@@ -1,0 +1,287 @@
+{
+    "onboardingScreen": {
+        "title1": "किसी भी समय और तिथि पर पुस्तक सेवा",
+        "title2": "अपने पास सबसे अच्छा सैलून खोजें",
+        "title3": "सर्वश्रेष्ठ पेशेवर विशेषज्ञ खोजें",
+        "Description": "लोरम बहुत गाजर, टमाटर स्नातक डेवलपर।",
+        "skip": "छोड़ें",
+        "next": "अगला",
+        "started": "शुरू हो जाओ",
+        "tapBack": "ऐप से बाहर निकलने के लिए फिर से टैप करें"
+    },
+    "loginScreen": {
+        "login": "लॉग इन करें",
+        "pleaseEnter": "कृपया अपना मोबाइल नंबर दर्ज करें और लॉगिन करें।",
+        "mobile": "अपना मोबाइल नंबर दर्ज करें",
+        "verification": "*हम सत्यापन के लिए ओटीपी भेजेंगे",
+        "or": "या",
+        "tapBack": "ऐप से बाहर निकलने के लिए फिर से टैप करें"
+    },
+    "registerScreen": {
+        "register": "पंजीकरण करवाना",
+        "welcomePlease": "आपका स्वागत है कृपया अपना खाता बनाएं",
+        "name": "अपना नाम दर्ज करें",
+        "mobile": "अपना मोबाइल नंबर दर्ज करें",
+        "email": "अपना ईमेल आईडी दर्ज करें"
+    },
+    "otpScreen": {
+        "verification": "सत्यापन",
+        "confirmation": "आपके फ़ोन नंबर पर पुष्टिकरण कोड भेजा गया है",
+        "verifyNow": "अभी सत्यापित करें",
+        "resend": "पुन: भेजें"
+    },
+    "bottomTab": {
+        "home": "घर",
+        "nearBy": "पास ही",
+        "booking": "बुकिंग",
+        "profile": "प्रोफ़ाइल",
+        "exitApp": "क्या आप वाकई ऐप से बाहर निकलना चाहते हैं?",
+        "yes": "हां",
+        "no": "नहीं"
+    },
+    "homeScreen": {
+        "hii": "इस",
+        "search": "खोज",
+        "welcome": "स्वागत",
+        "lookingFor": "आप क्या ढूंढ रहे हैं?"
+    },
+    "serviceScreen": {
+        "other": "अन्य",
+        "bookAppointment": "निर्धारित तारीख बुक करना"
+    },
+    "informationScreen": {
+        "about": "के बारे में",
+        "description": "ES WESNGS। चेहरे की पहचान सूद। Birgitta ingberg deling। डिप काउंसिल क्रेन। हेनट वुड। दोहेट बार्ब्रो इस्सन। मिवी की ट्रिगर चेतावनी। तुम्हारा engen। YouTuber। गैंग रैली आज्ञाकारिता। कावई मैक्रोक्टिक। नवाचार ऊंचाई में फुल ब्रेक। अब देखें अब खरीदें। । दोहेट बार्ब्रो इस्सन। मिवी की ट्रिगर चेतावनी। तुम्हारा engen। YouTuber। गैंग रैली आज्ञाकारिता। प्यारा",
+        "readMore": "अधिक पढ़ें",
+        "specialist": "हमारे विशेषज्ञ",
+        "photo": "फ़ोटो",
+        "workingHour": "कार्यकारी घंटे",
+        "contact": "संपर्क करना",
+        "address": "पता",
+        "bookAppointment": "निर्धारित तारीख बुक करना"
+    },
+    "reviewScreen": {
+        "bookAppointment": "निर्धारित तारीख बुक करना"
+    },
+    "specialistProfileScreen": {
+        "review": "समीक्षा",
+        "about": "के बारे में",
+        "description": "ES WESNGS। चेहरे की पहचान सूद। Birgitta ingberg deling। डिप काउंसिल क्रेन। हेनट वुड। दोहेट बार्ब्रो इस्सन। मिवी की ट्रिगर चेतावनी। तुम्हारा engen। YouTuber। गैंग रैली आज्ञाकारिता। कावई मैक्रोक्टिक। नवाचार ऊंचाई में फुल ब्रेक। अब देखें अब खरीदें। । दोहेट बार्ब्रो इस्सन। मिवी की ट्रिगर चेतावनी। तुम्हारा engen। YouTuber। गैंग रैली आज्ञाकारिता। प्यारा",
+        "readMore": "अधिक पढ़ें",
+        "photo": "फ़ोटो",
+        "workingHour": "कार्यकारी घंटे",
+        "address": "पता",
+        "bookAppointment": "निर्धारित तारीख बुक करना"
+    },
+    "mainReviewScreen": {
+        "review": "समीक्षा"
+    },
+    "scheduleScreen": {
+        "schedule": "अनुसूची",
+        "date": "तारीख़ चुनें",
+        "slot": "उपलब्ध स्लॉट",
+        "Continue": "जारी रखें"
+    },
+    "confirmationScreen": {
+        "confirmation": "पुष्टीकरण",
+        "date": "दिनांक",
+        "time": "समय",
+        "mobile": "फ़ोन नंबर",
+        "notes": "तुम्हारे पर्चे",
+        "writeService": "अपनी विशेष सेवाएँ यहाँ लिखें",
+        "specialist": "SPECIALIST",
+        "CouponCode": "कूपन कोड लागू करें",
+        "totalPay": "कुल वेतन/",
+        "total": "कुल वेतन",
+        "confirm": "पुष्टि करें"
+    },
+    "paymentMethodScreen": {
+        "paymentMethod": "भुगतान का तरीका चुनें",
+        "thankYou": "आपको धन्यवाद",
+        "description": "ट्राइबर प्रोकोटा। Macaw। MyTotype गियर। Tresirade पारदर्शिता। टिबेल। इनबाउंड इनोवेशन। दीवार-टीवी वित्तीय फोबिया। फैन साइंस पार्क।",
+        "backHome": "घर वापिस जा रहा हूँ",
+        "name": "कार्डधारक का नाम",
+        "cardNo": "कार्ड नंबर",
+        "enterName": "अपना कार्ड धारक नाम दर्ज करें",
+        "enterCard": "अपना कार्ड नंबर दर्ज करें",
+        "expiryDate": "समाप्ति तिथि",
+        "enterCvv": "सी वी वी कोड",
+        "payment": "भुगतान",
+        "payWith": "Google वेतन के साथ भुगतान करें",
+        "upi": "UPI पिन दर्ज करें",
+        "email": "ईमेल आईडी दर्ज करें"
+    },
+    "nearByScreen": {
+        "nearByYou": "आपके पास",
+        "nearestSalon": "अपने निकटतम सैलून को खोजें",
+        "search": "खोज"
+    },
+    "bookingScreen": {
+        "ongoing": "चल रहे",
+        "history": "इतिहास",
+        "booking": "बुकिंग",
+        "upcomingBooking": "अपनी आगामी बुकिंग देखें"
+    },
+    "ongoingScreen": {
+        "getDirection": "दिशा प्राप्त करना",
+        "cancel": "रद्द करना",
+        "areYouSure": "क्या आप सुनिश्चित हैं कि आप नियुक्ति रद्द करना चाहते हैं?",
+        "yes": "हां",
+        "no": "ना"
+    },
+    "ongoingDetail": {
+        "date": "दिनांक",
+        "time": "समय",
+        "mobile": "फ़ोन नंबर",
+        "specialist": "SPECIALIST",
+        "totalPay": "कुल वेतन",
+        "rebooking": "पुनरुमा"
+    },
+    "historyScreen": {
+        "getDetail": "विस्तार प्राप्त करना",
+        "remove": " इतिहास से मिटाना।",
+        "noBooking": "अभी तक कोई बुकिंग नहीं"
+    },
+    "historyDetailScreen": {
+        "date": "दिनांक",
+        "time": "समय",
+        "mobile": "फ़ोन नंबर",
+        "specialist": "SPECIALIST",
+        "totalPay": "कुल वेतन",
+        "giveRate": "दर देना",
+        "yourReview": "आपकी समीक्षा",
+        "aboutSalon": "आप इस सैलून के बारे में क्या महसूस कर रहे हैं?",
+        "saySomething": "कुछ कहो",
+        "submit": "प्रस्तुत करना"
+    },
+    "profileScreen": {
+        "profile": "प्रोफ़ाइल",
+        "account": "मेरा खाता",
+        "chat": "बात करना",
+        "favorite": "पसंदीदा",
+        "languages": "बोली",
+        "notification": "अधिसूचना सेटिंग्स",
+        "invite": "मित्रों को आमंत्रित करें",
+        "coupon": "आपका कूपन",
+        "termsOfService": "सेवाओं की शर्तें",
+        "logout": "लॉग आउट",
+        "areYouSure": "क्या आप लॉग आउट करना चाहते हैं?",
+        "cancel": "रद्द करना",
+        "help": "मदद समर्थन"
+    },
+    "accountScreen": {
+        "account": "मेरा खाता",
+        "name": "पूरा नाम",
+        "EnterName": "अपना पूरा नाम भरें",
+        "email": "ईमेल आईडी",
+        "EnterEmail": "अपना ईमेल आईडी दर्ज करें",
+        "mobile": "फ़ोन नंबर",
+        "EnterMobile": "अपना दूरभाष क्रमांक दर्ज करें",
+        "update": "अपडेट करें",
+        "successfully": "प्रोफाइल को सफलतापूर्वक अपडेट किया गया!!",
+        "ok": "ठीक है",
+        "changeProfile": "प्रोफ़ाइल फोटो बदलें",
+        "camera": "कैमरा",
+        "gallery": "गेलरी",
+        "remove": "छवि निकालें",
+        "removeImage": "प्रोफ़ाइल फ़ोटो हटा दी गई."
+    },
+    "chatScreen": {
+        "chat": "बात करना",
+        "search": "खोज",
+        "nice": "ओह कितना अच्छा"
+    },
+    "messageScreen": {
+        "typeHere": "यहां अपना पाठ लिखें...."
+    },
+    "favoriteScreen": {
+        "favorite": "पसंदीदा",
+        "empty": "खाली पसंदीदा सूची",
+        "remove": " पसंदीदा से निकालें।"
+    },
+    "languageScreen": {
+        "languages": "बोली"
+    },
+    "settingScreen": {
+        "settings": "अधिसूचना सेटिंग्स",
+        "notification": "अधिसूचना",
+        "location": "स्थान",
+        "darkMode": "डार्क मोड",
+        "appUpdate": "अनुप्रयोग अद्यतन"
+    },
+    "inviteFriendScreen": {
+        "invite": "मित्रों को आमंत्रित करें",
+        "description": "ब्यूटी ऐप इंस्टॉल करने के लिए 20 से अधिक दोस्तों को आमंत्रित करें और आपको डिस्काउंट कूपन मिलता है",
+        "copy": "प्रतिलिपि",
+        "toastCopy": "कॉपी किया गया",
+        "typeHere": "यहां अपना पाठ लिखें....",
+        "send": "आमंत्रण भेजो"
+    },
+    "couponScreen": {
+        "yourCoupons": "आपका कूपन",
+        "onAllHair": "सभी बाल कटवाने पर",
+        "couponValid": "कूपन वैध 25 जून",
+        "onHairTreatment": "बाल उपचार पर",
+        "getDiscount": "छूट प्राप्त करना",
+        "congratulation": "बधाई हो आपको $5 की छूट मिलती हैसभी प्रकार के बाल कटाने पर",
+        "valid": "(यह 3 अगस्त 2022 से मान्य है)",
+        "apply": "आवेदन करना"
+    },
+    "termsOfServicesScreen": {
+        "termsOfService": "सेवा की शर्तें",
+        "terms": "उपयोग की शर्तें",
+        "mainDescription": "लोरम बहुत गाजर, टमाटर स्नातक डेवलपर। नफरत पूर्णांक में NAM NIBH देखभाल प्रोटीन की आवश्यकता है। जैसा कि डायम या क्षेत्र रहा है। Malesuada अब कल हँसी खींचते हैं। मेरे प्रिय अब, पोषण तरकश प्रोटीन egestas। निब मेकेनस प्लानिंग सिट मालसुडा डुई एक संग्रहालय mus.lorem गाजर था, स्नातक डेवलपर को बढ़ाया। नफरत पूर्णांक में NAM NIBH देखभाल प्रोटीन की आवश्यकता है। जैसा कि डायम या क्षेत्र रहा है। Malesuada अब कल हँसी खींचते हैं। मेरे प्रिय अब, पोषण तरकश प्रोटीन egestas। निभ मेकेनस प्लानिंग सिट मैलेसुदा डुई एक माउस था।",
+        "subDecription": "लोरम बहुत गाजर, टमाटर स्नातक डेवलपर। नफरत पूर्णांक में NAM NIBH देखभाल प्रोटीन की आवश्यकता है। जैसा कि डायम या क्षेत्र रहा है। Malesuada अब कल हँसी खींचते हैं। मेरे प्रिय अब, पोषण तरकश प्रोटीन egestas। निभ मेकेनस प्लानिंग सिट मैलेसुदा डुई एक माउस था।",
+        "privacy": "गोपनीयता नीति"
+    },
+    "helpSupportScreen": {
+        "helpSupport": "मदद समर्थन",
+        "name": "नाम",
+        "enterName": "अपना नाम दर्ज करें",
+        "email": "ईमेल पता",
+        "enterEmail": "अपना ईमेल पता दर्ज करें",
+        "message": "संदेश",
+        "writeMessage": "यहाँ संदेश लिखें",
+        "submit": "प्रस्तुत करना"
+    },
+    "notificationScreen": {
+        "notification": "अधिसूचना",
+        "appointment": "नव नियुक्ति",
+        "remind": "याद दिलाने के लिए",
+        "booking": "बुकिंग पूरी हुई",
+        "description1": "21 जून 2022 को ली नेल्स एंड मेकओवर में अपनी नियुक्ति बुक की।",
+        "description2": "आपकी आज की नियुक्ति बिग टेसेसालॉन में सुबह 9.00 बजे है",
+        "description3": "जे.जे. शाह सैलून में आपकी बुकिंग पूरी हो चुकी है। कृपया अपना अनुभव साझा करें।",
+        "today": "आज",
+        "yesterday": "कल",
+        "2minAgo": "2min पहले",
+        "noNotification": "अभी तक कोई अधिसूचना नहीं"
+    },
+    "searchScreen": {
+        "search": "खोज",
+        "searchYour": "अपना सैलून खोजें"
+    },
+    "filterBottomSheet": {
+        "filter": "फ़िल्टर",
+        "ratting": "रगड़",
+        "price": "कीमत",
+        "category": "श्रेणी",
+        "distance": "दूरी",
+        "reset": "रीसेट"
+    },
+    "topTabDetails": {
+        "services": "सेवाएं",
+        "information": "जानकारी",
+        "review": "समीक्षा"
+    },
+    "detailScreen": {
+        "open": "खुला हुआ"
+    },
+    "bookAppointmentScreen": {
+        "selectSpecialists": "विशेषज्ञों का चयन करें",
+        "Continue": "जारी रखें"
+    },
+    "loader": {
+        "pleaseWait": "कृपया प्रतीक्षा करें"
+    }
+}

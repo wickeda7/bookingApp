@@ -1,0 +1,292 @@
+{
+  "onboardingScreen": {
+    "title1": "Book service at any time & date",
+    "title2": "Find the best salon near by you",
+    "title3": "Find the best professional specialists",
+    "Description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    "skip": "SKIP",
+    "next": "NEXT",
+    "started": "GET STARTED",
+    "tapBack": "Tap back again to exit the App"
+  },
+  "loginScreen": {
+    "login": "Login",
+    "pleaseEnter": "Please enter your mobile number and login.",
+    "mobile": "Enter your mobile number",
+    "verification": "*We will sent otp for verification",
+    "or": "Or",
+    "tapBack": "Tap back again to exit the App"
+  },
+  "registerScreen": {
+    "register": "Register",
+    "welcomePlease": "Welcome please create your account",
+    "name": "Enter your name",
+    "mobile": "Enter your mobile number",
+    "email": "Enter your email id"
+  },
+  "otpScreen": {
+    "verification": "Verification",
+    "confirmation": " Confirmation code has been sent to your phone no",
+    "verifyNow": "VERIFY NOW",
+    "resend": "Resend"
+
+  },
+  "bottomTab": {
+    "home": "Home",
+    "nearBy": "Nearby",
+    "booking": "Booking",
+    "profile": "Profile",
+    "exitApp": "Are you sure you want to exit app?",
+    "yes": "Yes",
+    "no": "No"
+  },
+  "homeScreen": {
+    "hii": "Hii",
+    "search": "Search",
+    "welcome": "Welcome",
+    "lookingFor": "What are you looking for?"
+  },
+  "serviceScreen": {
+    "other": "Other",
+    "bookAppointment": "BOOK APPOINTMENT"
+  },
+  "informationScreen": {
+    "about": "About",
+    "description": "Es decingar. Facial recognition sud. Birgitta Åberg deling. Dipåd tranad. Henat vud. Doheten Barbro Isaksson. Mivis triggervarning. Engen din. Youtuber. Gang rallylydnad. Kawaii makroktig. Fulbryt innovationshöjd. See now buy now. . Doheten Barbro Isaksson. Mivis triggervarning. Engen din. Youtuber. Gang rallylydnad. Kawaii ",
+    "readMore": "read more",
+    "specialist": "Our specialists",
+    "photo": "Photo",
+    "workingHour": "Working hour",
+    "contact": "Contact",
+    "address": "Address",
+    "bookAppointment": "BOOK APPOINTMENT"
+  },
+  "reviewScreen": {
+    "bookAppointment": "BOOK APPOINTMENT"
+  },
+  "specialistProfileScreen": {
+    "review": "Review",
+    "about": "About",
+    "description": "Es decingar. Facial recognition sud. Birgitta Åberg deling. Dipåd tranad. Henat vud. Doheten Barbro Isaksson. Mivis triggervarning. Engen din. Youtuber. Gang rallylydnad. Kawaii makroktig. Fulbryt innovationshöjd. See now buy now. . Doheten Barbro Isaksson. Mivis triggervarning. Engen din. Youtuber. Gang rallylydnad. Kawaii ",
+    "readMore": "read more",
+    "photo": "Photo",
+    "workingHour": "Working hour",
+    "address": "Address",
+    "bookAppointment": "BOOK APPOINTMENT"
+  },
+  "mainReviewScreen": {
+    "review": "Review"
+  },
+  "scheduleScreen": {
+    "schedule": "Schedule",
+    "date": "Select date",
+    "slot": "Available slot",
+    "Continue": "CONTINUE"
+  },
+  "confirmationScreen": {
+    "confirmation": "Confirmation",
+    "date": "Date",
+    "time": "Time",
+    "mobile": "Phone number",
+    "notes": "Your notes",
+    "writeService": "Write your special services here",
+    "specialist": "Specialist",
+    "CouponCode": "Apply coupon code",
+    "totalPay": "Total pay/",
+    "total": "Total pay",
+    "confirm": "Confirm"
+  },
+  "paymentMethodScreen": {
+    "paymentMethod": "Select payment method",
+    "thankYou": "Thank you",
+    "description": "Tribur prokotta. Ara. Mytotyp rären. Tresirade transparens. Tibel. Inbound innovation. Vägg-tv finansfobi. Fan science park. ",
+    "backHome": "Back to home",
+    "name": "Card holder name",
+    "cardNo": "Card Number",
+    "enterName": "Enter your card holder name",
+    "enterCard": "Enter your card number",
+    "expiryDate": "Expiry date",
+    "enterCvv": "CVV code",
+    "payment": "Payment",
+    "payWith": "Pay with google pay",
+    "upi": "Enter UPI ID",
+    "email": "Enter email id"
+  },
+  "nearByScreen": {
+    "nearByYou": "Near by you",
+    "nearestSalon": "Search your nearest salon",
+    "search": "Search"
+  },
+  "bookingScreen": {
+    "ongoing": "Ongoing",
+    "history": "History",
+    "booking": "Booking",
+    "upcomingBooking": "see your upcoming booking"
+  },
+  "ongoingScreen": {
+    "getDirection": "Get direction",
+    "cancel": "Cancel",
+    "areYouSure": "Are you sure you want to cancel appointment?",
+    "yes": "YES",
+    "no": "NO"
+  },
+  "ongoingDetail": {
+    "date": "Date",
+    "time": "Time",
+    "mobile": "Phone number",
+    "specialist": "Specialist",
+    "totalPay": "Total pay",
+    "rebooking": "Rebooking"
+  },
+  "historyScreen": {
+    "getDetail": "Get detail",
+    "remove": " remove from history.",
+    "noBooking": "No booking yet"
+  },
+  "historyDetailScreen": {
+    "date": "Date",
+    "time": "Time",
+    "mobile": "Phone number",
+    "specialist": "Specialist",
+    "totalPay": "Total pay",
+    "giveRate": "Give rate",
+    "yourReview": "Your review",
+    "aboutSalon": "What are you feel about this salon?",
+    "saySomething": "Say something",
+    "submit": "Submit"
+  },
+  "profileScreen": {
+    "profile": "Profile",
+    "account": "Edit profile",
+    "chat": "Chat",
+    "favorite": "Favorite",
+    "languages": "Languages",
+    "notification": "Notification settings",
+    "invite": "Invite friends",
+    "coupon": "Your coupon",
+    "termsOfService": "Terms of services",
+    "logout": "Logout",
+    "areYouSure": "Are you sure you want to logout?",
+    "cancel": "Cancel",
+    "help": "Help & support"
+
+  },
+  "accountScreen": {
+    "account": "My account",
+    "name": "Full name",
+    "EnterName": "Enter your full name",
+    "email": "Email  id",
+    "EnterEmail": "Enter your email id",
+    "mobile": "Phone number",
+    "EnterMobile": "Enter your phone number",
+    "update": "UPDATE",
+    "successfully": "Profile updated successfully!!",
+    "ok": "Ok",
+    "changeProfile": "Change profile Photo",
+    "camera": "Camera",
+    "gallery": "Gallery",
+    "remove": "Remove image",
+    "removeImage": "Profile photo removed."
+  },
+  "chatScreen": {
+    "chat": "Chat",
+    "search": "Search",
+    "nice": "Oh, so nice"
+  },
+  "messageScreen": {
+    "typeHere": "Type your text here...."
+  },
+  "favoriteScreen": {
+    "favorite": "Favorite",
+    "empty": "Empty favorite list",
+    "remove": " remove from favorite."
+  },
+  "languageScreen": {
+    "languages": "Languages"
+  },
+  "settingScreen": {
+    "settings": "Notification settings",
+    "notification": "Notification",
+    "location": "Location",
+    "darkMode": "Dark mode",
+    "appUpdate": "Application update"
+  },
+  "inviteFriendScreen": {
+    "invite": "Invite friends",
+    "description": "Invite more than 20 friends to install beauty app and  you get discount coupon",
+    "copy": "Copy",
+    "toastCopy": "Copied",
+    "typeHere": "Type your text here....",
+    "send": "Send Invite"
+  },
+  "couponScreen": {
+    "yourCoupons": " Your coupons",
+    "onAllHair": "ON ALL HAIRCUTTING",
+    "couponValid": "Coupon valid 25 June",
+    "onHairTreatment": "ON HAIR TREATMENT",
+    "getDiscount": "Get discount",
+    "congratulation": "Congratulation you get discount on  all type of haircutting",
+    "valid": "(It’s valid from 3 aug 2022)",
+    "apply": "Apply"
+  },
+  "termsOfServicesScreen": {
+    "termsOfService": "Terms of service",
+    "terms": "Terms of use",
+    "mainDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nibh sollicitudin at odio integer eget dapibus. Ut dictum diam neque tellus. Malesuada nunc rhoncus viverra cras risus. Mi nunc, egestas in pellentesque pharetra interdum. Nibh maecenas congue blandit malesuada dui erat netus mus.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nibh sollicitudin at odio integer eget dapibus. Ut dictum diam neque tellus. Malesuada nunc rhoncus viverra cras risus. Mi nunc, egestas in pellentesque pharetra interdum. Nibh maecenas congue blandit malesuada dui erat netus mus.",
+    "subDecription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nibh sollicitudin at odio integer eget dapibus. Ut dictum diam neque tellus. Malesuada nunc rhoncus viverra cras risus. Mi nunc, egestas in pellentesque pharetra interdum. Nibh maecenas congue blandit malesuada dui erat netus mus.",
+    "privacy": "Privacy policy"
+
+  },
+  "helpSupportScreen": {
+    "helpSupport": "Help & support",
+    "name": "Name",
+    "enterName": "Enter your name",
+    "email": "Email Address",
+    "enterEmail": "Enter your email address",
+    "message": "Message",
+    "writeMessage": "Write message here",
+    "submit": "Submit"
+  },
+  "notificationScreen": {
+    "notification": "Notification",
+    "appointment": "New appointment",
+    "remind": "To remind",
+    "booking": "Booking completed",
+    "description1": "Booked an your appointment on  21 June 2022 at lee nails and makeover.",
+    "description2": "Your today’s appointment is at 9.00AM at the big teasesalon",
+    "description3": "Your booking at j.j shah salon  has been completed. please share your experience.",
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "2minAgo": "2min ago",
+    "noNotification": "No notification yet"
+
+  },
+  "searchScreen": {
+    "search": "Search",
+    "searchYour": "Search your salon"
+  },
+  "filterBottomSheet": {
+    "filter": "Filter",
+    "ratting": "Ratting",
+    "price": "Price",
+    "category": "Category",
+    "distance": "Distance",
+    "reset": "RESET"
+  },
+  "topTabDetails": {
+    "services": "Services",
+    "information": "Information",
+    "review": "Review"
+  },
+  "detailScreen": {
+    "open": "Open"
+  },
+  "bookAppointmentScreen": {
+    "selectSpecialists": "Select specialists",
+    "Continue": "CONTINUE"
+  },
+  "loader": {
+    "pleaseWait": "Please wait"
+  }
+
+}

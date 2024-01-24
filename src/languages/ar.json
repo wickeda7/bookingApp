@@ -1,0 +1,287 @@
+{
+    "onboardingScreen": {
+        "title1": "خدمة الكتاب في أي وقت وتاريخ",
+        "title2": "ابحث عن أفضل صالون بالقرب منك",
+        "title3": "ابحث عن أفضل المتخصصين المحترفين",
+        "Description": "لوريم الجزر جدا ، مطور طماطم البكالوريوس.",
+        "skip": "يتخطى",
+        "next": "التالي",
+        "started": "البدء",
+        "tapBack": "اضغط مرة أخرى للخروج من التطبيق"
+    },
+    "loginScreen": {
+        "login": "تسجيل الدخول",
+        "pleaseEnter": "الرجاء إدخال رقم هاتفك المحمول وتسجيل الدخول.",
+        "mobile": "أدخل رقم هاتفك المحمول",
+        "verification": "*سنرسل OTP للتحقق",
+        "or": "أو",
+        "tapBack": "اضغط مرة أخرى للخروج من التطبيق"
+    },
+    "registerScreen": {
+        "register": "يسجل",
+        "welcomePlease": "مرحبًا",
+        "name": "أدخل أسمك",
+        "mobile": "أدخل رقم هاتفك المحمول",
+        "email": "أدخل معرف البريد الإلكتروني الخاص بك"
+    },
+    "otpScreen": {
+        "verification": "تَحَقّق",
+        "confirmation": "تم إرسال رمز التأكيد إلى هاتفك لا",
+        "verifyNow": "تحقق الآن",
+        "resend": "إعادة إرسال"
+    },
+    "bottomTab": {
+        "home": "مسكن",
+        "nearBy": "مجاور",
+        "booking": "الحجز",
+        "profile": "الملف الشخصي",
+        "exitApp": "هل أنت متأكد أنك تريد الخروج من التطبيق؟",
+        "yes": "نعم",
+        "no": "رقم"
+    },
+    "homeScreen": {
+        "hii": "هذه",
+        "search": "يبحث",
+        "welcome": "أهلا وسهلا",
+        "lookingFor": "عما تبحث؟"
+    },
+    "serviceScreen": {
+        "other": "آخر",
+        "bookAppointment": "موعد الكتاب"
+    },
+    "informationScreen": {
+        "about": "حول",
+        "description": "الحالات ES. التعرف على الوجه SUD. Birgitta Åberg deling. تراجع مجلس كرين. هينات فود. Dohet Barbro Isaksson. تحذير الزناد Mivi. المهندس لك. يوتيوب. طاعة حشد العصابات. Kawaii macroctic. فول استراحة في ارتفاع الابتكار. انظر الآن شراء الآن. . Dohet Barbro Isaksson. تحذير الزناد Mivi. المهندس لك. يوتيوب. طاعة حشد العصابات. كاواي",
+        "readMore": "اقرأ أكثر",
+        "specialist": "أخصائيونا",
+        "photo": "صورة",
+        "workingHour": "ساعة العمل",
+        "contact": "اتصال",
+        "address": "تبوك",
+        "bookAppointment": "موعد الكتاب"
+    },
+    "reviewScreen": {
+        "bookAppointment": "موعد الكتاب"
+    },
+    "specialistProfileScreen": {
+        "review": "إعادة النظر",
+        "about": "حول",
+        "description": "الحالات ES. التعرف على الوجه SUD. Birgitta Åberg deling. تراجع مجلس كرين. هينات فود. Dohet Barbro Isaksson. تحذير الزناد Mivi. المهندس لك. يوتيوب. طاعة حشد العصابات. Kawaii macroctic. فول استراحة في ارتفاع الابتكار. انظر الآن شراء الآن. . Dohet Barbro Isaksson. تحذير الزناد Mivi. المهندس لك. يوتيوب. طاعة حشد العصابات. كاواي",
+        "readMore": "اقرأ أكثر",
+        "photo": "صورة",
+        "workingHour": "ساعة العمل",
+        "address": "تبوك",
+        "bookAppointment": "موعد الكتاب"
+    },
+    "mainReviewScreen": {
+        "review": "إعادة النظر"
+    },
+    "scheduleScreen": {
+        "schedule": "برنامج",
+        "date": "حدد تاريخ",
+        "slot": "فتحة متوفرة",
+        "Continue": "استمر"
+    },
+    "confirmationScreen": {
+        "confirmation": "تأكيد",
+        "date": "تاريخ",
+        "time": "زمن",
+        "mobile": "رقم الهاتف",
+        "notes": "ملاحظاتك",
+        "writeService": "اكتب خدماتك الخاصة هنا",
+        "specialist": "متخصص",
+        "CouponCode": "تطبيق رمز القسيمة",
+        "totalPay": "إجمالي الدفع/",
+        "total": "إجمالي الدفع",
+        "confirm": "يتأكد"
+    },
+    "paymentMethodScreen": {
+        "paymentMethod": "اختار طريقة الدفع",
+        "thankYou": "شكرًا لك",
+        "description": "تريبيور بروكوتا. ماكاو. mytotype العتاد. الشفافية tresirade. تبل. الابتكار الوارد. الرهاب المالي الحائط. حديقة علوم المعجبين.",
+        "backHome": "العودة إلى المنزل",
+        "name": "إسم صاحب البطاقة",
+        "cardNo": "رقم البطاقة",
+        "enterName": "أدخل اسم حامل البطاقة الخاص بك",
+        "enterCard": "أدخل رقم بطاقتك",
+        "expiryDate": "تاريخ انتهاء الصلاحية",
+        "enterCvv": "رقم الكود الموجود على بطاقات الاتمان",
+        "payment": "دفع",
+        "payWith": "دفع مع Google Pay",
+        "upi": "أدخل PIN UPI",
+        "email": "أدخل معرف البريد الإلكتروني"
+    },
+    "nearByScreen": {
+        "nearByYou": "بالقرب من قبلك",
+        "nearestSalon": "ابحث في أقرب صالون",
+        "search": "يبحث"
+    },
+    "bookingScreen": {
+        "ongoing": "جاري التنفيذ",
+        "history": "تاريخ",
+        "booking": "الحجز",
+        "upcomingBooking": "انظر الحجز القادم الخاص بك"
+    },
+    "ongoingScreen": {
+        "getDirection": "احصل على اتجاه",
+        "cancel": "يلغي",
+        "areYouSure": "هل أنت متأكد من أنك تريد إلغاء الموعد؟",
+        "yes": "نعم",
+        "no": "رقم"
+    },
+    "ongoingDetail": {
+        "date": "تاريخ",
+        "time": "زمن",
+        "mobile": "رقم الهاتف",
+        "specialist": "متخصص",
+        "totalPay": "إجمالي الأجور",
+        "rebooking": "إعادة الحجز"
+    },
+    "historyScreen": {
+        "getDetail": "احصل على التفاصيل",
+        "remove": " امحي من التأريخ.",
+        "noBooking": "لا يوجد حجز بعد"
+    },
+    "historyDetailScreen": {
+        "date": "تاريخ",
+        "time": "زمن",
+        "mobile": "رقم الهاتف",
+        "specialist": "متخصص",
+        "totalPay": "إجمالي الأجور",
+        "giveRate": "إعطاء معدل",
+        "yourReview": "مراجعتك",
+        "aboutSalon": "ما هو شعورك تجاه هذا الصالون؟",
+        "saySomething": "قل شيئا",
+        "submit": "يُقدِّم"
+    },
+    "profileScreen": {
+        "profile": "الملف الشخصي",
+        "account": "حسابي",
+        "chat": "دردشة",
+        "favorite": "مفضل",
+        "languages": "اللغات",
+        "notification": "إعدادات الإشعار",
+        "invite": "ادعو أصدقاء",
+        "coupon": "قسيمك",
+        "termsOfService": "شروط الخدمة",
+        "logout": "تسجيل خروج",
+        "areYouSure": "هل أنت متأكد أنك تريد تسجيل الخروج؟",
+        "cancel": "يلغي",
+        "help": "ساعد لدعم"
+    },
+    "accountScreen": {
+        "account": "حسابي",
+        "name": "الاسم الكامل",
+        "EnterName": "أدخل اسمك الكامل",
+        "email": "عنوان الايميل",
+        "EnterEmail": "أدخل معرف البريد الإلكتروني الخاص بك",
+        "mobile": "رقم الهاتف",
+        "EnterMobile": "أدخل رقم هاتفك",
+        "update": "تحديث",
+        "successfully": "تم تحديث الملف الشخصي بنجاح!!",
+        "ok": "موافق",
+        "changeProfile": "تغيير صورة الملف الشخصي",
+        "camera": "آلة تصوير",
+        "gallery": "صالة عرض",
+        "remove": "إزالة الصورة",
+        "removeImage": "تمت إزالة صورة الملف الشخصي."
+    },
+    "chatScreen": {
+        "chat": "دردشة",
+        "search": "يبحث",
+        "nice": "أوه ، لطيف جدا"
+    },
+    "messageScreen": {
+        "typeHere": "اكتب النص هنا...."
+    },
+    "favoriteScreen": {
+        "favorite": "مفضل",
+        "empty": "القائمة المفضلة الفارغة",
+        "remove": " ترفع من المفضل."
+    },
+    "languageScreen": {
+        "languages": "اللغات"
+    },
+    "settingScreen": {
+        "settings": "إعدادات الإشعار",
+        "notification": "تنبيه",
+        "location": "موقع",
+        "darkMode": "الوضع المظلم",
+        "appUpdate": "تحديث التطبيق"
+    },
+    "inviteFriendScreen": {
+        "invite": "ادعو أصدقاء",
+        "description": "قم بدعوة أكثر من 20 صديقًا لتثبيت تطبيق الجمال وتحصل على قسيمة خصم",
+        "copy": "ينسخ",
+        "toastCopy": "نسخ",
+        "typeHere": "اكتب النص هنا....",
+        "send": "ارسل دعوة"
+    },
+    "couponScreen": {
+        "yourCoupons": "كوبوناتك",
+        "onAllHair": "على كل حلاقة",
+        "couponValid": "قسيمة صالحة 25 يونيو",
+        "onHairTreatment": "على علاج الشعر",
+        "getDiscount": "احصل على خصم",
+        "congratulation": "مبروك حصولك على خصم على جميع أنواع قص الشعر",
+        "valid": "(إنها صالحة من 3 أغسطس 2022)",
+        "apply": "يتقدم"
+    },
+    "termsOfServicesScreen": {
+        "termsOfService": "شروط الخدمة",
+        "terms": "تعليمات الاستخدام",
+        "mainDescription": "لوريم الجزر جدا ، مطور طماطم البكالوريوس. رعاية NAM NIBH في عدد صحيح الكراهية تحتاج إلى البروتين. كما كان القطر أو المنطقة. Malesuada تتراوح الآن سحب الضحك غدًا. عزيزي الآن ، Egestas The Nutrition Quiver Protein. NIBH Maecenas التخطيط Sit Malesuada DUI كان متحف Mus.lorem جزر ، محسّن مطور الجامعة. رعاية NAM NIBH في عدد صحيح الكراهية تحتاج إلى البروتين. كما كان القطر أو المنطقة. Malesuada تتراوح الآن سحب الضحك غدًا. عزيزي الآن ، Egestas The Nutrition Quiver Protein. Nibh Maecenas التخطيط Sit Malesuada DUI كان الماوس.",
+        "subDecription": "لوريم الجزر جدا ، مطور طماطم البكالوريوس. رعاية NAM NIBH في عدد صحيح الكراهية تحتاج إلى البروتين. كما كان القطر أو المنطقة. Malesuada تتراوح الآن سحب الضحك غدًا. عزيزي الآن ، Egestas The Nutrition Quiver Protein. Nibh Maecenas التخطيط Sit Malesuada DUI كان الماوس.",
+        "privacy": "سياسة الخصوصية"
+    },
+    "helpSupportScreen": {
+        "helpSupport": "ساعد لدعم",
+        "name": "اسم",
+        "enterName": "أدخل أسمك",
+        "email": "عنوان البريد الالكترونى",
+        "enterEmail": "أدخل عنوان بريدك الالكتروني",
+        "message": "رسالة",
+        "writeMessage": "اكتب رسالة هنا",
+        "submit": "يُقدِّم"
+    },
+    "notificationScreen": {
+        "notification": "تنبيه",
+        "appointment": "موعد جديد",
+        "remind": "للتذكير",
+        "booking": "الانتهاء الحجز",
+        "description1": "حجزت موعدك في 21 يونيو 2022 في لي الأظافر والتحول.",
+        "description2": "موعد اليوم في الساعة 9:00 صباحًا في Big Teasesalon",
+        "description3": "تم الانتهاء من حجزك في صالون J.J Shah. يرجى مشاركة تجربتك.",
+        "today": "اليوم",
+        "yesterday": "في الامس",
+        "2minAgo": "قبل 2 دقيقة",
+        "noNotification": "لا إشعار بعد"
+    },
+    "searchScreen": {
+        "search": "يبحث",
+        "searchYour": "ابحث في صالونك"
+    },
+    "filterBottomSheet": {
+        "filter": "منقي",
+        "ratting": "التقيد",
+        "price": "سعر",
+        "category": "الفئة",
+        "distance": "مسافه: بعد",
+        "reset": "إعادة تعيين"
+    },
+    "topTabDetails": {
+        "services": "خدمات",
+        "information": "معلومة",
+        "review": "إعادة النظر"
+    },
+    "detailScreen": {
+        "open": "فتح"
+    },
+    "bookAppointmentScreen": {
+        "selectSpecialists": "حدد المتخصصين",
+        "Continue": "استمر"
+    },
+    "loader": {
+        "pleaseWait": "أرجو الإنتظار"
+    }
+}

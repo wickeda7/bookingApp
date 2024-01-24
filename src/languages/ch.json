@@ -1,0 +1,289 @@
+{
+    "onboardingScreen": {
+        "title1": "任何时间和日期的书籍服务",
+        "title2": "在您附近找到最好的沙龙",
+        "title3": "找到最好的专业专家",
+        "Description": "Lorem非常胡萝卜，番茄本科开发人员。",
+        "skip": "跳过",
+        "next": "下一个",
+        "started": "开始",
+        "tapBack": "再次点击以退出应用程序"
+    },
+    "loginScreen": {
+        "login": "登录",
+        "pleaseEnter": "请输入您的手机号码并登录。",
+        "mobile": "输入你的手机号码",
+        "verification": "*我们将发送OTP进行验证",
+        "or": "或者",
+        "tapBack": "再次点击以退出应用程序"
+    },
+    "registerScreen": {
+        "register": "登记",
+        "welcomePlease": "欢迎创建您的帐户",
+        "name": "输入你的名字",
+        "mobile": "输入你的手机号码",
+        "email": "输入您的电子邮件ID"
+    },
+    "otpScreen": {
+        "verification": "确认",
+        "confirmation": "确认代码已发送到您的电话号码",
+        "verifyNow": "立即验证",
+        "resend": "重发"
+    },
+    "bottomTab": {
+        "home": "家",
+        "nearBy": "附近",
+        "booking": "预订",
+        "profile": "轮廓",
+        "exitApp": "您确定要退出应用程序吗？",
+        "yes": "是的",
+        "no": "不"
+    },
+    "homeScreen": {
+        "hii": "这个",
+        "search": "搜索",
+        "welcome": "欢迎",
+        "lookingFor": "你要买什么？"
+    },
+    "serviceScreen": {
+        "other": "其他",
+        "bookAppointment": "预约书"
+    },
+    "informationScreen": {
+        "about": "关于",
+        "description": "ES决定。 面部识别SUD。 BirgittaÅbergDeling。 浸入委员会起重机。 Henat Vud。 Dohet Barbro Isaksson。 Mivi的触发警告。 恩格你的。 YouTuber。 帮派集会服从。 kawaii宏观。 创新高度的大会。 立即查看。 。 Dohet Barbro Isaksson。 Mivi的触发警告。 恩格你的。 YouTuber。 帮派集会服从。 kawaii",
+        "readMore": "阅读更多",
+        "specialist": "我们的专家",
+        "photo": "照片",
+        "workingHour": "工作时间",
+        "contact": "接触",
+        "address": "地址",
+        "bookAppointment": "预约书"
+    },
+    "reviewScreen": {
+        "bookAppointment": "预约书"
+    },
+    "specialistProfileScreen": {
+        "review": "审查",
+        "about": "关于",
+        "description": "ES决定。 面部识别SUD。 BirgittaÅbergDeling。 浸入委员会起重机。 Henat Vud。 Dohet Barbro Isaksson。 Mivi的触发警告。 恩格你的。 YouTuber。 帮派集会服从。 kawaii宏观。 创新高度的大会。 立即查看。 。 Dohet Barbro Isaksson。 Mivi的触发警告。 恩格你的。 YouTuber。 帮派集会服从。 kawaii",
+        "readMore": "阅读更多",
+        "photo": "照片",
+        "workingHour": "工作时间",
+        "address": "地址",
+        "bookAppointment": "预约书"
+    },
+    "mainReviewScreen": {
+        "review": "审查"
+    },
+    "scheduleScreen": {
+        "schedule": "日程",
+        "date": "选择日期",
+        "slot": "可用的插槽",
+        "Continue": "继续"
+    },
+    "confirmationScreen": {
+        "confirmation": "确认",
+        "date": "日期",
+        "time": "时间",
+        "mobile": "电话号码",
+        "notes": "你的笔记",
+        "writeService": "在这里写您的特殊服务",
+        "specialist": "专家",
+        "CouponCode": "应用优惠券代码",
+        "totalPay": "总工资/",
+        "total": "总工资",
+        "confirm": "确认"
+    },
+    "paymentMethodScreen": {
+        "paymentMethod": "选择付款方式",
+        "thankYou": "谢谢",
+        "description": "Tribur Prokotta。 金刚鹦鹉。 mytypy the Gear。 透明度透明度。 西藏。 入站创新。 Wall-TV金融恐惧症。 粉丝科学公园。",
+        "backHome": "回到家",
+        "name": "持卡人姓名",
+        "cardNo": "卡号",
+        "enterName": "输入您的卡持有人名称",
+        "enterCard": "输入您的卡号",
+        "expiryDate": "到期日",
+        "enterCvv": "CVV代码",
+        "payment": "支付",
+        "payWith": "用Google付款",
+        "upi": "输入UPI PIN",
+        "email": "输入电子邮件ID"
+    },
+    "nearByScreen": {
+        "nearByYou": "在你附近",
+        "nearestSalon": "搜索您最近的沙龙",
+        "search": "搜索"
+    },
+    "bookingScreen": {
+        "ongoing": "正在进行",
+        "history": "历史",
+        "booking": "预订",
+        "upcomingBooking": "查看您即将预订的"
+    },
+    "ongoingScreen": {
+        "getDirection": "获取路线",
+        "cancel": "取消",
+        "areYouSure": "您确定要取消约会吗？",
+        "yes": "是的",
+        "no": "不"
+    },
+    "ongoingDetail": {
+        "date": "日期",
+        "time": "时间",
+        "mobile": "电话号码",
+        "specialist": "专家",
+        "totalPay": "总薪水",
+        "rebooking": "重新预订"
+    },
+    "historyScreen": {
+        "getDetail": "获取细节",
+        "remove": " 从历史中删除。",
+        "noBooking": "暂无预订"
+    },
+    "historyDetailScreen": {
+        "date": "日期",
+        "time": "时间",
+        "mobile": "电话号码",
+        "specialist": "专家",
+        "totalPay": "总薪水",
+        "giveRate": "给出费率",
+        "yourReview": "你的意见",
+        "aboutSalon": "您对这家沙龙有什么感觉？",
+        "saySomething": "说些什么",
+        "submit": "提交"
+    },
+    "profileScreen": {
+        "profile": "轮廓",
+        "account": "我的帐户",
+        "chat": "聊天",
+        "favorite": "最喜欢的",
+        "languages": "语言",
+        "notification": "通知设置",
+        "invite": "邀请朋友",
+        "coupon": "您的优惠券",
+        "termsOfService": "服务条款",
+        "logout": "登出",
+        "areYouSure": "您确定要注销吗？",
+        "cancel": "取消",
+        "help": "帮助支持"
+    },
+    "accountScreen": {
+        "account": "我的帐户",
+        "name": "全名",
+        "EnterName": "输入您的全名",
+        "email": "电子邮件ID",
+        "EnterEmail": "输入您的电子邮件ID",
+        "mobile": "电话号码",
+        "EnterMobile": "输入你的电话号码",
+        "update": "更新",
+        "successfully": "个人资料成功更新了！",
+        "ok": "好的",
+        "changeProfile": "更改档案照片",
+        "camera": "相机",
+        "gallery": "画廊",
+        "remove": "删除图像",
+        "removeImage": "个人资料照片已删除。"
+    },
+    "chatScreen": {
+        "chat": "聊天",
+        "search": "搜索",
+        "nice": "哦，好吧"
+    },
+    "messageScreen": {
+        "typeHere": "在此输入文字...."
+    },
+    "favoriteScreen": {
+        "favorite": "最喜欢的",
+        "empty": "空喜欢的列表",
+        "remove": " 从最爱中删除。"
+    },
+    "languageScreen": {
+        "languages": "语言"
+
+
+    },
+    "settingScreen": {
+        "settings": "通知设置",
+        "notification": "通知",
+        "location": "地点",
+        "darkMode": "黑暗模式",
+        "appUpdate": "应用程序更新"
+    },
+    "inviteFriendScreen": {
+        "invite": "邀请朋友",
+        "description": "邀请20多个朋友安装美容应用程序，您将获得折扣优惠券",
+        "copy": "复制",
+        "toastCopy": "复制",
+        "typeHere": "在此输入文字....",
+        "send": "发送邀请"
+    },
+    "couponScreen": {
+        "yourCoupons": "您的优惠券",
+        "onAllHair": "在所有理发上",
+        "couponValid": "优惠券有效期6月25日",
+        "onHairTreatment": "关于头发治疗",
+        "getDiscount": "获得折扣",
+        "congratulation": "恭喜你获得折扣 $5 所有类型的理发",
+        "valid": "（自 2022 年 8 月 3 日起有效）",
+        "apply": "申请"
+    },
+    "termsOfServicesScreen": {
+        "termsOfService": "服务条款",
+        "terms": "使用条款",
+        "mainDescription": "Lorem非常胡萝卜，番茄本科开发人员。 仇恨整数需要蛋白质的NAM NIBH护理。 就像直径或区域一样。 Malesuada现在范围拉动明天的笑声。 亲爱的现在，埃古斯塔斯营养颤抖的蛋白质。 NIBH Maecenas Planning Sit Malesuada DUI是博物馆Mus.lorem胡萝卜，增强了本科开发人员。 仇恨整数需要蛋白质的NAM NIBH护理。 就像直径或区域一样。 Malesuada现在范围拉动明天的笑声。 亲爱的现在，埃古斯塔斯营养颤抖的蛋白质。 NIBH Maecenas Planning Sit Malesuada DUI是老鼠。",
+        "subDecription": "Lorem非常胡萝卜，番茄本科开发人员。 仇恨整数需要蛋白质的NAM NIBH护理。 就像直径或区域一样。 Malesuada现在范围拉动明天的笑声。 亲爱的现在，埃古斯塔斯营养颤抖的蛋白质。 NIBH Maecenas Planning Sit Malesuada DUI是老鼠。",
+        "privacy": "隐私政策"
+    },
+    "helpSupportScreen": {
+        "helpSupport": "帮助支持",
+        "name": "姓名",
+        "enterName": "输入你的名字",
+        "email": "电子邮件地址",
+        "enterEmail": "输入你的电子邮箱地址",
+        "message": "信息",
+        "writeMessage": "在这里写消息",
+        "submit": "提交"
+    },
+    "notificationScreen": {
+        "notification": "通知",
+        "appointment": "新任命",
+        "remind": "提醒",
+        "booking": "预订完成",
+        "description1": "在2022年6月21日在Lee Nails和改头换面预约您的约会。",
+        "description2": "您今天的约会是在大型Teasesalon的上午9.00",
+        "description3": "您在J.J Shah沙龙的预订已完成。 请分享您的经验。",
+        "today": "今天",
+        "yesterday": "昨天",
+        "2minAgo": "2分钟前",
+        "noNotification": "尚未通知"
+    },
+    "searchScreen": {
+        "search": "搜索",
+        "searchYour": "搜索您的沙龙"
+    },
+    "filterBottomSheet": {
+        "filter": "筛选",
+        "ratting": "rat",
+        "price": "价格",
+        "category": "类别",
+        "distance": "距离",
+        "reset": "重置"
+    },
+    "topTabDetails": {
+        "services": "服务",
+        "information": "信息",
+        "review": "审查"
+    },
+    "detailScreen": {
+        "open": "打开"
+    },
+    "bookAppointmentScreen": {
+        "selectSpecialists": "选择专家",
+        "Continue": "继续"
+    },
+    "loader": {
+        "pleaseWait": "请稍等"
+    }
+}

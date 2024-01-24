@@ -1,0 +1,288 @@
+{
+    "onboardingScreen": {
+        "title1": "Layanan Pesan kapan saja & tanggal",
+        "title2": "Temukan salon terbaik di dekat Anda",
+        "title3": "Temukan spesialis profesional terbaik",
+        "Description": "Lorem sangat wortel, pengembang sarjana tomat.",
+        "skip": "MELEWATI",
+        "next": "BERIKUTNYA",
+        "started": "MEMULAI",
+        "tapBack": "Ketuk Kembali Lagi untuk Keluar dari Aplikasi"
+    },
+    "loginScreen": {
+        "login": "Gabung",
+        "pleaseEnter": "Harap masukkan nomor ponsel Anda dan login.",
+        "mobile": "Masukkan nomor ponsel Anda",
+        "verification": "*Kami akan mengirim OTP untuk verifikasi",
+        "or": "Atau",
+        "tapBack": "Ketuk Kembali Lagi untuk Keluar dari Aplikasi"
+    },
+    "registerScreen": {
+        "register": "Daftar",
+        "welcomePlease": "Selamat Datang Harap Buat Akun Anda",
+        "name": "Masukkan nama Anda",
+        "mobile": "Masukkan nomor ponsel Anda",
+        "email": "Masukkan ID Email Anda"
+    },
+    "otpScreen": {
+        "verification": "Verifikasi",
+        "confirmation": "Kode konfirmasi telah dikirim ke telepon Anda Tidak",
+        "verifyNow": "VERIFIKASI SEKARANG",
+        "resend": "Ulang"
+    },
+    "bottomTab": {
+        "home": "Rumah",
+        "nearBy": "Di dekat sini",
+        "booking": "Pemesanan",
+        "profile": "Profil",
+        "exitApp": "tidakApakah Anda yakin ingin keluar dari aplikasi?",
+        "yes": "Ya",
+        "no": "Tidak"
+    },
+    "homeScreen": {
+        "hii": "Ini",
+        "search": "Mencari",
+        "welcome": "Selamat datang",
+        "lookingFor": "Apa yang sedang Anda cari?"
+    },
+    "serviceScreen": {
+        "other": "Lainnya",
+        "bookAppointment": "Janji temu buku"
+    },
+    "informationScreen": {
+        "about": "Tentang",
+        "description": "Es Decings. Pengakuan Wajah Sud. Birgitta Åberg Deling. Dewan Dewan Dip. Henat Vud. Dohet Barbro Isaksson. Peringatan Pemicu Mivi. Engen milikmu. YouTuber. Ketaatan geng. Kawaii Macroctic. Break ful dalam tinggi inovasi. Lihat sekarang beli sekarang. . Dohet Barbro Isaksson. Peringatan Pemicu Mivi. Engen milikmu. YouTuber. Ketaatan geng. Kawaii",
+        "readMore": "Baca selengkapnya",
+        "specialist": "Spesialis kami",
+        "photo": "Foto",
+        "workingHour": "Jam kerja",
+        "contact": "Kontak",
+        "address": "Alamat",
+        "bookAppointment": "Janji temu buku"
+    },
+    "reviewScreen": {
+        "bookAppointment": "Janji temu buku"
+    },
+    "specialistProfileScreen": {
+        "review": "Tinjauan",
+        "about": "Tentang",
+        "description": "Es Decings. Pengakuan Wajah Sud. Birgitta Åberg Deling. Dewan Dewan Dip. Henat Vud. Dohet Barbro Isaksson. Peringatan Pemicu Mivi. Engen milikmu. YouTuber. Ketaatan geng. Kawaii Macroctic. Break ful dalam tinggi inovasi. Lihat sekarang beli sekarang. . Dohet Barbro Isaksson. Peringatan Pemicu Mivi. Engen milikmu. YouTuber. Ketaatan geng. Kawaii",
+        "readMore": "Baca selengkapnya",
+        "photo": "Foto",
+        "workingHour": "Jam kerja",
+        "address": "Alamat",
+        "bookAppointment": "Janji temu buku"
+    },
+    "mainReviewScreen": {
+        "review": "Tinjauan"
+    },
+    "scheduleScreen": {
+        "schedule": "Jadwal",
+        "date": "Pilih Tanggal",
+        "slot": "Slot yang tersedia",
+        "Continue": "MELANJUTKAN"
+    },
+    "confirmationScreen": {
+        "confirmation": "Konfirmasi",
+        "date": "Tanggal",
+        "time": "Waktu",
+        "mobile": "Nomor telepon",
+        "notes": "Catatan Anda",
+        "writeService": "Tulis layanan khusus Anda di sini",
+        "specialist": "Spesialis",
+        "CouponCode": "Terapkan kode kupon",
+        "totalPay": "Total Pay/",
+        "total": "Total Pay",
+        "confirm": "Mengonfirmasi"
+    },
+    "paymentMethodScreen": {
+        "paymentMethod": "Pilih metode pembayaran",
+        "thankYou": "Terima kasih",
+        "description": "Tribur Prokotta. Macaw. Mytotype gigi. Transparansi Tresirade. Tibel. Inovasi masuk. Fobia Keuangan TV Wall-TV. Taman Ilmu Penggemar.",
+        "backHome": "Kembali ke rumah",
+        "name": "Nama pemegang kartu",
+        "cardNo": "Nomor kartu",
+        "enterName": "Masukkan Nama Pemegang Kartu Anda",
+        "enterCard": "Masukkan Nomor Kartu Anda",
+        "expiryDate": "Tanggal kadaluarsa",
+        "enterCvv": "Kode CVV",
+        "payment": "Pembayaran",
+        "payWith": "Bayar dengan Google Pay",
+        "upi": "Masukkan UPI Pin",
+        "email": "Masukkan ID Email"
+    },
+    "nearByScreen": {
+        "nearByYou": "Dekat denganmu",
+        "nearestSalon": "Cari salon terdekat Anda",
+        "search": "Mencari"
+    },
+    "bookingScreen": {
+        "ongoing": "Sedang berlangsung",
+        "history": "Sejarah",
+        "booking": "Pemesanan",
+        "upcomingBooking": "Lihat pemesanan Anda yang akan datang"
+    },
+    "ongoingScreen": {
+        "getDirection": "Dapatkan arah",
+        "cancel": "Membatalkan",
+        "areYouSure": "Apakah Anda yakin ingin membatalkan janji temu?",
+        "yes": "YA",
+        "no": "TIDAK"
+    },
+    "ongoingDetail": {
+        "date": "Tanggal",
+        "time": "Waktu",
+        "mobile": "Nomor telepon",
+        "specialist": "Spesialis",
+        "totalPay": "Total pembayaran",
+        "rebooking": "Pesan ulang"
+    },
+    "historyScreen": {
+        "getDetail": "Dapatkan detail",
+        "remove": " Hapus dari riwayat.",
+        "noBooking": "Belum ada pemesanan"
+    },
+    "historyDetailScreen": {
+        "date": "Tanggal",
+        "time": "Waktu",
+        "mobile": "Nomor telepon",
+        "specialist": "Spesialis",
+        "totalPay": "Total pembayaran",
+        "giveRate": "Memberi tingkat",
+        "yourReview": "Ulasan Anda",
+        "aboutSalon": "Apa yang Anda rasakan tentang salon ini?",
+        "saySomething": "Katakan sesuatu",
+        "submit": "Kirim"
+    },
+    "profileScreen": {
+        "profile": "Profil",
+        "account": "Akun saya",
+        "chat": "Mengobrol",
+        "favorite": "Favorit",
+        "languages": "Bahasa",
+        "notification": "Pengaturan pemberitahuan",
+        "invite": "Mengundang teman-teman",
+        "coupon": "Kupon Anda",
+        "termsOfService": "Ketentuan Layanan",
+        "logout": "Keluar",
+        "areYouSure": "Apakah Anda yakin ingin keluar?",
+        "cancel": "Membatalkan",
+        "help": "Bantuan & Dukungan"
+    },
+    "accountScreen": {
+        "account": "Akun saya",
+        "name": "Nama lengkap",
+        "EnterName": "Masukkan nama lengkapmu",
+        "email": "ID Email",
+        "EnterEmail": "Masukkan ID Email Anda",
+        "mobile": "Nomor telepon",
+        "EnterMobile": "Masukkan nomor telepon Anda",
+        "update": "MEMPERBARUI",
+        "successfully": "Profil berhasil diperbarui !!",
+        "ok": "Oke",
+        "changeProfile": "Ubah foto profil",
+        "camera": "Kamera",
+        "gallery": "Galeri",
+        "remove": "Hapus gambar",
+        "removeImage": "Foto profil dihapus."
+    },
+    "chatScreen": {
+        "chat": "Mengobrol",
+        "search": "Mencari",
+        "nice": "Oh, sangat bagus"
+    },
+    "messageScreen": {
+        "typeHere": "Ketik teks Anda di sini ...."
+    },
+    "favoriteScreen": {
+        "favorite": "Favorit",
+        "empty": "Daftar favorit kosong",
+        "remove": " Hapus dari favorit."
+    },
+    "languageScreen": {
+        "languages": "Bahasa"
+
+    },
+    "settingScreen": {
+        "settings": "Pengaturan pemberitahuan",
+        "notification": "Pemberitahuan",
+        "location": "Lokasi",
+        "darkMode": "Mode gelap",
+        "appUpdate": "Pembaruan Aplikasi"
+    },
+    "inviteFriendScreen": {
+        "invite": "Mengundang teman-teman",
+        "description": "Undang lebih dari 20 teman untuk menginstal aplikasi kecantikan dan Anda mendapatkan kupon diskon",
+        "copy": "Salinan",
+        "toastCopy": "Disalin",
+        "typeHere": "Ketik teks Anda di sini ....",
+        "send": "Kirim undangan"
+    },
+    "couponScreen": {
+        "yourCoupons": "Kupon Anda",
+        "onAllHair": "Pada semua potongan rambut",
+        "couponValid": "Kupon Valid 25 Juni",
+        "onHairTreatment": "Tentang perawatan rambut",
+        "getDiscount": "Dapatkan diskon",
+        "congratulation": "Selamat Anda mendapatkan diskon $5 pada semua jenis potong rambut",
+        "valid": "(Berlaku mulai 3 Agustus 2022)",
+        "apply": "Berlaku"
+    },
+    "termsOfServicesScreen": {
+        "termsOfService": "Ketentuan Layanan",
+        "terms": "Syarat Penggunaan",
+        "mainDescription": "Lorem sangat wortel, pengembang sarjana tomat. Nam Nibh Care at Hate Integer membutuhkan protein. Seperti diam atau wilayah. Malesuada sekarang rentang tarik besok tawa. Sayangku sekarang, Egestas protein quiver nutrisi. Perencanaan Nibh Maecenas Sit Malesuada DUI adalah museum mus.lorem wortel, pengembang sarjana yang ditingkatkan. Nam Nibh Care at Hate Integer membutuhkan protein. Seperti diam atau wilayah. Malesuada sekarang rentang tarik besok tawa. Sayangku sekarang, Egestas protein quiver nutrisi. Nibh Maecenas Perencanaan Sit Malesuada DUI adalah tikus.",
+        "subDecription": "Lorem sangat wortel, pengembang sarjana tomat. Nam Nibh Care at Hate Integer membutuhkan protein. Seperti diam atau wilayah. Malesuada sekarang rentang tarik besok tawa. Sayangku sekarang, Egestas protein quiver nutrisi. Nibh Maecenas Perencanaan Sit Malesuada DUI adalah tikus.",
+        "privacy": "Kebijakan pribadi"
+    },
+    "helpSupportScreen": {
+        "helpSupport": "Bantuan & Dukungan",
+        "name": "Nama",
+        "enterName": "Masukkan nama Anda",
+        "email": "Alamat email",
+        "enterEmail": "Masukkan alamat email Anda",
+        "message": "Pesan",
+        "writeMessage": "Tulis pesan di sini",
+        "submit": "Kirim"
+    },
+    "notificationScreen": {
+        "notification": "Pemberitahuan",
+        "appointment": "Janji temu baru",
+        "remind": "Untuk mengingatkan",
+        "booking": "Pemesanan selesai",
+        "description1": "Memesan janji temu Anda pada 21 Juni 2022 di Lee Nails and Makeover.",
+        "description2": "Janji temu hari ini adalah pukul 9.00 pagi di Teasesalon Besar",
+        "description3": "Pemesanan Anda di Salon J.J Shah telah selesai. Tolong bagikan pengalaman Anda.",
+        "today": "Hari ini",
+        "yesterday": "Kemarin",
+        "2minAgo": "2 menit yang lalu",
+        "noNotification": "Belum ada pemberitahuan"
+    },
+    "searchScreen": {
+        "search": "Mencari",
+        "searchYour": "Cari salon Anda"
+    },
+    "filterBottomSheet": {
+        "filter": "Saring",
+        "ratting": "Ratting",
+        "price": "Harga",
+        "category": "kategori",
+        "distance": "Jarak",
+        "reset": "MENGATUR ULANG"
+    },
+    "topTabDetails": {
+        "services": "Jasa",
+        "information": "Informasi",
+        "review": "Tinjauan"
+    },
+    "detailScreen": {
+        "open": "Membuka"
+    },
+    "bookAppointmentScreen": {
+        "selectSpecialists": "Pilih Spesialis",
+        "Continue": "MELANJUTKAN"
+    },
+    "loader": {
+        "pleaseWait": "Mohon tunggu"
+    }
+}
