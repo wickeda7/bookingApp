@@ -16,7 +16,7 @@ const LoginScreen = (props) => {
 
   const isRtl = i18n.dir() == 'rtl';
 
-  const { loading, facebookLogin, googleLogin, logout, userData, loggedIn, phoneLogin, setPhoneNumber, phoneNumber } =
+  const { loading, facebookLogin, promptAsync, logout, userData, loggedIn, phoneLogin, setPhoneNumber, phoneNumber } =
     useAuthContext();
 
   function tr(key) {
@@ -220,7 +220,7 @@ const LoginScreen = (props) => {
               backgroundColor: Colors.red,
               ...Default.shadow,
             }}
-            onPress={() => googleLogin()}
+            onPress={() => promptAsync()}
           >
             <Ionicons
               name='logo-google'

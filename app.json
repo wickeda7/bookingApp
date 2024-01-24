@@ -27,6 +27,12 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "scheme": "bookingApp",
+    "extra": {
+      "eas": {
+        "projectId": "a6f4e729-267d-4ad8-9b50-1cec72e188b6"
+      }
     }
   }
 }
