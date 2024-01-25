@@ -22,17 +22,32 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.wickeda7.bookingApp"
+      "bundleIdentifier": "com.wickeda7.bookingApp",
+      "infoPlist": {
+        "SKAdNetworkItems": [
+          {
+            "SKAdNetworkIdentifier": "v9wttpbfk9.skadnetwork"
+          },
+          {
+            "SKAdNetworkIdentifier": "n38lu8286q.skadnetwork"
+          }
+        ]
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.wickeda7.bookingApp"
+      "package": "com.wickeda7.bookingApp",
+      "permissions": [
+        "android.permission.INTERNET"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -40,7 +55,7 @@
     "scheme": "bookingapp",
     "extra": {
       "eas": {
-        "projectId": "a6f4e729-267d-4ad8-9b50-1cec72e188b6"
+        "projectId": "79594082-941a-4056-b601-e3bbf3b902ae"
       }
     }
   }

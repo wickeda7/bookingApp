@@ -1,4 +1,4 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.wickeda7.bookingApp">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
   <uses-permission android:name="android.permission.INTERNET"/>
   <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
   <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
@@ -31,9 +31,9 @@
         <action android:name="android.intent.action.VIEW"/>
         <category android:name="android.intent.category.DEFAULT"/>
         <category android:name="android.intent.category.BROWSABLE"/>
+        <data android:scheme="bookingapp"/>
         <data android:scheme="com.wickeda7.bookingApp"/>
         <data android:scheme="exp+bookingapp"/>
-        <data android:scheme="bookingApp"/>
         <data android:scheme="fb1403305993896132"/>
       </intent-filter>
     </activity>
