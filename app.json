@@ -15,6 +15,14 @@
           "displayName": "Booking App",
           "scheme": "fb1403305993896132"
         }
+      ],
+      [
+        "expo-build-properties",
+        {
+          "ios": {
+            "useFrameworks": "static"
+          }
+        }
       ]
     ],
     "splash": {
@@ -22,9 +30,7 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.wickeda7.bookingApp",
@@ -45,9 +51,7 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.wickeda7.bookingApp",
-      "permissions": [
-        "android.permission.INTERNET"
-      ]
+      "permissions": ["android.permission.INTERNET"]
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -55,7 +59,7 @@
     "scheme": "bookingapp",
     "extra": {
       "eas": {
-        "projectId": "79594082-941a-4056-b601-e3bbf3b902ae"
+        "projectId": "46bb83bd-ab64-48cb-9df4-1ff2944f36c9"
       }
     }
   }

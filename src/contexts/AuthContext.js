@@ -18,13 +18,14 @@ import { AccessToken, LoginManager, Settings } from 'react-native-fbsdk-next';
 import { appFirebase } from '../utils/firebaseConfig';
 
 WebBrowser.maybeCompleteAuthSession();
-const auth = getAuth(appFirebase);
+
 const AuthContext = createContext({});
 
 const AuthContextProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
   const [loggedIn, setLoggedIn] = useState(null);
   const [userData, setUserData] = useState(null);
+  const auth = getAuth(appFirebase);
   const [request, response, promptAsync] = Google.useAuthRequest({
     androidClientId: ANDROIDCLIENTID,
     iosClientId: IOSCLIENTID,
@@ -36,8 +37,6 @@ const AuthContextProvider = ({ children }) => {
 
   // verification code (OTP - One-Time-Passcode)
   const [code, setCode] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('6266754894');
-  const countryCode = '+1';
 
   useEffect(() => {
     const unSub = onAuthStateChanged(auth, async (user) => {
@@ -82,12 +81,6 @@ const AuthContextProvider = ({ children }) => {
     return JSON.parse(data);
   };
 
-  const phoneLogin = async () => {
-    // console.log('phoneLogin', countryCode + phoneNumber);
-    // const confirmation = await auth().signInWithPhoneNumber(countryCode + phoneNumber);
-    // console.log('confirmation', confirmation);
-    // setConfirm(confirmation);
-  };
   const confirmCode = async (code) => {
     // try {
     //   await confirm.confirm(code);
@@ -121,13 +114,13 @@ const AuthContextProvider = ({ children }) => {
   };
   const value = {
     loading,
+    setLoading,
     loggedIn,
     logout,
+    setUserData,
     userData,
     facebookLogin,
-    phoneLogin,
-    setPhoneNumber,
-    phoneNumber,
+    auth,
     confirmCode,
     promptAsync,
   };

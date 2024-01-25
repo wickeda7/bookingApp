@@ -10,14 +10,13 @@ import MyStatusBar from '@components/myStatusBar';
 import Toast from 'react-native-root-toast';
 import { useAuthContext } from '@contexts/AuthContext';
 import { use } from 'i18next';
-
+import PhoneAuth from './phoneAuth';
 const LoginScreen = (props) => {
   const { t, i18n } = useTranslation();
 
   const isRtl = i18n.dir() == 'rtl';
 
-  const { loading, facebookLogin, promptAsync, logout, userData, loggedIn, phoneLogin, setPhoneNumber, phoneNumber } =
-    useAuthContext();
+  const { loading, facebookLogin, promptAsync, logout, userData, loggedIn } = useAuthContext();
 
   function tr(key) {
     return t(`loginScreen:${key}`);
@@ -59,32 +58,6 @@ const LoginScreen = (props) => {
 
   const [visible, setVisible] = useState(false);
 
-  const handleLogin = () => {
-    // if (phoneNumber.length !== 10) {
-    //   Toast.show(tr('enterValid'), {
-    //     duration: Toast.durations.SHORT,
-    //     position: Toast.positions.BOTTOM,
-    //     shadow: true,
-    //     animation: true,
-    //     hideOnPress: true,
-    //     delay: 0,
-    //     backgroundColor: Colors.black,
-    //     textColor: Colors.white,
-    //   });
-    //   return;
-    // }
-    //props.navigation.navigate('otpScreen');
-    phoneLogin();
-
-    // setVisible(true);
-    // setTimeout(() => {
-    //   setVisible(false);
-    //   props.navigation.navigate('registerScreen');
-    // }, 1500);
-  };
-  const handlePhone = (number) => {
-    setPhoneNumber(number.unmaskedPhoneNumber);
-  };
   return (
     <View style={{ flex: 1 }}>
       <MyStatusBar />
@@ -116,61 +89,10 @@ const LoginScreen = (props) => {
         >
           {tr('login')}
         </Text>
-        <Text
-          style={{
-            ...Fonts.Grey16Medium,
-            textAlign: 'center',
-            marginBottom: Default.fixPadding,
-          }}
-        >
-          {tr('pleaseEnter')}
-        </Text>
+        <PhoneAuth />
 
-        <IntlPhoneInput
-          placeholder={tr('mobile')}
-          defaultCountry='US'
-          disableCountryChange={true}
-          containerStyle={{
-            ...Fonts.Black15Medium,
-            alignItems: 'center',
-            marginHorizontal: Default.fixPadding * 2,
-            marginVertical: Default.fixPadding * 1.5,
-            borderRadius: 10,
-            backgroundColor: Colors.white,
-            ...Default.shadow,
-          }}
-          phoneInputStyle={{
-            textAlign: isRtl ? 'right' : 'left',
-            paddingHorizontal: Default.fixPadding * 0.5,
-            borderLeftWidth: 2,
-            borderLeftColor: Colors.lightGrey,
-          }}
-          onChangeText={(text) => handlePhone(text)}
-        />
-        <Text
-          style={{
-            ...Fonts.Primary15Medium,
-            marginHorizontal: Default.fixPadding * 2,
-            marginBottom: Default.fixPadding,
-          }}
-        >
-          {tr('verification')}
-        </Text>
         <Loader visible={visible} />
-        <TouchableOpacity
-          onPress={handleLogin}
-          style={{
-            alignItems: 'center',
-            justifyContent: 'center',
-            margin: Default.fixPadding * 2,
-            paddingVertical: Default.fixPadding,
-            borderRadius: 10,
-            backgroundColor: Colors.primary,
-            ...Default.shadow,
-          }}
-        >
-          <Text style={Fonts.White18Bold}>{tr('login')}</Text>
-        </TouchableOpacity>
+
         <Text
           style={{
             ...Fonts.Grey16Medium,
