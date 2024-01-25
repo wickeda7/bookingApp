@@ -1,17 +1,21 @@
 import { createContext, useEffect, useState, useContext } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { ANDROIDCLIENTID, IOSCLIENTID } from '@env';
+import { ANDROIDCLIENTID, IOSCLIENTID, FBAPPID } from '@env';
 
-//import { AccessToken, LoginManager } from 'react-native-fbsdk-next';
 import * as WebBrowser from 'expo-web-browser';
 import * as Google from 'expo-auth-session/providers/google';
-import { GoogleAuthProvider, signInWithCredential, getAuth, signOut, onAuthStateChanged } from 'firebase/auth';
-import { appFirebase } from '../utils/firebaseConfig';
-import { use } from 'i18next';
-////import { GoogleSignin } from '@react-native-google-signin/google-signin';
-//import auth from '@react-native-firebase/auth';
+import {
+  GoogleAuthProvider,
+  FacebookAuthProvider,
+  signInWithCredential,
+  getAuth,
+  signOut,
+  onAuthStateChanged,
+} from 'firebase/auth';
 
-//GoogleSignin.configure({ webClientId: ANDROIDCLIENTID });
+import { AccessToken, LoginManager, Settings } from 'react-native-fbsdk-next';
+
+import { appFirebase } from '../utils/firebaseConfig';
 
 WebBrowser.maybeCompleteAuthSession();
 const auth = getAuth(appFirebase);
@@ -41,6 +45,7 @@ const AuthContextProvider = ({ children }) => {
         setUserData(user);
         setLoggedIn(true);
         await AsyncStorage.setItem('@user', JSON.stringify(user));
+        // FB and Google user.reloadUserInfo store DB
         console.log('onAuthStateChanged', user);
       } else {
         setLoggedIn(false);
@@ -57,11 +62,13 @@ const AuthContextProvider = ({ children }) => {
 
   const handleEffect = async () => {
     const user = await getLocalUser();
+    console.log('handleEffect getLocalUser', user);
     if (!user) {
+      console.log(' handleEffect response', response);
       if (response?.type === 'success') {
         const { id_token } = response.params;
         const credential = GoogleAuthProvider.credential(id_token);
-        const googleUser = await signInWithCredential(auth, credential);
+        await signInWithCredential(auth, credential);
       }
     } else {
       setUserData(user);
@@ -89,36 +96,20 @@ const AuthContextProvider = ({ children }) => {
     //   console.log('Invalid code.');
     // }
   };
-  const googleLogin = async () => {
-    // // Check if your device supports Google Play
-    // await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
-    // // Get the users ID token
-    // const { idToken } = await GoogleSignin.signIn();
-    // // Create a Google credential with the token
-    // const googleCredential = auth.GoogleAuthProvider.credential(idToken);
-    // // Sign-in the user with the credential
-    // return auth().signInWithCredential(googleCredential);
-  };
+
   const facebookLogin = async () => {
-    // try {
-    //   setLoading(true);
-    //   const result = await LoginManager.logInWithPermissions(['public_profile', 'email']);
-    //   if (result.isCancelled) {
-    //     throw 'User cancelled the login process';
-    //   }
-    //   // Once signed in, get the users AccesToken
-    //   const data = await AccessToken.getCurrentAccessToken();
-    //   // console.log("provider ",facebookAuthProvider);
-    //   if (!data) {
-    //     throw 'Something went wrong obtaining access token';
-    //   }
-    //   const facebookCredential = auth.FacebookAuthProvider.credential(data.accessToken);
-    //   return auth().signInWithCredential(facebookCredential);
-    // } catch (error) {
-    //   console.log('error', error);
-    //   setLoading(false);
-    //   setLoggedIn(false);
-    // }
+    Settings.initializeSDK();
+    Settings.setAppID(FBAPPID);
+    const result = await LoginManager.logInWithPermissions(['public_profile', 'email']);
+    if (result.isCancelled) {
+      throw 'User cancelled the login process';
+    }
+    const data = await AccessToken.getCurrentAccessToken();
+    if (!data) {
+      throw 'Something went wrong obtaining access token';
+    }
+    const facebookCredential = FacebookAuthProvider.credential(data.accessToken);
+    signInWithCredential(auth, facebookCredential);
   };
 
   const logout = async () => {
@@ -134,7 +125,6 @@ const AuthContextProvider = ({ children }) => {
     logout,
     userData,
     facebookLogin,
-    googleLogin,
     phoneLogin,
     setPhoneNumber,
     phoneNumber,

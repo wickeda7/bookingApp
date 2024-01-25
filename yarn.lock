@@ -3791,21 +3791,21 @@ expo-crypto@~12.8.0:
   dependencies:
     base64-js "^1.3.0"
 
-expo-dev-client@~3.3.6:
-  version "3.3.6"
-  resolved "https://registry.yarnpkg.com/expo-dev-client/-/expo-dev-client-3.3.6.tgz#2d7a090126919309c61421d8a2bfd669f376a23b"
-  integrity sha512-0MceeNbci/ioncesLscLyH5hIBbsF/zrCo3e3Tn5qoa/Np5XZU4V+2dJ9eqgHjD7R0BTF93Em7diYOJVqzWutg==
+expo-dev-client@~3.3.7:
+  version "3.3.7"
+  resolved "https://registry.yarnpkg.com/expo-dev-client/-/expo-dev-client-3.3.7.tgz#3d1fab382d5fb0d7670025e6d05ff3ec9cccd2c9"
+  integrity sha512-dsucMzezNuP7zxSxYi1EbIA16j491tD9joUlGlpvBW1IylxUmbPraOqUqdXsDxRIAJh5HgJx/8X03Xoo1j7YKw==
   dependencies:
-    expo-dev-launcher "3.6.3"
-    expo-dev-menu "4.5.4"
+    expo-dev-launcher "3.6.4"
+    expo-dev-menu "4.5.5"
     expo-dev-menu-interface "1.7.2"
     expo-manifests "~0.13.0"
     expo-updates-interface "~0.15.1"
 
-expo-dev-launcher@3.6.3:
-  version "3.6.3"
-  resolved "https://registry.yarnpkg.com/expo-dev-launcher/-/expo-dev-launcher-3.6.3.tgz#cdd930b9107833d0fe48db8d9cb33c7e0f7e9140"
-  integrity sha512-mXg38bXq9BzDG67TwmG7RbUwplzVVRWzY6wTK8ckFdpPv8woWo6PJ+iDaLaSAgVTAP8I4oouv9vcX6fjV5WMwg==
+expo-dev-launcher@3.6.4:
+  version "3.6.4"
+  resolved "https://registry.yarnpkg.com/expo-dev-launcher/-/expo-dev-launcher-3.6.4.tgz#d8b980b7faff8176e83685211871ffa1acdd8d35"
+  integrity sha512-i5NGm2QeVl7ePk9nyvW1hAEg29FRMltNNEkRiK/AF77ObrD0YG/FhhidQL8C/SIIm/3RcsjAiw4buF5QRoieKg==
   dependencies:
     ajv "8.11.0"
     expo-dev-menu "4.5.4"
@@ -3822,6 +3822,14 @@ expo-dev-menu@4.5.4:
   version "4.5.4"
   resolved "https://registry.yarnpkg.com/expo-dev-menu/-/expo-dev-menu-4.5.4.tgz#e529d5f1e1615acfb7c750077eef620feded45b0"
   integrity sha512-TLCfXKI7r5PJpMKUcslKz9J7tChdYdm6DmOEYwFQC3OLcegXzCT/H92WfTdVXU+xz5XYTcyvnIZQa7/d2Ig90g==
+  dependencies:
+    expo-dev-menu-interface "1.7.2"
+    semver "^7.5.3"
+
+expo-dev-menu@4.5.5:
+  version "4.5.5"
+  resolved "https://registry.yarnpkg.com/expo-dev-menu/-/expo-dev-menu-4.5.5.tgz#c010b158f448c2544bc1ba00486e6eaeaeab0114"
+  integrity sha512-PcbI/SqAvueOIEtR1O0s+WvVD7yizQSqXisDSkBrTym3u8XZSN+K730kz2Z64ukY9YIPG4qWR4sd+9rcjsbMWw==
   dependencies:
     expo-dev-menu-interface "1.7.2"
     semver "^7.5.3"
@@ -3901,10 +3909,18 @@ expo-updates-interface@~0.15.1:
   resolved "https://registry.yarnpkg.com/expo-updates-interface/-/expo-updates-interface-0.15.3.tgz#cdee536dea0a8692833a4d074005bf9c6bbbdd99"
   integrity sha512-uLvsbaCmUsXgJqeen8rYH/jPr874ZUCXEvWpKHxrCv5/XATPlYEaDuecbNSGQ+cu78i6MdtB4BHOwZmoH2d47A==
 
-expo-web-browser@~12.8.0, expo-web-browser@~12.8.1:
+expo-web-browser@~12.8.0:
   version "12.8.1"
   resolved "https://registry.yarnpkg.com/expo-web-browser/-/expo-web-browser-12.8.1.tgz#9f56e70fc16f0508d6e36344f65873ca15920201"
   integrity sha512-1x47xcOor6MRo43P3L65WTaBgsj/346pPA5v+wMb1ePH9XYfuAivKGAnn318q29yGx7VhX8K7WehmJx1muA+8Q==
+  dependencies:
+    compare-urls "^2.0.0"
+    url "^0.11.0"
+
+expo-web-browser@~12.8.2:
+  version "12.8.2"
+  resolved "https://registry.yarnpkg.com/expo-web-browser/-/expo-web-browser-12.8.2.tgz#f34fb85c80031e0dddd4f9b9efd03cb60333b089"
+  integrity sha512-Mw8WoFMSADecNjtC4PZVsVj1/lYdxIAH1jOVV+F8v8SEWYxORWofoShfXg7oUxRLu0iUG8JETfO5y4m8+fOgdg==
   dependencies:
     compare-urls "^2.0.0"
     url "^0.11.0"
@@ -6125,6 +6141,11 @@ react-native-dotenv@^3.4.9:
   integrity sha512-dbyd+mcy7SUzxEgmt33TRf1FGcNe6swJhXmB0unKkI49F7+pidog9kPtjxMLTAfmKA8gcN2XHQSKltGfGbGCLQ==
   dependencies:
     dotenv "^16.3.1"
+
+react-native-fbsdk-next@^12.1.2:
+  version "12.1.2"
+  resolved "https://registry.yarnpkg.com/react-native-fbsdk-next/-/react-native-fbsdk-next-12.1.2.tgz#46ddb91e22b6bda4a9097bdc78209b09878c111a"
+  integrity sha512-N5MgPwFLnLnC73HuvPLoG+KOjYJBnCFKpkbB3A8+AcKh5BrCcGFICtm3q8XXH1FUiQ8l+meQixz1ag1QoTEBig==
 
 react-native-gesture-handler@^2.14.1:
   version "2.14.1"

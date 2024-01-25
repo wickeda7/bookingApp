@@ -6,14 +6,23 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
+    "plugins": [
+      [
+        "react-native-fbsdk-next",
+        {
+          "appID": "1403305993896132",
+          "clientToken": "930bf9c82e1552164349751b77872d90",
+          "displayName": "Booking App",
+          "scheme": "fb1403305993896132"
+        }
+      ]
+    ],
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.wickeda7.bookingApp"
