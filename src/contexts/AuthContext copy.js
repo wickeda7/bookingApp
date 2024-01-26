@@ -16,14 +16,13 @@ import {
 import { AccessToken, LoginManager, Settings } from 'react-native-fbsdk-next';
 
 import { appFirebase } from '../utils/firebaseConfig';
-import { api } from '@api/api';
 
 WebBrowser.maybeCompleteAuthSession();
 
 const AuthContext = createContext({});
 
 const AuthContextProvider = ({ children }) => {
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [loggedIn, setLoggedIn] = useState(null);
   const [userData, setUserData] = useState(null);
   const auth = getAuth(appFirebase);
@@ -36,24 +35,21 @@ const AuthContextProvider = ({ children }) => {
   // If null, no SMS has been sent
   const [confirm, setConfirm] = useState(null);
 
+  // verification code (OTP - One-Time-Passcode)
+  const [code, setCode] = useState('');
+
   useEffect(() => {
     const unSub = onAuthStateChanged(auth, async (user) => {
       if (user) {
-        setLoading(false);
         setUserData(user);
         setLoggedIn(true);
         await AsyncStorage.setItem('@user', JSON.stringify(user));
         // FB and Google user.reloadUserInfo store DB
-        const userInfo = user.reloadUserInfo.providerUserInfo[0];
-        if (userInfo) {
-          updateUserData(userInfo);
-        }
+        console.log('onAuthStateChanged', user);
       } else {
-        setLoading(false);
         setLoggedIn(false);
         setUserData(null);
-
-        //console.log('no onAuthStateChanged');
+        console.log('no onAuthStateChanged');
       }
     });
     return () => unSub();
@@ -63,30 +59,11 @@ const AuthContextProvider = ({ children }) => {
     handleEffect();
   }, [response]);
 
-  const updateUserData = async (user) => {
-    //console.log('onAuthStateChanged', user);
-    const email = user.email ? user.email : user.phoneNumber + '@' + user.providerId + '.com';
-    //console.log('updateUserData email', email);
-    const res = await api.getUser(email);
-    // console.log('updateUserData getUser', res.data);
-    if (!res.data) {
-      const data = {
-        email: email,
-        username: user.displayName,
-        phoneNumber: user.phoneNumber,
-        password: user.phoneNumber,
-        role: 1,
-        firebase: user.providerId,
-      };
-      const res = await api.register(data);
-      // console.log('updateUserData register', res);
-    }
-  };
   const handleEffect = async () => {
     const user = await getLocalUser();
-    //console.log('handleEffect getLocalUser', user);
+    console.log('handleEffect getLocalUser', user);
     if (!user) {
-      // console.log(' handleEffect response', response);
+      console.log(' handleEffect response', response);
       if (response?.type === 'success') {
         const { id_token } = response.params;
         const credential = GoogleAuthProvider.credential(id_token);
@@ -95,7 +72,6 @@ const AuthContextProvider = ({ children }) => {
     } else {
       setUserData(user);
       setLoggedIn(true);
-      setLoading(false);
     }
   };
 
@@ -103,6 +79,15 @@ const AuthContextProvider = ({ children }) => {
     const data = await AsyncStorage.getItem('@user');
     if (!data) return null;
     return JSON.parse(data);
+  };
+
+  const confirmCode = async (code) => {
+    // try {
+    //   await confirm.confirm(code);
+    //   console.log('User signed in successfully');
+    // } catch (error) {
+    //   console.log('Invalid code.');
+    // }
   };
 
   const facebookLogin = async () => {
@@ -136,6 +121,7 @@ const AuthContextProvider = ({ children }) => {
     userData,
     facebookLogin,
     auth,
+    confirmCode,
     promptAsync,
   };
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
