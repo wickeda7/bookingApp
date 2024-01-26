@@ -47,29 +47,10 @@ const AuthContextProvider = ({ children }) => {
         if (userInfo) {
           updateUserData(userInfo);
         }
-
-        //ROLE = 1 = users 3 = technicians 4 = admin
-        // phoneNumber: "+16266754894"
-        // providerId: "phone"
-        // rawId: "+16266754894"
-
-        // displayName: "Hung To"
-        // email: "hungqto@yahoo.com"
-        // federatedId: "10231037695984400"
-        // photoUrl: "https://graph.facebook.com/10231037695984400/picture"
-        // providerId: "facebook.com"
-        // rawId: "10231037695984400"
-
-        //  displayName: "Hung To"
-        // email: "wickedsupergt@gmail.com"
-        // federatedId: "113084141107113266155"
-        // photoUrl: "https://lh3.googleusercontent.com/a/ACg8ocKMFlam0-cS8ZhslAZB2lGiLfPb88qsVLMEdp5DeX5WQA=s96-c"
-        // providerId: "google.com"
-        // rawId: "113084141107113266155"
       } else {
         setLoggedIn(false);
         setUserData(null);
-        console.log('no onAuthStateChanged');
+        //console.log('no onAuthStateChanged');
       }
     });
     return () => unSub();
@@ -80,10 +61,11 @@ const AuthContextProvider = ({ children }) => {
   }, [response]);
 
   const updateUserData = async (user) => {
-    console.log('onAuthStateChanged', user);
-    const email = user.email ? user.email : user.phoneNumber + '@' + providerId + '.com';
+    //console.log('onAuthStateChanged', user);
+    const email = user.email ? user.email : user.phoneNumber + '@' + user.providerId + '.com';
+    //console.log('updateUserData email', email);
     const res = await api.getUser(email);
-    console.log('updateUserData getUser', res.data);
+    // console.log('updateUserData getUser', res.data);
     if (!res.data) {
       const data = {
         email: email,
@@ -94,14 +76,14 @@ const AuthContextProvider = ({ children }) => {
         firebase: user.providerId,
       };
       const res = await api.register(data);
-      console.log('updateUserData register', res);
+      // console.log('updateUserData register', res);
     }
   };
   const handleEffect = async () => {
     const user = await getLocalUser();
-    console.log('handleEffect getLocalUser', user);
+    //console.log('handleEffect getLocalUser', user);
     if (!user) {
-      console.log(' handleEffect response', response);
+      // console.log(' handleEffect response', response);
       if (response?.type === 'success') {
         const { id_token } = response.params;
         const credential = GoogleAuthProvider.credential(id_token);
@@ -117,15 +99,6 @@ const AuthContextProvider = ({ children }) => {
     const data = await AsyncStorage.getItem('@user');
     if (!data) return null;
     return JSON.parse(data);
-  };
-
-  const confirmCode = async (code) => {
-    // try {
-    //   await confirm.confirm(code);
-    //   console.log('User signed in successfully');
-    // } catch (error) {
-    //   console.log('Invalid code.');
-    // }
   };
 
   const facebookLogin = async () => {
@@ -159,7 +132,6 @@ const AuthContextProvider = ({ children }) => {
     userData,
     facebookLogin,
     auth,
-    confirmCode,
     promptAsync,
   };
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

@@ -30,8 +30,8 @@ yarn-error.*
 
 # local env files
 .env*.local
-/ios
-/android
+ios/
+android/
 # typescript
 *.tsbuildinfo
 

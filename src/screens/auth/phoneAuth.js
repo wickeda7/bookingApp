@@ -17,14 +17,12 @@ const PhoneAuth = () => {
   function tr(key) {
     return t(`loginScreen:${key}`);
   }
-  const { loading, setLoading, setUserData, auth } = useAuthContext();
-  const [phoneNumber, setPhoneNumber] = useState('6266754894');
+  const { setLoading, auth } = useAuthContext();
+  const [phoneNumber, setPhoneNumber] = useState('');
   const recaptchaVerifier = useRef(null);
   const [isVerifying, setIsVerifying] = useState(false);
   const [confirmationResult, setConfirmationResult] = useState(null);
 
-  const [verificationId, setVerificationId] = useState();
-  const [verificationCode, setVerificationCode] = useState();
   const countryCode = '+1';
 
   const [message, showMessage] = useState();
@@ -34,11 +32,11 @@ const PhoneAuth = () => {
 
   const handleVerify = async () => {
     if (code.length !== 6) return;
-    console.log('handleVerify', confirmationResult);
+    // console.log('handleVerify', confirmationResult);
     if (confirmationResult) {
       try {
         const userCredential = await confirmationResult.confirm(code);
-        console.log('handleVerify userCredential', userCredential);
+        //console.log('handleVerify userCredential', userCredential);
         setLoading(true);
       } catch (error) {
         setVerificationWrong(true);
@@ -63,11 +61,11 @@ const PhoneAuth = () => {
 
     // props.navigation.navigate('otpScreen');
     try {
-      console.log('phoneLogin', countryCode + phoneNumber);
+      // console.log('phoneLogin', countryCode + phoneNumber);
       const result = await signInWithPhoneNumber(auth, countryCode + phoneNumber, recaptchaVerifier.current);
       setConfirmationResult(result);
       setIsVerifying(true);
-      console.log('verificationId', result);
+      //console.log('verificationId', result);
     } catch (error) {
       console.log('phoneLogin', error);
     }
