@@ -22,6 +22,7 @@ const PhoneAuth = () => {
   const recaptchaVerifier = useRef(null);
   const [isVerifying, setIsVerifying] = useState(false);
   const [confirmationResult, setConfirmationResult] = useState(null);
+  const [verificationWrong, setVerificationWrong] = useState(false);
 
   const countryCode = '+1';
 
@@ -29,7 +30,7 @@ const PhoneAuth = () => {
   const attemptInvisibleVerification = false;
   // verification code (OTP - One-Time-Passcode)
   const [code, setCode] = useState('');
-
+  console.log('verificationWrong', verificationWrong);
   const handleVerify = async () => {
     if (code.length !== 6) return;
     // console.log('handleVerify', confirmationResult);
@@ -39,7 +40,16 @@ const PhoneAuth = () => {
         //console.log('handleVerify userCredential', userCredential);
         setLoading(true);
       } catch (error) {
-        setVerificationWrong(true);
+        Toast.show(tr('enterValid'), {
+          duration: Toast.durations.SHORT,
+          position: Toast.positions.BOTTOM,
+          shadow: true,
+          animation: true,
+          hideOnPress: true,
+          delay: 0,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+        });
       }
     }
   };
@@ -53,7 +63,7 @@ const PhoneAuth = () => {
         animation: true,
         hideOnPress: true,
         delay: 0,
-        backgroundColor: Colors.black,
+        backgroundColor: Colors.red,
         textColor: Colors.white,
       });
       return;

@@ -1,10 +1,10 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import React, { useState } from 'react';
 import { Default, Fonts, Colors } from '@constants/style';
-import IntlPhoneInput from 'react-native-intl-phone-input';
 import { useTranslation } from 'react-i18next';
 import { formatPhoneNumber } from '@utils/helper';
 import OTPTextView from 'react-native-otp-textinput';
+import Toast from 'react-native-root-toast';
 
 const Verify = ({ phoneLogin, phoneNumber, setCode, handleVerify }) => {
   const { t, i18n } = useTranslation();

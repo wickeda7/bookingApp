@@ -39,11 +39,6 @@ const AuthContextProvider = ({ children }) => {
   useEffect(() => {
     const unSub = onAuthStateChanged(auth, async (user) => {
       if (user) {
-        setLoading(false);
-        setUserData(user);
-        setLoggedIn(true);
-        await AsyncStorage.setItem('@user', JSON.stringify(user));
-        // FB and Google user.reloadUserInfo store DB
         const userInfo = user.reloadUserInfo.providerUserInfo[0];
         if (userInfo) {
           updateUserData(userInfo);
@@ -52,8 +47,6 @@ const AuthContextProvider = ({ children }) => {
         setLoading(false);
         setLoggedIn(false);
         setUserData(null);
-
-        //console.log('no onAuthStateChanged');
       }
     });
     return () => unSub();
@@ -64,11 +57,10 @@ const AuthContextProvider = ({ children }) => {
   }, [response]);
 
   const updateUserData = async (user) => {
-    //console.log('onAuthStateChanged', user);
+    setLoading(true);
     const email = user.email ? user.email : user.phoneNumber + '@' + user.providerId + '.com';
-    //console.log('updateUserData email', email);
     const res = await api.getUser(email);
-    // console.log('updateUserData getUser', res.data);
+    console.log('updateUserData getUser', res.data);
     if (!res.data) {
       const data = {
         email: email,
@@ -79,8 +71,16 @@ const AuthContextProvider = ({ children }) => {
         firebase: user.providerId,
       };
       const res = await api.register(data);
-      // console.log('updateUserData register', res);
+      await AsyncStorage.setItem('@user', JSON.stringify(res.data.user));
+      setUserData(res.data.user);
+
+      console.log('updateUserData register', res);
+    } else {
+      await AsyncStorage.setItem('@user', JSON.stringify(res.data));
+      setUserData(res.data);
     }
+    setLoggedIn(true);
+    setLoading(false);
   };
   const handleEffect = async () => {
     const user = await getLocalUser();

@@ -8,6 +8,7 @@ import AuthContextProvider from '@contexts/AuthContext';
 import SplashScreen from '@screens/splashScreen';
 import AuthStack from '@navigation/AuthStack';
 import BottomTab from '@navigation/bottomTab';
+import UserStack from '@navigation/UserStack';
 
 import i18n from '@languages/index';
 const Stack = createStackNavigator();
@@ -24,6 +25,7 @@ const MainNavigation = () => {
           <Stack.Screen name='splashScreen' component={SplashScreen} options={{ headerShown: false }} />
           <Stack.Screen name='AuthStack' component={AuthStack} options={{ headerShown: false }} />
           <Stack.Screen name='BottomTab' component={BottomTab} options={{ headerShown: false }} />
+          <Stack.Screen name='UserStack' component={UserStack} options={{ headerShown: false }} />
         </Stack.Navigator>
       </AuthContextProvider>
     </NavigationContainer>

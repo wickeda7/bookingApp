@@ -16,7 +16,7 @@ const LoginScreen = (props) => {
 
   const isRtl = i18n.dir() == 'rtl';
 
-  const { loading, facebookLogin, promptAsync, logout, userData, loggedIn } = useAuthContext();
+  const { facebookLogin, promptAsync, logout, userData, loggedIn, verificationWrong } = useAuthContext();
 
   function tr(key) {
     return t(`loginScreen:${key}`);
@@ -33,9 +33,20 @@ const LoginScreen = (props) => {
       textColor: Colors.white,
     });
   };
-  useEffect(() => {
-    //console.log('loading', loading);
-  }, []);
+
+  console.log('verificationWrong', verificationWrong);
+  if (verificationWrong) {
+    Toast.show('Please enter the correct code', {
+      duration: Toast.durations.SHORT,
+      position: Toast.positions.BOTTOM,
+      shadow: true,
+      animation: true,
+      hideOnPress: true,
+      delay: 0,
+      backgroundColor: Colors.black,
+      textColor: Colors.white,
+    });
+  }
 
   const [exitApp, setExitApp] = useState(0);
   const backAction = () => {
@@ -151,7 +162,7 @@ const LoginScreen = (props) => {
             justifyContent: 'space-around',
           }}
         >
-          <TouchableOpacity
+          {/* <TouchableOpacity
             style={{
               flexDirection: 'row',
               justifyContent: 'center',
@@ -185,7 +196,7 @@ const LoginScreen = (props) => {
             onPress={() => logout()}
           >
             <Text style={Fonts.White18Bold}>LOUGOUT</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
       </ScrollView>
     </View>

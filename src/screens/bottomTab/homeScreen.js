@@ -5,7 +5,7 @@ import Octicons from 'react-native-vector-icons/Octicons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useTranslation } from 'react-i18next';
 import MyStatusBar from '@components/myStatusBar';
-
+import { useAuthContext } from '@contexts/AuthContext';
 const HomeScreen = (props) => {
   const { t, i18n } = useTranslation();
 
@@ -14,7 +14,9 @@ const HomeScreen = (props) => {
   function tr(key) {
     return t(`homeScreen:${key}`);
   }
-
+  const { userData, logout } = useAuthContext();
+  console.log('userData', userData);
+  const name = userData.username ? userData.username : '';
   const dataList = [
     {
       key: '1',
@@ -106,9 +108,9 @@ const HomeScreen = (props) => {
           <View style={{ flex: 9 }}>
             <View style={{ flexDirection: isRtl ? 'row-reverse' : 'row' }}>
               <Text style={Fonts.White20Bold}>{tr('hii')},</Text>
-              <Text style={Fonts.Yellow20Bold}>Jenny wilson</Text>
+              <Text style={Fonts.Yellow20Bold}>{name}</Text>
             </View>
-            <View
+            {/* <View
               style={{
                 flexDirection: isRtl ? 'row-reverse' : 'row',
                 alignItems: 'center',
@@ -125,10 +127,10 @@ const HomeScreen = (props) => {
                 }}
               />
               <Text style={Fonts.White14Medium}>8502 Preston Rd. Inglewood, Maine 98380</Text>
-            </View>
+            </View> */}
           </View>
           <TouchableOpacity
-            onPress={() => props.navigation.navigate('notificationScreen')}
+            onPress={() => props.navigation.navigate('UserStack', { screen: 'notificationScreen' })}
             style={{
               flex: 1,
               marginVertical: Default.fixPadding,
@@ -213,6 +215,20 @@ const HomeScreen = (props) => {
         keyExtractor={(item) => item.key}
         showsVerticalScrollIndicator={false}
       />
+      <TouchableOpacity
+        onPress={() => logout()}
+        style={{
+          flexDirection: isRtl ? 'row-reverse' : 'row',
+          padding: Default.fixPadding * 1.3,
+          marginVertical: Default.fixPadding * 2,
+          marginHorizontal: Default.fixPadding * 1.5,
+          borderRadius: 10,
+          backgroundColor: Colors.white,
+          ...Default.shadow,
+        }}
+      >
+        <Text>LOGOUT</Text>
+      </TouchableOpacity>
     </View>
   );
 };
