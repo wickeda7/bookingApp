@@ -6,6 +6,7 @@ import MyStatusBar from '@components/myStatusBar';
 const SplashScreen = (props) => {
   setTimeout(() => {
     props.navigation.push('AuthStack', { screen: 'onboardingScreen' });
+    // props.navigation.push('AuthStack', { screen: 'otpScreen' });
   }, 2000);
 
   return (

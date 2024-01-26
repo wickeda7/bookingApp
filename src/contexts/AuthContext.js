@@ -35,9 +35,6 @@ const AuthContextProvider = ({ children }) => {
   // If null, no SMS has been sent
   const [confirm, setConfirm] = useState(null);
 
-  // verification code (OTP - One-Time-Passcode)
-  const [code, setCode] = useState('');
-
   useEffect(() => {
     const unSub = onAuthStateChanged(auth, async (user) => {
       if (user) {

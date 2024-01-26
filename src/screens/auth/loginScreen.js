@@ -80,15 +80,7 @@ const LoginScreen = (props) => {
         >
           Beauty
         </Text>
-        <Text
-          style={{
-            ...Fonts.Black28Bold,
-            textAlign: 'center',
-            marginBottom: Default.fixPadding,
-          }}
-        >
-          {tr('login')}
-        </Text>
+
         <PhoneAuth />
 
         <Loader visible={visible} />
