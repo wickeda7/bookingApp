@@ -16,6 +16,7 @@ import {
 import { AccessToken, LoginManager, Settings } from 'react-native-fbsdk-next';
 
 import { appFirebase } from '../utils/firebaseConfig';
+import { api } from '@api/api';
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -42,7 +43,29 @@ const AuthContextProvider = ({ children }) => {
         setLoggedIn(true);
         await AsyncStorage.setItem('@user', JSON.stringify(user));
         // FB and Google user.reloadUserInfo store DB
-        console.log('onAuthStateChanged', user);
+        const userInfo = user.reloadUserInfo.providerUserInfo[0];
+        if (userInfo) {
+          updateUserData(userInfo);
+        }
+
+        //ROLE = 1 = users 3 = technicians 4 = admin
+        // phoneNumber: "+16266754894"
+        // providerId: "phone"
+        // rawId: "+16266754894"
+
+        // displayName: "Hung To"
+        // email: "hungqto@yahoo.com"
+        // federatedId: "10231037695984400"
+        // photoUrl: "https://graph.facebook.com/10231037695984400/picture"
+        // providerId: "facebook.com"
+        // rawId: "10231037695984400"
+
+        //  displayName: "Hung To"
+        // email: "wickedsupergt@gmail.com"
+        // federatedId: "113084141107113266155"
+        // photoUrl: "https://lh3.googleusercontent.com/a/ACg8ocKMFlam0-cS8ZhslAZB2lGiLfPb88qsVLMEdp5DeX5WQA=s96-c"
+        // providerId: "google.com"
+        // rawId: "113084141107113266155"
       } else {
         setLoggedIn(false);
         setUserData(null);
@@ -56,6 +79,24 @@ const AuthContextProvider = ({ children }) => {
     handleEffect();
   }, [response]);
 
+  const updateUserData = async (user) => {
+    console.log('onAuthStateChanged', user);
+    const email = user.email ? user.email : user.phoneNumber + '@' + providerId + '.com';
+    const res = await api.getUser(email);
+    console.log('updateUserData getUser', res.data);
+    if (!res.data) {
+      const data = {
+        email: email,
+        username: user.displayName,
+        phoneNumber: user.phoneNumber,
+        password: user.phoneNumber,
+        role: 1,
+        firebase: user.providerId,
+      };
+      const res = await api.register(data);
+      console.log('updateUserData register', res);
+    }
+  };
   const handleEffect = async () => {
     const user = await getLocalUser();
     console.log('handleEffect getLocalUser', user);
