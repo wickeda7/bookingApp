@@ -58,6 +58,8 @@
 	<string>930bf9c82e1552164349751b77872d90</string>
 	<key>FacebookDisplayName</key>
 	<string>Booking App</string>
+	<key>GMSApiKey</key>
+	<string>AIzaSyBvma0JNZQhrzbwpDdmEu-u3VYe7pqXm4s</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>fbapi</string>
