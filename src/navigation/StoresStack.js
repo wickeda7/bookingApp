@@ -13,7 +13,7 @@ import OngoingDetailScreen from '@screens/stores/ongoingDetailScreen';
 import SearchScreen from '@screens/stores/searchScreen';
 import SearchLocationScreen from '@screens/stores/searchLocationScreen';
 import SpecialistProfileScreen from '@screens/stores/specialistProfileScreen';
-// import TermsOfServicesScreen from '@screens/stores/termsOfServicesScreen';
+
 const Stack = createStackNavigator();
 
 const StoresStack = () => {
@@ -38,16 +38,8 @@ const StoresStack = () => {
         component={SpecialistProfileScreen}
         options={{ headerShown: false }}
       />
-
       <Stack.Screen name='mainReviewScreen' component={MainReviewScreen} options={{ headerShown: false }} />
       <Stack.Screen name='searchScreen' component={SearchScreen} options={{ headerShown: false }} />
-
-      {/*
-     
-      
-     
-     
-      <Stack.Screen name='termsOfServicesScreen' component={TermsOfServicesScreen} options={{ headerShown: false }} /> */}
     </Stack.Navigator>
   );
 };

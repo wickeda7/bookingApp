@@ -6,7 +6,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useTranslation } from 'react-i18next';
 import MyStatusBar from '@components/myStatusBar';
-
+import { useAuthContext } from '@contexts/AuthContext';
 const ProfileScreen = (props) => {
   const { t, i18n } = useTranslation();
 
@@ -15,7 +15,7 @@ const ProfileScreen = (props) => {
   function tr(key) {
     return t(`profileScreen:${key}`);
   }
-
+  const { logout } = useAuthContext();
   const [visible, setVisible] = useState(false);
   return (
     <View style={{ flex: 1, backgroundColor: Colors.white }}>
@@ -64,7 +64,7 @@ const ProfileScreen = (props) => {
                 alignItems: 'center',
                 padding: Default.fixPadding * 1.5,
               }}
-              onPress={() => props.navigation.navigate('accountScreen')}
+              onPress={() => props.navigation.navigate('UserStack', { screen: 'accountScreen' })}
             >
               <FontAwesome
                 name='user-o'
@@ -99,7 +99,7 @@ const ProfileScreen = (props) => {
                 alignItems: 'center',
                 padding: Default.fixPadding * 1.5,
               }}
-              onPress={() => props.navigation.navigate('chatScreen')}
+              onPress={() => props.navigation.navigate('UserStack', { screen: 'chatScreen' })}
             >
               <Ionicons
                 name='chatbubble-ellipses-outline'
@@ -138,7 +138,7 @@ const ProfileScreen = (props) => {
             }}
           >
             <TouchableOpacity
-              onPress={() => props.navigation.navigate('favoriteScreen')}
+              onPress={() => props.navigation.navigate('UserStack', { screen: 'favoriteScreen' })}
               style={{
                 flexDirection: isRtl ? 'row-reverse' : 'row',
                 alignItems: 'center',
@@ -177,7 +177,7 @@ const ProfileScreen = (props) => {
                 alignItems: 'center',
                 padding: Default.fixPadding * 1.5,
               }}
-              onPress={() => props.navigation.navigate('languageScreen')}
+              onPress={() => props.navigation.navigate('UserStack', { screen: 'languageScreen' })}
             >
               <Ionicons
                 name='globe-outline'
@@ -211,7 +211,7 @@ const ProfileScreen = (props) => {
                 alignItems: 'center',
                 padding: Default.fixPadding * 1.5,
               }}
-              onPress={() => props.navigation.navigate('settingScreen')}
+              onPress={() => props.navigation.navigate('UserStack', { screen: 'settingScreen' })}
             >
               <Ionicons
                 name='notifications-outline'
@@ -245,7 +245,7 @@ const ProfileScreen = (props) => {
                 alignItems: 'center',
                 padding: Default.fixPadding * 1.5,
               }}
-              onPress={() => props.navigation.navigate('inviteFriendScreen')}
+              onPress={() => props.navigation.navigate('UserStack', { screen: 'inviteFriendScreen' })}
             >
               <Ionicons
                 name='share-social-outline'
@@ -279,7 +279,7 @@ const ProfileScreen = (props) => {
                 alignItems: 'center',
                 padding: Default.fixPadding * 1.5,
               }}
-              onPress={() => props.navigation.navigate('couponScreen')}
+              onPress={() => props.navigation.navigate('StoresStack', { screen: 'couponScreen' })}
             >
               <MaterialCommunityIcons
                 name='ticket-percent-outline'
@@ -313,7 +313,7 @@ const ProfileScreen = (props) => {
                 alignItems: 'center',
                 padding: Default.fixPadding * 1.5,
               }}
-              onPress={() => props.navigation.navigate('termsOfServicesScreen')}
+              onPress={() => props.navigation.navigate('UserStack', { screen: 'termsOfServicesScreen' })}
             >
               <MaterialCommunityIcons
                 name='clipboard-text-outline'
@@ -347,7 +347,7 @@ const ProfileScreen = (props) => {
                 padding: Default.fixPadding * 1.5,
                 alignItems: 'center',
               }}
-              onPress={() => props.navigation.navigate('helpSupportScreen')}
+              onPress={() => props.navigation.navigate('UserStack', { screen: 'helpSupportScreen' })}
             >
               <MaterialCommunityIcons
                 name='help-circle-outline'
@@ -439,7 +439,8 @@ const ProfileScreen = (props) => {
                   </TouchableOpacity>
                   <TouchableOpacity
                     onPress={() => {
-                      props.navigation.navigate('loginScreen');
+                      logout();
+
                       setVisible(false);
                     }}
                   >

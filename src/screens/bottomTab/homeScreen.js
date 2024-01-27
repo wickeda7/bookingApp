@@ -14,8 +14,7 @@ const HomeScreen = (props) => {
   function tr(key) {
     return t(`homeScreen:${key}`);
   }
-  const { userData, logout } = useAuthContext();
-  console.log('userData', userData);
+  const { userData } = useAuthContext();
   const name = userData?.username ? userData.username : '';
   const dataList = [
     {
@@ -215,20 +214,6 @@ const HomeScreen = (props) => {
         keyExtractor={(item) => item.key}
         showsVerticalScrollIndicator={false}
       />
-      <TouchableOpacity
-        onPress={() => logout()}
-        style={{
-          flexDirection: isRtl ? 'row-reverse' : 'row',
-          padding: Default.fixPadding * 1.3,
-          marginVertical: Default.fixPadding * 2,
-          marginHorizontal: Default.fixPadding * 1.5,
-          borderRadius: 10,
-          backgroundColor: Colors.white,
-          ...Default.shadow,
-        }}
-      >
-        <Text>LOGOUT</Text>
-      </TouchableOpacity>
     </View>
   );
 };
