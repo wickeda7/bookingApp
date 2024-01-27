@@ -197,7 +197,7 @@ const NearByScreen = (props) => {
           {initialMapState.markers.map((marker, index) => (
             <TouchableOpacity
               key={index}
-              onPress={() => props.navigation.navigate('topTabDetails', { screen: 'nearby' })}
+              onPress={() => props.navigation.navigate('TopTabDetails', { screen: 'nearby' })}
               style={{
                 flexDirection: isRtl ? 'row-reverse' : 'row',
                 overflow: 'hidden',

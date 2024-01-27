@@ -154,7 +154,7 @@ const HomeScreen = (props) => {
         </View>
 
         <TouchableOpacity
-          onPress={() => props.navigation.navigate('searchScreen')}
+          onPress={() => props.navigation.navigate('StoresStack', { screen: 'searchScreen' })}
           style={{
             flexDirection: isRtl ? 'row-reverse' : 'row',
             padding: Default.fixPadding * 1.3,

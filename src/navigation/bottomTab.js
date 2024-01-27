@@ -3,6 +3,7 @@ import HomeScreen from '@screens/bottomTab/homeScreen';
 import NearByScreen from '@screens/bottomTab/nearByScreen';
 import BookingScreen from '@screens/bottomTab/bookingScreen';
 import ProfileScreen from '@screens/bottomTab/profileScreen';
+
 import { Colors, Fonts, Default } from '@constants/style';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useTranslation } from 'react-i18next';

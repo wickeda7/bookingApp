@@ -10,6 +10,8 @@ import AuthStack from '@navigation/AuthStack';
 import BottomTab from '@navigation/bottomTab';
 import UserStack from '@navigation/UserStack';
 import StoresStack from '@navigation/StoresStack';
+import TopTabDetails from '@navigation/topTabDetails';
+import DetailScreen from '@screens/stores/detailScreen';
 
 import i18n from '@languages/index';
 const Stack = createStackNavigator();
@@ -28,6 +30,13 @@ const MainNavigation = () => {
           <Stack.Screen name='BottomTab' component={BottomTab} options={{ headerShown: false }} />
           <Stack.Screen name='UserStack' component={UserStack} options={{ headerShown: false }} />
           <Stack.Screen name='StoresStack' component={StoresStack} options={{ headerShown: false }} />
+          <Stack.Screen
+            name='TopTabDetails'
+            component={TopTabDetails}
+            options={({ navigation }) => ({
+              header: () => <DetailScreen navigation={navigation} />,
+            })}
+          />
         </Stack.Navigator>
       </AuthContextProvider>
     </NavigationContainer>

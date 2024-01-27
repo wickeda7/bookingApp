@@ -69,7 +69,7 @@ const OngoingScreen = (props) => {
       >
         <TouchableOpacity
           activeOpacity={0.8}
-          onPress={() => props.navigation.navigate('ongoingDetailScreen')}
+          onPress={() => props.navigation.push('StoresStack', { screen: 'ongoingDetailScreen' })}
           style={{
             flexDirection: isRtl ? 'row-reverse' : 'row',
             backgroundColor: Colors.white,
@@ -130,9 +130,12 @@ const OngoingScreen = (props) => {
                   ...Default.shadow,
                 }}
                 onPress={() =>
-                  props.navigation.navigate('searchLocationScreen', {
-                    image: item.image,
-                    title: item.title,
+                  props.navigation.navigate('StoresStack', {
+                    screen: 'searchLocationScreen',
+                    params: {
+                      image: item.image,
+                      title: item.title,
+                    },
                   })
                 }
               >

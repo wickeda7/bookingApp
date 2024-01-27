@@ -148,7 +148,7 @@ const HistoryScreen = (props) => {
                 backgroundColor: Colors.white,
                 ...Default.shadow,
               }}
-              onPress={() => props.navigation.navigate('historyDetailScreen')}
+              onPress={() => props.navigation.navigate('StoresStack', { screen: 'historyDetailScreen' })}
             >
               <Text numberOfLines={1} style={Fonts.Primary14Medium}>
                 {tr('getDetail')}

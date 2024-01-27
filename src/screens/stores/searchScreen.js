@@ -1,20 +1,23 @@
-import { Text, View, TouchableOpacity, FlatList, Image, BackHandler } from 'react-native';
+import { Text, View, TextInput, TouchableOpacity, FlatList, Image, BackHandler } from 'react-native';
 import React, { useState, useEffect } from 'react';
+import { Colors, Default, Fonts } from '@constants/style';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Octicons from 'react-native-vector-icons/Octicons';
-import { Colors, Default, Fonts } from '@constants/style';
 import { useTranslation } from 'react-i18next';
+import FilterBottomSheet from '@components/filterBottomSheet';
 import MyStatusBar from '@components/myStatusBar';
 
-const CategoriesScreen = ({ navigation, route }) => {
-  const { i18n } = useTranslation();
+const SearchScreen = (props) => {
+  const { t, i18n } = useTranslation();
 
   const isRtl = i18n.dir() === 'rtl';
 
-  const title = route.params.title;
+  function tr(key) {
+    return t(`searchScreen:${key}`);
+  }
 
   const backAction = () => {
-    navigation.pop();
+    props.navigation.goBack();
     return true;
   };
   useEffect(() => {
@@ -23,12 +26,18 @@ const CategoriesScreen = ({ navigation, route }) => {
     return () => BackHandler.removeEventListener('hardwareBackPress', backAction);
   }, []);
 
-  const DATA = [
+  const [visible, setVisible] = useState(false);
+
+  const toggleClose = () => {
+    setVisible(!visible);
+  };
+
+  const dataList = [
     {
       id: '1',
       image: require('@assets/images/hair1.png'),
       title: 'The Big Tease Salons',
-      description: '1901 Thornridge Cir. Shiloh,Hawaii 81063 ',
+      description: '2972 Westheimer Rd. Santa Ana,Illinois 85486 ',
       star: require('@assets/images/star5.png'),
       selected: false,
     },
@@ -44,7 +53,7 @@ const CategoriesScreen = ({ navigation, route }) => {
       id: '3',
       image: require('@assets/images/hair3.png'),
       title: 'Backyard Barbers',
-      description: '1901 Thornridge Cir. Shiloh,Hawaii 81063 ',
+      description: '2972 Westheimer Rd. Santa Ana,  Illinois 85486 ',
       star: require('@assets/images/star4.png'),
       selected: true,
     },
@@ -52,7 +61,7 @@ const CategoriesScreen = ({ navigation, route }) => {
       id: '4',
       image: require('@assets/images/hair4.png'),
       title: 'Salon Zeppelin',
-      description: '1901 Thornridge Cir. Shiloh,Hawaii 81063 ',
+      description: '2972 Westheimer Rd. Santa Ana,  Illinois 85486 ',
       star: require('@assets/images/star3.png'),
       selected: false,
     },
@@ -60,7 +69,7 @@ const CategoriesScreen = ({ navigation, route }) => {
       id: '5',
       image: require('@assets/images/hair5.png'),
       title: 'Brooklyn Barbers',
-      description: '1901 Thornridge Cir. Shiloh,Hawaii 81063 ',
+      description: '2972 Westheimer Rd. Santa Ana,  Illinois 85486 ',
       star: require('@assets/images/star5.png'),
       selected: false,
     },
@@ -70,13 +79,13 @@ const CategoriesScreen = ({ navigation, route }) => {
       title: 'Barber Republic',
       description: '1901 Thornridge Cir. Shiloh,Hawaii 81063 ',
       star: require('@assets/images/star1.png'),
-      selected: true,
+      selected: false,
     },
     {
       id: '7',
       image: require('@assets/images/hair7.png'),
       title: 'Hair salons',
-      description: '1901 Thornridge Cir. Shiloh,Hawaii 81063 ',
+      description: '2972 Westheimer Rd. Santa Ana,  Illinois 85486 ',
       star: require('@assets/images/star4.png'),
       selected: false,
     },
@@ -84,8 +93,7 @@ const CategoriesScreen = ({ navigation, route }) => {
       id: '8',
       image: require('@assets/images/hair8.png'),
       title: 'Nail salons',
-      description: '1901 Thornridge Cir. Shiloh,Hawaii 81063 ',
-      description: '3517 W. Gray St. Utica,Pennsylvania 57867',
+      description: '2972 Westheimer Rd. Santa Ana,  Illinois 85486 ',
       star: require('@assets/images/star1.png'),
       selected: false,
     },
@@ -93,9 +101,9 @@ const CategoriesScreen = ({ navigation, route }) => {
       id: '9',
       image: require('@assets/images/hair9.png'),
       title: 'Makeup',
-      description: '1901 Thornridge Cir. Shiloh,Hawaii 81063 ',
+      description: '2972 Westheimer Rd. Santa Ana,  Illinois 85486 ',
       star: require('@assets/images/star3.png'),
-      selected: false,
+      selected: true,
     },
     {
       id: '10',
@@ -107,17 +115,18 @@ const CategoriesScreen = ({ navigation, route }) => {
     },
   ];
 
-  const [select, setSelect] = useState(DATA);
+  const [search, setSearch] = useState();
+  const [filteredDataSource, setFilteredDataSource] = useState(dataList);
 
   const onSelect = (item) => {
-    const newItem = select.map((val) => {
+    const newItem = filteredDataSource.map((val) => {
       if (val.id === item.id) {
         return { ...val, selected: !val.selected };
       } else {
         return val;
       }
     });
-    setSelect(newItem);
+    setFilteredDataSource(newItem);
   };
 
   const renderItem = ({ item, index }) => {
@@ -125,9 +134,8 @@ const CategoriesScreen = ({ navigation, route }) => {
     return (
       <View>
         <TouchableOpacity
-          onPress={() => navigation.navigate('TopTabDetails')}
+          onPress={() => props.navigation.navigate('TopTabDetails')}
           style={{
-            flex: 1,
             flexDirection: isRtl ? 'row-reverse' : 'row',
             overflow: 'hidden',
             marginTop: isFirst ? Default.fixPadding * 1.5 : 0,
@@ -149,11 +157,11 @@ const CategoriesScreen = ({ navigation, route }) => {
             }}
           >
             <Text style={Fonts.Black16Medium}>{item.title}</Text>
-            <Image source={item.star} style={{ marginVertical: 3 }} />
+            <Image source={item.star} style={{ marginVertical: Default.fixPadding * 0.5 }} />
             <View
               style={{
                 flexDirection: isRtl ? 'row-reverse' : 'row',
-                alignItems: isRtl ? 'flex-end' : 'flex-start',
+                alignItems: 'center',
               }}
             >
               <Octicons
@@ -166,7 +174,14 @@ const CategoriesScreen = ({ navigation, route }) => {
                 }}
               />
 
-              <Text style={{ ...Fonts.Grey14Regular }}>{item.description}</Text>
+              <Text
+                style={{
+                  ...Fonts.Grey14Regular,
+                  textAlign: isRtl ? 'right' : 'left',
+                }}
+              >
+                {item.description}
+              </Text>
             </View>
           </View>
           <TouchableOpacity onPress={() => onSelect(item)}>
@@ -185,32 +200,113 @@ const CategoriesScreen = ({ navigation, route }) => {
     );
   };
 
+  const searchFilter = (text) => {
+    if (text) {
+      const newData = dataList.filter(function (item) {
+        const itemData = item.title ? item.title.toUpperCase() : ''.toUpperCase();
+        const textData = text.toUpperCase();
+        return itemData.indexOf(textData) > -1;
+      });
+      setFilteredDataSource(newData);
+      setSearch(text);
+    } else {
+      setFilteredDataSource(dataList);
+      setSearch(text);
+    }
+  };
+
   return (
-    <View style={{ flex: 1, backgroundColor: Colors.white }}>
+    <View style={{ flex: 1 }}>
       <MyStatusBar />
       <View
         style={{
-          flexDirection: isRtl ? 'row-reverse' : 'row',
-          alignItems: 'center',
           paddingVertical: Default.fixPadding,
           backgroundColor: Colors.primary,
         }}
       >
-        <TouchableOpacity
-          style={{ marginHorizontal: Default.fixPadding * 1.5 }}
-          onPress={() => navigation.navigate('homeScreen')}
+        <View
+          style={{
+            flexDirection: isRtl ? 'row-reverse' : 'row',
+            alignItems: 'center',
+            marginHorizontal: Default.fixPadding * 1.5,
+          }}
         >
-          <Ionicons name={isRtl ? 'arrow-forward' : 'arrow-back'} size={30} color={Colors.white} />
-        </TouchableOpacity>
-        <Text style={Fonts.White18Bold}>{title} </Text>
+          <TouchableOpacity style={{ flex: 1 }} onPress={() => props.navigation.navigate('homeScreen')}>
+            <Ionicons name={isRtl ? 'arrow-forward' : 'arrow-back'} size={30} color={Colors.white} />
+          </TouchableOpacity>
+          <Text style={{ ...Fonts.White18Bold, flex: 8 }}>{tr('search')}</Text>
+          <View style={{ flex: 1 }}>
+            <TouchableOpacity
+              onPress={() => setVisible(true)}
+              style={{
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: 30,
+                width: 30,
+                borderRadius: 15,
+                backgroundColor: Colors.white,
+              }}
+            >
+              <Ionicons name='filter' size={20} color={Colors.primary} />
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        <View
+          style={{
+            flexDirection: isRtl ? 'row-reverse' : 'row',
+            padding: Default.fixPadding,
+            marginHorizontal: Default.fixPadding * 1.5,
+            marginVertical: Default.fixPadding,
+            borderRadius: 10,
+            backgroundColor: Colors.white,
+            ...Default.shadow,
+          }}
+        >
+          <Ionicons name='search-outline' size={20} color={Colors.grey} style={{ flex: 0.8, alignSelf: 'center' }} />
+          <TextInput
+            value={search}
+            onChangeText={(text) => searchFilter(text)}
+            placeholder={tr('searchYour')}
+            placeholderTextColor={Colors.grey}
+            selectionColor={Colors.primary}
+            style={{
+              ...Fonts.Black16Medium,
+              flex: 8.4,
+              textAlign: isRtl ? 'right' : 'left',
+              alignSelf: 'center',
+              marginHorizontal: 5,
+            }}
+          />
+          <Ionicons
+            name='mic-outline'
+            size={20}
+            color={Colors.grey}
+            style={{
+              flex: 0.8,
+              alignSelf: 'center',
+            }}
+          />
+        </View>
       </View>
+
       <FlatList
-        data={select}
+        numColumns={1}
+        data={filteredDataSource}
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
         showsVerticalScrollIndicator={false}
       />
+
+      <FilterBottomSheet
+        visible={visible}
+        toggleClose={toggleClose}
+        close={() => {
+          setVisible(false);
+        }}
+      />
     </View>
   );
 };
-export default CategoriesScreen;
+
+export default SearchScreen;

@@ -6,7 +6,7 @@ import React from 'react';
 // import LanguageScreen from '../screens/user/languageScreen';
 // import SettingScreen from '../screens/user/settingScreen';
 // import InviteFriendScreen from '../screens/user/inviteFriendScreen';
-// import CouponScreen from '../screens/user/couponScreen';
+//
 // import HelpSupportScreen from '../screens/user/helpSupportScreen';
 import NotificationScreen from '@screens/user/notificationScreen';
 
@@ -27,7 +27,7 @@ const UserStack = () => {
       <Stack.Screen name='settingScreen' component={SettingScreen} options={{ headerShown: false }} />
       <Stack.Screen name='inviteFriendScreen' component={InviteFriendScreen} options={{ headerShown: false }} />
 
-      <Stack.Screen name='couponScreen' component={CouponScreen} options={{ headerShown: false }} />
+      
       <Stack.Screen name='helpSupportScreen' component={HelpSupportScreen} options={{ headerShown: false }} /> */}
       <Stack.Screen
         name='notificationScreen'
