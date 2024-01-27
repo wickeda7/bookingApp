@@ -73,8 +73,6 @@ const AuthContextProvider = ({ children }) => {
       const res = await api.register(data);
       await AsyncStorage.setItem('@user', JSON.stringify(res.data.user));
       setUserData(res.data.user);
-
-      console.log('updateUserData register', res);
     } else {
       await AsyncStorage.setItem('@user', JSON.stringify(res.data));
       setUserData(res.data);
@@ -84,9 +82,7 @@ const AuthContextProvider = ({ children }) => {
   };
   const handleEffect = async () => {
     const user = await getLocalUser();
-    //console.log('handleEffect getLocalUser', user);
     if (!user) {
-      // console.log(' handleEffect response', response);
       if (response?.type === 'success') {
         const { id_token } = response.params;
         const credential = GoogleAuthProvider.credential(id_token);

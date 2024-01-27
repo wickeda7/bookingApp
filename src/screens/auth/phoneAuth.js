@@ -4,12 +4,10 @@ import React, { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuthContext } from '@contexts/AuthContext';
 import Toast from 'react-native-root-toast';
-import { FirebaseRecaptchaVerifierModal, FirebaseRecaptchaBanner } from 'expo-firebase-recaptcha';
-import { getAuth, PhoneAuthProvider, signInWithPhoneNumber } from 'firebase/auth';
 import appFirebase from '@utils/firebaseConfig';
 import Phone from './phone';
 import Verify from './verify';
-//https://docs.expo.dev/versions/v46.0.0/sdk/firebase-recaptcha/
+import { useFirebaseLogin } from '@itzsunny/firebase-login';
 
 const PhoneAuth = () => {
   const { t, i18n } = useTranslation();
@@ -19,25 +17,21 @@ const PhoneAuth = () => {
   }
   const { setLoading, auth } = useAuthContext();
   const [phoneNumber, setPhoneNumber] = useState('');
-  const recaptchaVerifier = useRef(null);
   const [isVerifying, setIsVerifying] = useState(false);
   const [confirmationResult, setConfirmationResult] = useState(null);
-  const [verificationWrong, setVerificationWrong] = useState(false);
-
+  const { recaptcha, sendOtp, verifyOtp } = useFirebaseLogin({
+    auth: auth,
+    firebaseConfig: appFirebase.options,
+  });
   const countryCode = '+1';
 
-  const [message, showMessage] = useState();
-  const attemptInvisibleVerification = false;
   // verification code (OTP - One-Time-Passcode)
   const [code, setCode] = useState('');
-  console.log('verificationWrong', verificationWrong);
   const handleVerify = async () => {
     if (code.length !== 6) return;
-    // console.log('handleVerify', confirmationResult);
     if (confirmationResult) {
       try {
-        const userCredential = await confirmationResult.confirm(code);
-        //console.log('handleVerify userCredential', userCredential);
+        const userCredential = await verifyOtp(confirmationResult, code);
         setLoading(true);
       } catch (error) {
         Toast.show(tr('enterValid'), {
@@ -71,11 +65,9 @@ const PhoneAuth = () => {
 
     // props.navigation.navigate('otpScreen');
     try {
-      // console.log('phoneLogin', countryCode + phoneNumber);
-      const result = await signInWithPhoneNumber(auth, countryCode + phoneNumber, recaptchaVerifier.current);
+      const result = await sendOtp(countryCode + phoneNumber);
       setConfirmationResult(result);
       setIsVerifying(true);
-      //console.log('verificationId', result);
     } catch (error) {
       console.log('phoneLogin', error);
     }
@@ -92,12 +84,7 @@ const PhoneAuth = () => {
       ) : (
         <Phone phoneLogin={phoneLogin} handlePhone={handlePhone} />
       )}
-
-      <FirebaseRecaptchaVerifierModal
-        ref={recaptchaVerifier}
-        firebaseConfig={appFirebase.options}
-        attemptInvisibleVerification={true}
-      />
+      {recaptcha}
     </View>
   );
 };

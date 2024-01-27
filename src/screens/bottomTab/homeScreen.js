@@ -16,7 +16,7 @@ const HomeScreen = (props) => {
   }
   const { userData, logout } = useAuthContext();
   console.log('userData', userData);
-  const name = userData.username ? userData.username : '';
+  const name = userData?.username ? userData.username : '';
   const dataList = [
     {
       key: '1',
