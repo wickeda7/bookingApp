@@ -5,53 +5,37 @@ import Octicons from 'react-native-vector-icons/Octicons';
 import { Colors, Default, Fonts } from '@constants/style';
 import { useTranslation } from 'react-i18next';
 import MyStatusBar from '@components/myStatusBar';
-import { stores } from '@api/stores';
-import { users } from '@api/users';
-import { useAuthContext } from '@contexts/AuthContext';
+import { useStoreContext } from '@contexts/StoreContext';
 const CategoriesScreen = ({ navigation, route }) => {
   const { i18n } = useTranslation();
 
   const isRtl = i18n.dir() === 'rtl';
 
   const title = route.params.title;
-  const [select, setSelect] = useState();
-  const { userData } = useAuthContext();
+  const { setSelectedStore, stores, onFavorite, getStores } = useStoreContext();
   const backAction = () => {
     navigation.pop();
     return true;
   };
+
   useEffect(() => {
-    getStores();
+    if (!stores) getStores();
     BackHandler.addEventListener('hardwareBackPress', backAction);
 
     return () => BackHandler.removeEventListener('hardwareBackPress', backAction);
   }, []);
 
-  const getStores = async () => {
-    const response = await stores.getData(userData?.favorites);
-    setSelect(response);
+  const handleSelectedStore = (store) => {
+    setSelectedStore(store);
+    navigation.navigate('TopTabDetails');
   };
-
-  const onSelect = (item) => {
-    const newItem = select.map((val) => {
-      if (val.id === item.id) {
-        const newVal = { ...val, selected: !val.selected };
-        users.updateFavorite(userData.id, newVal);
-        return newVal;
-      } else {
-        return val;
-      }
-    });
-    setSelect(newItem);
-  };
-
   const renderItem = ({ item, index }) => {
     const isFirst = index === 0;
     if (!item.star) item.star = require('@assets/images/star5.png');
     return (
       <View>
         <TouchableOpacity
-          onPress={() => navigation.navigate('TopTabDetails')}
+          onPress={() => handleSelectedStore(item)}
           style={{
             flex: 1,
             flexDirection: isRtl ? 'row-reverse' : 'row',
@@ -99,7 +83,7 @@ const CategoriesScreen = ({ navigation, route }) => {
               <Text style={{ ...Fonts.Grey14Regular }}>{item.location}</Text>
             </View>
           </View>
-          <TouchableOpacity onPress={() => onSelect(item)}>
+          <TouchableOpacity onPress={() => onFavorite(item)}>
             <Ionicons
               color={Colors.primary}
               size={25}
@@ -135,7 +119,7 @@ const CategoriesScreen = ({ navigation, route }) => {
         <Text style={Fonts.White18Bold}>{title} </Text>
       </View>
       <FlatList
-        data={select}
+        data={stores}
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
         showsVerticalScrollIndicator={false}

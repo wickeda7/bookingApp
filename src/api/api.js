@@ -38,8 +38,14 @@ export const api = {
   },
   putFavorite: async (id, data) => {
     try {
-      const url = `${STRAPIURL}/api/users/${id}`;
+      const url = `${STRAPIURL}/api/users/${id}?populate=favorites`;
       const response = await axios.put(url, data);
+      if (response.data) {
+        const url2 = `${STRAPIURL}/api/users/${response.data.email}`;
+        const favRes = await await axios.get(url2);
+        return favRes.data.data.favorites;
+      }
+
       return response.data;
     } catch (error) {
       console.log('error putFavorite', error);

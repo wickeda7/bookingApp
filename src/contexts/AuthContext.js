@@ -123,6 +123,20 @@ const AuthContextProvider = ({ children }) => {
     setLoggedIn(false);
     setUserData(null);
   };
+
+  const updateUserFavorite = async () => {
+    const updatedUseer = userData;
+    const user = await getLocalUser();
+
+    const res = await users.getUser(userData.email);
+    if (res.favorites.length === 0) {
+      delete updatedUseer.favorites;
+    } else {
+      updatedUseer.favorites = res.favorites;
+    }
+    setUserData(updatedUseer);
+    await AsyncStorage.setItem('@user', JSON.stringify(updatedUseer));
+  };
   const value = {
     loading,
     setLoading,
@@ -133,6 +147,7 @@ const AuthContextProvider = ({ children }) => {
     facebookLogin,
     auth,
     promptAsync,
+    updateUserFavorite,
   };
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

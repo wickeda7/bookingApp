@@ -4,12 +4,15 @@ import { Colors, Default, Fonts } from '@constants/style';
 import Octicons from 'react-native-vector-icons/Octicons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useTranslation } from 'react-i18next';
-
+import { useStoreContext } from '@contexts/StoreContext';
+import { STRAPIURL } from '@env';
 const DetailScreen = (props) => {
   const { t, i18n } = useTranslation();
-
   const isRtl = i18n.dir() === 'rtl';
-
+  const { selectedStore } = useStoreContext();
+  console.log('selectedStore', selectedStore);
+  const { images, name, address } = selectedStore;
+  const topImage = images ? `${STRAPIURL}${images.data[0].attributes.url}` : null;
   function tr(key) {
     return t(`detailScreen:${key}`);
   }
@@ -27,7 +30,12 @@ const DetailScreen = (props) => {
   const [isVisible, setVisible] = useState(false);
   return (
     <View style={{ marginTop: StatusBar.currentHeight }}>
-      <Image source={require('@assets/images/detail.png')} />
+      {topImage ? (
+        <Image source={{ uri: topImage }} style={{ width: '100%', height: 200 }} />
+      ) : (
+        <Image source={require('@assets/images/detail.png')} />
+      )}
+
       <View
         style={{
           position: 'absolute',
