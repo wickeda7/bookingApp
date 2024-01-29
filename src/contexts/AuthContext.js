@@ -17,6 +17,7 @@ import { AccessToken, LoginManager, Settings } from 'react-native-fbsdk-next';
 
 import { appFirebase } from '../utils/firebaseConfig';
 import { api } from '@api/api';
+import { users } from '@api/users';
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -59,9 +60,8 @@ const AuthContextProvider = ({ children }) => {
   const updateUserData = async (user) => {
     setLoading(true);
     const email = user.email ? user.email : user.phoneNumber + '@' + user.providerId + '.com';
-    const res = await api.getUser(email);
-    console.log('updateUserData getUser', res.data);
-    if (!res.data) {
+    const res = await users.getUser(email);
+    if (!res) {
       const data = {
         email: email,
         username: user.displayName,
@@ -70,12 +70,12 @@ const AuthContextProvider = ({ children }) => {
         role: 1,
         firebase: user.providerId,
       };
-      const res = await api.register(data);
-      await AsyncStorage.setItem('@user', JSON.stringify(res.data.user));
-      setUserData(res.data.user);
+      const res = await users.register(data);
+      await AsyncStorage.setItem('@user', JSON.stringify(res.user));
+      setUserData(res.user);
     } else {
-      await AsyncStorage.setItem('@user', JSON.stringify(res.data));
-      setUserData(res.data);
+      await AsyncStorage.setItem('@user', JSON.stringify(res));
+      setUserData(res);
     }
     setLoggedIn(true);
     setLoading(false);

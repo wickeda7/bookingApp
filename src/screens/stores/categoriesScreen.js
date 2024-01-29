@@ -5,114 +5,39 @@ import Octicons from 'react-native-vector-icons/Octicons';
 import { Colors, Default, Fonts } from '@constants/style';
 import { useTranslation } from 'react-i18next';
 import MyStatusBar from '@components/myStatusBar';
-
+import { stores } from '@api/stores';
+import { users } from '@api/users';
+import { useAuthContext } from '@contexts/AuthContext';
 const CategoriesScreen = ({ navigation, route }) => {
   const { i18n } = useTranslation();
 
   const isRtl = i18n.dir() === 'rtl';
 
   const title = route.params.title;
-
+  const [select, setSelect] = useState();
+  const { userData } = useAuthContext();
   const backAction = () => {
     navigation.pop();
     return true;
   };
   useEffect(() => {
+    getStores();
     BackHandler.addEventListener('hardwareBackPress', backAction);
 
     return () => BackHandler.removeEventListener('hardwareBackPress', backAction);
   }, []);
 
-  const DATA = [
-    {
-      id: '1',
-      image: require('@assets/images/hair1.png'),
-      title: 'The Big Tease Salons',
-      description: '1901 Thornridge Cir. Shiloh,Hawaii 81063 ',
-      star: require('@assets/images/star5.png'),
-      selected: false,
-    },
-    {
-      id: '2',
-      image: require('@assets/images/hair2.png'),
-      title: 'Straight Razors',
-      description: '1901 Thornridge Cir. Shiloh,Hawaii 81063 ',
-      star: require('@assets/images/star3.png'),
-      selected: false,
-    },
-    {
-      id: '3',
-      image: require('@assets/images/hair3.png'),
-      title: 'Backyard Barbers',
-      description: '1901 Thornridge Cir. Shiloh,Hawaii 81063 ',
-      star: require('@assets/images/star4.png'),
-      selected: true,
-    },
-    {
-      id: '4',
-      image: require('@assets/images/hair4.png'),
-      title: 'Salon Zeppelin',
-      description: '1901 Thornridge Cir. Shiloh,Hawaii 81063 ',
-      star: require('@assets/images/star3.png'),
-      selected: false,
-    },
-    {
-      id: '5',
-      image: require('@assets/images/hair5.png'),
-      title: 'Brooklyn Barbers',
-      description: '1901 Thornridge Cir. Shiloh,Hawaii 81063 ',
-      star: require('@assets/images/star5.png'),
-      selected: false,
-    },
-    {
-      id: '6',
-      image: require('@assets/images/hair6.png'),
-      title: 'Barber Republic',
-      description: '1901 Thornridge Cir. Shiloh,Hawaii 81063 ',
-      star: require('@assets/images/star1.png'),
-      selected: true,
-    },
-    {
-      id: '7',
-      image: require('@assets/images/hair7.png'),
-      title: 'Hair salons',
-      description: '1901 Thornridge Cir. Shiloh,Hawaii 81063 ',
-      star: require('@assets/images/star4.png'),
-      selected: false,
-    },
-    {
-      id: '8',
-      image: require('@assets/images/hair8.png'),
-      title: 'Nail salons',
-      description: '1901 Thornridge Cir. Shiloh,Hawaii 81063 ',
-      description: '3517 W. Gray St. Utica,Pennsylvania 57867',
-      star: require('@assets/images/star1.png'),
-      selected: false,
-    },
-    {
-      id: '9',
-      image: require('@assets/images/hair9.png'),
-      title: 'Makeup',
-      description: '1901 Thornridge Cir. Shiloh,Hawaii 81063 ',
-      star: require('@assets/images/star3.png'),
-      selected: false,
-    },
-    {
-      id: '10',
-      image: require('@assets/images/hair10.png'),
-      title: 'Skin care',
-      description: '1901 Thornridge Cir. Shiloh,Hawaii 81063 ',
-      star: require('@assets/images/star4.png'),
-      selected: false,
-    },
-  ];
-
-  const [select, setSelect] = useState(DATA);
+  const getStores = async () => {
+    const response = await stores.getData(userData?.favorites);
+    setSelect(response);
+  };
 
   const onSelect = (item) => {
     const newItem = select.map((val) => {
       if (val.id === item.id) {
-        return { ...val, selected: !val.selected };
+        const newVal = { ...val, selected: !val.selected };
+        users.updateFavorite(userData.id, newVal);
+        return newVal;
       } else {
         return val;
       }
@@ -122,6 +47,7 @@ const CategoriesScreen = ({ navigation, route }) => {
 
   const renderItem = ({ item, index }) => {
     const isFirst = index === 0;
+    if (!item.star) item.star = require('@assets/images/star5.png');
     return (
       <View>
         <TouchableOpacity
@@ -138,7 +64,11 @@ const CategoriesScreen = ({ navigation, route }) => {
             ...Default.shadow,
           }}
         >
-          <Image source={item.image} />
+          {item.image ? (
+            <Image source={item.image} />
+          ) : (
+            <Image source={{ uri: item.logo }} style={{ width: 131, height: 123 }} />
+          )}
 
           <View
             style={{
@@ -148,7 +78,7 @@ const CategoriesScreen = ({ navigation, route }) => {
               marginHorizontal: Default.fixPadding * 1.5,
             }}
           >
-            <Text style={Fonts.Black16Medium}>{item.title}</Text>
+            <Text style={Fonts.Black16Medium}>{item.name}</Text>
             <Image source={item.star} style={{ marginVertical: 3 }} />
             <View
               style={{
@@ -166,7 +96,7 @@ const CategoriesScreen = ({ navigation, route }) => {
                 }}
               />
 
-              <Text style={{ ...Fonts.Grey14Regular }}>{item.description}</Text>
+              <Text style={{ ...Fonts.Grey14Regular }}>{item.location}</Text>
             </View>
           </View>
           <TouchableOpacity onPress={() => onSelect(item)}>
