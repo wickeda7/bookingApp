@@ -5,13 +5,15 @@ import Octicons from 'react-native-vector-icons/Octicons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useTranslation } from 'react-i18next';
 import { useStoreContext } from '@contexts/StoreContext';
+
 import { STRAPIURL } from '@env';
+import { use } from 'i18next';
 const DetailScreen = (props) => {
   const { t, i18n } = useTranslation();
   const isRtl = i18n.dir() === 'rtl';
-  const { selectedStore } = useStoreContext();
-  console.log('selectedStore', selectedStore);
-  const { images, name, address } = selectedStore;
+  const { selectedStore, onFavorite } = useStoreContext();
+  const [isVisible, setVisible] = useState(false);
+  const { images, name, location } = selectedStore;
   const topImage = images ? `${STRAPIURL}${images.data[0].attributes.url}` : null;
   function tr(key) {
     return t(`detailScreen:${key}`);
@@ -21,13 +23,22 @@ const DetailScreen = (props) => {
     props.navigation.goBack();
     return true;
   };
+
+  useEffect(() => {
+    if (!selectedStore) return;
+    setVisible(selectedStore.selected);
+  }, [selectedStore]);
+
   useEffect(() => {
     BackHandler.addEventListener('hardwareBackPress', backAction);
 
     return () => BackHandler.removeEventListener('hardwareBackPress', backAction);
   }, []);
 
-  const [isVisible, setVisible] = useState(false);
+  const handleFavorite = () => {
+    onFavorite(selectedStore);
+    setVisible((preState) => !preState);
+  };
   return (
     <View style={{ marginTop: StatusBar.currentHeight }}>
       {topImage ? (
@@ -64,7 +75,7 @@ const DetailScreen = (props) => {
 
         <TouchableOpacity
           onPress={() => {
-            setVisible((preState) => !preState);
+            handleFavorite();
           }}
           style={{
             flex: 1,
@@ -72,7 +83,7 @@ const DetailScreen = (props) => {
           }}
         >
           <Ionicons
-            name={isVisible ? 'heart-outline' : 'heart'}
+            name={isVisible ? 'heart' : 'heart-outline'}
             size={30}
             style={{
               color: Colors.primary,
@@ -101,7 +112,7 @@ const DetailScreen = (props) => {
         }}
       >
         <View style={{ flex: 7.5, alignItems: isRtl ? 'flex-end' : 'flex-start' }}>
-          <Text style={Fonts.Black18Bold}>The Big Tease Salon</Text>
+          <Text style={Fonts.Black18Bold}>{name}</Text>
           <Image source={require('@assets/images/star4.png')} style={{ marginVertical: 3 }} />
           <View
             style={{
@@ -118,7 +129,7 @@ const DetailScreen = (props) => {
                 marginLeft: isRtl ? Default.fixPadding * 0.5 : 0,
               }}
             />
-            <Text style={Fonts.Primary14Medium}>4140 Parker Rd. Allentown</Text>
+            <Text style={Fonts.Primary14Medium}>{location}</Text>
           </View>
         </View>
         <View style={{ flex: 2.5, flexDirection: isRtl ? 'row-reverse' : 'row' }}>
