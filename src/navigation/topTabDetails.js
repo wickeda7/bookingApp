@@ -27,7 +27,7 @@ const TopTabDetails = (props) => {
         },
         tabBarActiveTintColor: Colors.primary,
         inactiveColor: Colors.grey,
-        tabBarScrollEnabled: true,
+
         tabBarIndicatorStyle: {
           borderBottomColor: Colors.primary,
           borderBottomWidth: 3,
@@ -48,47 +48,6 @@ const TopTabDetails = (props) => {
         options={{
           title: tr('information'),
         }}
-        initialParams={{ screen: screen }}
-      />
-      <Tab.Screen
-        name='informationScreen1'
-        component={InformationScreen}
-        options={{
-          title: tr('information'),
-        }}
-        initialParams={{ screen: screen }}
-      />
-      <Tab.Screen
-        name='informationScreen2'
-        component={InformationScreen}
-        options={{
-          title: tr('information'),
-        }}
-        initialParams={{ screen: screen }}
-      />
-      <Tab.Screen
-        name='informationScreen3'
-        component={InformationScreen}
-        options={{
-          title: tr('information'),
-        }}
-        initialParams={{ screen: screen }}
-      />
-      <Tab.Screen
-        name='informationScreen4'
-        component={InformationScreen}
-        options={{
-          title: tr('information'),
-        }}
-        initialParams={{ screen: screen }}
-      />
-      <Tab.Screen
-        name='informationScreen5'
-        component={InformationScreen}
-        options={{
-          title: tr('information'),
-        }}
-        initialParams={{ screen: screen }}
       />
       <Tab.Screen
         name={isRtl ? 'serviceScreen' : 'reviewScreen'}
@@ -96,7 +55,6 @@ const TopTabDetails = (props) => {
         options={{
           title: title2,
         }}
-        initialParams={{ screen: screen }}
       />
     </Tab.Navigator>
   );
