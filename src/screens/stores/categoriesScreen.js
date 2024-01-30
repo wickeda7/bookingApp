@@ -27,7 +27,9 @@ const CategoriesScreen = ({ navigation, route }) => {
 
   const handleSelectedStore = (store) => {
     setSelectedStore(store);
-    navigation.navigate('TopTabDetails');
+    //navigation.navigate('TopTabDetails');
+    navigation.navigate('TopTabDetails', { screen: 'serviceScreen' });
+    //navigation.push('TopTabDetails', { screen: 'serviceScreen' });
   };
   const renderItem = ({ item, index }) => {
     const isFirst = index === 0;

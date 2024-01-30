@@ -20,7 +20,7 @@ const InformationScreen = (props) => {
 
   const isRtl = i18n.dir() === 'rtl';
   let screen = props.route.params?.screen ? props.route.params?.screen : '';
-  console.log('screen', screen);
+  console.log('InformationScreen screen', screen);
   function tr(key) {
     return t(`informationScreen:${key}`);
   }

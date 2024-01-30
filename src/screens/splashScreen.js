@@ -9,7 +9,7 @@ const SplashScreen = (props) => {
   const { loading, loggedIn } = useAuthContext();
   useEffect(() => {
     if (!loading && loggedIn) {
-      props.navigation.push('BottomTab');
+      props.navigation.navigate('BottomTab');
     }
     if (!loading && !loggedIn) {
       setTimeout(() => {

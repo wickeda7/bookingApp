@@ -14,6 +14,22 @@ const StoreContextProvider = ({ children }) => {
     setStores(response);
   };
 
+  const getStoreRelation = async (id) => {
+    if (selectedStore.services) return;
+    const response = await storeApi.getStoreById(selectedStore.id);
+    const updatedStore = { ...selectedStore, ...response };
+    setSelectedStore(updatedStore);
+    const newItem = stores.map((val) => {
+      if (val.id === updatedStore.id) {
+        const newVal = { ...val, ...updatedStore };
+
+        return newVal;
+      } else {
+        return val;
+      }
+    });
+    setStores(newItem);
+  };
   const onFavorite = (item) => {
     const newItem = stores.map((val) => {
       if (val.id === item.id) {
@@ -36,6 +52,7 @@ const StoreContextProvider = ({ children }) => {
     setStores,
     onFavorite,
     getStores,
+    getStoreRelation,
   };
   return <StoreContext.Provider value={value}>{children}</StoreContext.Provider>;
 };

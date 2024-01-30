@@ -5,16 +5,20 @@ import Octicons from 'react-native-vector-icons/Octicons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useTranslation } from 'react-i18next';
 import { useStoreContext } from '@contexts/StoreContext';
-
 import { STRAPIURL } from '@env';
 import { use } from 'i18next';
 const DetailScreen = (props) => {
   const { t, i18n } = useTranslation();
   const isRtl = i18n.dir() === 'rtl';
-  const { selectedStore, onFavorite } = useStoreContext();
+  const { selectedStore, onFavorite, getStoreRelation } = useStoreContext();
   const [isVisible, setVisible] = useState(false);
-  const { images, name, location } = selectedStore;
-  const topImage = images ? `${STRAPIURL}${images.data[0].attributes.url}` : null;
+  let topImage = null;
+  if (selectedStore?.images) {
+    topImage = `${STRAPIURL}${selectedStore.images[0].attributes.url}`;
+  }
+  //console.log('selectedStore', selectedStore);
+  let name = selectedStore?.name;
+  let location = selectedStore?.location;
   function tr(key) {
     return t(`detailScreen:${key}`);
   }
@@ -27,6 +31,7 @@ const DetailScreen = (props) => {
   useEffect(() => {
     if (!selectedStore) return;
     setVisible(selectedStore.selected);
+    getStoreRelation();
   }, [selectedStore]);
 
   useEffect(() => {

@@ -4,25 +4,18 @@ import { Colors, Default, Fonts } from '@constants/style';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useTranslation } from 'react-i18next';
 import Items from '@components/items';
-import { use } from 'i18next';
-const ServiceScreen = (props) => {
+const ServiceScreenSub = (props) => {
   const { t, i18n } = useTranslation();
 
   const service = props.route.params.service;
   let screen = props.route.params?.screen ? props.route.params?.screen : '';
   const isRtl = i18n.dir() === 'rtl';
-  const [items, setItems] = useState(null);
-  // useEffect(() => {
-  //   if (service.items) {
-  //     setItems(service.items);
-  //   }
-  // }, []);
+
   function tr(key) {
     return t(`serviceScreen:${key}`);
   }
 
   const backAction = () => {
-    console.log('backAction');
     props.navigation.pop();
     return true;
   };
@@ -31,18 +24,11 @@ const ServiceScreen = (props) => {
 
     return () => BackHandler.removeEventListener('hardwareBackPress', backAction);
   }, []);
-  console.log('service.items', items);
-  // if (!items)
-  //   return (
-  //     <View style={{ flex: 1, height: 500 }}>
-  //       <Text>WTF</Text>
-  //     </View>
-  //   );
+  console.log('service.sub', service.sub_services);
   return (
-    <View style={{ flex: 1, height: 500 }}>
+    <View style={{ flex: 1 }}>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <Text>Itemssdfasdfs</Text>
-        {/* <Items items={items} /> */}
+        {/* <Items items={service.items} /> */}
         {/* <Text>sfsdfsdf</Text>
         {service.items && <Items items={service.items} />}
         {service.sub_services && <Text>sub_services</Text>} */}
@@ -63,4 +49,4 @@ const ServiceScreen = (props) => {
   );
 };
 
-export default ServiceScreen;
+export default ServiceScreenSub;

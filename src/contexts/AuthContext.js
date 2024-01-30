@@ -77,6 +77,7 @@ const AuthContextProvider = ({ children }) => {
       await AsyncStorage.setItem('@user', JSON.stringify(res));
       setUserData(res);
     }
+    //console.log('updateUserData setLoggedIn true');
     setLoggedIn(true);
     setLoading(false);
   };
@@ -88,11 +89,13 @@ const AuthContextProvider = ({ children }) => {
         const credential = GoogleAuthProvider.credential(id_token);
         await signInWithCredential(auth, credential);
       }
-    } else {
-      setUserData(user);
-      setLoggedIn(true);
-      setLoading(false);
     }
+    //  else {
+    //   console.log('handleEffect setLoggedIn true');
+    //   setUserData(user);
+    //   setLoggedIn(true);
+    //   setLoading(false);
+    // }
   };
 
   const getLocalUser = async () => {

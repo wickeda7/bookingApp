@@ -32,4 +32,20 @@ export const formatPhoneNumber = (value) => {
   return formattedNumber;
 };
 
-export default { formatPhoneNumber };
+export const parseReduceData = (data) => {
+  const reduced = data.reduce((acc, item) => {
+    const { id, attributes } = item;
+    if (attributes.enable) {
+      acc.push({
+        id,
+        name: attributes.name,
+        price: attributes.price,
+        description: attributes.description,
+        priceOption: attributes.priceOption,
+      });
+    }
+    return acc;
+  }, []);
+  return reduced;
+};
+export default { formatPhoneNumber, parseReduceData };
