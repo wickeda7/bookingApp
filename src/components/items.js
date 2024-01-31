@@ -2,10 +2,11 @@ import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Colors, Default, Fonts } from '@constants/style';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import { formatPrice } from '@utils/helper';
 import { use } from 'i18next';
 
 const Items = ({ items }) => {
-  console.log('items????', items);
   const [menu, setMenu] = useState(null);
   useEffect(() => {
     if (items) {
@@ -14,8 +15,7 @@ const Items = ({ items }) => {
   }, []);
   const { t, i18n } = useTranslation();
   const isRtl = i18n.dir() === 'rtl';
-  return <Text>Items</Text>;
-  if (!menu) return <></>;
+  if (!menu) return null;
   return (
     <>
       {menu.map((item) => {
@@ -49,8 +49,22 @@ const Items = ({ items }) => {
                 textAlign: isRtl ? 'right' : 'left',
               }}
             >
-              {item.price} {option}
+              {formatPrice(item.price * 100)} {option}
             </Text>
+            <View style={{ flex: 1 }}>
+              <TouchableOpacity
+                onPress={() => {
+                  //statusOption(item.text);
+                }}
+              >
+                <Ionicons
+                  //name={selectedOption === item.text ? 'radio-button-on-outline' : 'ellipse-outline'}
+                  name={'radio-button-on-outline'}
+                  size={30}
+                  color={Colors.primary}
+                />
+              </TouchableOpacity>
+            </View>
           </TouchableOpacity>
         );
       })}

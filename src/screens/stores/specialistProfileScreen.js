@@ -87,7 +87,10 @@ const SpecialistProfileScreen = (props) => {
         }}
       >
         <TouchableOpacity
-          onPress={() => props.navigation.goBack()}
+          onPress={() => {
+            props.navigation.navigate('TopTabDetails', { screen: 'informationScreen' });
+            //props.navigation.goBack()
+          }}
           style={{ flex: 1, alignItems: isRtl ? 'flex-end' : 'flex-start' }}
         >
           <Ionicons

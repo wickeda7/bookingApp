@@ -1,7 +1,5 @@
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import ServiceScreen from '@screens/stores/serviceScreen';
-import ServiceScreen2 from '@screens/stores/serviceScreen2';
-import ServiceScreenSub from '@screens/stores/serviceScreenSub';
 import InformationScreen from '@screens/stores/informationScreen';
 import ReviewScreen from '@screens/stores/reviewScreen';
 import { Colors } from '@constants/style';
@@ -53,65 +51,7 @@ const TopTabDetails = (props) => {
           />
         );
       })}
-      {/* <Tab.Screen
-        key={services[0].id}
-        name={`serviceScreen${services[0].id}`}
-        component={ServiceScreen}
-        options={{
-          title: services[0].name,
-        }}
-        initialParams={{ service: services[0], screen: screen }}
-      /> */}
-      {/* {services &&
-        services.map((service) => {
-          return (
-            <Tab.Screen
-              key={service.id}
-              name={`serviceScreen${service.id}`}
-              component={ServiceScreen}
-              options={{
-                title: service.name,
-              }}
-              initialParams={{ service: service, screen: screen }}
-            />
-          );
 
-          // if (service.items) {
-          //   return (
-          //     <Tab.Screen
-          //       key={service.id}
-          //       name={`serviceScreen${service.id}`}
-          //       component={ServiceScreen}
-          //       options={{
-          //         title: service.name,
-          //       }}
-          //       initialParams={{ service: service, screen: screen }}
-          //     />
-          //   );
-          // } else {
-          //   return (
-          //     <Tab.Screen
-          //       key={service.id}
-          //       name={`serviceScreenSub${service.id}`}
-          //       component={ServiceScreenSub}
-          //       options={{
-          //         title: service.name,
-          //       }}
-          //       initialParams={{ service: service, screen: screen }}
-          //     />
-          //   );
-          // }
-        })} */}
-      {/* {!services && (
-        <Tab.Screen
-          name={isRtl ? 'reviewScreen' : 'serviceScreen'}
-          component={isRtl ? ReviewScreen : ServiceScreen2}
-          options={{
-            title: title,
-          }}
-          initialParams={{ screen: screen }}
-        />
-      )} */}
       <Tab.Screen
         name='informationScreen'
         component={InformationScreen}

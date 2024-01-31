@@ -6,6 +6,7 @@ export const DATA = [
     location: '1901 Thornridge Cir. Shiloh,Hawaii 81063 ',
     star: require('@assets/images/star5.png'),
     selected: false,
+    services: [],
   },
   {
     id: '12',
@@ -14,6 +15,7 @@ export const DATA = [
     location: '1901 Thornridge Cir. Shiloh,Hawaii 81063 ',
     star: require('@assets/images/star3.png'),
     selected: false,
+    services: [],
   },
   {
     id: '13',
@@ -22,6 +24,7 @@ export const DATA = [
     location: '1901 Thornridge Cir. Shiloh,Hawaii 81063 ',
     star: require('@assets/images/star4.png'),
     selected: true,
+    services: [],
   },
   {
     id: '14',
@@ -30,6 +33,7 @@ export const DATA = [
     location: '1901 Thornridge Cir. Shiloh,Hawaii 81063 ',
     star: require('@assets/images/star3.png'),
     selected: false,
+    services: [],
   },
   {
     id: '15',
@@ -38,6 +42,7 @@ export const DATA = [
     location: '1901 Thornridge Cir. Shiloh,Hawaii 81063 ',
     star: require('@assets/images/star5.png'),
     selected: false,
+    services: [],
   },
   {
     id: '16',
@@ -46,6 +51,7 @@ export const DATA = [
     location: '1901 Thornridge Cir. Shiloh,Hawaii 81063 ',
     star: require('@assets/images/star1.png'),
     selected: true,
+    services: [],
   },
   {
     id: '17',
@@ -54,6 +60,7 @@ export const DATA = [
     location: '1901 Thornridge Cir. Shiloh,Hawaii 81063 ',
     star: require('@assets/images/star4.png'),
     selected: false,
+    services: [],
   },
   {
     id: '18',
@@ -63,6 +70,7 @@ export const DATA = [
     location: '3517 W. Gray St. Utica,Pennsylvania 57867',
     star: require('@assets/images/star1.png'),
     selected: false,
+    services: [],
   },
   {
     id: '19',
@@ -71,6 +79,7 @@ export const DATA = [
     location: '1901 Thornridge Cir. Shiloh,Hawaii 81063 ',
     star: require('@assets/images/star3.png'),
     selected: false,
+    services: [],
   },
   {
     id: '20',
@@ -79,5 +88,6 @@ export const DATA = [
     location: '1901 Thornridge Cir. Shiloh,Hawaii 81063 ',
     star: require('@assets/images/star4.png'),
     selected: false,
+    services: [],
   },
 ];
