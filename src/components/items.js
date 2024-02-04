@@ -6,7 +6,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { formatPrice } from '@utils/helper';
 import { use } from 'i18next';
 
-const Items = ({ items }) => {
+const Items = ({ items, key }) => {
   const [menu, setMenu] = useState(null);
   useEffect(() => {
     if (items) {

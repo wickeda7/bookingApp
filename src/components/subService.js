@@ -9,12 +9,10 @@ const SubService = ({ subservices }) => {
       setSubMenu(subservices);
     }
   }, []);
-  console.log('subMenu', subMenu);
   if (!subMenu) return null;
   return (
     <>
       {subMenu.map((subService) => {
-        console.log('subService', subService);
         return (
           <>
             <View

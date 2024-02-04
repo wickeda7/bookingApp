@@ -14,13 +14,25 @@ import { Default, Fonts, Colors } from '@constants/style';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MapView, { Marker } from 'react-native-maps';
 import { useTranslation } from 'react-i18next';
-
+import { ourSpecialistsData, PhotoData } from '@api/tempData';
+import { STRAPIURL } from '@env';
+import moment from 'moment';
+import { formatPhoneNumber } from '@utils/helper';
 const InformationScreen = (props) => {
   const { t, i18n } = useTranslation();
 
   const isRtl = i18n.dir() === 'rtl';
   let screen = props.route.params?.screen ? props.route.params?.screen : '';
-  console.log('InformationScreen screen', screen);
+  const selectedStore = props.route.params?.selectedStore ? props.route.params?.selectedStore : '';
+  const { about, employee, images, hours, phone, location, latitude, longtitude } = selectedStore;
+  let newEmployee = [...employee, ...ourSpecialistsData];
+  // var mydate = new Date();
+  // var weekDayName = moment(mydate).format('dddd');
+  // console.log('images', weekDayName);
+
+  ///ourSpecialistsData
+  //const employee = props.route.params?.employee ? props.route.params?.employee : ''; 34.10711972462575, -118.0611798585755
+  console.log('InformationScreen ourSpecialistsData', images);
   function tr(key) {
     return t(`informationScreen:${key}`);
   }
@@ -35,53 +47,11 @@ const InformationScreen = (props) => {
     return () => BackHandler.removeEventListener('hardwareBackPress', backAction);
   }, []);
 
-  const ourSpecialistsData = [
-    {
-      key: '1',
-      image: require('@assets/images/pic1.png'),
-      name: 'Kari',
-      status: 'hair stylist',
-    },
-    {
-      key: '2',
-      image: require('@assets/images/pic2.png'),
-      name: 'Shawn',
-      status: 'nail artiest',
-    },
-    {
-      key: '3',
-      image: require('@assets/images/pic3.png'),
-      name: 'Mitchell',
-      status: 'manger',
-    },
-    {
-      key: '4',
-      image: require('@assets/images/pic4.png'),
-      name: 'Kari',
-      status: 'hair stylistt',
-    },
-    {
-      key: '5',
-      image: require('@assets/images/pic5.png'),
-      name: 'Shawn',
-      status: 'nail artiest',
-    },
-    {
-      key: '6',
-      image: require('@assets/images/pic6.png'),
-      name: 'Mitchell',
-      status: 'manger',
-    },
-    {
-      key: '7',
-      image: require('@assets/images/pic4.png'),
-      name: 'Kari',
-      status: 'hair stylistt',
-    },
-  ];
-
   const renderItemOurSpecialists = ({ item, index }) => {
     const isFirst = index === 0;
+    const name = item.name ? item.name : item.firstName;
+    const specialty = item.status ? item.status : item.userInfo.specialty;
+    //console.log('specialty', `${STRAPIURL}${item.userInfo.profileImg.url}`);
     return (
       <TouchableOpacity
         onPress={() => {
@@ -99,47 +69,20 @@ const InformationScreen = (props) => {
           marginRight: Default.fixPadding * 1.5,
         }}
       >
-        <Image source={item.image} />
+        {item.image ? (
+          <Image source={item.image} />
+        ) : (
+          <Image source={{ uri: `${STRAPIURL}${item.userInfo.profileImg.url}` }} style={{ width: 72, height: 72 }} />
+        )}
 
-        <Text style={{ ...Fonts.Black14Regular, textAlign: 'center' }}>{item.name}</Text>
-        <Text style={{ ...Fonts.Black14Regular, textAlign: 'center' }}>{item.status}</Text>
+        <Text style={{ ...Fonts.Black14Regular, textAlign: 'center' }}>{name}</Text>
+        <Text style={{ ...Fonts.Black14Regular, textAlign: 'center' }}>{specialty}</Text>
       </TouchableOpacity>
     );
   };
-
-  const PhotoData = [
-    {
-      key: '1',
-      image: require('@assets/images/photo1.png'),
-    },
-    {
-      key: '2',
-      image: require('@assets/images/photo2.png'),
-    },
-    {
-      key: '3',
-      image: require('@assets/images/photo3.png'),
-    },
-    {
-      key: '4',
-      image: require('@assets/images/photo4.png'),
-    },
-    {
-      key: '5',
-      image: require('@assets/images/photo5.png'),
-    },
-    {
-      key: '6',
-      image: require('@assets/images/photo6.png'),
-    },
-    {
-      key: '7',
-      image: require('@assets/images/photo7.png'),
-    },
-  ];
-
-  const renderItemPhoto = ({ item, index }) => {
-    const isFirst = index === PhotoData.length - 7;
+  const renderItemHours = ({ item, index }) => {
+    const totalDays = hours.length;
+    const isFirst = index === hours.length - totalDays;
     return (
       <View
         style={{
@@ -148,7 +91,28 @@ const InformationScreen = (props) => {
           marginRight: Default.fixPadding * 1.5,
         }}
       >
-        <Image source={item.image} />
+        <View>
+          <Text style={{ fontWeight: '600' }}>{item.day}</Text>
+        </View>
+        <View>
+          <Text>{item.hours}</Text>
+        </View>
+      </View>
+    );
+  };
+
+  const renderItemPhoto = ({ item, index }) => {
+    const totalImg = images.length;
+    const isFirst = index === images.length - totalImg;
+    return (
+      <View
+        style={{
+          paddingBottom: Default.fixPadding * 1.5,
+          marginLeft: isFirst ? Default.fixPadding * 1.5 : 0,
+          marginRight: Default.fixPadding * 1.5,
+        }}
+      >
+        <Image source={{ uri: `${STRAPIURL}${item.url}` }} style={{ width: 110, height: 101 }} />
       </View>
     );
   };
@@ -165,7 +129,7 @@ const InformationScreen = (props) => {
         >
           <Text style={Fonts.Black16Bold}>{tr('about')}</Text>
           <Text style={Fonts.Grey14Regular}>
-            {tr('description')}
+            {about.substring(0, 200)}...
             <Text style={Fonts.Primary14Regular}>{tr('readMore')}</Text>
           </Text>
         </View>
@@ -187,9 +151,9 @@ const InformationScreen = (props) => {
           </Text>
           <FlatList
             horizontal={true}
-            data={ourSpecialistsData}
+            data={newEmployee}
             renderItem={renderItemOurSpecialists}
-            keyExtractor={(item) => item.key}
+            keyExtractor={(item) => item.id}
             showsHorizontalScrollIndicator={false}
           />
         </View>
@@ -211,9 +175,9 @@ const InformationScreen = (props) => {
           </Text>
           <FlatList
             horizontal={true}
-            data={PhotoData}
+            data={images}
             renderItem={renderItemPhoto}
-            keyExtractor={(item) => item.key}
+            keyExtractor={(item) => item.id}
             showsHorizontalScrollIndicator={false}
           />
         </View>
@@ -226,14 +190,13 @@ const InformationScreen = (props) => {
           }}
         >
           <Text style={Fonts.Black16Bold}>{tr('workingHour')}</Text>
-          <Text
-            style={{
-              ...Fonts.Grey14Medium,
-              textAlign: isRtl ? 'right' : 'left',
-            }}
-          >
-            9:00 AM - 9:00 PM
-          </Text>
+          <FlatList
+            horizontal={true}
+            data={hours}
+            renderItem={renderItemHours}
+            keyExtractor={(item) => item.day}
+            showsHorizontalScrollIndicator={false}
+          />
         </View>
 
         <View
@@ -261,10 +224,10 @@ const InformationScreen = (props) => {
                 ...Fonts.Black14Medium,
               }}
             >
-              (808) 555-0111
+              {formatPhoneNumber(phone)}
             </Text>
           </View>
-          <View
+          {/* <View
             style={{
               flexDirection: isRtl ? 'row-reverse' : 'row',
               alignItems: 'center',
@@ -277,7 +240,7 @@ const InformationScreen = (props) => {
               style={{ marginRight: Default.fixPadding * 0.5 }}
             />
             <Text style={Fonts.Black14Medium}>www.thebigteasesalon.com</Text>
-          </View>
+          </View> */}
         </View>
 
         <View
@@ -293,21 +256,19 @@ const InformationScreen = (props) => {
             }}
           >
             <Text style={Fonts.Black16Bold}>{tr('address')}</Text>
-            <Text style={{ ...Fonts.Primary14Regular, maxWidth: '45%' }}>
-              4140 Parker Rd. Allentown, New Mexico 31134
-            </Text>
+            <Text style={{ ...Fonts.Primary14Regular, maxWidth: '45%' }}>{location}</Text>
           </View>
 
           <MapView
             style={{ height: 150 }}
             initialRegion={{
-              latitude: 37.78825,
-              longitude: -122.4324,
+              latitude: latitude,
+              longitude: longtitude,
               latitudeDelta: 0.0922,
               longitudeDelta: 0.0421,
             }}
           >
-            <Marker coordinate={{ latitude: 37.78825, longitude: -122.4324 }} />
+            <Marker coordinate={{ latitude, longitude: longtitude }} />
           </MapView>
         </View>
       </ScrollView>

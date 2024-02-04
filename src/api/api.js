@@ -37,10 +37,9 @@ export const api = {
     }
   },
   getStoreById: async (id) => {
-    //http://localhost:1337/api/stores/1?fields[0]=name&populate[0]=services&populate[1]=services.items&populate[2]=services.sub_services&populate[3]=services.sub_services.items&populate[4]=images
     try {
-      const url = `${STRAPIURL}/api/stores/${id}?fields[0]=name&=name&populate[0]=services&populate[1]=services.items&populate[2]=services.sub_services&populate[3]=services.sub_services.items&populate[4]=images`;
-      const response = await axios.get(url);
+      const url = `${STRAPIURL}/api/stores/${id}?fields[0]=name&=name&populate[0]=services&populate[1]=services.items&populate[2]=services.sub_services&populate[3]=services.sub_services.items&populate[4]=images&populate[5]=employee&populate[6]=employee.userInfo&populate[7]=employee.userInfo.profileImg&populate[8]=employee.userInfo.images`;
+      const response = await axios.get(`${STRAPIURL}/api/stores/populate/${id}`);
       //console.log('getStoreById', response.data.data);
       return response.data.data;
     } catch (error) {

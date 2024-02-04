@@ -91,3 +91,73 @@ export const DATA = [
     services: [],
   },
 ];
+
+export const ourSpecialistsData = [
+  {
+    id: '2',
+    image: require('@assets/images/pic2.png'),
+    name: 'Shawn',
+    status: 'nail artiest',
+  },
+  {
+    id: '3',
+    image: require('@assets/images/pic3.png'),
+    name: 'Mitchell',
+    status: 'manger',
+  },
+  {
+    id: '4',
+    image: require('@assets/images/pic4.png'),
+    name: 'Kari',
+    status: 'hair stylistt',
+  },
+  {
+    id: '5',
+    image: require('@assets/images/pic5.png'),
+    name: 'Shawn',
+    status: 'nail artiest',
+  },
+  {
+    id: '6',
+    image: require('@assets/images/pic6.png'),
+    name: 'Mitchell',
+    status: 'manger',
+  },
+  {
+    id: '7',
+    image: require('@assets/images/pic4.png'),
+    name: 'Kari',
+    status: 'hair stylistt',
+  },
+];
+
+export const PhotoData = [
+  {
+    key: '1',
+    image: require('@assets/images/photo1.png'),
+  },
+  {
+    key: '2',
+    image: require('@assets/images/photo2.png'),
+  },
+  {
+    key: '3',
+    image: require('@assets/images/photo3.png'),
+  },
+  {
+    key: '4',
+    image: require('@assets/images/photo4.png'),
+  },
+  {
+    key: '5',
+    image: require('@assets/images/photo5.png'),
+  },
+  {
+    key: '6',
+    image: require('@assets/images/photo6.png'),
+  },
+  {
+    key: '7',
+    image: require('@assets/images/photo7.png'),
+  },
+];

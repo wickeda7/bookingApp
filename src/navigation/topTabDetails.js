@@ -58,6 +58,7 @@ const TopTabDetails = (props) => {
         options={{
           title: tr('information'),
         }}
+        initialParams={{ screen: screen, selectedStore: selectedStore }}
       />
       <Tab.Screen
         name={isRtl ? 'serviceScreen' : 'reviewScreen'}

@@ -14,7 +14,7 @@ const DetailScreen = (props) => {
   const [isVisible, setVisible] = useState(false);
   let topImage = null;
   if (selectedStore?.images) {
-    topImage = `${STRAPIURL}${selectedStore.images[0].attributes.url}`;
+    topImage = `${STRAPIURL}${selectedStore.images[0].url}`;
   }
   //console.log('selectedStore', selectedStore);
   let name = selectedStore?.name;
