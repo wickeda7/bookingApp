@@ -6,10 +6,22 @@ import Octicons from 'react-native-vector-icons/Octicons';
 import MapView, { Marker } from 'react-native-maps';
 import { useTranslation } from 'react-i18next';
 import MyStatusBar from '@components/myStatusBar';
+import { STRAPIURL } from '@env';
 
 const SpecialistProfileScreen = (props) => {
   const { t, i18n } = useTranslation();
-
+  let screen = props.route.params?.screen ? props.route.params?.screen : '';
+  const employee = props.route.params?.employee ? props.route.params?.employee : '';
+  const {
+    firstName,
+    lastName,
+    userInfo: { profileImg, specialty, experience, images, about },
+  } = employee;
+  let topImage = null;
+  console.log('SpecialistProfileScreen ourSpecialistsData', images);
+  if (profileImg) {
+    topImage = `${STRAPIURL}${profileImg.url}`;
+  }
   const isRtl = i18n.dir() === 'rtl';
 
   function tr(key) {
@@ -27,36 +39,6 @@ const SpecialistProfileScreen = (props) => {
   }, []);
 
   const [isVisible, setVisible] = useState(false);
-  const PhotoData = [
-    {
-      key: '1',
-      image: require('@assets/images/photo1.png'),
-    },
-    {
-      key: '2',
-      image: require('@assets/images/photo2.png'),
-    },
-    {
-      key: '3',
-      image: require('@assets/images/photo3.png'),
-    },
-    {
-      key: '4',
-      image: require('@assets/images/photo4.png'),
-    },
-    {
-      key: '5',
-      image: require('@assets/images/photo5.png'),
-    },
-    {
-      key: '6',
-      image: require('@assets/images/photo6.png'),
-    },
-    {
-      key: '7',
-      image: require('@assets/images/photo7.png'),
-    },
-  ];
 
   const renderItemPhoto = ({ item, index }) => {
     const isFirst = index === 0;
@@ -68,7 +50,7 @@ const SpecialistProfileScreen = (props) => {
           marginRight: Default.fixPadding * 1.5,
         }}
       >
-        <Image source={item.image} />
+        <Image source={{ uri: `${STRAPIURL}${item.url}` }} style={{ width: 110, height: 101 }} />
       </View>
     );
   };
@@ -76,7 +58,11 @@ const SpecialistProfileScreen = (props) => {
   return (
     <View style={{ flex: 1 }}>
       {/* <MyStatusBar /> */}
-      <Image source={require('@assets/images/sProfile.png')} />
+      {topImage ? (
+        <Image source={{ uri: topImage }} style={{ width: '100%', height: 299 }} />
+      ) : (
+        <Image source={require('@assets/images/sProfile.png')} />
+      )}
 
       <View
         style={{
@@ -134,8 +120,10 @@ const SpecialistProfileScreen = (props) => {
                 alignItems: 'center',
               }}
             >
-              <Text style={Fonts.Black18Bold}>Kari Alexande</Text>
-              <Text style={Fonts.Grey15Bold}>(hair style specialist)</Text>
+              <Text style={Fonts.Black18Bold}>
+                {firstName} {lastName}?
+              </Text>
+              <Text style={Fonts.Grey15Bold}>({specialty})</Text>
             </View>
             <Text
               style={{
@@ -144,7 +132,7 @@ const SpecialistProfileScreen = (props) => {
                 textAlign: isRtl ? 'right' : 'left',
               }}
             >
-              6 year experience
+              {experience} year experience
             </Text>
             <Image
               source={require('@assets/images/star4.png')}
@@ -153,7 +141,7 @@ const SpecialistProfileScreen = (props) => {
                 marginVertical: 2,
               }}
             />
-            <View
+            {/* <View
               style={{
                 flexDirection: isRtl ? 'row-reverse' : 'row',
                 alignItems: 'center',
@@ -170,7 +158,7 @@ const SpecialistProfileScreen = (props) => {
                 }}
               />
               <Text style={Fonts.Primary14Medium}>4140 Parker Rd. Allentown</Text>
-            </View>
+            </View> */}
           </View>
 
           <TouchableOpacity
@@ -199,7 +187,7 @@ const SpecialistProfileScreen = (props) => {
         >
           <Text style={Fonts.Black16Bold}>{tr('about')}</Text>
           <Text style={Fonts.Grey14Regular}>
-            {tr('description')}
+            {about}
             <Text style={Fonts.Primary14Regular}>{tr('readMore')}</Text>
           </Text>
         </View>
@@ -215,13 +203,13 @@ const SpecialistProfileScreen = (props) => {
         </Text>
         <FlatList
           horizontal
-          data={PhotoData}
+          data={images}
           renderItem={renderItemPhoto}
-          keyExtractor={(item) => item.key}
+          keyExtractor={(item) => item.id}
           showsHorizontalScrollIndicator={false}
         />
 
-        <View
+        {/* <View
           style={{
             paddingBottom: Default.fixPadding,
             paddingHorizontal: Default.fixPadding * 1.5,
@@ -236,9 +224,9 @@ const SpecialistProfileScreen = (props) => {
           >
             9:00 AM - 9:00 PM
           </Text>
-        </View>
+        </View> */}
 
-        <View
+        {/* <View
           style={{
             paddingBottom: Default.fixPadding,
             paddingHorizontal: Default.fixPadding * 1.5,
@@ -273,7 +261,7 @@ const SpecialistProfileScreen = (props) => {
           >
             <Marker coordinate={{ latitude: 37.78825, longitude: -122.4324 }} />
           </MapView>
-        </View>
+        </View> */}
       </ScrollView>
 
       <TouchableOpacity
