@@ -18,7 +18,6 @@ const SpecialistProfileScreen = (props) => {
     userInfo: { profileImg, specialty, experience, images, about },
   } = employee;
   let topImage = null;
-  console.log('SpecialistProfileScreen ourSpecialistsData', images);
   if (profileImg) {
     topImage = `${STRAPIURL}${profileImg.url}`;
   }

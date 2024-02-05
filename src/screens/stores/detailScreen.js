@@ -16,7 +16,6 @@ const DetailScreen = (props) => {
   if (selectedStore?.images) {
     topImage = `${STRAPIURL}${selectedStore.images[0].url}`;
   }
-  //console.log('selectedStore', selectedStore);
   let name = selectedStore?.name;
   let location = selectedStore?.location;
   function tr(key) {

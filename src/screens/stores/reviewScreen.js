@@ -2,10 +2,13 @@ import { Image, Text, View, SafeAreaView, ScrollView, TouchableOpacity, StatusBa
 import React, { useEffect } from 'react';
 import { Colors, Default, Fonts } from '@constants/style';
 import { useTranslation } from 'react-i18next';
+import { useStoreContext } from '@contexts/StoreContext';
+import Loader from '@components/loader';
+import { STRAPIURL } from '@env';
 
 const ReviewScreen = (props) => {
   const { t, i18n } = useTranslation();
-
+  const { getReviews, reviews, loading } = useStoreContext();
   const isRtl = i18n.dir() === 'rtl';
 
   function tr(key) {
@@ -17,56 +20,75 @@ const ReviewScreen = (props) => {
     return true;
   };
   useEffect(() => {
+    if (!reviews) getReviews();
+
     BackHandler.addEventListener('hardwareBackPress', backAction);
 
     return () => BackHandler.removeEventListener('hardwareBackPress', backAction);
   }, []);
-
+  if (loading) return <Loader visible={true} />;
   return (
     <View style={{ flex: 1 }}>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <View
-          style={{
-            marginHorizontal: Default.fixPadding * 1.5,
-            marginVertical: Default.fixPadding * 1.5,
-            borderRadius: 10,
-            backgroundColor: Colors.white,
-            ...Default.shadow,
-          }}
-        >
-          <View
-            style={{
-              flexDirection: isRtl ? 'row-reverse' : 'row',
-              borderTopLeftRadius: 10,
-              borderTopRightRadius: 10,
-              paddingHorizontal: Default.fixPadding * 1.5,
-              backgroundColor: Colors.regularGrey,
-            }}
-          >
-            <Image source={require('@assets/images/review1.png')} />
-            <View
-              style={{
-                justifyContent: 'center',
-                alignItems: isRtl ? 'flex-end' : 'flex-start',
-              }}
-            >
-              <Text style={Fonts.Black16Medium}>Cameron Williamson</Text>
-              <Image source={require('@assets/images/star5.png')} />
-            </View>
-          </View>
+        {reviews &&
+          reviews.map((review, index) => {
+            const {
+              content,
+              reviewed_by: {
+                firstName,
+                lastName,
+                userInfo: { profileImg },
+              },
+            } = review;
 
-          <Text
-            style={{
-              ...Fonts.Grey14Medium,
-              margin: Default.fixPadding * 1.5,
-            }}
-          >
-            Triage. Bloppa Joakim Norberg. Kuratera AI. Rune Gunnarsson bevoheten. Nanoteknik lean startup. Inger
-            Lindholm ungen. Betav Lovisa Lind. Dussade Johan Sundström. Effektiv Magdalena
-          </Text>
-        </View>
+            let topImage = `${STRAPIURL}${profileImg.url}`;
+            return (
+              <View
+                style={{
+                  marginHorizontal: Default.fixPadding * 1.5,
+                  marginVertical: Default.fixPadding * 1.5,
+                  borderRadius: 10,
+                  backgroundColor: Colors.white,
+                  ...Default.shadow,
+                }}
+                key={review.id}
+              >
+                <View
+                  style={{
+                    flexDirection: isRtl ? 'row-reverse' : 'row',
+                    borderTopLeftRadius: 10,
+                    borderTopRightRadius: 10,
+                    paddingHorizontal: Default.fixPadding * 1.5,
+                    backgroundColor: Colors.regularGrey,
+                  }}
+                >
+                  <Image source={{ uri: topImage }} style={{ width: 66, height: 66 }} />
+                  <View
+                    style={{
+                      justifyContent: 'center',
+                      alignItems: isRtl ? 'flex-end' : 'flex-start',
+                    }}
+                  >
+                    <Text style={Fonts.Black16Medium}>
+                      {firstName} {lastName}
+                    </Text>
+                    <Image source={require('@assets/images/star5.png')} />
+                  </View>
+                </View>
 
-        <View
+                <Text
+                  style={{
+                    ...Fonts.Grey14Medium,
+                    margin: Default.fixPadding * 1.5,
+                  }}
+                >
+                  {content}
+                </Text>
+              </View>
+            );
+          })}
+        {/******************************************************** */}
+        {/* <View
           style={{
             marginHorizontal: Default.fixPadding * 1.5,
             marginBottom: Default.fixPadding * 1.5,
@@ -187,7 +209,7 @@ const ReviewScreen = (props) => {
             Triage. Bloppa Joakim Norberg. Kuratera AI. Rune Gunnarsson bevoheten. Nanoteknik lean startup. Inger
             Lindholm ungen. Betav Lovisa Lind. Dussade Johan Sundström. Effektiv Magdalena
           </Text>
-        </View>
+        </View> */}
       </ScrollView>
 
       <TouchableOpacity

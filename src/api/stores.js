@@ -39,4 +39,12 @@ export const stores = {
       throw error;
     }
   },
+  getReviews: async (id) => {
+    try {
+      const response = await api.getStoreReviews(id);
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  },
 };
