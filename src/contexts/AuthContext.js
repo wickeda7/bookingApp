@@ -27,6 +27,7 @@ const AuthContextProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [loggedIn, setLoggedIn] = useState(null);
   const [userData, setUserData] = useState(null);
+  const [reviews, setReviews] = useState(null);
   const auth = getAuth(appFirebase);
   const [request, response, promptAsync] = Google.useAuthRequest({
     androidClientId: ANDROIDCLIENTID,
@@ -140,6 +141,12 @@ const AuthContextProvider = ({ children }) => {
     setUserData(updatedUseer);
     await AsyncStorage.setItem('@user', JSON.stringify(updatedUseer));
   };
+  const getReviews = async (id) => {
+    setLoading(true);
+    const response = await users.getReviews(id);
+    setReviews(response.data);
+    setLoading(false);
+  };
   const value = {
     loading,
     setLoading,
@@ -151,6 +158,8 @@ const AuthContextProvider = ({ children }) => {
     auth,
     promptAsync,
     updateUserFavorite,
+    getReviews,
+    reviews,
   };
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

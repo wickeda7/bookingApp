@@ -32,7 +32,6 @@ const InformationScreen = (props) => {
 
   ///ourSpecialistsData
   //const employee = props.route.params?.employee ? props.route.params?.employee : ''; 34.10711972462575, -118.0611798585755
-  console.log('InformationScreen ourSpecialistsData', newEmployee);
   function tr(key) {
     return t(`informationScreen:${key}`);
   }
@@ -56,14 +55,14 @@ const InformationScreen = (props) => {
       <TouchableOpacity
         onPress={() => {
           if (screen !== '') {
-            props.navigation.navigate('StoresStack', {
+            props.navigation.push('StoresStack', {
               screen: 'specialistProfileScreen',
               params: {
                 employee: item,
               },
             });
           } else {
-            props.navigation.navigate('specialistProfileScreen', { employee: item });
+            props.navigation.push('specialistProfileScreen', { employee: item });
           }
         }}
         style={{

@@ -70,4 +70,13 @@ export const api = {
       throw error;
     }
   },
+  getSpecialistReviews: async (id) => {
+    try {
+      const url = `${STRAPIURL}/api/review/specialist/${id}`;
+      const response = await axios.get(url);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
 };

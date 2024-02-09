@@ -52,7 +52,6 @@ const StoreContextProvider = ({ children }) => {
   const getReviews = async (id) => {
     if (!selectedStore) return;
     setLoading(true);
-    console.log('selectedStore11111', selectedStore);
     const response = await storeApi.getReviews(selectedStore.id);
     setReviews(response.data);
     updatedSelectedStore({ reviews: response.data });

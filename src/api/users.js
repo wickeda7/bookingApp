@@ -36,4 +36,12 @@ export const users = {
       throw error;
     }
   },
+  getReviews: async (id) => {
+    try {
+      const response = await api.getSpecialistReviews(id);
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  },
 };

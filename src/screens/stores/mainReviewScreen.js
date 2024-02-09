@@ -1,15 +1,19 @@
-import { Image, Text, View, TouchableOpacity, FlatList, BackHandler } from 'react-native';
+import { Text, View, TouchableOpacity, FlatList, BackHandler } from 'react-native';
 import React, { useEffect } from 'react';
 import { Colors, Default, Fonts } from '@constants/style';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useTranslation } from 'react-i18next';
 import MyStatusBar from '@components/myStatusBar';
+import { useAuthContext } from '@contexts/AuthContext';
+import Loader from '@components/loader';
+import ReviewContent from '@components/reviewContent';
 
 const MainReviewScreen = (props) => {
   const { t, i18n } = useTranslation();
-
+  const { getReviews, reviews, loading } = useAuthContext();
   const isRtl = i18n.dir() === 'rtl';
-
+  const specialistId = props.route.params?.specialistId ? props.route.params?.specialistId : '';
+  const employee = props.route.params?.employee ? props.route.params?.employee : '';
   function tr(key) {
     return t(`mainReviewScreen:${key}`);
   }
@@ -19,93 +23,14 @@ const MainReviewScreen = (props) => {
     return true;
   };
   useEffect(() => {
+    if (!reviews) getReviews(specialistId);
     BackHandler.addEventListener('hardwareBackPress', backAction);
 
     return () => BackHandler.removeEventListener('hardwareBackPress', backAction);
   }, []);
 
-  const dataList = [
-    {
-      id: '1',
-      title: 'Cameron Williamson',
-      image: require('@assets/images/review1.png'),
-    },
-    {
-      id: '2',
-      title: 'Brooklyn Simmons',
-      image: require('@assets/images/review2.png'),
-    },
-    {
-      id: '3',
-      title: 'Arlene McCoy',
-      image: require('@assets/images/review3.png'),
-    },
-    {
-      id: '4',
-      title: 'Guy Hawkins',
-      image: require('@assets/images/review4.png'),
-    },
-    {
-      id: '5',
-      title: 'Jane Cooper',
-      image: require('@assets/images/review5.png'),
-    },
-    {
-      id: '6',
-      title: 'Brooklyn Simmons',
-      image: require('@assets/images/review6.png'),
-    },
-  ];
-
-  const renderItem = ({ item, index }) => {
-    const isEnd = index === dataList.length - 1;
-
-    return (
-      <View
-        style={{
-          marginHorizontal: Default.fixPadding * 1.5,
-          marginBottom: isEnd ? Default.fixPadding * 1.5 : 0,
-          marginTop: Default.fixPadding * 1.5,
-          borderRadius: 10,
-          backgroundColor: Colors.white,
-          ...Default.shadow,
-        }}
-      >
-        <View
-          style={{
-            flexDirection: isRtl ? 'row-reverse' : 'row',
-            paddingHorizontal: Default.fixPadding,
-            borderTopLeftRadius: 10,
-            borderTopRightRadius: 10,
-            backgroundColor: Colors.regularGrey,
-          }}
-        >
-          <Image source={item.image} />
-          <View
-            style={{
-              justifyContent: 'center',
-              alignItems: isRtl ? 'flex-end' : 'flex-start',
-            }}
-          >
-            <Text style={Fonts.Black16Medium}>{item.title}</Text>
-            <Image source={require('@assets/images/star5.png')} />
-          </View>
-        </View>
-
-        <Text
-          style={{
-            ...Fonts.Grey14Medium,
-            marginHorizontal: Default.fixPadding * 1.5,
-            marginVertical: Default.fixPadding * 1.5,
-          }}
-        >
-          Triage. Bloops Joachim Norbert. Quartern AI. Rune Gunnar's begotten. Nanoteknik lean startup. Inge Windhoek
-          nuget. Betas Louisa Lind. Dissuade Johann Sunstroke. Effective Magdalena
-        </Text>
-      </View>
-    );
-  };
-
+  if (loading) return <Loader visible={true} />;
+  if (!reviews) return null;
   return (
     <View style={{ flex: 1 }}>
       <MyStatusBar />
@@ -119,7 +44,8 @@ const MainReviewScreen = (props) => {
       >
         <TouchableOpacity
           style={{ marginHorizontal: Default.fixPadding }}
-          onPress={() => props.navigation.navigate('specialistProfileScreen')}
+          //onPress={() => props.navigation.navigate('specialistProfileScreen', { employee: employee })}
+          onPress={() => props.navigation.goBack()}
         >
           <Ionicons name={isRtl ? 'arrow-forward' : 'arrow-back'} size={30} color={Colors.white} />
         </TouchableOpacity>
@@ -127,8 +53,8 @@ const MainReviewScreen = (props) => {
       </View>
 
       <FlatList
-        data={dataList}
-        renderItem={renderItem}
+        data={reviews}
+        renderItem={({ item, index }) => <ReviewContent item={item} index={index} reviews={reviews} />}
         keyExtractor={(item) => item.id}
         showsVerticalScrollIndicator={false}
       />

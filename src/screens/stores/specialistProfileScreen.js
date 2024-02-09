@@ -13,6 +13,7 @@ const SpecialistProfileScreen = (props) => {
   let screen = props.route.params?.screen ? props.route.params?.screen : '';
   const employee = props.route.params?.employee ? props.route.params?.employee : '';
   const {
+    id,
     firstName,
     lastName,
     userInfo: { profileImg, specialty, experience, images, about },
@@ -73,8 +74,8 @@ const SpecialistProfileScreen = (props) => {
       >
         <TouchableOpacity
           onPress={() => {
-            props.navigation.navigate('TopTabDetails', { screen: 'informationScreen' });
-            //props.navigation.goBack()
+            //props.navigation.navigate('TopTabDetails', { screen: 'informationScreen' });
+            props.navigation.goBack();
           }}
           style={{ flex: 1, alignItems: isRtl ? 'flex-end' : 'flex-start' }}
         >
@@ -165,7 +166,7 @@ const SpecialistProfileScreen = (props) => {
               flexDirection: isRtl ? 'row-reverse' : 'row',
               flex: 2.5,
             }}
-            onPress={() => props.navigation.navigate('mainReviewScreen')}
+            onPress={() => props.navigation.push('mainReviewScreen', { specialistId: id, employee: employee })}
           >
             <Ionicons
               name='chatbubble-ellipses-outline'
