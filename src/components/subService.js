@@ -14,9 +14,8 @@ const SubService = ({ subservices }) => {
     <>
       {subMenu.map((subService) => {
         return (
-          <>
+          <View key={subService.id}>
             <View
-              key={subService.id}
               style={{
                 justifyContent: 'center',
                 alignItems: 'center',
@@ -28,7 +27,7 @@ const SubService = ({ subservices }) => {
               <Text style={Fonts.Primary16Bold}>{subService.name}</Text>
             </View>
             <Items items={subService.items} />
-          </>
+          </View>
         );
       })}
     </>
