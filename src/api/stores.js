@@ -3,22 +3,18 @@ import { DATA } from './tempData';
 import { STRAPIURL } from '@env';
 import { parseReduceData } from '@utils/helper';
 export const stores = {
-  getData: async (favorites) => {
+  getData: async (favorites, county, type) => {
     try {
-      const response = await api.getStores();
+      const response = await api.getStores(county, type);
       const res = response.data.reduce((acc, item) => {
-        let attributes = item.attributes;
-        attributes['id'] = item.id;
         const fovarite = favorites?.find((fav) => fav.id === item.id);
         if (fovarite) {
-          attributes['selected'] = true;
+          item['selected'] = true;
         }
 
-        attributes.logo = `${STRAPIURL}${item.attributes.logo.data.attributes.url}`;
-        attributes[
-          'location'
-        ] = `${item.attributes.address} ${item.attributes.city}, ${item.attributes.state} ${item.attributes.zip}`;
-        acc.push(attributes);
+        item['logo'] = `${STRAPIURL}${item.logo.url}`;
+        item['location'] = `${item.address} ${item.city}, ${item.state} ${item.zip}`;
+        acc.push(item);
         return acc;
       }, []);
       return [...res, ...DATA];

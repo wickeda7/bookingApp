@@ -27,6 +27,7 @@
     "expo-dev-client": "~3.3.7",
     "expo-font": "~11.10.2",
     "expo-image-picker": "~14.7.1",
+    "expo-location": "~16.5.3",
     "expo-status-bar": "~1.11.1",
     "expo-system-ui": "~2.9.3",
     "expo-web-browser": "~12.8.2",

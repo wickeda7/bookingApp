@@ -10,10 +10,16 @@ const StoreContextProvider = ({ children }) => {
   const { userData, updateUserFavorite } = useAuthContext();
   const [reviews, setReviews] = useState(null);
   const [loading, setLoading] = useState(false);
-
+  const [county, setCounty] = useState(null);
+  const [latitude, setLatitude] = useState(null);
+  const [longitude, setLongitude] = useState(null);
   const getStores = async () => {
-    const response = await storeApi.getData(userData?.favorites);
+    setLoading(true);
+    // const county = 'Los Angeles County';
+    const type = 'nail';
+    const response = await storeApi.getData(userData?.favorites, county, type);
     setStores(response);
+    // setLoading(false);
   };
 
   const updatedSelectedStore = (res) => {
@@ -68,6 +74,11 @@ const StoreContextProvider = ({ children }) => {
     getReviews,
     reviews,
     loading,
+    setCounty,
+    latitude,
+    setLatitude,
+    longitude,
+    setLongitude,
   };
   return <StoreContext.Provider value={value}>{children}</StoreContext.Provider>;
 };

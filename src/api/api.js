@@ -27,9 +27,10 @@ export const api = {
       throw error;
     }
   },
-  getStores: async () => {
+  getStores: async (county, type) => {
     try {
-      const url = `${STRAPIURL}/api/stores?[filters][county][$eq]=Los Angeles County&[filters][type][$eq]=nail&[populate][0]=logo`;
+      //const url = `${STRAPIURL}/api/stores?[filters][county][$eq]=Los Angeles County&[filters][type][$eq]=nail&[populate][0]=logo`;
+      const url = `${STRAPIURL}/api/stores/getStores/${county}/${type}`;
       const response = await axios.get(url);
       return response.data;
     } catch (error) {

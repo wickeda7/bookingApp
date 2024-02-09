@@ -7,6 +7,10 @@ export const DATA = [
     star: require('@assets/images/star5.png'),
     selected: false,
     services: [],
+    coordinate: {
+      latitude: 34.078630321040144,
+      longitude: -118.12291170597898,
+    },
   },
   {
     id: '12',
@@ -16,6 +20,10 @@ export const DATA = [
     star: require('@assets/images/star3.png'),
     selected: false,
     services: [],
+    coordinate: {
+      latitude: 34.080297707249635,
+      longitude: -118.09056347972955,
+    },
   },
   {
     id: '13',
@@ -25,6 +33,10 @@ export const DATA = [
     star: require('@assets/images/star4.png'),
     selected: true,
     services: [],
+    coordinate: {
+      latitude: 34.06266197385249,
+      longitude: -118.08205955336075,
+    },
   },
   {
     id: '14',
@@ -34,6 +46,10 @@ export const DATA = [
     star: require('@assets/images/star3.png'),
     selected: false,
     services: [],
+    coordinate: {
+      latitude: 34.081224822256715,
+      longitude: -118.06435407038502,
+    },
   },
   {
     id: '15',
@@ -43,6 +59,10 @@ export const DATA = [
     star: require('@assets/images/star5.png'),
     selected: false,
     services: [],
+    coordinate: {
+      latitude: 34.06268667988346,
+      longitude: -118.08192755362658,
+    },
   },
   {
     id: '16',
@@ -52,6 +72,10 @@ export const DATA = [
     star: require('@assets/images/star1.png'),
     selected: true,
     services: [],
+    coordinate: {
+      latitude: 34.06990346014901,
+      longitude: -118.10817028573325,
+    },
   },
   {
     id: '17',
@@ -61,6 +85,10 @@ export const DATA = [
     star: require('@assets/images/star4.png'),
     selected: false,
     services: [],
+    coordinate: {
+      latitude: 34.09151457208291,
+      longitude: -118.09106852164481,
+    },
   },
   {
     id: '18',
@@ -71,6 +99,10 @@ export const DATA = [
     star: require('@assets/images/star1.png'),
     selected: false,
     services: [],
+    coordinate: {
+      latitude: 34.06307775282436,
+      longitude: -118.09990908225264,
+    },
   },
   {
     id: '19',
@@ -80,6 +112,10 @@ export const DATA = [
     star: require('@assets/images/star3.png'),
     selected: false,
     services: [],
+    coordinate: {
+      latitude: 34.05205591902563,
+      longitude: -118.0512430835669,
+    },
   },
   {
     id: '20',
@@ -89,6 +125,10 @@ export const DATA = [
     star: require('@assets/images/star4.png'),
     selected: false,
     services: [],
+    coordinate: {
+      latitude: 34.07516456758363,
+      longitude: -118.08239962240802,
+    },
   },
 ];
 

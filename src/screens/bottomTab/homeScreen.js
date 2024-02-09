@@ -1,11 +1,13 @@
 import { Text, View, TouchableOpacity, Image, FlatList } from 'react-native';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Colors, Default, Fonts } from '@constants/style';
 import Octicons from 'react-native-vector-icons/Octicons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useTranslation } from 'react-i18next';
 import MyStatusBar from '@components/myStatusBar';
 import { useAuthContext } from '@contexts/AuthContext';
+import { useStoreContext } from '@contexts/StoreContext';
+import * as Location from 'expo-location';
 const HomeScreen = (props) => {
   const { t, i18n } = useTranslation();
 
@@ -15,6 +17,32 @@ const HomeScreen = (props) => {
     return t(`homeScreen:${key}`);
   }
   const { userData } = useAuthContext();
+  const { setCounty, setLatitude, setLongitude } = useStoreContext();
+  useEffect(() => {
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        setErrorMsg('Permission to access location was denied');
+        return;
+      }
+
+      const { coords } = await Location.getCurrentPositionAsync({});
+      if (coords) {
+        const { latitude, longitude } = coords;
+        setLongitude(longitude);
+        setLatitude(latitude);
+        Location.reverseGeocodeAsync({
+          latitude,
+          longitude,
+        })
+          .then((res) => {
+            let county = res[0].subregion;
+            setCounty(county);
+          })
+          .catch((e) => console.log(e));
+      }
+    })();
+  }, []);
   const name = userData?.username ? userData.username : '';
   const dataList = [
     {
