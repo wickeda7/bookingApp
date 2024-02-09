@@ -13,17 +13,17 @@ PODS:
   - EXJSONUtils (0.12.3)
   - EXManifests (0.13.2):
     - ExpoModulesCore
-  - Expo (50.0.4):
+  - Expo (50.0.6):
     - ExpoModulesCore
-  - expo-dev-client (3.3.7):
+  - expo-dev-client (3.3.8):
     - EXManifests
     - expo-dev-launcher
     - expo-dev-menu
     - expo-dev-menu-interface
     - EXUpdatesInterface
-  - expo-dev-launcher (3.6.4):
+  - expo-dev-launcher (3.6.6):
     - EXManifests
-    - expo-dev-launcher/Main (= 3.6.4)
+    - expo-dev-launcher/Main (= 3.6.6)
     - expo-dev-menu
     - expo-dev-menu-interface
     - ExpoModulesCore
@@ -32,7 +32,7 @@ PODS:
     - RCT-Folly (= 2022.05.16.00)
     - React-Core
     - React-RCTAppDelegate
-  - expo-dev-launcher/Main (3.6.4):
+  - expo-dev-launcher/Main (3.6.6):
     - EXManifests
     - expo-dev-launcher/Unsafe
     - expo-dev-menu
@@ -43,7 +43,7 @@ PODS:
     - RCT-Folly (= 2022.05.16.00)
     - React-Core
     - React-RCTAppDelegate
-  - expo-dev-launcher/Unsafe (3.6.4):
+  - expo-dev-launcher/Unsafe (3.6.6):
     - EXManifests
     - expo-dev-menu
     - expo-dev-menu-interface
@@ -90,7 +90,7 @@ PODS:
     - ExpoModulesCore
   - ExpoCrypto (12.8.0):
     - ExpoModulesCore
-  - ExpoFileSystem (16.0.5):
+  - ExpoFileSystem (16.0.6):
     - ExpoModulesCore
   - ExpoImagePicker (14.7.1):
     - ExpoModulesCore
@@ -1056,9 +1056,9 @@ PODS:
     - glog
     - RCT-Folly (= 2022.05.16.00)
     - React-Core
-  - react-native-safe-area-context (4.8.2):
+  - react-native-safe-area-context (4.9.0):
     - React-Core
-  - react-native-webview (13.6.4):
+  - react-native-webview (13.7.1):
     - glog
     - RCT-Folly (= 2022.05.16.00)
     - React-Core
@@ -1231,7 +1231,7 @@ PODS:
     - React-perflogger (= 0.73.2)
   - RNCAsyncStorage (1.21.0):
     - React-Core
-  - RNGestureHandler (2.14.1):
+  - RNGestureHandler (2.15.0):
     - glog
     - RCT-Folly (= 2022.05.16.00)
     - React-Core
@@ -1507,15 +1507,15 @@ SPEC CHECKSUMS:
   EXImageLoader: 55080616b2fe9da19ef8c7f706afd9814e279b6b
   EXJSONUtils: 5c42959e87be238b045ef37cc5268b16a6c0ad4a
   EXManifests: 5e8c29f36c716af768a4ea47ec05e1b89ab93091
-  Expo: 1e3bcf9dd99de57a636127057f6b488f0609681a
-  expo-dev-client: 80a81d82fd401673ab11702ce9e54115a8852f3b
-  expo-dev-launcher: 141aa2d7e603102de71caa9530c293a6c1737653
+  Expo: fb745b3074989670b6641f9f20463e8ee56a69ca
+  expo-dev-client: 025dce84f48b04c60c3891547732f001f6aad777
+  expo-dev-launcher: 4e83baafc5b7090c0da29acbceb6007e0a7ed3d8
   expo-dev-menu: 1b221587615ce11b37a64da5520e9a639496571b
   expo-dev-menu-interface: 7ba029c9d1a82ac22b9b584c00514860b060553e
   ExpoAdapterFBSDKNext: ee58a6200726bda53f000c4f32942c8466861e71
   ExpoClipboard: b597982124f067ff9f5b89093eb3d97898d5d877
   ExpoCrypto: e2ca148f5c93a0514959df86b34256bb3c50d358
-  ExpoFileSystem: 04795dd4d47e76eaf12e38c92091f77d794f9e7f
+  ExpoFileSystem: a9273932e69a9a1e1a8d01b6ba895bb8294bbea2
   ExpoImagePicker: 66970181d1c838f444e5e1f81b804ab2d5ff49bd
   ExpoKeepAwake: 0f5cad99603a3268e50af9a6eb8b76d0d9ac956c
   ExpoModulesCore: 2346e83abf90c2b2c16a54c3fc4a1169ae12816c
@@ -1561,8 +1561,8 @@ SPEC CHECKSUMS:
   react-native-google-maps: 8007277310c0d0f7266f7987e511fb3f5505f3f2
   react-native-maps: b4c3b092b1c71240d8d4792bae3738828942f14a
   react-native-pager-view: 33c56e3b547d2f29d224255d82e796942e0918b8
-  react-native-safe-area-context: 0ee144a6170530ccc37a0fd9388e28d06f516a89
-  react-native-webview: 1f6c37318115b6e96285e0b06770307d9a751bb8
+  react-native-safe-area-context: b97eb6f9e3b7f437806c2ce5983f479f8eb5de4b
+  react-native-webview: 8e7e4d51099dd9a7bec8148ab4f525b2bc0ecd30
   React-nativeconfig: 4dda3cbbdd1c4ce38450bb10b34b3e54120e4a91
   React-NativeModulesApple: d25a530c61e94fb317a0124b1cde1c459e4a47d3
   React-perflogger: 29efe63b7ef5fbaaa50ef6eaa92482f98a24b97e
@@ -1584,7 +1584,7 @@ SPEC CHECKSUMS:
   React-utils: 414787344613940abeb72cc95fba338e300ba3ac
   ReactCommon: d4860bcbe85d89bb261ba28948f027325bb577dc
   RNCAsyncStorage: 618d03a5f52fbccb3d7010076bc54712844c18ef
-  RNGestureHandler: 28bdf9a766c081e603120f79e925b72817c751c6
+  RNGestureHandler: 7feb85c5a30ebbcd4d5c7a851ba9e7eafb9860cb
   RNVectorIcons: ee070291bc6c7b4c880181b214534d4657ea1905
   SocketRocket: f32cd54efbe0f095c4d7594881e52619cfe80b17
   Yoga: e64aa65de36c0832d04e8c7bd614396c77a80047

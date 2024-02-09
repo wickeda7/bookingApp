@@ -9,6 +9,7 @@ import {
   StatusBar,
   BackHandler,
 } from 'react-native';
+import { Avatar } from 'react-native-paper';
 import React, { useEffect } from 'react';
 import { Default, Fonts, Colors } from '@constants/style';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -74,7 +75,13 @@ const InformationScreen = (props) => {
         {item.image ? (
           <Image source={item.image} />
         ) : (
-          <Image source={{ uri: `${STRAPIURL}${item.userInfo.profileImg.url}` }} style={{ width: 72, height: 72 }} />
+          <Avatar.Image
+            size={72}
+            source={{
+              uri: `${STRAPIURL}${item.userInfo.profileImg.url}`,
+            }}
+          />
+          // <Image source={{ uri: `${STRAPIURL}${item.userInfo.profileImg.url}` }} style={{ width: 72, height: 72 }} />
         )}
 
         <Text style={{ ...Fonts.Black14Regular, textAlign: 'center' }}>{name}</Text>
