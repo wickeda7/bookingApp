@@ -1,7 +1,6 @@
 import { Text, View, TouchableOpacity, Image, FlatList } from 'react-native';
 import React, { useEffect } from 'react';
 import { Colors, Default, Fonts } from '@constants/style';
-import Octicons from 'react-native-vector-icons/Octicons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useTranslation } from 'react-i18next';
 import MyStatusBar from '@components/myStatusBar';
@@ -136,6 +135,7 @@ const HomeScreen = (props) => {
             <View style={{ flexDirection: isRtl ? 'row-reverse' : 'row' }}>
               <Text style={Fonts.White20Bold}>{tr('hii')},</Text>
               <Text style={Fonts.Yellow20Bold}>{name}</Text>
+              <Text style={Fonts.Yellow20Bold}> HS</Text>
             </View>
             {/* <View
               style={{

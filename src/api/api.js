@@ -80,6 +80,15 @@ export const api = {
       throw error;
     }
   },
+  getSpecialistBooking: async (ids) => {
+    try {
+      const url = `${STRAPIURL}/api/appointments/specialists/${ids}`;
+      const response = await axios.get(url);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
   postBooking: async (data) => {
     const url = `${STRAPIURL}/api/appointments`;
     const headers = {

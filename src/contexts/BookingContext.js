@@ -9,8 +9,16 @@ const BookingContextProvider = ({ children }) => {
   const [services, setServices] = useState([]);
   const [selectedTime, setSelectedTime] = useState(null);
   const [selectedDate, setSelectedDate] = useState(null);
+  const [specialistBookings, setSpecialistBookings] = useState([]);
   const { selectedStore } = useStoreContext();
   const { userData } = useAuthContext();
+
+  const getSpecialistBooking = async (specialists) => {
+    const ids = specialists.map((item) => item.id).join('_');
+    const response = await booking.getSpecialistBooking(ids);
+    setSpecialistBookings(response.data);
+    return response.data;
+  };
 
   const confirmBooking = async () => {
     const data = {
@@ -46,6 +54,8 @@ const BookingContextProvider = ({ children }) => {
     selectedDate,
     setSelectedDate,
     confirmBooking,
+    getSpecialistBooking,
+    specialistBookings,
   };
   return <BookingContext.Provider value={value}>{children}</BookingContext.Provider>;
 };

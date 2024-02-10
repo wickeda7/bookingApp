@@ -1,14 +1,13 @@
 import { Text, View, SafeAreaView, ScrollView, TouchableOpacity, BackHandler } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { Colors, Default, Fonts } from '@constants/style';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useTranslation } from 'react-i18next';
 import Items from '@components/items';
 import SubService from '@components/subService';
-import { use } from 'i18next';
+import { useBookingContext } from '@contexts/BookingContext';
 const ServiceScreen = (props) => {
   const { t, i18n } = useTranslation();
-
+  const { services } = useBookingContext();
   const service = props.route.params.service;
   let screen = props.route.params?.screen ? props.route.params?.screen : '';
   const isRtl = i18n.dir() === 'rtl';
@@ -26,6 +25,7 @@ const ServiceScreen = (props) => {
     return () => BackHandler.removeEventListener('hardwareBackPress', backAction);
   }, []);
   const handleAppointment = () => {
+    if (services.length === 0) return;
     if (screen !== '') {
       props.navigation.navigate('StoresStack', {
         screen: 'bookAppointmentScreen',

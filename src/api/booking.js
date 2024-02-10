@@ -8,4 +8,12 @@ export const booking = {
       throw error;
     }
   },
+  getSpecialistBooking: async (ids) => {
+    try {
+      const response = await api.getSpecialistBooking(ids);
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  },
 };

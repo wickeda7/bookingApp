@@ -8,16 +8,14 @@ import MyStatusBar from '@components/myStatusBar';
 import { useBookingContext } from '@contexts/BookingContext';
 import { useStoreContext } from '@contexts/StoreContext';
 import CalendarComponent from '@components/calendar';
+import { use } from 'i18next';
 
 const ScheduleScreen = (props) => {
   const { t, i18n } = useTranslation();
-  const {
-    selectedSpecialist: { userInfo },
-    selectedTime,
-    setSelectedTime,
-  } = useBookingContext();
+  const { selectedSpecialist, selectedTime, setSelectedTime, specialistBookings, selectedDate } = useBookingContext();
   const { selectedStore } = useStoreContext();
-  const { hours: timeOption } = userInfo;
+  const [bookings, setBookings] = useState([]);
+  const [timeOption, setTimeOption] = useState(selectedSpecialist.userInfo.hours);
 
   const isRtl = i18n.dir() === 'rtl';
 
@@ -25,11 +23,45 @@ const ScheduleScreen = (props) => {
     return t(`scheduleScreen:${key}`);
   }
 
+  useEffect(() => {
+    const date = selectedDate?.dateString ? selectedDate.dateString : selectedDate;
+    if (!date) return;
+    setSelectedTime(null);
+    const bookedTimeSlot = bookings.reduce((acc, booking) => {
+      if (booking.date === date) {
+        acc.push(booking.timeslot);
+      }
+      return acc;
+    }, []);
+    if (bookedTimeSlot.length === 0) {
+      setTimeOption(selectedSpecialist.userInfo.hours);
+    } else {
+      createNewTimeOption(bookedTimeSlot);
+    }
+  }, [selectedDate]);
+
+  const getBookings = () => {
+    const specialistId = selectedSpecialist.id;
+    const { appointmentsSpecialist } = specialistBookings.find((booking) => booking.id === specialistId);
+    setBookings(appointmentsSpecialist);
+  };
+
+  const createNewTimeOption = (bookedTimeSlot) => {
+    const newTimeOption = timeOption.map((time) => {
+      if (bookedTimeSlot.includes(+time.id)) {
+        return { ...time, booked: true };
+      } else {
+        return time;
+      }
+    });
+    setTimeOption(newTimeOption);
+  };
   const backAction = () => {
     props.navigation.pop();
     return true;
   };
   useEffect(() => {
+    getBookings();
     BackHandler.addEventListener('hardwareBackPress', backAction);
 
     return () => BackHandler.removeEventListener('hardwareBackPress', backAction);
@@ -41,6 +73,11 @@ const ScheduleScreen = (props) => {
 
   const renderItem = ({ item, index }) => {
     const isEnd = index === timeOption.length - 1 || index === timeOption.length - 2;
+    const disabled = item.booked ? true : false;
+    let bg = selectedTime === item.id ? Colors.primary : Colors.white;
+    if (item.booked) {
+      bg = Colors.lightGrey;
+    }
     return (
       <TouchableOpacity
         style={{
@@ -54,8 +91,9 @@ const ScheduleScreen = (props) => {
           marginTop: Default.fixPadding * 1.5,
           marginBottom: isEnd ? Default.fixPadding * 1.5 : 0,
           borderRadius: 10,
-          backgroundColor: selectedTime === item.id ? Colors.primary : Colors.white,
+          backgroundColor: bg,
         }}
+        disabled={disabled}
         onPress={() => {
           statusTime(item.id);
         }}
@@ -104,7 +142,11 @@ const ScheduleScreen = (props) => {
         )}
       />
       <TouchableOpacity
-        onPress={() => props.navigation.navigate('confirmationScreen')}
+        onPress={() => {
+          if (selectedTime) {
+            props.navigation.navigate('confirmationScreen');
+          }
+        }}
         style={{
           justifyContent: 'center',
           alignItems: 'center',

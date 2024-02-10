@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next';
 import { Colors, Default, Fonts } from '@constants/style';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { formatPrice } from '@utils/helper';
-import { use } from 'i18next';
 import { useBookingContext } from '@contexts/BookingContext';
 
 const Items = ({ items, key }) => {

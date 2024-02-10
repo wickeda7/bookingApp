@@ -29,7 +29,8 @@ const DetailScreen = (props) => {
 
   useEffect(() => {
     if (!selectedStore) return;
-    setVisible(selectedStore.selected);
+    console.log('selectedStore', selectedStore);
+    setVisible(selectedStore.selected); /// favorite
     getStoreRelation();
   }, [selectedStore]);
 

@@ -26,7 +26,7 @@ const CategoriesScreen = ({ navigation, route }) => {
   }, []);
 
   const handleSelectedStore = (store) => {
-    console.log('store', store);
+    console.log('handleSelectedStore', store);
     setSelectedStore(store);
     navigation.navigate('TopTabDetails', { screen: 'serviceScreen' });
     //navigation.push('TopTabDetails', { screen: 'serviceScreen' });
@@ -118,7 +118,7 @@ const CategoriesScreen = ({ navigation, route }) => {
         >
           <Ionicons name={isRtl ? 'arrow-forward' : 'arrow-back'} size={30} color={Colors.white} />
         </TouchableOpacity>
-        <Text style={Fonts.White18Bold}>{title} </Text>
+        <Text style={Fonts.White18Bold}>{title} CS</Text>
       </View>
       <FlatList
         data={stores}

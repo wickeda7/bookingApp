@@ -204,14 +204,6 @@ export const PhotoData = [
 
 export const options1 = [
   {
-    id: '1',
-    image: require('@assets/images/img1.png'),
-
-    lastName: 'Simmons',
-    firstName: 'Brooklyn',
-    other: 'Gel',
-  },
-  {
     id: '2',
     image: require('@assets/images/img2.png'),
     firstName: 'Darlene ',

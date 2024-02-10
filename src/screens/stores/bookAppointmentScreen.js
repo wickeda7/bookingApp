@@ -9,6 +9,7 @@ import { useBookingContext } from '@contexts/BookingContext';
 import { Avatar } from 'react-native-paper';
 import { STRAPIURL } from '@env';
 import { options1 } from '@api/tempData';
+import Loader from '@components/loader';
 
 const BookAppointmentScreen = (props) => {
   const { t, i18n } = useTranslation();
@@ -18,9 +19,10 @@ const BookAppointmentScreen = (props) => {
     selectedStore: { employee },
   } = useStoreContext();
 
-  const { selectedSpecialist, setSelectedSpecialist } = useBookingContext();
+  const { selectedSpecialist, setSelectedSpecialist, getSpecialistBooking } = useBookingContext();
 
   const options = [...employee, ...options1];
+  const [visible, setVisible] = useState(false);
 
   function tr(key) {
     return t(`bookAppointmentScreen:${key}`);
@@ -30,7 +32,13 @@ const BookAppointmentScreen = (props) => {
     props.navigation.goBack();
     return true;
   };
+  const getBookAppointment = async () => {
+    setVisible(true);
+    const res = await getSpecialistBooking(employee);
+    if (res) setVisible(false);
+  };
   useEffect(() => {
+    getBookAppointment();
     BackHandler.addEventListener('hardwareBackPress', backAction);
 
     return () => BackHandler.removeEventListener('hardwareBackPress', backAction);
@@ -115,10 +123,11 @@ const BookAppointmentScreen = (props) => {
           backgroundColor: Colors.primary,
         }}
       >
+        <Loader visible={visible} />
         <TouchableOpacity style={{ marginHorizontal: Default.fixPadding * 1.5 }} onPress={() => props.navigation.pop()}>
           <Ionicons name={isRtl ? 'arrow-forward' : 'arrow-back'} size={30} color={Colors.white} />
         </TouchableOpacity>
-        <Text style={Fonts.White18Bold}>{tr('selectSpecialists')}</Text>
+        <Text style={Fonts.White18Bold}>{tr('selectSpecialists')} BAS</Text>
       </View>
 
       <FlatList
@@ -129,7 +138,11 @@ const BookAppointmentScreen = (props) => {
       />
 
       <TouchableOpacity
-        onPress={() => props.navigation.navigate('scheduleScreen')}
+        onPress={() => {
+          if (selectedSpecialist) {
+            props.navigation.navigate('scheduleScreen');
+          }
+        }}
         style={{
           alignItems: 'center',
           justifyContent: 'center',
