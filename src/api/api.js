@@ -80,4 +80,18 @@ export const api = {
       throw error;
     }
   },
+  postBooking: async (data) => {
+    const url = `${STRAPIURL}/api/appointments`;
+    const headers = {
+      'Content-Type': 'application/json',
+      Accept: '*/*',
+    };
+    try {
+      const res = await axios.post(url, data);
+
+      return res.data;
+    } catch (error) {
+      throw error;
+    }
+  },
 };

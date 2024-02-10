@@ -8,16 +8,30 @@ import { ScrollView } from 'react-native-gesture-handler';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useTranslation } from 'react-i18next';
 import MyStatusBar from '@components/myStatusBar';
+import { useBookingContext } from '@contexts/BookingContext';
+import { useStoreContext } from '@contexts/StoreContext';
+import { formatPhoneNumber, formatPrice } from '@utils/helper';
+import Loader from '@components/loader';
 
 const ConfirmationScreen = (props) => {
   const { t, i18n } = useTranslation();
+  const { selectedSpecialist, selectedDate, selectedTime, services, confirmBooking } = useBookingContext();
+  const {
+    userInfo: { hours, specialty },
+    firstName,
+    lastName,
+  } = selectedSpecialist;
+  const time = hours.find((item) => item.id === selectedTime);
+  const result = services.filter((service) => service.selected === true);
+  let total = 0;
 
+  const { selectedStore } = useStoreContext();
   const isRtl = i18n.dir() === 'rtl';
-
+  const [visible, setVisible] = useState(false);
+  const [confirmed, setConfirmed] = useState(false);
   function tr(key) {
     return t(`confirmationScreen:${key}`);
   }
-
   const backAction = () => {
     props.navigation.pop();
     return true;
@@ -29,6 +43,22 @@ const ConfirmationScreen = (props) => {
   }, []);
   const [text, onChangeText] = useState();
 
+  const onConfirm = async () => {
+    setVisible(true);
+    const res = await confirmBooking();
+    setVisible(false);
+    setConfirmed(true);
+    setTimeout(() => {
+      props.navigation.navigate('bookingScreen');
+    }, 2500);
+  };
+  const navigate = () => {
+    if (confirmed) {
+      props.navigation.navigate('bookingScreen');
+    } else {
+      props.navigation.pop();
+    }
+  };
   return (
     <View style={{ flex: 1 }}>
       <MyStatusBar />
@@ -40,10 +70,11 @@ const ConfirmationScreen = (props) => {
           backgroundColor: Colors.primary,
         }}
       >
-        <TouchableOpacity style={{ marginHorizontal: Default.fixPadding * 1.5 }} onPress={() => props.navigation.pop()}>
+        <Loader visible={visible} />
+        <TouchableOpacity style={{ marginHorizontal: Default.fixPadding * 1.5 }} onPress={() => navigate()}>
           <Ionicons name={isRtl ? 'arrow-forward' : 'arrow-back'} size={30} color={Colors.white} />
         </TouchableOpacity>
-        <Text style={Fonts.White18Bold}>{tr('confirmation')}</Text>
+        {!confirmed && <Text style={Fonts.White18Bold}>{tr('confirmation')}</Text>}
       </View>
       <ScrollView showsVerticalScrollIndicator={false}>
         <View
@@ -62,7 +93,7 @@ const ConfirmationScreen = (props) => {
               marginVertical: Default.fixPadding,
             }}
           >
-            <Image source={require('@assets/images/confirm.png')} />
+            <Image source={{ uri: selectedStore.logo }} style={{ width: 113, height: 110 }} />
             <View
               style={{
                 justifyContent: 'center',
@@ -70,7 +101,7 @@ const ConfirmationScreen = (props) => {
                 margin: Default.fixPadding,
               }}
             >
-              <Text style={{ ...Fonts.Black18Medium }}>The big tease salon</Text>
+              <Text style={{ ...Fonts.Black18Medium }}>{selectedStore.name}</Text>
               <Image
                 source={require('@assets/images/star4.png')}
                 style={{ marginVertical: Default.fixPadding * 0.5 }}
@@ -90,13 +121,10 @@ const ConfirmationScreen = (props) => {
                     marginLeft: isRtl ? Default.fixPadding * 0.5 : 0,
                   }}
                 />
-                <Text style={{ ...Fonts.ExtraLightGrey14Medium, maxWidth: '80%' }}>
-                  4517 Washington Ave. Manchester, Kentucky 39495
-                </Text>
+                <Text style={{ ...Fonts.ExtraLightGrey14Medium, maxWidth: '80%' }}>{selectedStore.location}</Text>
               </View>
             </View>
           </View>
-
           <View
             style={{
               flex: 1.5,
@@ -141,7 +169,11 @@ const ConfirmationScreen = (props) => {
                 {tr('date')}
               </Text>
             </View>
-            <Text style={Fonts.Grey14Medium}>19 sep 2022</Text>
+            {selectedDate.month ? (
+              <Text style={Fonts.Grey14Medium}>{`${selectedDate.month}-${selectedDate.day}-${selectedDate.year}`}</Text>
+            ) : (
+              <Text style={Fonts.Grey14Medium}>{selectedDate}</Text>
+            )}
           </View>
 
           <View
@@ -166,7 +198,7 @@ const ConfirmationScreen = (props) => {
                 {tr('time')}
               </Text>
             </View>
-            <Text style={Fonts.Grey14Medium}>10 : 00 - 12: 00 AM</Text>
+            <Text style={Fonts.Grey14Medium}>{time.hours}</Text>
           </View>
 
           <View
@@ -191,7 +223,7 @@ const ConfirmationScreen = (props) => {
                 {tr('mobile')}
               </Text>
             </View>
-            <Text style={Fonts.Grey14Medium}>+91(124567891)</Text>
+            <Text style={Fonts.Grey14Medium}>{formatPhoneNumber(selectedStore.phone)}</Text>
           </View>
         </View>
 
@@ -211,7 +243,7 @@ const ConfirmationScreen = (props) => {
             marginVertical: Default.fixPadding,
           }}
         >
-          Darlene Robertson
+          {firstName} {lastName}
         </Text>
         <Text
           style={{
@@ -220,7 +252,7 @@ const ConfirmationScreen = (props) => {
             marginBottom: Default.fixPadding,
           }}
         >
-          (haircutting specialist)
+          ({specialty})
         </Text>
 
         <View
@@ -301,45 +333,24 @@ const ConfirmationScreen = (props) => {
             style={{ flex: 1, padding: Default.fixPadding * 1.5 }}
           />
         </TouchableOpacity>
-
-        <View
-          style={{
-            flexDirection: isRtl ? 'row-reverse' : 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            marginBottom: Default.fixPadding,
-            marginHorizontal: Default.fixPadding * 1.5,
-          }}
-        >
-          <Text style={Fonts.Grey16Medium}>Medium hair cut</Text>
-          <Text style={Fonts.Grey14Bold}>$40 </Text>
-        </View>
-
-        <View
-          style={{
-            flexDirection: isRtl ? 'row-reverse' : 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            marginBottom: Default.fixPadding,
-            marginHorizontal: Default.fixPadding * 1.5,
-          }}
-        >
-          <Text style={Fonts.Grey16Medium}>Partial highlight</Text>
-          <Text style={Fonts.Grey14Bold}>$40 </Text>
-        </View>
-
-        <View
-          style={{
-            flexDirection: isRtl ? 'row-reverse' : 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            marginHorizontal: Default.fixPadding * 1.5,
-            marginBottom: Default.fixPadding,
-          }}
-        >
-          <Text style={Fonts.Grey16Medium}>Coupon</Text>
-          <Text style={Fonts.Grey14Bold}>-$10 </Text>
-        </View>
+        {result.map((item, index) => {
+          total += item.price * 100;
+          return (
+            <View
+              key={index}
+              style={{
+                flexDirection: isRtl ? 'row-reverse' : 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                marginBottom: Default.fixPadding,
+                marginHorizontal: Default.fixPadding * 1.5,
+              }}
+            >
+              <Text style={Fonts.Grey16Medium}>{item.name}</Text>
+              <Text style={Fonts.Grey14Bold}>{formatPrice(item.price * 100)} </Text>
+            </View>
+          );
+        })}
 
         <View
           style={{
@@ -351,10 +362,9 @@ const ConfirmationScreen = (props) => {
           }}
         >
           <Text style={Fonts.Black16Medium}>{tr('total')}</Text>
-          <Text style={Fonts.Primary16Medium}>$70</Text>
+          <Text style={Fonts.Primary16Medium}>{formatPrice(total)}</Text>
         </View>
       </ScrollView>
-
       <View
         style={{
           ...Default.shadow,
@@ -362,49 +372,57 @@ const ConfirmationScreen = (props) => {
           backgroundColor: Colors.white,
         }}
       >
-        <View
-          style={{
-            flex: 1,
-            flexDirection: 'row',
-            justifyContent: 'center',
-            alignItems: 'center',
-            padding: Default.fixPadding * 1.5,
-          }}
-        >
-          <Text
+        {confirmed ? (
+          <TouchableOpacity
+            // onPress={() => props.navigation.navigate('paymentMethodScreen')}
+            onPress={() => navigate()}
             style={{
-              ...Fonts.Black16Medium,
-              justifyContent: 'center',
+              backgroundColor: Colors.primary,
+              flex: 1,
+              padding: Default.fixPadding * 1.5,
               alignItems: 'center',
-              alignSelf: 'center',
             }}
           >
-            {tr('totalPay')}
-          </Text>
-          <Text
-            style={{
-              ...Fonts.Primary22Bold,
-              justifyContent: 'center',
-              alignItems: 'center',
-              alignSelf: 'center',
-              marginLeft: Default.fixPadding * 0.5,
-            }}
-          >
-            $80
-          </Text>
-        </View>
+            <Text style={Fonts.White18Bold}>Thank you for booking with us</Text>
+          </TouchableOpacity>
+        ) : (
+          <>
+            <View
+              style={{
+                flex: 1,
+                flexDirection: 'row',
+                justifyContent: 'center',
+                alignItems: 'center',
+                padding: Default.fixPadding * 1.5,
+              }}
+            >
+              <Text
+                style={{
+                  ...Fonts.Primary22Bold,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  alignSelf: 'center',
+                  marginLeft: Default.fixPadding * 0.5,
+                }}
+              >
+                {formatPrice(total)}
+              </Text>
+            </View>
 
-        <TouchableOpacity
-          onPress={() => props.navigation.navigate('paymentMethodScreen')}
-          style={{
-            backgroundColor: Colors.primary,
-            flex: 1,
-            padding: Default.fixPadding * 1.5,
-            alignItems: 'center',
-          }}
-        >
-          <Text style={Fonts.White18Bold}>{tr('confirm')}</Text>
-        </TouchableOpacity>
+            <TouchableOpacity
+              // onPress={() => props.navigation.navigate('paymentMethodScreen')}
+              onPress={() => onConfirm()}
+              style={{
+                backgroundColor: Colors.primary,
+                flex: 1,
+                padding: Default.fixPadding * 1.5,
+                alignItems: 'center',
+              }}
+            >
+              <Text style={Fonts.White18Bold}>{tr('confirm')}</Text>
+            </TouchableOpacity>
+          </>
+        )}
       </View>
     </View>
   );

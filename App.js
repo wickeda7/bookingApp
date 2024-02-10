@@ -6,6 +6,7 @@ import { withTranslation } from 'react-i18next';
 
 import AuthContextProvider from '@contexts/AuthContext';
 import StoreContextProvider from '@contexts/StoreContext';
+import BookingContextProvider from '@contexts/BookingContext';
 import SplashScreen from '@screens/splashScreen';
 import AuthStack from '@navigation/AuthStack';
 import BottomTab from '@navigation/bottomTab';
@@ -22,24 +23,26 @@ const MainNavigation = () => {
     <NavigationContainer>
       <AuthContextProvider>
         <StoreContextProvider>
-          <Stack.Navigator
-            screenOptions={{
-              ...TransitionPresets.SlideFromRightIOS,
-            }}
-          >
-            <Stack.Screen name='splashScreen' component={SplashScreen} options={{ headerShown: false }} />
-            <Stack.Screen name='AuthStack' component={AuthStack} options={{ headerShown: false }} />
-            <Stack.Screen name='BottomTab' component={BottomTab} options={{ headerShown: false }} />
-            <Stack.Screen name='UserStack' component={UserStack} options={{ headerShown: false }} />
-            <Stack.Screen name='StoresStack' component={StoresStack} options={{ headerShown: false }} />
-            <Stack.Screen
-              name='TopTabDetails'
-              component={TopTabDetails}
-              options={({ navigation }) => ({
-                header: () => <DetailScreen navigation={navigation} />,
-              })}
-            />
-          </Stack.Navigator>
+          <BookingContextProvider>
+            <Stack.Navigator
+              screenOptions={{
+                ...TransitionPresets.SlideFromRightIOS,
+              }}
+            >
+              <Stack.Screen name='splashScreen' component={SplashScreen} options={{ headerShown: false }} />
+              <Stack.Screen name='AuthStack' component={AuthStack} options={{ headerShown: false }} />
+              <Stack.Screen name='BottomTab' component={BottomTab} options={{ headerShown: false }} />
+              <Stack.Screen name='UserStack' component={UserStack} options={{ headerShown: false }} />
+              <Stack.Screen name='StoresStack' component={StoresStack} options={{ headerShown: false }} />
+              <Stack.Screen
+                name='TopTabDetails'
+                component={TopTabDetails}
+                options={({ navigation }) => ({
+                  header: () => <DetailScreen navigation={navigation} />,
+                })}
+              />
+            </Stack.Navigator>
+          </BookingContextProvider>
         </StoreContextProvider>
       </AuthContextProvider>
     </NavigationContainer>

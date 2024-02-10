@@ -25,7 +25,15 @@ const ServiceScreen = (props) => {
 
     return () => BackHandler.removeEventListener('hardwareBackPress', backAction);
   }, []);
-
+  const handleAppointment = () => {
+    if (screen !== '') {
+      props.navigation.navigate('StoresStack', {
+        screen: 'bookAppointmentScreen',
+      });
+    } else {
+      props.navigation.navigate('bookAppointmentScreen');
+    }
+  };
   return (
     <View style={{ flex: 1, height: 500 }}>
       <ScrollView showsVerticalScrollIndicator={false}>

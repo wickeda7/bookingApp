@@ -5,8 +5,10 @@ import { Colors, Default, Fonts } from '@constants/style';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { formatPrice } from '@utils/helper';
 import { use } from 'i18next';
+import { useBookingContext } from '@contexts/BookingContext';
 
 const Items = ({ items, key }) => {
+  const { services, setServices } = useBookingContext();
   const [menu, setMenu] = useState(null);
   useEffect(() => {
     if (items) {
@@ -14,7 +16,35 @@ const Items = ({ items, key }) => {
     }
   }, []);
   const { t, i18n } = useTranslation();
+
   const isRtl = i18n.dir() === 'rtl';
+  const setSelected = (item) => {
+    const newMenu = menu.map((menuItem) => {
+      if (menuItem.id === item.id) {
+        const newVal = { ...menuItem, selected: !menuItem.selected };
+        return newVal;
+      } else {
+        return menuItem;
+      }
+    });
+    const service = services.find((service) => service.id === item.id);
+    if (service) {
+      const newServices = services.map((service) => {
+        if (service.id === item.id) {
+          const newVal = { ...service, selected: !service.selected };
+          return newVal;
+        } else {
+          return service;
+        }
+      });
+      setServices(newServices);
+    } else {
+      const newItem = { ...item, selected: true };
+      setServices([...services, newItem]);
+    }
+
+    setMenu(newMenu);
+  };
   if (!menu) return null;
   return (
     <>
@@ -29,7 +59,7 @@ const Items = ({ items, key }) => {
               paddingHorizontal: Default.fixPadding * 1.5,
             }}
             onPress={() => {
-              console.log('item', item);
+              setSelected(item);
             }}
             key={item.id}
           >
@@ -54,12 +84,12 @@ const Items = ({ items, key }) => {
             <View style={{ flex: 1 }}>
               <TouchableOpacity
                 onPress={() => {
-                  //statusOption(item.text);
+                  setSelected(item);
                 }}
               >
                 <Ionicons
-                  //name={selectedOption === item.text ? 'radio-button-on-outline' : 'ellipse-outline'}
-                  name={'radio-button-on-outline'}
+                  name={item.selected ? 'radio-button-on-outline' : 'ellipse-outline'}
+                  //name={'radio-button-on-outline'}
                   size={30}
                   color={Colors.primary}
                 />

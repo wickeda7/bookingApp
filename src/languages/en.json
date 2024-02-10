@@ -29,7 +29,6 @@
     "confirmation": " Confirmation code has been sent to your phone no",
     "verifyNow": "VERIFY NOW",
     "resend": "Resend"
-
   },
   "bottomTab": {
     "home": "Home",
@@ -92,8 +91,8 @@
     "writeService": "Write your special services here",
     "specialist": "Specialist",
     "CouponCode": "Apply coupon code",
-    "totalPay": "Total pay/",
-    "total": "Total pay",
+    "totalPay": "Estimated total/",
+    "total": "Estimated total",
     "confirm": "Confirm"
   },
   "paymentMethodScreen": {
@@ -169,7 +168,6 @@
     "areYouSure": "Are you sure you want to logout?",
     "cancel": "Cancel",
     "help": "Help & support"
-
   },
   "accountScreen": {
     "account": "My account",
@@ -235,7 +233,6 @@
     "mainDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nibh sollicitudin at odio integer eget dapibus. Ut dictum diam neque tellus. Malesuada nunc rhoncus viverra cras risus. Mi nunc, egestas in pellentesque pharetra interdum. Nibh maecenas congue blandit malesuada dui erat netus mus.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nibh sollicitudin at odio integer eget dapibus. Ut dictum diam neque tellus. Malesuada nunc rhoncus viverra cras risus. Mi nunc, egestas in pellentesque pharetra interdum. Nibh maecenas congue blandit malesuada dui erat netus mus.",
     "subDecription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nibh sollicitudin at odio integer eget dapibus. Ut dictum diam neque tellus. Malesuada nunc rhoncus viverra cras risus. Mi nunc, egestas in pellentesque pharetra interdum. Nibh maecenas congue blandit malesuada dui erat netus mus.",
     "privacy": "Privacy policy"
-
   },
   "helpSupportScreen": {
     "helpSupport": "Help & support",
@@ -259,7 +256,6 @@
     "yesterday": "Yesterday",
     "2minAgo": "2min ago",
     "noNotification": "No notification yet"
-
   },
   "searchScreen": {
     "search": "Search",
@@ -288,5 +284,4 @@
   "loader": {
     "pleaseWait": "Please wait"
   }
-
 }

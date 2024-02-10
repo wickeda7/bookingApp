@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
@@ -6,12 +6,20 @@ import { Colors, Default, Fonts } from '@constants/style';
 import OngoingScreen from './ongoingScreen';
 import HistoryScreen from './historyScreen';
 import MyStatusBar from '@components/myStatusBar';
-
+import { useBookingContext } from '@contexts/BookingContext';
+import { use } from 'i18next';
 const Tab = createMaterialTopTabNavigator();
 
 function CustomTabBar({ state, descriptors, navigation }) {
   const { t } = useTranslation();
-
+  const { setSelectedDate, setSelectedTime, setServices } = useBookingContext();
+  useEffect(() => {
+    setTimeout(() => {
+      setSelectedTime(null);
+      setServices([]);
+      setSelectedDate(null);
+    }, 1000);
+  }, []);
   function tr(key) {
     return t(`bookingScreen:${key}`);
   }

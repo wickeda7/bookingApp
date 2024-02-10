@@ -4,11 +4,23 @@ import { Colors, Default, Fonts } from '@constants/style';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useTranslation } from 'react-i18next';
 import MyStatusBar from '@components/myStatusBar';
+import { useStoreContext } from '@contexts/StoreContext';
+import { useBookingContext } from '@contexts/BookingContext';
+import { Avatar } from 'react-native-paper';
+import { STRAPIURL } from '@env';
+import { options1 } from '@api/tempData';
 
 const BookAppointmentScreen = (props) => {
   const { t, i18n } = useTranslation();
 
   const isRtl = i18n.dir() === 'rtl';
+  const {
+    selectedStore: { employee },
+  } = useStoreContext();
+
+  const { selectedSpecialist, setSelectedSpecialist } = useBookingContext();
+
+  const options = [...employee, ...options1];
 
   function tr(key) {
     return t(`bookAppointmentScreen:${key}`);
@@ -24,57 +36,6 @@ const BookAppointmentScreen = (props) => {
     return () => BackHandler.removeEventListener('hardwareBackPress', backAction);
   }, []);
 
-  const options = [
-    {
-      key: '1',
-      image: require('@assets/images/img1.png'),
-      name: 'Brooklyn Simmons',
-      other: 'hair stylist',
-    },
-    {
-      key: '2',
-      image: require('@assets/images/img2.png'),
-      name: 'Darlene Robertson',
-      other: 'haircutting specialist',
-    },
-    {
-      key: '3',
-      image: require('@assets/images/img3.png'),
-      name: 'Esther Howard',
-      other: 'Nail art',
-    },
-    {
-      key: '4',
-      image: require('@assets/images/img4.png'),
-      name: 'Guy Hawkins',
-      other: 'spa specialist',
-    },
-    {
-      key: '5',
-      image: require('@assets/images/img5.png'),
-      name: 'Jacob Jones',
-      other: 'hair stylist',
-    },
-    {
-      key: '6',
-      image: require('@assets/images/img6.png'),
-      name: 'Theresa Webb',
-      other: 'hair stylist',
-    },
-    {
-      key: '7',
-      image: require('@assets/images/img1.png'),
-      name: 'Ronald Richards',
-      other: 'haircutting specialist',
-    },
-  ];
-
-  const [onSelect, setOnSelect] = useState('Darlene Robertson');
-
-  const statusField = (name) => {
-    setOnSelect(name);
-  };
-
   const renderItem = ({ item, index }) => {
     const isFirst = index === 0;
 
@@ -88,7 +49,7 @@ const BookAppointmentScreen = (props) => {
           marginHorizontal: Default.fixPadding * 1.5,
         }}
         onPress={() => {
-          statusField(item.name);
+          setSelectedSpecialist(item);
         }}
       >
         <View
@@ -98,26 +59,43 @@ const BookAppointmentScreen = (props) => {
             alignItems: 'center',
           }}
         >
-          <Image source={item.image} />
+          {item.image ? (
+            <Image source={item.image} />
+          ) : (
+            <Avatar.Image
+              size={54}
+              source={{
+                uri: `${STRAPIURL}${item.userInfo.profileImg.url}`,
+              }}
+            />
+          )}
+
           <View
             style={{
               alignItems: isRtl ? 'flex-end' : 'flex-start',
               marginHorizontal: Default.fixPadding,
             }}
           >
-            <Text style={Fonts.Black16Medium}>{item.name}</Text>
-            <Text style={Fonts.Grey14Medium}>{item.other}</Text>
+            <Text style={Fonts.Black16Medium}>
+              {' '}
+              {item.firstName} {item.lastName}
+            </Text>
+            {item.other ? (
+              <Text style={Fonts.Grey14Medium}>{item.other}</Text>
+            ) : (
+              <Text style={Fonts.Grey14Medium}>{item.userInfo.specialty}</Text>
+            )}
           </View>
         </View>
 
         <View style={{ flex: 1 }}>
           <TouchableOpacity
             onPress={() => {
-              statusField(item.name);
+              setSelectedSpecialist(item);
             }}
           >
             <Ionicons
-              name={onSelect === item.name ? 'radio-button-on-outline' : 'ellipse-outline'}
+              name={selectedSpecialist?.id === item.id ? 'radio-button-on-outline' : 'ellipse-outline'}
               size={30}
               color={Colors.primary}
             />
@@ -146,7 +124,7 @@ const BookAppointmentScreen = (props) => {
       <FlatList
         data={options}
         renderItem={renderItem}
-        keyExtractor={(item) => item.key}
+        keyExtractor={(item) => item.id}
         showsVerticalScrollIndicator={false}
       />
 
