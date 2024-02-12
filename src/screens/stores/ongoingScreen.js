@@ -7,6 +7,7 @@ import { useBookingContext } from '@contexts/BookingContext';
 import Loader from '@components/loader';
 import { STRAPIURL } from '@env';
 import moment from 'moment';
+import ConfirmModal from '@components/confirmModal';
 
 const OngoingScreen = (props) => {
   const { t, i18n } = useTranslation();
@@ -15,6 +16,7 @@ const OngoingScreen = (props) => {
   const { getUserBooking } = useBookingContext();
   const [lVisible, setLVisible] = useState(false);
   const [data, setData] = useState([]);
+  const [visible, setVisible] = useState(false);
   useEffect(() => {
     const getData = async () => {
       setLVisible(true);
@@ -28,8 +30,6 @@ const OngoingScreen = (props) => {
   function tr(key) {
     return t(`ongoingScreen:${key}`);
   }
-
-  const [visible, setVisible] = useState(false);
 
   const renderItem = ({ item, index }) => {
     const isFirst = index === 0;
@@ -53,7 +53,7 @@ const OngoingScreen = (props) => {
       >
         <TouchableOpacity
           activeOpacity={0.8}
-          onPress={() => props.navigation.push('StoresStack', { screen: 'ongoingDetailScreen' })}
+          onPress={() => props.navigation.push('StoresStack', { screen: 'ongoingDetailScreen', params: item })}
           style={{
             flexDirection: isRtl ? 'row-reverse' : 'row',
             backgroundColor: Colors.white,
@@ -107,7 +107,18 @@ const OngoingScreen = (props) => {
               >
                 {date} {aTime}
               </Text>
-              <Text style={[styles.status, item.confirmed ? styles.confirmed : styles.pending]}>{status}</Text>
+              <Text
+                style={[
+                  styles.status,
+                  {
+                    borderColor: item.confirmed ? Colors.success : Colors.pending,
+                    backgroundColor: item.confirmed ? Colors.successBg : Colors.pendingBg,
+                    color: item.confirmed ? Colors.success : Colors.pending,
+                  },
+                ]}
+              >
+                {status}
+              </Text>
             </View>
             <View
               style={{
@@ -131,8 +142,7 @@ const OngoingScreen = (props) => {
                   props.navigation.navigate('StoresStack', {
                     screen: 'searchLocationScreen',
                     params: {
-                      image: item.image,
-                      title: item.title,
+                      item: item,
                     },
                   })
                 }
@@ -183,79 +193,7 @@ const OngoingScreen = (props) => {
         showsVerticalScrollIndicator={false}
       />
 
-      <Modal animationType='fade' transparent={true} visible={visible}>
-        <View
-          style={{
-            flex: 1,
-            justifyContent: 'center',
-            alignItems: 'center',
-            backgroundColor: Colors.transparentBlack,
-          }}
-        >
-          <View
-            style={{
-              justifyContent: 'center',
-              alignItems: 'center',
-              width: 300,
-              height: 150,
-              borderRadius: 10,
-              backgroundColor: Colors.white,
-              ...Default.shadow,
-            }}
-          >
-            <View
-              style={{
-                paddingHorizontal: Default.fixPadding * 1.5,
-                paddingVertical: Default.fixPadding,
-              }}
-            >
-              <Text
-                style={{
-                  ...Fonts.Black16Medium,
-                  textAlign: 'center',
-                  marginVertical: Default.fixPadding,
-                }}
-              >
-                {tr('areYouSure')}
-              </Text>
-              <View
-                style={{
-                  flexDirection: isRtl ? 'row-reverse' : 'row',
-                  justifyContent: 'space-around',
-                  marginVertical: Default.fixPadding,
-                }}
-              >
-                <TouchableOpacity
-                  onPress={() => setVisible(false)}
-                  style={{
-                    alignItems: 'center',
-                    paddingVertical: Default.fixPadding,
-                    width: '40%',
-                    borderRadius: 10,
-                    backgroundColor: Colors.primary,
-                    ...Default.shadow,
-                  }}
-                >
-                  <Text style={Fonts.White14Bold}>{tr('yes')}</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => setVisible(false)}
-                  style={{
-                    alignItems: 'center',
-                    paddingVertical: Default.fixPadding,
-                    width: '40%',
-                    borderRadius: 10,
-                    backgroundColor: Colors.regularGrey,
-                    ...Default.shadow,
-                  }}
-                >
-                  <Text style={Fonts.Primary16Bold}>{tr('no')}</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </View>
-        </View>
-      </Modal>
+      <ConfirmModal visible={visible} setVisible={setVisible} />
     </View>
   );
 };
@@ -266,16 +204,6 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     padding: 5,
     fontSize: 10,
-  },
-  pending: {
-    borderColor: 'rgb(234 179 8)',
-    color: 'rgb(234 179 8)',
-    backgroundColor: 'rgb(254 252 232)',
-  },
-  confirmed: {
-    borderColor: 'rgb(22 163 74)',
-    color: 'rgb(22 163 74)',
-    backgroundColor: 'rgb(240 253 244)',
   },
 });
 export default OngoingScreen;

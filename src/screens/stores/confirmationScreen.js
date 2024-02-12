@@ -11,11 +11,13 @@ import MyStatusBar from '@components/myStatusBar';
 import { useBookingContext } from '@contexts/BookingContext';
 import { useStoreContext } from '@contexts/StoreContext';
 import { formatPhoneNumber, formatPrice } from '@utils/helper';
+import ItemRow from '@components/itemRow';
 import Loader from '@components/loader';
 
 const ConfirmationScreen = (props) => {
   const { t, i18n } = useTranslation();
   const { selectedSpecialist, selectedDate, selectedTime, services, confirmBooking } = useBookingContext();
+  console.log('selectedSpecialist', selectedSpecialist);
   const {
     userInfo: { hours, specialty },
     firstName,
@@ -335,21 +337,7 @@ const ConfirmationScreen = (props) => {
         </TouchableOpacity>
         {result.map((item, index) => {
           total += item.price * 100;
-          return (
-            <View
-              key={index}
-              style={{
-                flexDirection: isRtl ? 'row-reverse' : 'row',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                marginBottom: Default.fixPadding,
-                marginHorizontal: Default.fixPadding * 1.5,
-              }}
-            >
-              <Text style={Fonts.Grey16Medium}>{item.name}</Text>
-              <Text style={Fonts.Grey14Bold}>{formatPrice(item.price * 100)} </Text>
-            </View>
-          );
+          return <ItemRow item={item} key={item.id} />;
         })}
 
         <View

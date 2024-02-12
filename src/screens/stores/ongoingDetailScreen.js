@@ -1,16 +1,46 @@
-import { Text, View, TouchableOpacity, Image, BackHandler } from 'react-native';
+import { Text, View, TouchableOpacity, Image, BackHandler, StyleSheet } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { Colors, Fonts, Default } from '@constants/style';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Octicons from 'react-native-vector-icons/Octicons';
 import DashedLine from 'react-native-dashed-line';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useTranslation } from 'react-i18next';
 import MyStatusBar from '@components/myStatusBar';
-
+import { STRAPIURL } from '@env';
+import moment from 'moment';
+import { formatPhoneNumber, formatPrice } from '@utils/helper';
+import ItemRow from '@components/itemRow';
+import ConfirmModal from '@components/confirmModal';
 const OngoingDetailScreen = (props) => {
+  const booking = props.route.params;
+  const {
+    confirmed,
+    date,
+    timeslot,
+    specialist: {
+      firstName,
+      lastName,
+      userInfo: { hours, specialty },
+    },
+    store: {
+      name,
+      address,
+      city,
+      state,
+      zip,
+      phone,
+      logo: { url },
+    },
+    services,
+  } = booking;
+  const time = hours.find((hour) => +hour.id === timeslot);
+  const status = confirmed ? 'Confirmed' : 'Pending';
+  const pServices = JSON.parse(services);
+  const [visible, setVisible] = useState(false);
+  let leftTitle = confirmed ? 'Get Direction' : 'Rebooking';
   const { t, i18n } = useTranslation();
-
+  let total = 0;
   const isRtl = i18n.dir() === 'rtl';
 
   function tr(key) {
@@ -26,10 +56,26 @@ const OngoingDetailScreen = (props) => {
 
     return () => BackHandler.removeEventListener('hardwareBackPress', backAction);
   }, []);
+  const onConfirm = () => {
+    if (confirmed) {
+      props.navigation.navigate('StoresStack', {
+        screen: 'searchLocationScreen',
+        params: {
+          item: booking,
+        },
+      });
+    } else {
+      // props.navigation.navigate('rebookingScreen', { booking });
+    }
+  };
+  const onCancel = () => {
+    setVisible(true);
+  };
 
   return (
     <View style={{ flex: 1 }}>
       <MyStatusBar />
+      <ConfirmModal visible={visible} setVisible={setVisible} />
       <View
         style={{
           flexDirection: isRtl ? 'row-reverse' : 'row',
@@ -41,7 +87,7 @@ const OngoingDetailScreen = (props) => {
         <TouchableOpacity style={{ marginHorizontal: Default.fixPadding * 1.5 }} onPress={() => props.navigation.pop()}>
           <Ionicons name={isRtl ? 'arrow-forward' : 'arrow-back'} size={30} color={Colors.white} />
         </TouchableOpacity>
-        <Text style={{ ...Fonts.White18Bold, marginVertical: Default.fixPadding }}>The big tease salon</Text>
+        <Text style={{ ...Fonts.White18Bold, marginVertical: Default.fixPadding }}>{name}</Text>
       </View>
       <ScrollView showsVerticalScrollIndicator={false}>
         <View
@@ -60,7 +106,8 @@ const OngoingDetailScreen = (props) => {
               marginVertical: Default.fixPadding,
             }}
           >
-            <Image source={require('@assets/images/confirm.png')} />
+            <Image source={{ uri: `${STRAPIURL}${url}` }} style={{ width: 113, height: 110 }} />
+
             <View
               style={{
                 justifyContent: 'center',
@@ -68,7 +115,7 @@ const OngoingDetailScreen = (props) => {
                 margin: Default.fixPadding,
               }}
             >
-              <Text style={{ ...Fonts.Black18Medium }}>The big tease salon</Text>
+              <Text style={{ ...Fonts.Black18Medium }}>${name}</Text>
               <Image
                 source={require('@assets/images/star4.png')}
                 style={{ marginVertical: Default.fixPadding * 0.5 }}
@@ -89,7 +136,7 @@ const OngoingDetailScreen = (props) => {
                   }}
                 />
                 <Text style={{ ...Fonts.ExtraLightGrey14Medium, maxWidth: '80%' }}>
-                  2715 Ash Dr. San Jose, South Dakota 83475
+                  {address}, {city}, {state}, {zip}
                 </Text>
               </View>
             </View>
@@ -138,7 +185,7 @@ const OngoingDetailScreen = (props) => {
                 {tr('date')}
               </Text>
             </View>
-            <Text style={Fonts.Grey14Medium}>19 sep 2022</Text>
+            <Text style={Fonts.Grey14Medium}>{moment(date).format('MMM Do YYYY')}</Text>
           </View>
 
           <View
@@ -162,8 +209,20 @@ const OngoingDetailScreen = (props) => {
               >
                 {tr('time')}
               </Text>
+              <Text
+                style={[
+                  styles.status,
+                  {
+                    borderColor: confirmed ? Colors.success : Colors.pending,
+                    backgroundColor: confirmed ? Colors.successBg : Colors.pendingBg,
+                    color: confirmed ? Colors.success : Colors.pending,
+                  },
+                ]}
+              >
+                {status}
+              </Text>
             </View>
-            <Text style={Fonts.Grey14Medium}>10 : 00 - 12: 00 AM</Text>
+            <Text style={Fonts.Grey14Medium}>{time.hours}</Text>
           </View>
 
           <View
@@ -188,7 +247,7 @@ const OngoingDetailScreen = (props) => {
                 {tr('mobile')}
               </Text>
             </View>
-            <Text style={Fonts.Grey14Medium}>+91(124567891)</Text>
+            <Text style={Fonts.Grey14Medium}>{formatPhoneNumber(phone)}</Text>
           </View>
         </View>
 
@@ -208,7 +267,7 @@ const OngoingDetailScreen = (props) => {
             marginVertical: Default.fixPadding,
           }}
         >
-          Darlene Robertson
+          {firstName} {lastName}
         </Text>
         <Text
           style={{
@@ -218,50 +277,16 @@ const OngoingDetailScreen = (props) => {
             marginBottom: Default.fixPadding,
           }}
         >
-          (haircutting specialist)
+          ({specialty})
         </Text>
 
         <DashedLine dashLength={5} dashColor={Colors.extraLightGrey} style={{ marginTop: Default.fixPadding }} />
-
-        <View
-          style={{
-            flexDirection: isRtl ? 'row-reverse' : 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            marginHorizontal: Default.fixPadding * 1.5,
-            marginVertical: Default.fixPadding,
-          }}
-        >
-          <Text style={Fonts.Grey16Medium}>Medium hair cut</Text>
-          <Text style={Fonts.Grey14Bold}>$40 </Text>
+        <View style={{ marginTop: 10 }}>
+          {pServices.map((item) => {
+            total += item.price * 100;
+            return <ItemRow item={item} key={item.id} />;
+          })}
         </View>
-
-        <View
-          style={{
-            flexDirection: isRtl ? 'row-reverse' : 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            marginHorizontal: Default.fixPadding * 1.5,
-            marginBottom: Default.fixPadding,
-          }}
-        >
-          <Text style={Fonts.Grey16Medium}>Partial highlight</Text>
-          <Text style={Fonts.Grey14Bold}>$40 </Text>
-        </View>
-
-        <View
-          style={{
-            flexDirection: isRtl ? 'row-reverse' : 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            marginHorizontal: Default.fixPadding * 1.5,
-            marginBottom: Default.fixPadding,
-          }}
-        >
-          <Text style={Fonts.Grey16Medium}>Coupon</Text>
-          <Text style={Fonts.Grey14Bold}>-$10 </Text>
-        </View>
-
         <View
           style={{
             flexDirection: isRtl ? 'row-reverse' : 'row',
@@ -272,11 +297,47 @@ const OngoingDetailScreen = (props) => {
           }}
         >
           <Text style={Fonts.Black16Medium}>{tr('totalPay')}</Text>
-          <Text style={Fonts.Primary16Medium}>$70</Text>
+          <Text style={Fonts.Primary16Medium}>{formatPrice(total)}</Text>
         </View>
       </ScrollView>
-
-      <TouchableOpacity
+      <View
+        style={{
+          ...Default.shadow,
+          flexDirection: isRtl ? 'row-reverse' : 'row',
+        }}
+      >
+        <TouchableOpacity
+          // onPress={() => props.navigation.navigate('paymentMethodScreen')}
+          onPress={() => onConfirm()}
+          style={{
+            backgroundColor: Colors.primary,
+            flex: 1,
+            padding: Default.fixPadding * 1.5,
+            alignItems: 'center',
+            marginHorizontal: Default.fixPadding * 1.5,
+            borderRadius: 10,
+            ...Default.shadow,
+          }}
+        >
+          <Text style={Fonts.White18Bold}>{leftTitle}</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          // onPress={() => props.navigation.navigate('paymentMethodScreen')}
+          onPress={() => onCancel()}
+          style={{
+            backgroundColor: Colors.white,
+            flex: 1,
+            padding: Default.fixPadding * 1.5,
+            alignItems: 'center',
+            marginHorizontal: Default.fixPadding * 1.5,
+            borderRadius: 10,
+            ...Default.shadow,
+          }}
+        >
+          <Text style={Fonts.Black18Bold}>Cancel</Text>
+        </TouchableOpacity>
+      </View>
+      {/* <TouchableOpacity
         onPress={() => props.navigation.navigate('confirmationScreen')}
         style={{
           justifyContent: 'center',
@@ -290,9 +351,17 @@ const OngoingDetailScreen = (props) => {
         }}
       >
         <Text style={Fonts.White18Bold}>{tr('rebooking')}</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
     </View>
   );
 };
-
+const styles = StyleSheet.create({
+  status: {
+    borderWidth: 1,
+    borderRadius: 10,
+    marginLeft: 10,
+    padding: 5,
+    fontSize: 10,
+  },
+});
 export default OngoingDetailScreen;
