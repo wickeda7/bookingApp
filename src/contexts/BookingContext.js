@@ -12,7 +12,8 @@ const BookingContextProvider = ({ children }) => {
   const [specialistBookings, setSpecialistBookings] = useState([]);
   const { selectedStore } = useStoreContext();
   const { userData } = useAuthContext();
-
+  const [cancelBooking, setCancelBooking] = useState(null);
+  const [cancelId, setCancelId] = useState(null);
   const getSpecialistBooking = async (specialists) => {
     const ids = specialists.map((item) => item.id).join('_');
     const response = await booking.getSpecialistBooking(ids);
@@ -21,6 +22,7 @@ const BookingContextProvider = ({ children }) => {
   };
 
   const deleteHistory = async (id) => {
+    console.log('deleteHistory', id);
     const response = await booking.deleteHistory(id);
     return response;
   };
@@ -71,6 +73,10 @@ const BookingContextProvider = ({ children }) => {
     specialistBookings,
     getUserBooking,
     deleteHistory,
+    cancelBooking,
+    setCancelBooking,
+    cancelId,
+    setCancelId,
   };
   return <BookingContext.Provider value={value}>{children}</BookingContext.Provider>;
 };

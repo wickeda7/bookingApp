@@ -5,6 +5,7 @@ import moment from 'moment';
 import Octicons from 'react-native-vector-icons/Octicons';
 import { Colors, Default, Fonts } from '@constants/style';
 import { useTranslation } from 'react-i18next';
+import { useBookingContext } from '@contexts/BookingContext';
 const BookingRow = ({ item, showStatus, done, props, setVisible }) => {
   const { t, i18n } = useTranslation();
   const isRtl = i18n.dir() === 'rtl';
@@ -14,7 +15,7 @@ const BookingRow = ({ item, showStatus, done, props, setVisible }) => {
   const aTime = `( ${time[0]} ${time1[2]} )`;
   const date = moment(item.date).format('MMM Do YYYY');
   const status = item.confirmed ? 'Confirmed' : 'Pending';
-
+  const { setCancelBooking } = useBookingContext();
   function tr(key) {
     return t(`ongoingScreen:${key}`);
   }
@@ -142,7 +143,10 @@ const BookingRow = ({ item, showStatus, done, props, setVisible }) => {
               </TouchableOpacity>
               <TouchableOpacity
                 activeOpacity={0.8}
-                onPress={() => setVisible(true)}
+                onPress={() => {
+                  setCancelBooking(item);
+                  setVisible(true);
+                }}
                 style={{
                   justifyContent: 'center',
                   alignItems: 'center',

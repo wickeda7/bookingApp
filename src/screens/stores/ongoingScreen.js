@@ -11,7 +11,7 @@ const OngoingScreen = (props) => {
   const { t, i18n } = useTranslation();
   const { navigation, route } = props;
   const isRtl = i18n.dir() === 'rtl';
-  const { getUserBooking } = useBookingContext();
+  const { getUserBooking, cancelId } = useBookingContext();
   const [lVisible, setLVisible] = useState(false);
   const [data, setData] = useState([]);
   const [visible, setVisible] = useState(false);
@@ -29,6 +29,12 @@ const OngoingScreen = (props) => {
     return unsubscribe;
   }, [navigation]);
 
+  useEffect(() => {
+    if (cancelId) {
+      const newData = data.filter((item) => item.id !== cancelId);
+      setData(newData);
+    }
+  }, [cancelId]);
   function tr(key) {
     return t(`ongoingScreen:${key}`);
   }

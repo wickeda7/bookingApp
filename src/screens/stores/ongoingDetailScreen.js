@@ -12,6 +12,7 @@ import moment from 'moment';
 import { formatPhoneNumber, formatPrice } from '@utils/helper';
 import ItemRow from '@components/itemRow';
 import ConfirmModal from '@components/confirmModal';
+import { useBookingContext } from '@contexts/BookingContext';
 const OngoingDetailScreen = (props) => {
   const booking = props.route.params;
   const {
@@ -42,7 +43,7 @@ const OngoingDetailScreen = (props) => {
   const { t, i18n } = useTranslation();
   let total = 0;
   const isRtl = i18n.dir() === 'rtl';
-
+  const { setCancelBooking, cancelId } = useBookingContext();
   function tr(key) {
     return t(`ongoingDetail:${key}`);
   }
@@ -56,6 +57,11 @@ const OngoingDetailScreen = (props) => {
 
     return () => BackHandler.removeEventListener('hardwareBackPress', backAction);
   }, []);
+  useEffect(() => {
+    if (cancelId) {
+      props.navigation.pop();
+    }
+  }, [cancelId]);
   const onConfirm = () => {
     if (confirmed) {
       props.navigation.navigate('StoresStack', {
@@ -70,6 +76,7 @@ const OngoingDetailScreen = (props) => {
   };
   const onCancel = () => {
     setVisible(true);
+    setCancelBooking(booking);
   };
 
   return (
