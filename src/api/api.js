@@ -103,4 +103,13 @@ export const api = {
       throw error;
     }
   },
+  getUserBooking: async (id) => {
+    try {
+      const url = `${STRAPIURL}/api/appointments/user/${id}`;
+      const response = await axios.get(url);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
 };

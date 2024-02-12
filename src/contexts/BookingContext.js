@@ -20,6 +20,15 @@ const BookingContextProvider = ({ children }) => {
     return response.data;
   };
 
+  const getUserBooking = async () => {
+    if (!userData) {
+      console.log('need to login');
+    } else {
+      const response = await booking.getUserBooking(userData.id);
+      return response.data;
+    }
+  };
+
   const confirmBooking = async () => {
     const data = {
       data: {
@@ -56,6 +65,7 @@ const BookingContextProvider = ({ children }) => {
     confirmBooking,
     getSpecialistBooking,
     specialistBookings,
+    getUserBooking,
   };
   return <BookingContext.Provider value={value}>{children}</BookingContext.Provider>;
 };

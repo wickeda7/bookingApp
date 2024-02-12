@@ -3,11 +3,10 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { Colors, Default, Fonts } from '@constants/style';
-import OngoingScreen from './ongoingScreen';
-import HistoryScreen from './historyScreen';
+import OngoingScreen from '@screens/stores/ongoingScreen';
+import HistoryScreen from '@screens/stores/historyScreen';
 import MyStatusBar from '@components/myStatusBar';
 import { useBookingContext } from '@contexts/BookingContext';
-import { use } from 'i18next';
 const Tab = createMaterialTopTabNavigator();
 
 function CustomTabBar({ state, descriptors, navigation }) {
@@ -32,8 +31,9 @@ function CustomTabBar({ state, descriptors, navigation }) {
         backgroundColor: Colors.primary,
       }}
     >
-      <Text style={{ ...Fonts.White20Bold }}>{tr('booking')}</Text>
+      <Text style={{ ...Fonts.White20Bold }}>{tr('booking')} BS</Text>
       <Text style={{ ...Fonts.White16Medium, marginBottom: Default.fixPadding }}>{tr('upcomingBooking')}</Text>
+      <Text style={{ ...Fonts.White16Medium, marginBottom: Default.fixPadding }}>TODO: reminder alert booking</Text>
 
       <View style={styles.TabBarMainContainer}>
         {state.routes.map((route, index) => {

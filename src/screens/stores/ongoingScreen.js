@@ -1,13 +1,29 @@
-import { Text, View, TouchableOpacity, FlatList, Image, Modal } from 'react-native';
-import React, { useState } from 'react';
+import { Text, View, TouchableOpacity, FlatList, Image, Modal, StyleSheet } from 'react-native';
+import React, { useEffect, useState } from 'react';
 import Octicons from 'react-native-vector-icons/Octicons';
 import { Colors, Default, Fonts } from '@constants/style';
 import { useTranslation } from 'react-i18next';
+import { useBookingContext } from '@contexts/BookingContext';
+import Loader from '@components/loader';
+import { STRAPIURL } from '@env';
+import moment from 'moment';
 
 const OngoingScreen = (props) => {
   const { t, i18n } = useTranslation();
 
   const isRtl = i18n.dir() === 'rtl';
+  const { getUserBooking } = useBookingContext();
+  const [lVisible, setLVisible] = useState(false);
+  const [data, setData] = useState([]);
+  useEffect(() => {
+    const getData = async () => {
+      setLVisible(true);
+      const res = await getUserBooking();
+      setData(res);
+      setLVisible(false);
+    };
+    getData();
+  }, []);
 
   function tr(key) {
     return t(`ongoingScreen:${key}`);
@@ -15,46 +31,14 @@ const OngoingScreen = (props) => {
 
   const [visible, setVisible] = useState(false);
 
-  const dataList = [
-    {
-      key: '1',
-      image: require('@assets/images/image.png'),
-      title: 'Salon Iridescent ',
-      description: '1901 Trowbridge Cir. Shiloh,',
-      time: '26 June 2022 (9:00AM)',
-    },
-    {
-      key: '2',
-      image: require('@assets/images/image1.png'),
-      title: 'Salon Iridescent ',
-      description: '1901 Trowbridge Cir. Shiloh,',
-      time: '26 June 2022 (9:00AM)',
-    },
-    {
-      key: '3',
-      image: require('@assets/images/image2.png'),
-      title: 'Salon Iridescent ',
-      description: '1901 Trowbridge Cir. Shiloh,',
-      time: '26 June 2022 (9:00AM)',
-    },
-    {
-      key: '4',
-      image: require('@assets/images/image3.png'),
-      title: 'Salon Iridescent ',
-      description: '1901 Trowbridge Cir. Shiloh,',
-      time: '26 June 2022 (9:00AM)',
-    },
-    {
-      key: '5',
-      image: require('@assets/images/image3.png'),
-      title: 'Salon Iridescent ',
-      description: '1901 Trowbridge Cir. Shiloh,',
-      time: '26 June 2022 (9:00AM)',
-    },
-  ];
-
   const renderItem = ({ item, index }) => {
     const isFirst = index === 0;
+    const temp = item.specialist.userInfo.hours.find((hour) => +hour.id === item.timeslot);
+    const time = temp.hours.split('-');
+    const time1 = time[1].split(' ');
+    const aTime = `( ${time[0]} ${time1[2]} )`;
+    const date = moment(item.date).format('MMM Do YYYY');
+    const status = item.confirmed ? 'Confirmed' : 'Pending';
     return (
       <View
         style={{
@@ -75,7 +59,7 @@ const OngoingScreen = (props) => {
             backgroundColor: Colors.white,
           }}
         >
-          <Image source={item.image} />
+          <Image source={{ uri: `${STRAPIURL}${item.store.logo.url}` }} style={{ width: 131, height: 143 }} />
           <View
             style={{
               alignItems: isRtl ? 'flex-end' : 'flex-start',
@@ -83,7 +67,7 @@ const OngoingScreen = (props) => {
               margin: Default.fixPadding,
             }}
           >
-            <Text style={Fonts.Primary16Medium}>{item.title}</Text>
+            <Text style={Fonts.Primary16Medium}>{item.store.name}</Text>
             <View
               style={{
                 flexDirection: isRtl ? 'row-reverse' : 'row',
@@ -101,16 +85,30 @@ const OngoingScreen = (props) => {
                 }}
               />
 
-              <Text style={{ ...Fonts.Grey14Regular }}>{item.description}</Text>
+              <Text style={{ ...Fonts.Grey14Regular }}>{item.store.address}</Text>
             </View>
-            <Text
+            <View style={{ flex: 1, paddingLeft: 20, marginTop: -5 }}>
+              <Text style={{ ...Fonts.Grey14Regular }}>
+                {item.store.city}, {item.store.state} {item.store.zip}{' '}
+              </Text>
+            </View>
+            <View
               style={{
-                ...Fonts.Black14Medium,
-                marginBottom: Default.fixPadding * 0.5,
+                flexDirection: isRtl ? 'row-reverse' : 'row',
+                alignItems: 'center',
+                marginVertical: Default.fixPadding * 0.5,
               }}
             >
-              {item.time}
-            </Text>
+              <Text
+                style={{
+                  ...Fonts.Black14Medium,
+                  marginBottom: Default.fixPadding * 0.5,
+                }}
+              >
+                {date} {aTime}
+              </Text>
+              <Text style={[styles.status, item.confirmed ? styles.confirmed : styles.pending]}>{status}</Text>
+            </View>
             <View
               style={{
                 flexDirection: isRtl ? 'row-reverse' : 'row',
@@ -176,11 +174,12 @@ const OngoingScreen = (props) => {
 
   return (
     <View style={{ flex: 1 }}>
+      <Loader visible={lVisible} />
       <FlatList
         numColumns={1}
-        data={dataList}
+        data={data}
         renderItem={renderItem}
-        keyExtractor={(item) => item.key}
+        keyExtractor={(item) => item.id}
         showsVerticalScrollIndicator={false}
       />
 
@@ -260,5 +259,23 @@ const OngoingScreen = (props) => {
     </View>
   );
 };
-
+const styles = StyleSheet.create({
+  status: {
+    borderWidth: 1,
+    borderRadius: 10,
+    marginLeft: 10,
+    padding: 5,
+    fontSize: 10,
+  },
+  pending: {
+    borderColor: 'rgb(234 179 8)',
+    color: 'rgb(234 179 8)',
+    backgroundColor: 'rgb(254 252 232)',
+  },
+  confirmed: {
+    borderColor: 'rgb(22 163 74)',
+    color: 'rgb(22 163 74)',
+    backgroundColor: 'rgb(240 253 244)',
+  },
+});
 export default OngoingScreen;

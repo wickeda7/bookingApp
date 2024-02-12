@@ -16,4 +16,12 @@ export const booking = {
       throw error;
     }
   },
+  getUserBooking: async (id) => {
+    try {
+      const response = await api.getUserBooking(id);
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  },
 };
