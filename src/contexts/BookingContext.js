@@ -20,11 +20,15 @@ const BookingContextProvider = ({ children }) => {
     return response.data;
   };
 
-  const getUserBooking = async () => {
+  const deleteHistory = async (id) => {
+    const response = await booking.deleteHistory(id);
+    return response;
+  };
+  const getUserBooking = async (done) => {
     if (!userData) {
       console.log('need to login');
     } else {
-      const response = await booking.getUserBooking(userData.id);
+      const response = await booking.getUserBooking(userData.id, done);
       return response.data;
     }
   };
@@ -66,6 +70,7 @@ const BookingContextProvider = ({ children }) => {
     getSpecialistBooking,
     specialistBookings,
     getUserBooking,
+    deleteHistory,
   };
   return <BookingContext.Provider value={value}>{children}</BookingContext.Provider>;
 };

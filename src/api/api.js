@@ -103,10 +103,19 @@ export const api = {
       throw error;
     }
   },
-  getUserBooking: async (id) => {
+  getUserBooking: async (id, done = false) => {
     try {
-      const url = `${STRAPIURL}/api/appointments/user/${id}`;
+      const url = `${STRAPIURL}/api/appointments/user/${id}/${done}`;
       const response = await axios.get(url);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  deleteHistory: async (id) => {
+    try {
+      const url = `${STRAPIURL}/api/appointments/cancel/${id}`;
+      const response = await axios.put(url);
       return response.data;
     } catch (error) {
       throw error;

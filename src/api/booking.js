@@ -16,9 +16,17 @@ export const booking = {
       throw error;
     }
   },
-  getUserBooking: async (id) => {
+  getUserBooking: async (id, done) => {
     try {
-      const response = await api.getUserBooking(id);
+      const response = await api.getUserBooking(id, done);
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  },
+  deleteHistory: async (id) => {
+    try {
+      const response = await api.deleteHistory(id);
       return response;
     } catch (error) {
       throw error;

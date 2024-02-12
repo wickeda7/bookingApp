@@ -1,75 +1,41 @@
 import { Text, View, TouchableOpacity, Image, StyleSheet } from 'react-native';
-import React, { useState } from 'react';
-import Octicons from 'react-native-vector-icons/Octicons';
+import React, { useEffect, useState } from 'react';
 import { Colors, Default, Fonts } from '@constants/style';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Feather from 'react-native-vector-icons/Feather';
 import Toast from 'react-native-root-toast';
 import { useTranslation } from 'react-i18next';
+import { useBookingContext } from '@contexts/BookingContext';
+import Loader from '@components/loader';
+import BookingRow from '@components/bookingRow';
 
 const HistoryScreen = (props) => {
   const { t, i18n } = useTranslation();
   const isRtl = i18n.dir() === 'rtl';
-
+  const [visible, setVisible] = useState(false);
+  const [data, setData] = useState([]);
+  const { getUserBooking, deleteHistory } = useBookingContext();
+  const { navigation, route } = props;
   function tr(key) {
     return t(`historyScreen:${key}`);
   }
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      const getData = async () => {
+        setVisible(true);
+        let res = await getUserBooking(true);
+        res = res.map((item, index) => {
+          return { ...item, key: `${index}` };
+        });
+        setData(res);
+        setVisible(false);
+      };
+      getData();
+    });
 
-  const dataList = [
-    {
-      key: '1',
-      image: require('@assets/images/image.png'),
-      title: 'The Big Tease Salons',
-      description: '6391 Elgin St. Celina, Delaware ',
-      time: '26 June 2022 (9:00AM)',
-    },
-    {
-      key: '2',
-      image: require('@assets/images/image2.png'),
-      title: 'Ahead of Time',
-      description: '3517 W. Gray St. Utica, ',
-      time: '26 June 2022 (9:00AM)',
-    },
-    {
-      key: '3',
-      image: require('@assets/images/image3.png'),
-      title: 'Salon Iridescent ',
-      description: '1901 Thornridge Cir. Shiloh,',
-      time: '26 June 2022 (9:00AM)',
-    },
-    {
-      key: '4',
-      image: require('@assets/images/image7.png'),
-      title: 'Catchy Hair Salon',
-      description: '1901 Thornridge Cir. Shiloh,',
-      time: '26 June 2022 (9:00AM)',
-    },
-    {
-      key: '5',
-      image: require('@assets/images/image6.png'),
-      title: 'Ahead of Time',
-      description: '3517 W. Gray St. Utica, ',
-      time: '26 June 2022 (9:00AM)',
-    },
-    {
-      key: '6',
-      image: require('@assets/images/image5.png'),
-      title: 'Salon Iridescent ',
-      description: '1901 Thornridge Cir. Shiloh,',
-      time: '26 June 2022 (9:00AM)',
-    },
-  ];
-
-  const [listData, setListData] = useState(
-    dataList.map((historyItem, index) => ({
-      key: `${index}`,
-      title: historyItem.title,
-      image: historyItem.image,
-      description: historyItem.description,
-      time: historyItem.time,
-    }))
-  );
+    return unsubscribe;
+  }, [navigation]);
 
   const closeRow = (rowMap, rowKey) => {
     if (rowMap[rowKey]) {
@@ -77,16 +43,19 @@ const HistoryScreen = (props) => {
     }
   };
 
-  const deleteRow = (rowMap, rowKey) => {
+  const deleteRow = async (rowMap, rowKey, id) => {
     closeRow(rowMap, rowKey);
-    const newData = [...listData];
-    const prevIndex = listData.findIndex((item) => item.key === rowKey);
-    newData.splice(prevIndex, 1);
-    setListData(newData);
+    const newData = [...data];
+    const prevIndex = data.findIndex((item) => item.key === rowKey);
+    const res = await deleteHistory(id);
+    if (res) {
+      newData.splice(prevIndex, 1);
+      setData(newData);
+    }
   };
 
-  const renderItem = (data) => {
-    const isEnd = data.item.key == 5;
+  const renderItem = ({ item, index }) => {
+    const isEnd = index === data.length - 1 || index === data.length - 2;
 
     return (
       <View
@@ -106,62 +75,14 @@ const HistoryScreen = (props) => {
             backgroundColor: Colors.white,
           }}
         >
-          <Image source={data.item.image} />
-          <View
-            style={{
-              justifyContent: 'center',
-              alignItems: isRtl ? 'flex-end' : 'flex-start',
-              marginHorizontal: Default.fixPadding * 1.5,
-              backgroundColor: Colors.white,
-            }}
-          >
-            <Text style={Fonts.Primary16Medium}>{data.item.title}</Text>
-
-            <View
-              style={{
-                flexDirection: isRtl ? 'row-reverse' : 'row',
-                alignItems: 'center',
-                marginVertical: 3,
-              }}
-            >
-              <Octicons
-                name='location'
-                size={18}
-                color={Colors.grey}
-                style={{
-                  marginRight: Default.fixPadding * 0.5,
-                  marginLeft: isRtl ? Default.fixPadding * 0.5 : 0,
-                }}
-              />
-
-              <Text style={{ ...Fonts.Grey14Regular }}>{data.item.description}</Text>
-            </View>
-            <Text style={Fonts.Black14Medium}>{data.item.time}</Text>
-
-            <TouchableOpacity
-              style={{
-                alignItems: 'center',
-                paddingVertical: Default.fixPadding,
-                width: 100,
-                marginTop: Default.fixPadding,
-                borderRadius: 10,
-                backgroundColor: Colors.white,
-                ...Default.shadow,
-              }}
-              onPress={() => props.navigation.navigate('StoresStack', { screen: 'historyDetailScreen' })}
-            >
-              <Text numberOfLines={1} style={Fonts.Primary14Medium}>
-                {tr('getDetail')}
-              </Text>
-            </TouchableOpacity>
-          </View>
+          <BookingRow item={item} showStatus={false} done={true} props={props} />
         </View>
       </View>
     );
   };
 
   const renderHiddenItem = (data, rowMap) => {
-    const title = data.item.title;
+    const title = data.item.store.name;
     var result = title + tr('remove');
 
     return (
@@ -178,7 +99,7 @@ const HistoryScreen = (props) => {
           ...styles.backRightBtnRight,
         }}
         onPress={() => {
-          deleteRow(rowMap, data.item.key);
+          deleteRow(rowMap, data.item.key, data.item.id);
           Toast.show(result, {
             duration: Toast.durations.SHORT,
             position: Toast.positions.BOTTOM,
@@ -196,7 +117,8 @@ const HistoryScreen = (props) => {
 
   return (
     <View style={{ flex: 1 }}>
-      {listData.length === 0 ? (
+      <Loader visible={visible} />
+      {data.length === 0 ? (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <Feather name='calendar' color={Colors.primary} size={50} />
           <Text
@@ -210,7 +132,7 @@ const HistoryScreen = (props) => {
         </View>
       ) : (
         <SwipeListView
-          data={listData}
+          data={data}
           renderItem={renderItem}
           renderHiddenItem={renderHiddenItem}
           rightOpenValue={-80}
