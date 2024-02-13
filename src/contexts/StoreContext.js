@@ -42,6 +42,10 @@ const StoreContextProvider = ({ children }) => {
     updatedSelectedStore(response);
   };
   const onFavorite = (item) => {
+    if (!stores) {
+      users.updateFavorite(userData.id, item);
+      return item;
+    }
     const newItem = stores.map((val) => {
       if (val.id === item.id) {
         const newVal = { ...val, selected: !val.selected };

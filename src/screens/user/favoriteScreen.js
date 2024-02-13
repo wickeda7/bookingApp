@@ -7,7 +7,9 @@ import { SwipeListView } from 'react-native-swipe-list-view';
 import Toast from 'react-native-root-toast';
 import { useTranslation } from 'react-i18next';
 import MyStatusBar from '@components/myStatusBar';
-
+import { useAuthContext } from '@contexts/AuthContext';
+import { useStoreContext } from '@contexts/StoreContext';
+import { STRAPIURL } from '@env';
 const FavoriteScreen = (props) => {
   const { t, i18n } = useTranslation();
 
@@ -16,7 +18,16 @@ const FavoriteScreen = (props) => {
   function tr(key) {
     return t(`favoriteScreen:${key}`);
   }
-
+  const { userData } = useAuthContext();
+  const { onFavorite } = useStoreContext();
+  const favorites = userData?.favorites;
+  const [data, setData] = useState([]);
+  useEffect(() => {
+    const res = favorites.map((item, index) => {
+      return { ...item, key: `${index}` };
+    });
+    setData(res);
+  }, [favorites]);
   const backAction = () => {
     props.navigation.goBack();
     return true;
@@ -27,76 +38,26 @@ const FavoriteScreen = (props) => {
     return () => BackHandler.removeEventListener('hardwareBackPress', backAction);
   }, []);
 
-  const dataList = [
-    {
-      key: '1',
-      image: require('@assets/images/hair1.png'),
-      title: 'The Big Tease Salons',
-      description: '2972 Westheimer Rd. Santa Ana,Illinois 85486 ',
-      star: require('@assets/images/star5.png'),
-      icon: 'location',
-    },
-    {
-      key: '2',
-      image: require('@assets/images/hair2.png'),
-      title: 'Straight Razors',
-      description: '1901 Thornridge Cir. Shiloh,Hawaii 81063 ',
-      star: require('@assets/images/star3.png'),
-      icon: 'location',
-    },
-    {
-      key: '3',
-      image: require('@assets/images/hair3.png'),
-      title: 'Backyard Barbers',
-      description: '2715 Ash Dr. San Jose, South Dakota 83475',
-      star: require('@assets/images/star4.png'),
-      icon: 'location',
-    },
-    {
-      key: '4',
-      image: require('@assets/images/hair4.png'),
-      title: 'Salon Zeppelin',
-      description: '3517 W. Gray St. Utica,Pennsylvania 57867',
-      star: require('@assets/images/star3.png'),
-      icon: 'location',
-    },
-    {
-      key: '5',
-      image: require('@assets/images/hair5.png'),
-      title: 'Brooklyn Barbers',
-      description: '2972 Westheimer Rd. Santa Ana,  Illinois 85486 ',
-      star: require('@assets/images/star5.png'),
-      icon: 'location',
-    },
-  ];
-
-  const [listData, setListData] = useState(
-    dataList.map((favoriteItem, index) => ({
-      key: `${index}`,
-      title: favoriteItem.title,
-      image: favoriteItem.image,
-      description: favoriteItem.description,
-      star: favoriteItem.star,
-      icon: favoriteItem.icon,
-    }))
-  );
-
   const closeRow = (rowMap, rowKey) => {
     if (rowMap[rowKey]) {
       rowMap[rowKey].closeRow();
     }
   };
 
-  const deleteRow = (rowMap, rowKey) => {
-    closeRow(rowMap, rowKey);
-    const newData = [...listData];
-    const prevIndex = listData.findIndex((item) => item.key === rowKey);
-    newData.splice(prevIndex, 1);
-    setListData(newData);
+  const deleteRow = async (rowMap, row) => {
+    closeRow(rowMap, row.key);
+    const newData = [...data];
+    const prevIndex = data.findIndex((item) => item.key === row.key);
+    const res = onFavorite(row);
+    if (res) {
+      newData.splice(prevIndex, 1);
+      setData(newData);
+    }
   };
 
-  const renderItem = (data) => {
-    const isEnd = data.item.key == 4;
+  const renderItem = ({ item, index }) => {
+    if (!item.star) item.star = require('@assets/images/star5.png');
+    const isEnd = index === data.length - 1 || index === data.length - 2;
     return (
       <View
         style={{
@@ -114,7 +75,7 @@ const FavoriteScreen = (props) => {
             flexDirection: isRtl ? 'row-reverse' : 'row',
           }}
         >
-          <Image source={data.item.image} />
+          <Image source={{ uri: `${STRAPIURL}${item.logo.url}` }} style={{ width: 131, height: 123 }} />
 
           <View
             style={{
@@ -123,8 +84,8 @@ const FavoriteScreen = (props) => {
               marginHorizontal: Default.fixPadding * 0.5,
             }}
           >
-            <Text style={{ ...Fonts.Black16Medium }}>{data.item.title}</Text>
-            <Image source={data.item.star} style={{ marginVertical: 5 }} />
+            <Text style={{ ...Fonts.Black16Medium }}>{item.name}</Text>
+            <Image source={item.star} style={{ marginVertical: 5 }} />
             <View
               style={{
                 flexDirection: isRtl ? 'row-reverse' : 'row',
@@ -132,13 +93,15 @@ const FavoriteScreen = (props) => {
               }}
             >
               <Octicons
-                name={data.item.icon}
+                name='location'
                 size={18}
                 color={Colors.grey}
                 style={{ marginRight: Default.fixPadding * 0.5 }}
               />
 
-              <Text style={{ ...Fonts.Grey14Regular, maxWidth: '75%' }}>{data.item.description}</Text>
+              <Text style={{ ...Fonts.Grey14Regular, maxWidth: '75%' }}>
+                {item.address} {item.city} {item.state} {item.zip}
+              </Text>
             </View>
           </View>
         </View>
@@ -147,7 +110,7 @@ const FavoriteScreen = (props) => {
   };
 
   const renderHiddenItem = (data, rowMap) => {
-    const title = data.item.title;
+    const title = data.item.name;
     var result = title + tr('remove');
 
     return (
@@ -164,7 +127,7 @@ const FavoriteScreen = (props) => {
           marginTop: Default.fixPadding * 1.5,
         }}
         onPress={() => {
-          deleteRow(rowMap, data.item.key);
+          deleteRow(rowMap, data.item);
           Toast.show(result, {
             duration: Toast.durations.SHORT,
             position: Toast.positions.BOTTOM,
@@ -206,14 +169,14 @@ const FavoriteScreen = (props) => {
           {tr('favorite')}
         </Text>
       </View>
-      {listData.length === 0 ? (
+      {data.length === 0 ? (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <Ionicons name='heart-dislike' color={Colors.primary} size={50} />
           <Text style={Fonts.Primary16Medium}>{tr('empty')}</Text>
         </View>
       ) : (
         <SwipeListView
-          data={listData}
+          data={data}
           renderItem={renderItem}
           renderHiddenItem={renderHiddenItem}
           rightOpenValue={-80}
