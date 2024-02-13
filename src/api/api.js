@@ -1,7 +1,6 @@
 import axios from 'axios';
 
 import { STRAPIURL } from '@env';
-
 export const api = {
   getUser: async (email) => {
     try {
@@ -119,6 +118,42 @@ export const api = {
       return response.data;
     } catch (error) {
       throw error;
+    }
+  },
+  updateUser: async (id, data) => {
+    try {
+      const url = `${STRAPIURL}/api/users/${id}`;
+      const response = await axios.put(url, data);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  uploadProfileImage: async (id, file) => {
+    try {
+      const url = `${STRAPIURL}/api/upload`;
+      const formData = new FormData();
+      const fileName = file.split('/').pop();
+      const fileType = fileName.split('.').pop();
+
+      formData.append('files', {
+        name: fileName,
+        type: 'image/jpeg',
+        uri: file,
+      });
+      formData.append('ref', 'api::user-info.user-info');
+      formData.append('refId', id);
+      formData.append('field', 'profileImg');
+      const headers = {
+        accept: 'application/json',
+        'Accept-Language': 'en-US,en;q=0.8',
+      };
+      const res = await axios.post(url, formData, {
+        headers: headers,
+      });
+      return res.data;
+    } catch (error) {
+      console.log('error uploadProfileImage', error);
     }
   },
 };

@@ -44,4 +44,20 @@ export const users = {
       throw error;
     }
   },
+  updateUser: async (id, data) => {
+    try {
+      const response = await api.updateUser(id, data);
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  },
+  uploadProfileImage: async (id, file) => {
+    try {
+      const response = await api.uploadProfileImage(id, file);
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  },
 };

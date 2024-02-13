@@ -7,6 +7,8 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import { useTranslation } from 'react-i18next';
 import MyStatusBar from '@components/myStatusBar';
 import { useAuthContext } from '@contexts/AuthContext';
+import { Avatar } from 'react-native-paper';
+import { STRAPIURL } from '@env';
 const ProfileScreen = (props) => {
   const { t, i18n } = useTranslation();
 
@@ -15,8 +17,9 @@ const ProfileScreen = (props) => {
   function tr(key) {
     return t(`profileScreen:${key}`);
   }
-  const { logout } = useAuthContext();
+  const { logout, userData } = useAuthContext();
   const [visible, setVisible] = useState(false);
+  if (!userData) return null;
   return (
     <View style={{ flex: 1, backgroundColor: Colors.white }}>
       <MyStatusBar />
@@ -28,7 +31,7 @@ const ProfileScreen = (props) => {
             margin: Default.fixPadding * 1.5,
           }}
         >
-          {tr('profile')}
+          {tr('profile')} PS
         </Text>
       </View>
 
@@ -38,16 +41,22 @@ const ProfileScreen = (props) => {
           backgroundColor: Colors.white,
         }}
       >
-        <Image
-          source={require('@assets/images/profile1.png')}
+        <Avatar.Image
+          size={128}
+          source={{
+            uri: `${STRAPIURL}${userData.userInfo.profileImg.url}`,
+          }}
           style={{
             marginTop: -70,
             alignSelf: 'center',
           }}
         />
+
         <ScrollView showsVerticalScrollIndicator={false}>
-          <Text style={{ ...Fonts.Black16Bold, textAlign: 'center' }}>Jenny Wilson</Text>
-          <Text style={{ ...Fonts.Grey14Medium, textAlign: 'center' }}>Jennywilson@gmail.com</Text>
+          <Text style={{ ...Fonts.Black16Bold, textAlign: 'center' }}>
+            {userData.firstName} {userData.lastName}
+          </Text>
+          <Text style={{ ...Fonts.Grey14Medium, textAlign: 'center' }}>{userData.email}</Text>
 
           <View
             style={{

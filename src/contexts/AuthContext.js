@@ -42,6 +42,7 @@ const AuthContextProvider = ({ children }) => {
     const unSub = onAuthStateChanged(auth, async (user) => {
       if (user) {
         const userInfo = user.reloadUserInfo.providerUserInfo[0];
+
         if (userInfo) {
           updateUserData(userInfo);
         }
@@ -147,6 +148,35 @@ const AuthContextProvider = ({ children }) => {
     setReviews(response.data);
     setLoading(false);
   };
+  const updateUser = async (data) => {
+    const temp = {
+      firstName: data.name,
+      lastName: data.lName,
+      email: data.textEmail,
+      phoneNumber: data.textNo,
+    };
+    const response = await users.updateUser(data.userId, temp);
+    const newInfo = { ...userData, ...temp };
+    setUserData(newInfo);
+    await AsyncStorage.setItem('@user', JSON.stringify(newInfo));
+    return response;
+  };
+  const uploadProfileImage = async (id, file) => {
+    const response = await users.uploadProfileImage(id, file);
+    const newInfo = {
+      ...userData,
+      userInfo: {
+        ...userData.userInfo,
+        profileImg: {
+          ...userData.userInfo.profileImg,
+          url: response[0].url,
+        },
+      },
+    };
+    setUserData(newInfo);
+    await AsyncStorage.setItem('@user', JSON.stringify(newInfo));
+    return response;
+  };
   const value = {
     loading,
     setLoading,
@@ -160,6 +190,8 @@ const AuthContextProvider = ({ children }) => {
     updateUserFavorite,
     getReviews,
     reviews,
+    updateUser,
+    uploadProfileImage,
   };
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

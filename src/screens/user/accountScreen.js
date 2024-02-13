@@ -9,6 +9,7 @@ import {
   Modal,
   Animated,
   BackHandler,
+  Platform,
 } from 'react-native';
 import React, { useState, useEffect, useRef } from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -18,10 +19,14 @@ import Toast from 'react-native-root-toast';
 import * as ImagePicker from 'expo-image-picker';
 import { useTranslation } from 'react-i18next';
 import MyStatusBar from '@components/myStatusBar';
+import { useAuthContext } from '@contexts/AuthContext';
+import { Avatar } from 'react-native-paper';
+import { STRAPIURL } from '@env';
 
 const ModalUpdate = ({ visibleUpdate, children }) => {
   const [showModal, setShowModal] = useState(visibleUpdate);
   const scaleValue = useRef(new Animated.Value(0)).current;
+
   useEffect(() => {
     toggleModal();
   }, [visibleUpdate]);
@@ -59,7 +64,18 @@ const AccountScreen = (props) => {
   function tr(key) {
     return t(`accountScreen:${key}`);
   }
-
+  const { userData, updateUser, uploadProfileImage } = useAuthContext();
+  const {
+    email,
+    firstName,
+    phoneNumber,
+    lastName,
+    id: userId,
+    userInfo: {
+      id,
+      profileImg: { url },
+    },
+  } = userData;
   const backAction = () => {
     props.navigation.goBack();
     return true;
@@ -72,11 +88,11 @@ const AccountScreen = (props) => {
 
   const [visibleUpdate, setVisibleUpdate] = useState(false);
 
-  const [name, setName] = useState('Jenny wilson');
-  const [textEmail, onChangeTextEmail] = useState('jennywilson@gmail.com');
-  const [textNo, onChangeTextNo] = useState('99362383432');
+  const [name, setName] = useState(firstName);
+  const [lName, setLName] = useState(lastName);
+  const [textEmail, onChangeTextEmail] = useState(email);
+  const [textNo, onChangeTextNo] = useState(phoneNumber);
   const [visible, setVisible] = useState(false);
-
   const toggleClose = () => {
     setVisible(!visible);
   };
@@ -94,6 +110,13 @@ const AccountScreen = (props) => {
   };
 
   const [pickedImage, setPickedImage] = useState();
+  const updateUserData = async () => {
+    //const res = await updateUser({ id, name, lName, textEmail, textNo, pickedImage, userId });
+    const res = await updateUser({ name, lName, textEmail, textNo, userId });
+    if (res) {
+      setVisibleUpdate(true);
+    }
+  };
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -105,6 +128,9 @@ const AccountScreen = (props) => {
 
     if (!result.canceled) {
       setPickedImage(result.assets[0].uri);
+
+      const uri = Platform.OS === 'ios' ? result.assets[0].uri.replace('file://', '') : result.assets[0].uri;
+      await uploadProfileImage(id, uri);
       setVisible(false);
     }
   };
@@ -121,6 +147,8 @@ const AccountScreen = (props) => {
 
     if (!result.canceled) {
       setPickedImage(result.assets[0].uri);
+      const uri = Platform.OS === 'ios' ? result.assets[0].uri.replace('file://', '') : result.assets[0].uri;
+      await uploadProfileImage(id, uri);
       setVisible(false);
     }
   };
@@ -225,14 +253,24 @@ const AccountScreen = (props) => {
         </BottomSheet>
 
         {!pickedImage ? (
-          <Image
-            source={require('@assets/images/profile1.png')}
+          <Avatar.Image
+            size={128}
+            source={{
+              uri: `${STRAPIURL}${url}`,
+            }}
             style={{
-              alignSelf: 'center',
               marginVertical: Default.fixPadding * 2,
+              alignSelf: 'center',
             }}
           />
         ) : (
+          // <Image
+          //   source={require('@assets/images/profile1.png')}
+          //   style={{
+          //     alignSelf: 'center',
+          //     marginVertical: Default.fixPadding * 2,
+          //   }}
+          // />
           <Image
             style={{
               marginVertical: Default.fixPadding * 2,
@@ -301,7 +339,34 @@ const AccountScreen = (props) => {
             }}
           />
         </View>
-
+        <Text
+          style={{
+            ...Fonts.Grey16Medium,
+            marginHorizontal: Default.fixPadding * 1.5,
+          }}
+        >
+          {tr('lastname')}
+        </Text>
+        <View
+          style={{
+            margin: Default.fixPadding * 1.5,
+            padding: Default.fixPadding,
+            borderRadius: 10,
+            backgroundColor: Colors.white,
+            ...Default.shadow,
+          }}
+        >
+          <TextInput
+            onChangeText={setLName}
+            selectionColor={Colors.primary}
+            value={lName}
+            placeholder={tr('EnterLastName')}
+            style={{
+              ...Fonts.Black16Medium,
+              textAlign: isRtl ? 'right' : 'left',
+            }}
+          />
+        </View>
         <Text
           style={{
             ...Fonts.Grey16Medium,
@@ -398,7 +463,7 @@ const AccountScreen = (props) => {
       </ModalUpdate>
 
       <TouchableOpacity
-        onPress={() => setVisibleUpdate(true)}
+        onPress={() => updateUserData()}
         style={{
           justifyContent: 'center',
           alignItems: 'center',

@@ -54,4 +54,21 @@ export const formatPrice = (number) => {
     currency: 'USD',
   }).format(number / 100);
 };
-export default { formatPhoneNumber, parseReduceData, formatPrice };
+
+export const imageUrlToBase64 = async (url) => {
+  const response = await fetch(url);
+  const blob = await response.blob();
+  return new Promise((onSuccess, onError) => {
+    try {
+      const reader = new FileReader();
+      reader.onload = function () {
+        onSuccess(this.result);
+      };
+      reader.readAsDataURL(blob);
+    } catch (e) {
+      onError(e);
+    }
+  });
+};
+
+export default { formatPhoneNumber, parseReduceData, formatPrice, imageUrlToBase64 };
