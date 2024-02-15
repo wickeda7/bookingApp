@@ -26,21 +26,25 @@ const BookingContextProvider = ({ children }) => {
     const response = await booking.deleteHistory(id);
     return response;
   };
-  const getUserBooking = async (done) => {
+  const getUserBooking = async (done, type) => {
     if (!userData) {
       console.log('need to login');
     } else {
-      const response = await booking.getUserBooking(userData.id, done);
+      const response = await booking.getUserBooking(userData.id, done, type);
       return response.data;
     }
   };
 
   const confirmBooking = async () => {
+    // console.log('confirmBooking', selectedDate); //dateString: "2024-02-16"
+    //return;
+    const date = selectedDate.dateString ? selectedDate.dateString : selectedDate.toString();
+    console.log('confirmBooking', date);
     const data = {
       data: {
         timeslot: selectedTime,
         services: JSON.stringify(services),
-        date: selectedDate.dateString,
+        date: date,
         store: selectedStore.id,
         client: userData.id,
         specialist: selectedSpecialist.id,

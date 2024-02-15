@@ -19,7 +19,7 @@ const OngoingScreen = (props) => {
     const unsubscribe = navigation.addListener('focus', () => {
       const getData = async () => {
         setLVisible(true);
-        const res = await getUserBooking();
+        const res = await getUserBooking(false, 'user');
         setData(res);
         setLVisible(false);
       };

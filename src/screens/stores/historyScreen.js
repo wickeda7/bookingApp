@@ -24,7 +24,7 @@ const HistoryScreen = (props) => {
     const unsubscribe = navigation.addListener('focus', () => {
       const getData = async () => {
         setVisible(true);
-        let res = await getUserBooking(true);
+        let res = await getUserBooking(true, 'user');
         res = res.map((item, index) => {
           return { ...item, key: `${index}` };
         });

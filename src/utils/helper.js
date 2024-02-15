@@ -1,3 +1,5 @@
+import { createIconSetFromFontello } from 'react-native-vector-icons';
+import moment from 'moment';
 export const formatPhoneNumber = (value) => {
   //https://aprilescobar.medium.com/phone-number-formatting-made-easy-1b887872ab2f
   let formattedNumber;
@@ -70,5 +72,27 @@ export const imageUrlToBase64 = async (url) => {
     }
   });
 };
+export const parseEvents = (data) => {
+  if (data.length === 0) return [];
+  const EVENT_COLOR = '#e6add8';
+  const today = new Date();
+  return data.reduce((acc, item) => {
+    const date = item.date;
+    const time = item.specialist.userInfo.hours.find((hour) => +hour.id === item.timeslot);
+    const temp = time.hours.split(' - ');
+    const startTime = temp[0];
+    const endTime = temp[1];
+    const services = JSON.parse(item.services);
+    acc.push({
+      id: item.id,
+      title: `${item.client.firstName} ${item.client.lastName}`,
+      start: moment(`${date} ${startTime}`, 'YYYY-MM-DD h:m:s A').format('YYYY-MM-DD HH:mm:ss'),
+      end: moment(`${date} ${endTime}`, 'YYYY-MM-DD h:m:s A').format('YYYY-MM-DD HH:mm:ss'),
+      summary: services[0].name,
+      color: EVENT_COLOR,
+    });
+    return acc;
+  }, []);
+};
 
-export default { formatPhoneNumber, parseReduceData, formatPrice, imageUrlToBase64 };
+export default { formatPhoneNumber, parseReduceData, formatPrice, imageUrlToBase64, parseEvents };

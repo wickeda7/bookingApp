@@ -21,7 +21,6 @@ const ProfileScreen = (props) => {
   const [visible, setVisible] = useState(false);
   const image = userData?.userInfo?.profileImg.url || DefaultImage;
 
-  console.log('userData', image);
   if (!userData) return null;
   return (
     <View style={{ flex: 1, backgroundColor: Colors.white }}>
@@ -452,7 +451,6 @@ const ProfileScreen = (props) => {
                   <TouchableOpacity
                     onPress={() => {
                       logout();
-
                       setVisible(false);
                     }}
                   >

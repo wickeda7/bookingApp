@@ -123,7 +123,6 @@ const AuthContextProvider = ({ children }) => {
 
   const logout = async () => {
     await signOut(auth);
-    console.log('User signed out!');
     await AsyncStorage.removeItem('@user');
     setLoggedIn(false);
     setUserData(null);

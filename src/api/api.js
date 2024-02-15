@@ -95,6 +95,7 @@ export const api = {
       Accept: '*/*',
     };
     try {
+      console.log('data', data);
       const res = await axios.post(url, data);
 
       return res.data;
@@ -102,9 +103,9 @@ export const api = {
       throw error;
     }
   },
-  getUserBooking: async (id, done = false) => {
+  getUserBooking: async (id, done = false, type) => {
     try {
-      const url = `${STRAPIURL}/api/appointments/user/${id}/${done}`;
+      const url = `${STRAPIURL}/api/appointments/user/${id}/${done}/${type}`;
       const response = await axios.get(url);
       return response.data;
     } catch (error) {

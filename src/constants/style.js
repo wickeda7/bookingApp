@@ -31,6 +31,29 @@ export const Colors = {
   successBg: 'rgb(240 253 244)',
 };
 export const DefaultImage = '/uploads/blank_profile_2758685862.png';
+export const calendarTheme = {
+  backgroundColor: '#ffffff',
+  calendarBackground: '#ffffff',
+  textSectionTitleColor: '#000000',
+  textSectionTitleDisabledColor: '#000000',
+  selectedDayBackgroundColor: Colors.primary,
+  selectedDayTextColor: '#ffffff',
+  todayTextColor: Colors.primary,
+  dayTextColor: '#2d4150',
+  textDisabledColor: '#d9e1e8',
+  dotColor: Colors.primary,
+  selectedDotColor: '#ffffff',
+  arrowColor: 'black',
+  disabledArrowColor: '#d9e1e8',
+  monthTextColor: 'black',
+  indicatorColor: 'blue',
+  textDayFontWeight: '300',
+  textMonthFontWeight: 'bold',
+  textDayHeaderFontWeight: '300',
+  textDayFontSize: 15,
+  textMonthFontSize: 15,
+  textDayHeaderFontSize: 15,
+};
 export const Fonts = {
   Primary40Bold: {
     color: Colors.primary,

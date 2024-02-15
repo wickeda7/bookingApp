@@ -10,7 +10,7 @@ import { useTranslation } from 'react-i18next';
 import { BackHandler, Text, Modal, View, TouchableOpacity, Platform } from 'react-native';
 import React, { useCallback, useState } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
-
+import { useAuthContext } from '@contexts/AuthContext';
 const Tab = createBottomTabNavigator();
 
 const BottomTab = () => {
@@ -25,7 +25,8 @@ const BottomTab = () => {
   const title2 = isRtl ? tr('home') : tr('profile');
   const title3 = isRtl ? tr('booking') : tr('nearBy');
   const title4 = isRtl ? tr('nearBy') : tr('booking');
-
+  const { userData } = useAuthContext();
+  const roleId = userData?.role.id; // 3 === worker, 1 === user, 4 === admin
   const [backClickCount, setBackClickCount] = useState(0);
   const [visible, setVisible] = useState(false);
 
@@ -154,22 +155,24 @@ const BottomTab = () => {
             ),
           }}
         />
-        <Tab.Screen
-          name={isRtl ? 'bookingScreen' : 'nearByScreen'}
-          component={isRtl ? BookingScreen : NearByScreen}
-          options={{
-            title: title3,
-            tabBarActiveTintColor: Colors.primary,
-            headerShown: false,
-            tabBarIcon: ({ focused }) => (
-              <Ionicons
-                name={isRtl ? 'calendar-sharp' : 'location-outline'}
-                color={focused ? Colors.primary : Colors.lightGrey}
-                size={22}
-              />
-            ),
-          }}
-        />
+        {roleId === 1 && (
+          <Tab.Screen
+            name={isRtl ? 'bookingScreen' : 'nearByScreen'}
+            component={isRtl ? BookingScreen : NearByScreen}
+            options={{
+              title: title3,
+              tabBarActiveTintColor: Colors.primary,
+              headerShown: false,
+              tabBarIcon: ({ focused }) => (
+                <Ionicons
+                  name={isRtl ? 'calendar-sharp' : 'location-outline'}
+                  color={focused ? Colors.primary : Colors.lightGrey}
+                  size={22}
+                />
+              ),
+            }}
+          />
+        )}
         <Tab.Screen
           name={isRtl ? 'nearByScreen' : 'bookingScreen'}
           component={isRtl ? NearByScreen : BookingScreen}
