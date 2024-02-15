@@ -13,6 +13,7 @@ import OngoingDetailScreen from '@screens/stores/ongoingDetailScreen';
 import SearchScreen from '@screens/stores/searchScreen';
 import SearchLocationScreen from '@screens/stores/searchLocationScreen';
 import SpecialistProfileScreen from '@screens/stores/specialistProfileScreen';
+import BookingDetail from '@screens/workers/bookingDetail';
 
 const Stack = createStackNavigator();
 
@@ -40,6 +41,7 @@ const StoresStack = () => {
       />
       <Stack.Screen name='mainReviewScreen' component={MainReviewScreen} options={{ headerShown: false }} />
       <Stack.Screen name='searchScreen' component={SearchScreen} options={{ headerShown: false }} />
+      <Stack.Screen name='bookingDetail' component={BookingDetail} options={{ headerShown: false }} />
     </Stack.Navigator>
   );
 };

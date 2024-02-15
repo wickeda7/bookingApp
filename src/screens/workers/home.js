@@ -16,7 +16,7 @@ import { parseEvents } from '@utils/helper';
 const INITIAL_TIME = { hour: 9, minutes: 0 };
 const today = new Date();
 const getDate = (offset = 0) => CalendarUtils.getCalendarDateString(new Date().setDate(today.getDate() + offset));
-const WorkerHome = () => {
+const WorkerHome = ({ props }) => {
   const { userData } = useAuthContext();
   const { t, i18n } = useTranslation();
   const { getUserBooking } = useBookingContext();
@@ -51,6 +51,11 @@ const WorkerHome = () => {
       eventsByDate: groupBy(events, (event) => CalendarUtils.getCalendarDateString(event.start)),
     });
   }, [data]);
+  const onEventPress = (event) => {
+    const item = data.find((item) => item.id === event.id);
+    // console.log('event pressed', item, data, event.id);
+    props.navigation.push('StoresStack', { screen: 'bookingDetail', params: item });
+  };
 
   const onDateChanged = (date, source) => {
     console.log('TimelineCalendarScreen onDateChanged: ', date, source);
@@ -119,9 +124,7 @@ const WorkerHome = () => {
       },
     ]);
   };
-  const onEventPress = (event) => {
-    console.log('event pressed', event);
-  };
+
   const timelineProps = {
     format24h: false,
     //onBackgroundLongPress: createNewEvent,
@@ -136,24 +139,37 @@ const WorkerHome = () => {
   };
   if (event.length === 0) return <Text>Loading...</Text>;
   return (
-    <CalendarProvider
-      date={event.currentDate}
-      onDateChanged={onDateChanged}
-      onMonthChange={onMonthChange}
-      showTodayButton
-      disabledOpacity={0.6}
-      // numberOfDays={3}
-    >
-      <ExpandableCalendar firstDay={1} markedDates={marked} theme={calendarTheme} />
-      <TimelineList
-        events={event.eventsByDate}
-        timelineProps={timelineProps}
-        showNowIndicator
-        // scrollToNow
-        scrollToFirst
-        initialTime={INITIAL_TIME}
-      />
-    </CalendarProvider>
+    <>
+      <View
+        style={{
+          flexDirection: isRtl ? 'row-reverse' : 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          marginHorizontal: Default.fixPadding * 1.5,
+          marginBottom: Default.fixPadding * 1.5,
+        }}
+      >
+        <Text>TODO: set up reminder for appointments</Text>
+      </View>
+      <CalendarProvider
+        date={event.currentDate}
+        onDateChanged={onDateChanged}
+        onMonthChange={onMonthChange}
+        showTodayButton
+        disabledOpacity={0.6}
+        // numberOfDays={3}
+      >
+        <ExpandableCalendar firstDay={1} markedDates={marked} theme={calendarTheme} />
+        <TimelineList
+          events={event.eventsByDate}
+          timelineProps={timelineProps}
+          showNowIndicator
+          // scrollToNow
+          scrollToFirst
+          initialTime={INITIAL_TIME}
+        />
+      </CalendarProvider>
+    </>
   );
 };
 

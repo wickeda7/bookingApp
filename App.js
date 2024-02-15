@@ -14,7 +14,6 @@ import UserStack from '@navigation/UserStack';
 import StoresStack from '@navigation/StoresStack';
 import TopTabDetails from '@navigation/topTabDetails';
 import DetailScreen from '@screens/stores/detailScreen';
-
 import i18n from '@languages/index';
 const Stack = createStackNavigator();
 
