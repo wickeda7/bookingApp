@@ -15,7 +15,7 @@ const ScheduleScreen = (props) => {
   const { selectedSpecialist, selectedTime, setSelectedTime, specialistBookings, selectedDate } = useBookingContext();
   const { selectedStore } = useStoreContext();
   const [bookings, setBookings] = useState([]);
-  const [timeOption, setTimeOption] = useState(selectedSpecialist.userInfo.hours);
+  const [timeOption, setTimeOption] = useState(selectedSpecialist?.userInfo?.hours);
 
   const isRtl = i18n.dir() === 'rtl';
 
@@ -34,7 +34,7 @@ const ScheduleScreen = (props) => {
       return acc;
     }, []);
     if (bookedTimeSlot.length === 0) {
-      setTimeOption(selectedSpecialist.userInfo.hours);
+      setTimeOption(selectedSpecialist?.userInfo?.hours);
     } else {
       createNewTimeOption(bookedTimeSlot);
     }

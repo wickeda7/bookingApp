@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import { Avatar } from 'react-native-paper';
 import React, { useEffect } from 'react';
-import { Default, Fonts, Colors } from '@constants/style';
+import { Default, Fonts, Colors, DefaultImage } from '@constants/style';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MapView, { Marker } from 'react-native-maps';
 import { useTranslation } from 'react-i18next';
@@ -49,8 +49,8 @@ const InformationScreen = (props) => {
   const renderItemOurSpecialists = ({ item, index }) => {
     const isFirst = index === 0;
     const name = item.name ? item.name : item.firstName;
-    const specialty = item.status ? item.status : item.userInfo.specialty;
-    //console.log('specialty', `${STRAPIURL}${item.userInfo.profileImg.url}`);
+    const specialty = item.status ? item.status : item?.userInfo?.specialty;
+    const image = item.userInfo?.profileImg?.url ? item.userInfo.profileImg.url : DefaultImage;
     return (
       <TouchableOpacity
         onPress={() => {
@@ -77,7 +77,7 @@ const InformationScreen = (props) => {
           <Avatar.Image
             size={72}
             source={{
-              uri: `${STRAPIURL}${item.userInfo.profileImg.url}`,
+              uri: `${STRAPIURL}${image}`,
             }}
           />
           // <Image source={{ uri: `${STRAPIURL}${item.userInfo.profileImg.url}` }} style={{ width: 72, height: 72 }} />

@@ -1,6 +1,6 @@
 import { Text, View, ScrollView, Image, TouchableOpacity, Modal } from 'react-native';
 import React, { useState } from 'react';
-import { Colors, Default, Fonts } from '@constants/style';
+import { Colors, Default, Fonts, DefaultImage } from '@constants/style';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -19,6 +19,9 @@ const ProfileScreen = (props) => {
   }
   const { logout, userData } = useAuthContext();
   const [visible, setVisible] = useState(false);
+  const image = userData?.userInfo?.profileImg.url || DefaultImage;
+
+  console.log('userData', image);
   if (!userData) return null;
   return (
     <View style={{ flex: 1, backgroundColor: Colors.white }}>
@@ -44,7 +47,7 @@ const ProfileScreen = (props) => {
         <Avatar.Image
           size={128}
           source={{
-            uri: `${STRAPIURL}${userData.userInfo.profileImg.url}`,
+            uri: `${STRAPIURL}${image}`,
           }}
           style={{
             marginTop: -70,

@@ -1,6 +1,6 @@
 import { Text, View, TouchableOpacity, Image, FlatList, BackHandler } from 'react-native';
 import { useEffect, useState } from 'react';
-import { Colors, Default, Fonts } from '@constants/style';
+import { Colors, Default, Fonts, DefaultImage } from '@constants/style';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useTranslation } from 'react-i18next';
 import MyStatusBar from '@components/myStatusBar';
@@ -46,7 +46,7 @@ const BookAppointmentScreen = (props) => {
 
   const renderItem = ({ item, index }) => {
     const isFirst = index === 0;
-
+    const image = item.userInfo?.profileImg?.url ? item.userInfo.profileImg.url : DefaultImage;
     return (
       <TouchableOpacity
         style={{
@@ -73,7 +73,7 @@ const BookAppointmentScreen = (props) => {
             <Avatar.Image
               size={54}
               source={{
-                uri: `${STRAPIURL}${item.userInfo.profileImg.url}`,
+                uri: `${STRAPIURL}${image}`,
               }}
             />
           )}
@@ -91,7 +91,7 @@ const BookAppointmentScreen = (props) => {
             {item.other ? (
               <Text style={Fonts.Grey14Medium}>{item.other}</Text>
             ) : (
-              <Text style={Fonts.Grey14Medium}>{item.userInfo.specialty}</Text>
+              <Text style={Fonts.Grey14Medium}>{item?.userInfo?.specialty}</Text>
             )}
           </View>
         </View>

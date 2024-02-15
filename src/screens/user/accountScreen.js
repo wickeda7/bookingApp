@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import React, { useState, useEffect, useRef } from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { Colors, Fonts, Default } from '@constants/style';
+import { Colors, Fonts, Default, DefaultImage } from '@constants/style';
 import { BottomSheet } from 'react-native-btr';
 import Toast from 'react-native-root-toast';
 import * as ImagePicker from 'expo-image-picker';
@@ -65,17 +65,10 @@ const AccountScreen = (props) => {
     return t(`accountScreen:${key}`);
   }
   const { userData, updateUser, uploadProfileImage } = useAuthContext();
-  const {
-    email,
-    firstName,
-    phoneNumber,
-    lastName,
-    id: userId,
-    userInfo: {
-      id,
-      profileImg: { url },
-    },
-  } = userData;
+  const { email, firstName, phoneNumber, lastName, id: userId, userInfo } = userData;
+  const { id, profileImg } = userInfo ?? {};
+  const { url } = profileImg ?? {};
+  const image = url ? url : DefaultImage;
   const backAction = () => {
     props.navigation.goBack();
     return true;
@@ -256,7 +249,7 @@ const AccountScreen = (props) => {
           <Avatar.Image
             size={128}
             source={{
-              uri: `${STRAPIURL}${url}`,
+              uri: `${STRAPIURL}${image}`,
             }}
             style={{
               marginVertical: Default.fixPadding * 2,
