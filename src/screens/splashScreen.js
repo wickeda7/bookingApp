@@ -3,7 +3,6 @@ import React, { useEffect } from 'react';
 import { Fonts } from '@constants/style';
 import MyStatusBar from '@components/myStatusBar';
 import { useAuthContext } from '@contexts/AuthContext';
-import { use } from 'i18next';
 
 const SplashScreen = (props) => {
   const { loading, loggedIn } = useAuthContext();
@@ -15,10 +14,9 @@ const SplashScreen = (props) => {
       setTimeout(() => {
         props.navigation.push('AuthStack', { screen: 'onboardingScreen' });
         // props.navigation.push('AuthStack', { screen: 'otpScreen' });
-      }, 2000);
+      }, 1000);
     }
   }, [loading, loggedIn]);
-
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
       <MyStatusBar />

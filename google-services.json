@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "609160962113",
+    "project_id": "nailsapp-1c498",
+    "storage_bucket": "nailsapp-1c498.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:609160962113:android:8c20db1f3930ea4b40a6c0",
+        "android_client_info": {
+          "package_name": "com.wickeda7.bookingApp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "609160962113-9mof2f39r1ubno7f57gq9vi4t92gr8nd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.wickeda7.bookingApp",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "609160962113-7c5kschbd950fbper4mbkjlmjuuje04u.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCrOKyA3Cm8Wggs1O5LYCnarMdoNgXCNvM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "609160962113-1cbv0527hlpm1cm2d23amvirv72o4kaj.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "609160962113-0ibh9gfh2fsa4k78bo9vj5u4tof1uuaa.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.wickeda7.nailsapp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

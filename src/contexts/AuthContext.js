@@ -40,6 +40,7 @@ const AuthContextProvider = ({ children }) => {
 
   useEffect(() => {
     const unSub = onAuthStateChanged(auth, async (user) => {
+      console.log('onAuthStateChanged', user);
       if (user) {
         const userInfo = user.reloadUserInfo.providerUserInfo[0];
 
@@ -107,6 +108,7 @@ const AuthContextProvider = ({ children }) => {
   };
 
   const facebookLogin = async () => {
+    console.log('facebookLogin');
     Settings.initializeSDK();
     Settings.setAppID(FBAPPID);
     const result = await LoginManager.logInWithPermissions(['public_profile', 'email']);
