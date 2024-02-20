@@ -30,7 +30,8 @@ export const Colors = {
   success: 'rgb(22 163 74)',
   successBg: 'rgb(240 253 244)',
 };
-export const DefaultImage = '/uploads/blank_profile_2758685862.png';
+export const DefaultImage =
+  'https://bookingapp-aws-s3-images-bucket.s3.us-west-1.amazonaws.com/blank_profile_b72ab56cfa.png';
 export const calendarTheme = {
   backgroundColor: '#ffffff',
   calendarBackground: '#ffffff',

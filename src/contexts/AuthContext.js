@@ -40,7 +40,6 @@ const AuthContextProvider = ({ children }) => {
 
   useEffect(() => {
     const unSub = onAuthStateChanged(auth, async (user) => {
-      console.log('onAuthStateChanged', user);
       if (user) {
         const userInfo = user.reloadUserInfo.providerUserInfo[0];
 
@@ -108,7 +107,6 @@ const AuthContextProvider = ({ children }) => {
   };
 
   const facebookLogin = async () => {
-    console.log('facebookLogin');
     Settings.initializeSDK();
     Settings.setAppID(FBAPPID);
     const result = await LoginManager.logInWithPermissions(['public_profile', 'email']);
@@ -153,10 +151,20 @@ const AuthContextProvider = ({ children }) => {
     const temp = {
       firstName: data.name,
       lastName: data.lName,
-      email: data.textEmail,
       phoneNumber: data.textNo,
     };
-    const response = await users.updateUser(data.userId, temp);
+    const response = await users.updateUser(data.id, temp);
+    const newUserInfo = { ...userData.userInfo, ...temp };
+    const newInfo = { ...userData, userInfo: newUserInfo };
+    setUserData(newInfo);
+    await AsyncStorage.setItem('@user', JSON.stringify(newInfo));
+    return response;
+  };
+  const updateEmail = async (data) => {
+    const temp = {
+      email: data.textEmail,
+    };
+    const response = await users.updateEmail(data.userId, temp);
     const newInfo = { ...userData, ...temp };
     setUserData(newInfo);
     await AsyncStorage.setItem('@user', JSON.stringify(newInfo));
@@ -192,6 +200,7 @@ const AuthContextProvider = ({ children }) => {
     getReviews,
     reviews,
     updateUser,
+    updateEmail,
     uploadProfileImage,
   };
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

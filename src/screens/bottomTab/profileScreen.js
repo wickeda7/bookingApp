@@ -19,7 +19,9 @@ const ProfileScreen = (props) => {
   }
   const { logout, userData } = useAuthContext();
   const [visible, setVisible] = useState(false);
-  const image = userData?.userInfo?.profileImg.url || DefaultImage;
+  const image = userData?.userInfo?.profileImg?.url || DefaultImage;
+  const name = userData?.userInfo?.firstName || ' ';
+  const lastName = userData?.userInfo?.lastName || ' ';
 
   if (!userData) return null;
   return (
@@ -46,7 +48,7 @@ const ProfileScreen = (props) => {
         <Avatar.Image
           size={128}
           source={{
-            uri: `${STRAPIURL}${image}`,
+            uri: `${image}`,
           }}
           style={{
             marginTop: -70,
@@ -56,7 +58,7 @@ const ProfileScreen = (props) => {
 
         <ScrollView showsVerticalScrollIndicator={false}>
           <Text style={{ ...Fonts.Black16Bold, textAlign: 'center' }}>
-            {userData.firstName} {userData.lastName}
+            {name} {lastName}
           </Text>
           <Text style={{ ...Fonts.Grey14Medium, textAlign: 'center' }}>{userData.email}</Text>
 

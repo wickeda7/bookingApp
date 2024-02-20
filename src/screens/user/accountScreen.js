@@ -64,11 +64,12 @@ const AccountScreen = (props) => {
   function tr(key) {
     return t(`accountScreen:${key}`);
   }
-  const { userData, updateUser, uploadProfileImage } = useAuthContext();
-  const { email, firstName, phoneNumber, lastName, id: userId, userInfo } = userData;
-  const { id, profileImg } = userInfo ?? {};
+  const { userData, updateUser, uploadProfileImage, updateEmail } = useAuthContext();
+  const { email, id: userId, userInfo } = userData;
+  const { id, profileImg, firstName, phoneNumber, lastName, firebase } = userInfo ?? {};
   const { url } = profileImg ?? {};
   const image = url ? url : DefaultImage;
+  const editable = firebase === 'facebook.com' || firebase === 'google.com' ? false : true;
   const backAction = () => {
     props.navigation.goBack();
     return true;
@@ -104,11 +105,13 @@ const AccountScreen = (props) => {
 
   const [pickedImage, setPickedImage] = useState();
   const updateUserData = async () => {
-    //const res = await updateUser({ id, name, lName, textEmail, textNo, pickedImage, userId });
-    const res = await updateUser({ name, lName, textEmail, textNo, userId });
-    if (res) {
-      setVisibleUpdate(true);
+    if (email !== textEmail) {
+      await updateEmail({ textEmail, userId });
     }
+    if (name || lName || textNo) {
+      await updateUser({ name, lName, textNo, id });
+    }
+    setVisibleUpdate(true);
   };
 
   const pickImage = async () => {
@@ -249,7 +252,7 @@ const AccountScreen = (props) => {
           <Avatar.Image
             size={128}
             source={{
-              uri: `${STRAPIURL}${image}`,
+              uri: `${image}`,
             }}
             style={{
               marginVertical: Default.fixPadding * 2,
@@ -387,6 +390,7 @@ const AccountScreen = (props) => {
               ...Fonts.Black16Medium,
               textAlign: isRtl ? 'right' : 'left',
             }}
+            editable={editable}
           />
         </View>
 

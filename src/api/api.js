@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 import { STRAPIURL } from '@env';
+//const STRAPIURL = 'http://localhost:1337';
 export const api = {
   getUser: async (email) => {
     try {
@@ -95,7 +96,6 @@ export const api = {
       Accept: '*/*',
     };
     try {
-      console.log('data', data);
       const res = await axios.post(url, data);
 
       return res.data;
@@ -121,12 +121,23 @@ export const api = {
       throw error;
     }
   },
-  updateUser: async (id, data) => {
+  updateEmail: async (id, data) => {
     try {
       const url = `${STRAPIURL}/api/users/${id}`;
       const response = await axios.put(url, data);
       return response.data;
     } catch (error) {
+      console.log('error updateUser', error);
+      throw error;
+    }
+  },
+  updateUser: async (id, data) => {
+    try {
+      const url = `${STRAPIURL}/api/user-infos/${id}`;
+      const response = await axios.put(url, { data });
+      return response.data;
+    } catch (error) {
+      console.log('error updateUser', error);
       throw error;
     }
   },

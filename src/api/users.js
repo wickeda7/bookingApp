@@ -44,6 +44,14 @@ export const users = {
       throw error;
     }
   },
+  updateEmail: async (id, data) => {
+    try {
+      const response = await api.updateEmail(id, data);
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  },
   updateUser: async (id, data) => {
     try {
       const response = await api.updateUser(id, data);
@@ -57,6 +65,7 @@ export const users = {
       const response = await api.uploadProfileImage(id, file);
       return response;
     } catch (error) {
+      console.log('error uploadProfileImage', error);
       throw error;
     }
   },
