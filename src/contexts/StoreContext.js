@@ -19,7 +19,7 @@ const StoreContextProvider = ({ children }) => {
     const type = 'nail';
     const response = await storeApi.getData(userData?.favorites, county, type);
     setStores(response);
-    // setLoading(false);
+    setLoading(false);
   };
 
   const updatedSelectedStore = (res) => {

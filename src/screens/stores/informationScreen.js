@@ -77,7 +77,7 @@ const InformationScreen = (props) => {
           <Avatar.Image
             size={72}
             source={{
-              uri: `${STRAPIURL}${image}`,
+              uri: `${image}`,
             }}
           />
           // <Image source={{ uri: `${STRAPIURL}${item.userInfo.profileImg.url}` }} style={{ width: 72, height: 72 }} />
@@ -120,7 +120,7 @@ const InformationScreen = (props) => {
           marginRight: Default.fixPadding * 1.5,
         }}
       >
-        <Image source={{ uri: `${STRAPIURL}${item.url}` }} style={{ width: 110, height: 101 }} />
+        <Image source={{ uri: `${item.url}` }} style={{ width: 110, height: 101 }} />
       </View>
     );
   };

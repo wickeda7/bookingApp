@@ -12,7 +12,7 @@ const BookingRow = ({ item, showStatus, done, props, setVisible }) => {
   const temp = item.specialist.userInfo.hours.find((hour) => +hour.id === item.timeslot);
   const time = temp.hours.split('-');
   const time1 = time[1].split(' ');
-  const aTime = `( ${time[0]} ${time1[2]} )`;
+  const aTime = `( ${time[0]})`;
   const date = moment(item.date).format('MMM Do YYYY');
   const status = item.confirmed ? 'Confirmed' : 'Pending';
   const { setCancelBooking } = useBookingContext();
@@ -21,7 +21,7 @@ const BookingRow = ({ item, showStatus, done, props, setVisible }) => {
   }
   return (
     <>
-      <Image source={{ uri: `${STRAPIURL}${item.store.logo.url}` }} style={{ width: 131, height: 143 }} />
+      <Image source={{ uri: `${item.store.logo.url}` }} style={{ width: 131, height: 143 }} />
       <View
         style={{
           alignItems: isRtl ? 'flex-end' : 'flex-start',

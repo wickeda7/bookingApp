@@ -132,7 +132,7 @@ const SearchLocationScreen = ({ navigation, route }) => {
         }}
       >
         <Image
-          source={{ uri: `${STRAPIURL}${url}` }}
+          source={{ uri: `${url}` }}
           style={{
             height: 100,
             width: 100,

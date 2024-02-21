@@ -12,7 +12,7 @@ const HomeScreen = (props) => {
   const { t, i18n } = useTranslation();
 
   const isRtl = i18n.dir() === 'rtl';
-  const name = userData?.firstName ? userData.firstName + ' ' + userData.lastName : '';
+  const name = userData?.userInfo?.firstName ? userData.userInfo.firstName + ' ' + userData.userInfo.lastName : '';
   const roleId = userData?.role.id || null; // 3 === worker, 1 === user, 4 === admin
   function tr(key) {
     return t(`homeScreen:${key}`);

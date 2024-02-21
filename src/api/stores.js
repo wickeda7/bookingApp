@@ -1,6 +1,5 @@
 import { api } from '@api/api';
 import { DATA } from './tempData';
-import { STRAPIURL } from '@env';
 import { parseReduceData } from '@utils/helper';
 export const stores = {
   getData: async (favorites, county, type) => {
@@ -12,7 +11,7 @@ export const stores = {
           item['selected'] = true;
         }
 
-        item['logo'] = `${STRAPIURL}${item.logo.url}`;
+        item['logo'] = `${item.logo.url}`;
         item['location'] = `${item.address} ${item.city}, ${item.state} ${item.zip}`;
         acc.push(item);
         return acc;
@@ -32,6 +31,7 @@ export const stores = {
       };
       return res;
     } catch (error) {
+      console.log('error getStoreById', error);
       throw error;
     }
   },
@@ -40,6 +40,7 @@ export const stores = {
       const response = await api.getStoreReviews(id);
       return response;
     } catch (error) {
+      console.log('error getReviews', error);
       throw error;
     }
   },

@@ -4,8 +4,9 @@ import { STRAPIURL } from '@env';
 //const STRAPIURL = 'http://localhost:1337';
 export const api = {
   getUser: async (email) => {
+    const url = `${STRAPIURL}/api/users/${email}`;
+    // console.warn('url', url);
     try {
-      const url = `${STRAPIURL}/api/users/${email}`;
       const response = await axios.get(url);
 
       return response.data;
@@ -15,6 +16,7 @@ export const api = {
   },
   register: async (data) => {
     const url = `${STRAPIURL}/api/users/register`;
+    // console.warn('url', url);
     const headers = {
       'Content-Type': 'application/json',
       accept: 'application/json',
@@ -41,6 +43,7 @@ export const api = {
     try {
       // const url = `${STRAPIURL}/api/stores/${id}?fields[0]=name&=name&populate[0]=services&populate[1]=services.items&populate[2]=services.sub_services&populate[3]=services.sub_services.items&populate[4]=images&populate[5]=employee&populate[6]=employee.userInfo&populate[7]=employee.userInfo.profileImg&populate[8]=employee.userInfo.images`;
       const response = await axios.get(`${STRAPIURL}/api/stores/populate/${id}`);
+
       return response.data.data;
     } catch (error) {
       throw error;
@@ -109,6 +112,7 @@ export const api = {
       const response = await axios.get(url);
       return response.data;
     } catch (error) {
+      console.log('error getUserBooking', error);
       throw error;
     }
   },

@@ -14,13 +14,12 @@ const SpecialistProfileScreen = (props) => {
   const employee = props.route.params?.employee ? props.route.params?.employee : '';
   const {
     id,
-    firstName,
-    lastName,
-    userInfo: { profileImg, specialty, experience, images, about },
+
+    userInfo: { profileImg, specialty, experience, images, about, firstName, lastName },
   } = employee;
   let topImage = null;
   if (profileImg) {
-    topImage = `${STRAPIURL}${profileImg.url}`;
+    topImage = `${profileImg.url}`;
   }
   const isRtl = i18n.dir() === 'rtl';
 
@@ -50,7 +49,7 @@ const SpecialistProfileScreen = (props) => {
           marginRight: Default.fixPadding * 1.5,
         }}
       >
-        <Image source={{ uri: `${STRAPIURL}${item.url}` }} style={{ width: 110, height: 101 }} />
+        <Image source={{ uri: `${item.url}` }} style={{ width: 110, height: 101 }} />
       </View>
     );
   };
@@ -121,7 +120,7 @@ const SpecialistProfileScreen = (props) => {
               }}
             >
               <Text style={Fonts.Black18Bold}>
-                {firstName} {lastName}?
+                {firstName} {lastName}
               </Text>
               <Text style={Fonts.Grey15Bold}>({specialty})</Text>
             </View>

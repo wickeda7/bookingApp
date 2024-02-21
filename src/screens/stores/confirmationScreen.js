@@ -17,11 +17,8 @@ import Loader from '@components/loader';
 const ConfirmationScreen = (props) => {
   const { t, i18n } = useTranslation();
   const { selectedSpecialist, selectedDate, selectedTime, services, confirmBooking } = useBookingContext();
-  console.log('selectedSpecialist', selectedDate);
   const {
-    userInfo: { hours, specialty },
-    firstName,
-    lastName,
+    userInfo: { firstName, lastName, hours, specialty },
   } = selectedSpecialist;
   const time = hours.find((item) => item.id === selectedTime);
   const result = services.filter((service) => service.selected === true);

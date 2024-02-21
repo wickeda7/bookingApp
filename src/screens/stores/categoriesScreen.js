@@ -6,13 +6,14 @@ import { Colors, Default, Fonts } from '@constants/style';
 import { useTranslation } from 'react-i18next';
 import MyStatusBar from '@components/myStatusBar';
 import { useStoreContext } from '@contexts/StoreContext';
+import Loader from '@components/loader';
 const CategoriesScreen = ({ navigation, route }) => {
   const { i18n } = useTranslation();
 
   const isRtl = i18n.dir() === 'rtl';
 
   const title = route.params.title;
-  const { setSelectedStore, stores, onFavorite, getStores } = useStoreContext();
+  const { setSelectedStore, stores, onFavorite, getStores, loading } = useStoreContext();
   const backAction = () => {
     navigation.pop();
     return true;
@@ -100,7 +101,7 @@ const CategoriesScreen = ({ navigation, route }) => {
       </View>
     );
   };
-
+  if (loading) return <Loader visible={true} />;
   return (
     <View style={{ flex: 1, backgroundColor: Colors.white }}>
       <MyStatusBar />

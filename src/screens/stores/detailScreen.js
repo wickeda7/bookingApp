@@ -14,7 +14,7 @@ const DetailScreen = (props) => {
   const [isVisible, setVisible] = useState(false);
   let topImage = null;
   if (selectedStore?.images) {
-    topImage = `${STRAPIURL}${selectedStore.images[0].url}`;
+    topImage = `${selectedStore.images[0].url}`;
   }
   let name = selectedStore?.name;
   let location = selectedStore?.location;
@@ -29,7 +29,6 @@ const DetailScreen = (props) => {
 
   useEffect(() => {
     if (!selectedStore) return;
-    console.log('selectedStore', selectedStore);
     setVisible(selectedStore.selected); /// favorite
     getStoreRelation();
   }, [selectedStore]);

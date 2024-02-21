@@ -73,7 +73,7 @@ const BookAppointmentScreen = (props) => {
             <Avatar.Image
               size={54}
               source={{
-                uri: `${STRAPIURL}${image}`,
+                uri: `${image}`,
               }}
             />
           )}

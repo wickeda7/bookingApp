@@ -18,7 +18,7 @@ const NearByScreen = (props) => {
 
   const isRtl = i18n.dir() === 'rtl';
 
-  const { setSelectedStore, stores, getStores, latitude, longitude } = useStoreContext();
+  const { setSelectedStore, stores, getStores, latitude, longitude, loading } = useStoreContext();
 
   function tr(key) {
     return t(`nearByScreen:${key}`);
@@ -108,6 +108,7 @@ const NearByScreen = (props) => {
   const _map = useRef(null);
   const _scrollView = useRef(null);
   if (!interpolations) return <Loader visible={true} />;
+  if (loading) return <Loader visible={true} />;
   return (
     <View style={{ flex: 1 }}>
       <MyStatusBar />
