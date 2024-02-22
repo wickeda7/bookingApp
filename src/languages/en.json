@@ -35,6 +35,7 @@
     "nearBy": "Nearby",
     "booking": "Booking",
     "profile": "Profile",
+    "clients": "Clients",
     "exitApp": "Are you sure you want to exit app?",
     "yes": "Yes",
     "no": "No"
@@ -43,7 +44,8 @@
     "hii": "Hii",
     "search": "Search",
     "welcome": "Welcome",
-    "lookingFor": "What are you looking for?"
+    "lookingFor": "What are you looking for?",
+    "noBooking": "No booking yet"
   },
   "serviceScreen": {
     "other": "Other",
@@ -115,6 +117,11 @@
     "nearByYou": "Near by you",
     "nearestSalon": "Search your nearest salon",
     "search": "Search"
+  },
+  "clientsScreen": {
+    "clients": "Clients",
+    "search": "Search by name, email, or phone",
+    "clientprodfile": "Client Profile"
   },
   "bookingScreen": {
     "ongoing": "Ongoing",

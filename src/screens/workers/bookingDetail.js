@@ -15,11 +15,11 @@ const BookingDetail = (props) => {
   const { client, specialist, services, date, status, id, timeslot } = booking;
   console.log('BookingDetail', booking);
   const {
-    firstName,
-    lastName,
     email,
-    phoneNumber,
     userInfo: {
+      firstName,
+      lastName,
+      phoneNumber,
       profileImg: { url },
     },
   } = client;
@@ -27,8 +27,7 @@ const BookingDetail = (props) => {
     userInfo: { hours },
   } = specialist;
   const time = hours.find((hour) => +hour.id === timeslot);
-  const pServices = JSON.parse(services);
-  console.log('BookingDetail', pServices);
+  const pServices = typeof services === 'object' ? services : JSON.parse(services);
   let total = 0;
   const { t, i18n } = useTranslation();
   const isRtl = i18n.dir() === 'rtl';
@@ -73,7 +72,7 @@ const BookingDetail = (props) => {
         <Avatar.Image
           size={128}
           source={{
-            uri: `${STRAPIURL}${url}`,
+            uri: `${url}`,
           }}
           style={{
             marginTop: -40,

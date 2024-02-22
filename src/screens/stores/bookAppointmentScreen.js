@@ -86,7 +86,7 @@ const BookAppointmentScreen = (props) => {
           >
             <Text style={Fonts.Black16Medium}>
               {' '}
-              {item.firstName} {item.lastName}
+              {item.userInfo.firstName} {item.userInfo.lastName}
             </Text>
             {item.other ? (
               <Text style={Fonts.Grey14Medium}>{item.other}</Text>

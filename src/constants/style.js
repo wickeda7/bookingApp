@@ -29,6 +29,10 @@ export const Colors = {
   pendingBg: 'rgb(254 252 232)',
   success: 'rgb(22 163 74)',
   successBg: 'rgb(240 253 244)',
+  disable: '#555555',
+  disable1: '#999999',
+  bord: '#E4E4E4',
+  bg1: '#F5F5F5',
 };
 export const DefaultImage =
   'https://bookingapp-aws-s3-images-bucket.s3.us-west-1.amazonaws.com/blank_profile_b72ab56cfa.png';
@@ -60,6 +64,10 @@ export const Fonts = {
     color: Colors.primary,
     fontSize: 40,
     fontFamily: 'Bold',
+  },
+  Divider: {
+    height: 1,
+    backgroundColor: Colors.bord,
   },
   Primary22Bold: {
     color: Colors.primary,
@@ -250,6 +258,10 @@ export const Fonts = {
     color: Colors.black,
     fontSize: 14,
     fontFamily: 'Medium',
+  },
+  Black14: {
+    color: Colors.black,
+    fontSize: 14,
   },
   White14Medium: {
     color: Colors.white,

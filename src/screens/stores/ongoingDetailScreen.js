@@ -20,9 +20,7 @@ const OngoingDetailScreen = (props) => {
     date,
     timeslot,
     specialist: {
-      firstName,
-      lastName,
-      userInfo: { hours, specialty },
+      userInfo: { firstName, lastName, hours, specialty },
     },
     store: {
       name,
@@ -37,7 +35,7 @@ const OngoingDetailScreen = (props) => {
   } = booking;
   const time = hours.find((hour) => +hour.id === timeslot);
   const status = confirmed ? 'Confirmed' : 'Pending';
-  const pServices = JSON.parse(services);
+  const pServices = typeof services === 'object' ? services : JSON.parse(services);
   const [visible, setVisible] = useState(false);
   let leftTitle = confirmed ? 'Get Direction' : 'Rebooking';
   const { t, i18n } = useTranslation();
@@ -113,7 +111,7 @@ const OngoingDetailScreen = (props) => {
               marginVertical: Default.fixPadding,
             }}
           >
-            <Image source={{ uri: `${STRAPIURL}${url}` }} style={{ width: 113, height: 110 }} />
+            <Image source={{ uri: `${url}` }} style={{ width: 113, height: 110 }} />
 
             <View
               style={{

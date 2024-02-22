@@ -12,6 +12,7 @@ import { useStoreContext } from '@contexts/StoreContext';
 import { useAuthContext } from '@contexts/AuthContext';
 import { useBookingContext } from '@contexts/BookingContext';
 import { parseEvents } from '@utils/helper';
+import Feather from 'react-native-vector-icons/Feather';
 
 const INITIAL_TIME = { hour: 9, minutes: 0 };
 const today = new Date();
@@ -137,7 +138,20 @@ const WorkerHome = ({ props }) => {
     rightEdgeSpacing: 24,
     onEventPress: onEventPress,
   };
-  if (event.length === 0) return <Text>Loading...</Text>;
+  if (event.length === 0)
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <Feather name='calendar' color={Colors.primary} size={50} />
+        <Text
+          style={{
+            ...Fonts.Primary16Bold,
+            marginVertical: Default.fixPadding,
+          }}
+        >
+          {tr('noBooking')}
+        </Text>
+      </View>
+    );
   return (
     <>
       <View

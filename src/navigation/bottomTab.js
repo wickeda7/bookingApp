@@ -3,7 +3,7 @@ import HomeScreen from '@screens/bottomTab/homeScreen';
 import NearByScreen from '@screens/bottomTab/nearByScreen';
 import BookingScreen from '@screens/bottomTab/bookingScreen';
 import ProfileScreen from '@screens/bottomTab/profileScreen';
-
+import Clients from '@screens/workers/clients';
 import { Colors, Fonts, Default } from '@constants/style';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useTranslation } from 'react-i18next';
@@ -156,39 +156,55 @@ const BottomTab = () => {
           }}
         />
         {roleId === 1 && (
+          <>
+            <Tab.Screen
+              name={isRtl ? 'bookingScreen' : 'nearByScreen'}
+              component={isRtl ? BookingScreen : NearByScreen}
+              options={{
+                title: title3,
+                tabBarActiveTintColor: Colors.primary,
+                headerShown: false,
+                tabBarIcon: ({ focused }) => (
+                  <Ionicons
+                    name={isRtl ? 'calendar-sharp' : 'location-outline'}
+                    color={focused ? Colors.primary : Colors.lightGrey}
+                    size={22}
+                  />
+                ),
+              }}
+            />
+            <Tab.Screen
+              name={isRtl ? 'nearByScreen' : 'bookingScreen'}
+              component={isRtl ? NearByScreen : BookingScreen}
+              options={{
+                title: title4,
+                headerShown: false,
+                tabBarActiveTintColor: Colors.primary,
+                tabBarIcon: ({ focused }) => (
+                  <Ionicons
+                    name={isRtl ? 'location-outline' : 'calendar-sharp'}
+                    color={focused ? Colors.primary : Colors.lightGrey}
+                    size={22}
+                  />
+                ),
+              }}
+            />
+          </>
+        )}
+        {roleId === 3 && (
           <Tab.Screen
-            name={isRtl ? 'bookingScreen' : 'nearByScreen'}
-            component={isRtl ? BookingScreen : NearByScreen}
+            name={'clients'}
+            component={Clients}
             options={{
-              title: title3,
-              tabBarActiveTintColor: Colors.primary,
+              title: tr('clients'),
               headerShown: false,
+              tabBarActiveTintColor: Colors.primary,
               tabBarIcon: ({ focused }) => (
-                <Ionicons
-                  name={isRtl ? 'calendar-sharp' : 'location-outline'}
-                  color={focused ? Colors.primary : Colors.lightGrey}
-                  size={22}
-                />
+                <Ionicons name={'people-outline'} color={focused ? Colors.primary : Colors.lightGrey} size={22} />
               ),
             }}
           />
         )}
-        <Tab.Screen
-          name={isRtl ? 'nearByScreen' : 'bookingScreen'}
-          component={isRtl ? NearByScreen : BookingScreen}
-          options={{
-            title: title4,
-            headerShown: false,
-            tabBarActiveTintColor: Colors.primary,
-            tabBarIcon: ({ focused }) => (
-              <Ionicons
-                name={isRtl ? 'location-outline' : 'calendar-sharp'}
-                color={focused ? Colors.primary : Colors.lightGrey}
-                size={22}
-              />
-            ),
-          }}
-        />
         <Tab.Screen
           name={isRtl ? 'homeScreen' : 'profileScreen'}
           component={isRtl ? HomeScreen : ProfileScreen}

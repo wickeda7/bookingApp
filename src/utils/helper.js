@@ -82,12 +82,12 @@ export const parseEvents = (data) => {
     const temp = time.hours.split(' - ');
     const startTime = temp[0];
     const endTime = temp[1];
-    const services = JSON.parse(item.services);
+    const services = typeof item.services === 'object' ? item.services : JSON.parse(item.services);
     acc.push({
       id: item.id,
-      title: `${item.client.firstName} ${item.client.lastName}`,
-      start: moment(`${date} ${startTime}`, 'YYYY-MM-DD h:m:s A').format('YYYY-MM-DD HH:mm:ss'),
-      end: moment(`${date} ${endTime}`, 'YYYY-MM-DD h:m:s A').format('YYYY-MM-DD HH:mm:ss'),
+      title: `${item.client.userInfo.firstName} ${item.client.userInfo.lastName}`,
+      start: moment(`${date} ${startTime}`, 'YYYY-MM-DD h:m A').format('YYYY-MM-DD HH:mm'),
+      end: moment(`${date} ${endTime}`, 'YYYY-MM-DD h:m A').format('YYYY-MM-DD HH:mm'),
       summary: services[0].name,
       color: EVENT_COLOR,
     });

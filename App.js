@@ -12,6 +12,7 @@ import AuthStack from '@navigation/AuthStack';
 import BottomTab from '@navigation/bottomTab';
 import UserStack from '@navigation/UserStack';
 import StoresStack from '@navigation/StoresStack';
+import WorkersStack from './src/navigation/WorkersStack';
 import TopTabDetails from '@navigation/topTabDetails';
 import DetailScreen from '@screens/stores/detailScreen';
 import i18n from '@languages/index';
@@ -84,10 +85,10 @@ TaskManager.defineTask(BACKGROUND_FETCH_TASK, async () => {
 
 async function registerBackgroundFetchAsync() {
   return BackgroundFetch.registerTaskAsync(BACKGROUND_FETCH_TASK, {
-    minimumInterval: 60 * 15, // 15 minutes
+    minimumInterval: 60 * 2, // 15 minutes
     stopOnTerminate: false, // android only,
     startOnBoot: true, // android only
-  });
+  }).then(() => BackgroundFetch.setMinimumIntervalAsync(60 * 2));
 }
 
 async function unregisterBackgroundFetchAsync() {
@@ -118,6 +119,7 @@ const MainNavigation = () => {
                   header: () => <DetailScreen navigation={navigation} />,
                 })}
               />
+              <Stack.Screen name='WorkersStack' component={WorkersStack} options={{ headerShown: false }} />
             </Stack.Navigator>
           </BookingContextProvider>
         </StoreContextProvider>
@@ -161,6 +163,8 @@ export default function App() {
     await registerBackgroundFetchAsync();
     const status = await BackgroundFetch.getStatusAsync();
     const isRegistered = await TaskManager.isTaskRegisteredAsync(BACKGROUND_FETCH_TASK);
+    const tasks = await TaskManager.getRegisteredTasksAsync();
+    console.debug('Registered tasks', tasks);
     console.log('status', status);
     console.log('isRegistered', isRegistered);
     setStatus(status);
