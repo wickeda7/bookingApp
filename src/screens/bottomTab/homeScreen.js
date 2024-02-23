@@ -21,31 +21,25 @@ const HomeScreen = (props) => {
   return (
     <View style={{ flex: 1, backgroundColor: Colors.white }}>
       <MyStatusBar />
-      <View
-        style={{
-          paddingVertical: Default.fixPadding,
-          backgroundColor: Colors.primary,
-        }}
-      >
-        <View
-          style={{
-            flexDirection: isRtl ? 'row-reverse' : 'row',
-            marginHorizontal: Default.fixPadding * 1.5,
-          }}
-        >
+      <View style={{ paddingVertical: Default.fixPadding, backgroundColor: Colors.primary }}>
+        <View style={{ flexDirection: isRtl ? 'row-reverse' : 'row', marginHorizontal: Default.fixPadding * 1.5 }}>
           <View style={{ flex: 9 }}>
             <View style={{ flexDirection: isRtl ? 'row-reverse' : 'row' }}>
               <Text style={Fonts.White20Bold}>{tr('hii')},</Text>
               <Text style={Fonts.Yellow20Bold}>{name}</Text>
               <Text style={Fonts.Yellow20Bold}> HS</Text>
             </View>
+            <View
+              style={{
+                flexDirection: isRtl ? 'row-reverse' : 'row',
+                alignItems: 'center',
+                marginTop: Default.fixPadding * 0.5,
+              }}
+            ></View>
           </View>
           <TouchableOpacity
             onPress={() => props.navigation.navigate('UserStack', { screen: 'notificationScreen' })}
-            style={{
-              flex: 1,
-              marginVertical: Default.fixPadding,
-            }}
+            style={{ flex: 1, marginVertical: Default.fixPadding }}
           >
             <Ionicons name='notifications-outline' size={30} color={Colors.white} />
             <View

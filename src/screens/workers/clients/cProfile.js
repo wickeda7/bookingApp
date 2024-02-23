@@ -28,18 +28,15 @@ const CProfile = (props) => {
           backgroundColor: Colors.primary,
         }}
       >
-        <View style={{ flex: 9 }}>
-          <View style={{ flexDirection: 'row' }}>
-            <TouchableOpacity
-              style={{ marginHorizontal: Default.fixPadding * 1.5 }}
-              onPress={() => props.navigation.navigate('clients')}
-            >
-              <Ionicons name={'arrow-back'} size={30} color={Colors.white} />
-            </TouchableOpacity>
-            <Text style={Fonts.White18Bold}>{tr('clientprodfile')}</Text>
-          </View>
-        </View>
-        <View style={{ flex: 1 }}>
+        <TouchableOpacity
+          style={{ marginHorizontal: Default.fixPadding * 1.5 }}
+          onPress={() => props.navigation.navigate('clients')}
+        >
+          <Ionicons name={'arrow-back'} size={30} color={Colors.white} />
+        </TouchableOpacity>
+        <Text style={Fonts.White18Bold}>{tr('clientprodfile')}</Text>
+
+        <View style={{ flex: 1, alignItems: 'flex-end', marginHorizontal: Default.fixPadding * 1.5 }}>
           <TouchableOpacity
             onPress={() => refRBSheet.current.open()}
             style={{

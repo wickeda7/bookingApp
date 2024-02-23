@@ -8,7 +8,6 @@ import { useTranslation } from 'react-i18next';
 import MyStatusBar from '@components/myStatusBar';
 import { useAuthContext } from '@contexts/AuthContext';
 import { Avatar } from 'react-native-paper';
-import { STRAPIURL } from '@env';
 const ProfileScreen = (props) => {
   const { t, i18n } = useTranslation();
 
@@ -423,7 +422,7 @@ const ProfileScreen = (props) => {
               <View
                 style={{
                   width: 300,
-                  height: 90,
+                  height: 110,
                   paddingHorizontal: Default.fixPadding * 1.5,
                   paddingVertical: Default.fixPadding * 1.5,
                   borderRadius: 10,

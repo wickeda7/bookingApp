@@ -1,6 +1,6 @@
 import { createStackNavigator, TransitionPresets } from '@react-navigation/stack';
 import React from 'react';
-import CProfile from '@screens/workers/cProfile';
+import CProfile from '@screens/workers/clients/cProfile';
 
 const Stack = createStackNavigator();
 const WorkersStack = () => {

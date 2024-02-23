@@ -39,20 +39,24 @@ const Clients = (props) => {
             marginHorizontal: Default.fixPadding * 1.5,
           }}
         >
-          <View style={{ flex: 9 }}>
-            <View style={{ flexDirection: 'row' }}>
-              <Text style={{ ...Fonts.White20Bold }}>{tr('clients')}</Text>
-            </View>
-          </View>
-
-          <TouchableOpacity
-            onPress={() => refRBSheet.current.open()}
+          <Text style={[Fonts.White20Bold, { flex: 10 }]}>{tr('clients')}</Text>
+          <View
             style={{
-              flex: 1,
+              flex: 10,
+              width: '100%',
+              alignItems: 'flex-end',
             }}
           >
-            <Ionicons name='cog-outline' size={30} color={Colors.white} />
-          </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => refRBSheet.current.open()}
+              style={{
+                flex: 1,
+              }}
+            >
+              <Ionicons name='cog-outline' size={28} color={Colors.white} />
+            </TouchableOpacity>
+          </View>
+
           <RBSheet
             ref={refRBSheet}
             height={320}

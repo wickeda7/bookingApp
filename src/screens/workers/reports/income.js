@@ -1,0 +1,129 @@
+import { Text, TouchableOpacity, View } from 'react-native';
+import React, { useEffect, useRef } from 'react';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import Octicons from 'react-native-vector-icons/Octicons';
+import { Colors, Fonts, Default } from '@constants/style';
+import MyStatusBar from '@components/myStatusBar';
+import { useTranslation } from 'react-i18next';
+import DayCalendar from '@components/calendar/dayCalendar';
+import RangeCalendar from '@components/calendar/rangeCalendar';
+import ListView from '@components/calendar/ListView';
+import GraphView from '@components/calendar/GraphView';
+import { useWorkersContext } from '@contexts/WorkersContext';
+import RBSheet from 'react-native-raw-bottom-sheet';
+//https://www.youtube.com/watch?v=F6xtNGtDAJE
+const Income = (props) => {
+  const { t, i18n } = useTranslation();
+
+  const isRtl = i18n.dir() === 'rtl';
+
+  function tr(key) {
+    return t(`incomeScreen:${key}`);
+  }
+  const type = props.route.params?.type;
+  const title = type === 'day' ? tr('income') : tr('incomeRange');
+  const { calendar, setCalendar, graphView, setGraphView } = useWorkersContext();
+  const refRBSheet = useRef();
+  useEffect(() => {
+    if (!refRBSheet.current) return;
+    if (calendar) {
+      refRBSheet.current.open();
+    } else {
+      refRBSheet.current.close();
+    }
+  }, [calendar]);
+  return (
+    <View style={{ flex: 1, backgroundColor: Colors.white }}>
+      <MyStatusBar />
+      <View
+        style={{
+          flexDirection: isRtl ? 'row-reverse' : 'row',
+          alignItems: 'center',
+          paddingVertical: Default.fixPadding,
+          backgroundColor: Colors.primary,
+        }}
+      >
+        <TouchableOpacity
+          style={{ marginHorizontal: Default.fixPadding * 1.5 }}
+          onPress={() => props.navigation.navigate('reports')}
+        >
+          <Ionicons name={isRtl ? 'arrow-forward' : 'arrow-back'} size={30} color={Colors.white} />
+        </TouchableOpacity>
+        <Text style={Fonts.White18Bold}>{title}</Text>
+        <View
+          style={{
+            flex: 1,
+            alignItems: 'flex-end',
+          }}
+        >
+          {type === 'range' && (
+            <>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                }}
+              >
+                <View style={{ flex: 3, alignItems: 'center', justifyContent: 'center' }}></View>
+                <View
+                  style={{
+                    flex: 1,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    backgroundColor: calendar ? Colors.white : Colors.primary,
+                    marginRight: Default.fixPadding,
+                    borderRadius: 8,
+                    padding: 2,
+                  }}
+                >
+                  <TouchableOpacity onPress={() => setCalendar((prev) => !prev)}>
+                    <Ionicons name={'calendar-outline'} size={22} color={calendar ? Colors.primary : Colors.white} />
+                  </TouchableOpacity>
+                </View>
+                <View
+                  style={{
+                    flex: 1,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    backgroundColor: graphView ? Colors.white : Colors.primary,
+                    marginRight: Default.fixPadding,
+                    borderRadius: 8,
+                    padding: 2,
+                  }}
+                >
+                  <TouchableOpacity onPress={() => setGraphView((prev) => !prev)}>
+                    <Octicons name='graph' size={20} color={graphView ? Colors.primary : Colors.white} />
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </>
+          )}
+        </View>
+      </View>
+      {type === 'day' ? (
+        <DayCalendar />
+      ) : (
+        <>
+          <RBSheet
+            ref={refRBSheet}
+            height={400}
+            openDuration={100}
+            onClose={() => setCalendar(false)}
+            customStyles={{
+              container: {
+                borderTopRightRadius: 20,
+                borderTopLeftRadius: 20,
+                backgroundColor: Colors.white,
+              },
+            }}
+          >
+            <RangeCalendar />
+          </RBSheet>
+          {graphView ? <GraphView /> : <ListView />}
+        </>
+      )}
+    </View>
+  );
+};
+
+export default Income;

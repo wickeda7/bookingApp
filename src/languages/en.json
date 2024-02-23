@@ -33,9 +33,10 @@
   "bottomTab": {
     "home": "Home",
     "nearBy": "Nearby",
-    "booking": "Booking",
+    "booking": "Appointments",
     "profile": "Profile",
     "clients": "Clients",
+    "report": "Reports",
     "exitApp": "Are you sure you want to exit app?",
     "yes": "Yes",
     "no": "No"
@@ -46,6 +47,21 @@
     "welcome": "Welcome",
     "lookingFor": "What are you looking for?",
     "noBooking": "No booking yet"
+  },
+  "reports": {
+    "reports": "Reports",
+    "income": "Income Report By Each Day",
+    "incomeDesc": "Select date to view income reports",
+    "incomeRange": "Income Report By Date Range",
+    "incomeRangeDesc": "Select start to end dates to view income reports",
+    "invoice": "Invoices",
+    "invoiceDesc": "View your invoices history here",
+    "noInvoice": "No Invoice yet"
+  },
+  "incomeScreen": {
+    "income": "Income Report By Each Day",
+    "incomeRange": "By Date Range",
+    "incomeRangeDesc": "Select start to end dates to view results"
   },
   "serviceScreen": {
     "other": "Other",

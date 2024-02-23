@@ -1,0 +1,135 @@
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import React from 'react';
+import { Colors, Fonts, Default, DefaultImage } from '@constants/style';
+import MyStatusBar from '@components/myStatusBar';
+import { useTranslation } from 'react-i18next';
+import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
+import Icon from 'react-native-vector-icons/Ionicons';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+const Reports = (props) => {
+  const { t, i18n } = useTranslation();
+
+  const isRtl = i18n.dir() === 'rtl';
+
+  function tr(key) {
+    return t(`reports:${key}`);
+  }
+  return (
+    <View style={{ flex: 1, backgroundColor: Colors.white }}>
+      <MyStatusBar />
+      <View
+        style={{
+          paddingVertical: Default.fixPadding,
+          backgroundColor: Colors.primary,
+        }}
+      >
+        <View
+          style={{
+            flexDirection: 'row',
+            marginHorizontal: Default.fixPadding,
+          }}
+        >
+          <Text style={Fonts.White18Bold}>{tr('reports')}</Text>
+        </View>
+      </View>
+      <ScrollView showsVerticalScrollIndicator={false} style={{ margin: 15 }}>
+        <TouchableOpacity
+          style={{ flexDirection: 'row', alignItems: 'center' }}
+          onPress={() =>
+            props.navigation.navigate('ReportsStack', {
+              screen: 'Income',
+              params: {
+                type: 'day',
+              },
+            })
+          }
+        >
+          <View
+            style={{
+              alignItems: 'center',
+              justifyContent: 'center',
+              backgroundColor: '#c7f9cc', //#c7f9cc https://coolors.co/palettes/trending
+              borderRadius: 15,
+              height: 55,
+              width: 55,
+              ...Default.shadow,
+            }}
+          >
+            <FontAwesome6 name='file-invoice-dollar' size={35} color={'#57cc99'} />
+          </View>
+          <View style={{ marginLeft: 12, flex: 1 }}>
+            <Text style={[{ fontSize: 16, color: Colors.black }]}>{tr('income')}</Text>
+            <Text style={[{ fontSize: 12, color: Colors.disable }]}>{tr('incomeDesc')}</Text>
+          </View>
+          <Icon name='chevron-forward' size={24} color={Colors.black} />
+        </TouchableOpacity>
+        <View style={[Fonts.Divider, { backgroundColor: Colors.bord, marginVertical: 20 }]}></View>
+        <TouchableOpacity
+          style={{ flexDirection: 'row', alignItems: 'center' }}
+          onPress={() =>
+            props.navigation.navigate('ReportsStack', {
+              screen: 'Income',
+              params: {
+                type: 'range',
+              },
+            })
+          }
+        >
+          <View
+            style={{
+              alignItems: 'center',
+              justifyContent: 'center',
+              backgroundColor: '#b7e4c7', //#c7f9cc https://coolors.co/palettes/trending
+              borderRadius: 15,
+              height: 55,
+              width: 55,
+              ...Default.shadow,
+            }}
+          >
+            <FontAwesome6 name='filter-circle-dollar' size={30} color={'#008000'} />
+          </View>
+          <View style={{ marginLeft: 12, flex: 1 }}>
+            <Text style={[{ fontSize: 16, color: Colors.black }]}>{tr('incomeRange')}</Text>
+            <Text style={[{ fontSize: 12, color: Colors.disable }]}>{tr('incomeRangeDesc')}</Text>
+          </View>
+          <Icon name='chevron-forward' size={24} color={Colors.black} />
+        </TouchableOpacity>
+        <View style={[Fonts.Divider, { backgroundColor: Colors.bord, marginVertical: 20 }]}></View>
+        <TouchableOpacity
+          style={{ flexDirection: 'row', alignItems: 'center' }}
+          onPress={() =>
+            props.navigation.navigate('ReportsStack', {
+              screen: 'Invoices',
+              params: {
+                type: 'range',
+              },
+            })
+          }
+        >
+          <View
+            style={{
+              alignItems: 'center',
+              justifyContent: 'center',
+              backgroundColor: '#ffb2e6', //#c7f9cc https://coolors.co/palettes/trending //note-plus
+              borderRadius: 15,
+              height: 55,
+              width: 55,
+              ...Default.shadow,
+            }}
+          >
+            <MaterialCommunityIcons name='note' size={37} color={'#2d00f7'} />
+          </View>
+          <View style={{ marginLeft: 12, flex: 1 }}>
+            <Text style={[{ fontSize: 16, color: Colors.black }]}>{tr('invoice')}</Text>
+            <Text style={[{ fontSize: 12, color: Colors.disable }]}>{tr('invoiceDesc')}</Text>
+          </View>
+          <Icon name='chevron-forward' size={24} color={Colors.black} />
+        </TouchableOpacity>
+      </ScrollView>
+    </View>
+  );
+};
+
+export default Reports;
+
+const styles = StyleSheet.create({});

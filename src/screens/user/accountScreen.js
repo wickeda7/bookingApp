@@ -10,6 +10,7 @@ import {
   Animated,
   BackHandler,
   Platform,
+  KeyboardAvoidingView,
 } from 'react-native';
 import React, { useState, useEffect, useRef } from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -21,7 +22,6 @@ import { useTranslation } from 'react-i18next';
 import MyStatusBar from '@components/myStatusBar';
 import { useAuthContext } from '@contexts/AuthContext';
 import { Avatar } from 'react-native-paper';
-import { STRAPIURL } from '@env';
 
 const ModalUpdate = ({ visibleUpdate, children }) => {
   const [showModal, setShowModal] = useState(visibleUpdate);
@@ -150,7 +150,10 @@ const AccountScreen = (props) => {
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: Colors.white }}>
+    <KeyboardAvoidingView
+      style={{ flex: 1, backgroundColor: Colors.white }}
+      behavior={Platform.OS === 'ios' ? 'padding' : null}
+    >
       <MyStatusBar />
       <View
         style={{
@@ -474,7 +477,7 @@ const AccountScreen = (props) => {
       >
         <Text style={Fonts.White18Bold}>{tr('update')}</Text>
       </TouchableOpacity>
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 

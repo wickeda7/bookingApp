@@ -1,5 +1,6 @@
 export const Colors = {
   primary: '#FC3C62',
+  mediumPrimary: '#fc5576',
   lightPrimary: '#FED5DD',
   white: '#ffffff',
   black: '#2b2b2b',
@@ -104,21 +105,13 @@ export const Fonts = {
     fontSize: 28,
     fontFamily: 'Bold',
   },
-  White20Bold: {
-    color: Colors.white,
-    fontSize: 20,
-    fontFamily: 'Bold',
-  },
+
   Yellow20Bold: {
     color: Colors.yellow,
     fontSize: 20,
     fontFamily: 'Bold',
   },
-  White18Bold: {
-    color: Colors.white,
-    fontSize: 18,
-    fontFamily: 'Bold',
-  },
+
   Black16Bold: {
     color: Colors.black,
     fontSize: 16,
@@ -129,9 +122,14 @@ export const Fonts = {
     fontSize: 18,
     fontFamily: 'Bold',
   },
-  White18Bold: {
+  White20Bold: {
     color: Colors.white,
     fontSize: 20,
+    fontFamily: 'Bold',
+  },
+  White18Bold: {
+    color: Colors.white,
+    fontSize: 18,
     fontFamily: 'Bold',
   },
   Primary16Bold: {
@@ -149,11 +147,7 @@ export const Fonts = {
     fontSize: 20,
     fontFamily: 'Bold',
   },
-  White18Bold: {
-    color: Colors.white,
-    fontSize: 18,
-    fontFamily: 'Bold',
-  },
+
   Primary15Bold: {
     color: Colors.primary,
     fontSize: 15,

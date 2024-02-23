@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import MyStatusBar from '@components/myStatusBar';
 import { useBookingContext } from '@contexts/BookingContext';
 import { useStoreContext } from '@contexts/StoreContext';
-import CalendarComponent from '@components/calendar';
+import CalendarComponent from '@components/calendar/calendar';
 import { use } from 'i18next';
 
 const ScheduleScreen = (props) => {
