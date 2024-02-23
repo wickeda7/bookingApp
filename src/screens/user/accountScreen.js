@@ -65,6 +65,7 @@ const AccountScreen = (props) => {
     return t(`accountScreen:${key}`);
   }
   const { userData, updateUser, uploadProfileImage, updateEmail } = useAuthContext();
+  console.log('userData', userData);
   const { email, id: userId, userInfo } = userData;
   const { id, profileImg, firstName, phoneNumber, lastName, firebase } = userInfo ?? {};
   const { url } = profileImg ?? {};

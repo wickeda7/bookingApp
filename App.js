@@ -26,6 +26,7 @@ import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
 import { Platform } from 'react-native';
 import Constants from 'expo-constants';
+import Devi from 'react-native-device-info';
 
 const BACKGROUND_FETCH_TASK = 'background-fetch';
 
@@ -99,6 +100,8 @@ async function unregisterBackgroundFetchAsync() {
 const Stack = createStackNavigator();
 
 const MainNavigation = () => {
+  const isTablet = Devi.isTablet();
+  console.log('isTablet APP', isTablet);
   return (
     <NavigationContainer>
       <AuthContextProvider>

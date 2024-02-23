@@ -7,6 +7,8 @@ import MyStatusBar from '@components/myStatusBar';
 import { useAuthContext } from '@contexts/AuthContext';
 import WorkerHome from '@screens/workers/home';
 import UserHome from '@screens/user/home';
+import AdminHome from '@screens/admin/home';
+import Devi from 'react-native-device-info';
 const HomeScreen = (props) => {
   const { userData } = useAuthContext();
   const { t, i18n } = useTranslation();
@@ -14,6 +16,7 @@ const HomeScreen = (props) => {
   const isRtl = i18n.dir() === 'rtl';
   const name = userData?.userInfo?.firstName ? userData.userInfo.firstName + ' ' + userData.userInfo.lastName : '';
   const roleId = userData?.role.id || null; // 3 === worker, 1 === user, 4 === admin
+  const isTablet = Devi.isTablet();
   function tr(key) {
     return t(`homeScreen:${key}`);
   }
@@ -25,8 +28,16 @@ const HomeScreen = (props) => {
         <View style={{ flexDirection: isRtl ? 'row-reverse' : 'row', marginHorizontal: Default.fixPadding * 1.5 }}>
           <View style={{ flex: 9 }}>
             <View style={{ flexDirection: isRtl ? 'row-reverse' : 'row' }}>
-              <Text style={Fonts.White20Bold}>{tr('hii')},</Text>
-              <Text style={Fonts.Yellow20Bold}>{name}</Text>
+              {roleId === 4 ? (
+                <>
+                  <Text style={Fonts.White20Bold}>{userData.storeAdmin.name}</Text>
+                </>
+              ) : (
+                <>
+                  <Text style={Fonts.White20Bold}>{tr('hii')},</Text>
+                  <Text style={Fonts.Yellow20Bold}>{name}</Text>
+                </>
+              )}
               <Text style={Fonts.Yellow20Bold}> HS</Text>
             </View>
             <View
@@ -62,7 +73,8 @@ const HomeScreen = (props) => {
         switch (roleId) {
           case 3:
             return <WorkerHome props={props} />;
-
+          case 4:
+            return <AdminHome props={props} />;
           default:
             return <UserHome props={props} />;
         }

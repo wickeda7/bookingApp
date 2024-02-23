@@ -6572,6 +6572,11 @@ react-native-dashed-line@^1.1.0:
   resolved "https://registry.yarnpkg.com/react-native-dashed-line/-/react-native-dashed-line-1.1.0.tgz#dd586dbeabee3bc7d51aef0b8ae0d9fda418b1fc"
   integrity sha512-eO1YxTSYuE/1eaOO/mnV/DSQ45e7LQ690D6iv24Oyl9FcZFFiIIwoCurHnS+myJQvydppsshY1d0WwaQroNx/Q==
 
+react-native-device-info@^10.13.0:
+  version "10.13.0"
+  resolved "https://registry.yarnpkg.com/react-native-device-info/-/react-native-device-info-10.13.0.tgz#e6639dfe4804de0d61095f85ed794a62d158c6f8"
+  integrity sha512-AuZZXxZzQbv3JKE1bV0YPMXJVVTKQ3TJGpiBcYjJMOFZa0CE18kRgqHj3nKTM6KAD8CdCpjoEfuc128Rcs2TxA==
+
 react-native-dotenv@^3.4.9:
   version "3.4.10"
   resolved "https://registry.yarnpkg.com/react-native-dotenv/-/react-native-dotenv-3.4.10.tgz#b7142f50fa72d1ad5b9ae8064d4e486b774b30f2"
