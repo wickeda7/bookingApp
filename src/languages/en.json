@@ -58,6 +58,17 @@
     "invoiceDesc": "View your invoices history here",
     "noInvoice": "No Invoice yet"
   },
+  "staff": {
+    "staff": "Staff",
+    "addStaff": "Add Staff",
+    "addStaffDesc": "Add your staff here",
+    "noStaff": "No staff yet",
+    "name": "Name",
+    "email": "Email",
+    "phone": "Phone",
+    "specialty": "Specialty",
+    "createdAt": "Created Date"
+  },
   "incomeScreen": {
     "income": "Income Report By Each Day",
     "incomeRange": "By Date Range",

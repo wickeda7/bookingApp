@@ -1,5 +1,7 @@
 import { createIconSetFromFontello } from 'react-native-vector-icons';
 import moment from 'moment';
+import tableMap from '@constants/map';
+import { t } from 'i18next';
 export const formatPhoneNumber = (value) => {
   //https://aprilescobar.medium.com/phone-number-formatting-made-easy-1b887872ab2f
   let formattedNumber;
@@ -94,5 +96,13 @@ export const parseEvents = (data) => {
     return acc;
   }, []);
 };
-
-export default { formatPhoneNumber, parseReduceData, formatPrice, imageUrlToBase64, parseEvents };
+export const tableRows = (data, header, type) => {
+  const map = tableMap[type];
+  const headerMap = header.reduce((acc, item) => {
+    const { name, size } = item;
+    acc.push({ size, dataKey: map[name], headerName: name });
+    return acc;
+  }, []);
+  return headerMap;
+};
+export default { formatPhoneNumber, parseReduceData, formatPrice, imageUrlToBase64, parseEvents, tableRows };

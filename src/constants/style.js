@@ -66,13 +66,71 @@ export const Fonts = {
     fontSize: 40,
     fontFamily: 'Bold',
   },
+  Primary22Bold: {
+    color: Colors.primary,
+    fontSize: 22,
+    fontFamily: 'Bold',
+  },
+  Primary20Bold: {
+    color: Colors.primary,
+    fontSize: 20,
+    fontFamily: 'Bold',
+  },
+
+  Primary18Bold: {
+    color: Colors.primary,
+    fontSize: 18,
+    fontFamily: 'Bold',
+  },
+  Primary16Bold: {
+    color: Colors.primary,
+    fontSize: 16,
+    fontFamily: 'Bold',
+  },
+
+  Primary15Bold: {
+    color: Colors.primary,
+    fontSize: 15,
+    fontFamily: 'Bold',
+  },
+  Primary22Medium: {
+    color: Colors.primary,
+    fontSize: 22,
+    fontFamily: 'Medium',
+  },
+  Primary18Medium: {
+    color: Colors.primary,
+    fontSize: 18,
+    fontFamily: 'Medium',
+  },
+  Primary16Medium: {
+    color: Colors.primary,
+    fontSize: 16,
+    fontFamily: 'Medium',
+  },
+  Primary15Medium: {
+    color: Colors.primary,
+    fontSize: 15,
+    fontFamily: 'Medium',
+  },
+
+  Primary14Medium: {
+    color: Colors.primary,
+    fontSize: 14,
+    fontFamily: 'Medium',
+  },
+  Primary14Regular: {
+    color: Colors.primary,
+    fontSize: 14,
+    fontFamily: 'Regular',
+  },
   Divider: {
     height: 1,
     backgroundColor: Colors.bord,
   },
-  Primary22Bold: {
-    color: Colors.primary,
-    fontSize: 22,
+  Black28Bold: {
+    color: Colors.black,
+    fontSize: 28,
     fontFamily: 'Bold',
   },
   Black24Bold: {
@@ -85,11 +143,52 @@ export const Fonts = {
     fontSize: 22,
     fontFamily: 'Bold',
   },
+  Black18Bold: {
+    color: Colors.black,
+    fontSize: 18,
+    fontFamily: 'Bold',
+  },
   Black16Bold: {
     color: Colors.black,
     fontSize: 16,
     fontFamily: 'Bold',
   },
+  Black18Medium: {
+    color: Colors.black,
+    fontSize: 18,
+    fontFamily: 'Medium',
+  },
+  Black16Medium: {
+    color: Colors.black,
+    fontSize: 16,
+    fontFamily: 'Medium',
+  },
+
+  Black15Medium: {
+    color: Colors.black,
+    fontSize: 15,
+    fontFamily: 'Medium',
+  },
+  Black14Medium: {
+    color: Colors.black,
+    fontSize: 14,
+    fontFamily: 'Medium',
+  },
+  Black16Regular: {
+    color: Colors.black,
+    fontSize: 16,
+    fontFamily: 'Regular',
+  },
+  Black14Regular: {
+    color: Colors.black,
+    fontSize: 14,
+    fontFamily: 'Regular',
+  },
+  Black14: {
+    color: Colors.black,
+    fontSize: 14,
+  },
+
   White16Bold: {
     color: Colors.white,
     fontSize: 16,
@@ -100,11 +199,6 @@ export const Fonts = {
     fontSize: 14,
     fontFamily: 'Bold',
   },
-  Black28Bold: {
-    color: Colors.black,
-    fontSize: 28,
-    fontFamily: 'Bold',
-  },
 
   Yellow20Bold: {
     color: Colors.yellow,
@@ -112,16 +206,6 @@ export const Fonts = {
     fontFamily: 'Bold',
   },
 
-  Black16Bold: {
-    color: Colors.black,
-    fontSize: 16,
-    fontFamily: 'Bold',
-  },
-  Black18Bold: {
-    color: Colors.black,
-    fontSize: 18,
-    fontFamily: 'Bold',
-  },
   White20Bold: {
     color: Colors.white,
     fontSize: 20,
@@ -132,27 +216,7 @@ export const Fonts = {
     fontSize: 18,
     fontFamily: 'Bold',
   },
-  Primary16Bold: {
-    color: Colors.primary,
-    fontSize: 16,
-    fontFamily: 'Bold',
-  },
-  Primary18Bold: {
-    color: Colors.primary,
-    fontSize: 18,
-    fontFamily: 'Bold',
-  },
-  Primary20Bold: {
-    color: Colors.primary,
-    fontSize: 20,
-    fontFamily: 'Bold',
-  },
 
-  Primary15Bold: {
-    color: Colors.primary,
-    fontSize: 15,
-    fontFamily: 'Bold',
-  },
   Green14Bold: {
     color: Colors.green,
     fontSize: 14,
@@ -203,21 +267,13 @@ export const Fonts = {
     fontSize: 12,
     fontFamily: 'Medium',
   },
-  Black16Medium: {
-    color: Colors.black,
-    fontSize: 16,
-    fontFamily: 'Medium',
-  },
+
   White16Medium: {
     color: Colors.white,
     fontSize: 16,
     fontFamily: 'Medium',
   },
-  Black18Medium: {
-    color: Colors.black,
-    fontSize: 18,
-    fontFamily: 'Medium',
-  },
+
   ExtraLightGrey16Medium: {
     color: Colors.extraLightGrey,
     fontSize: 16,
@@ -228,11 +284,7 @@ export const Fonts = {
     fontSize: 14,
     fontFamily: 'Medium',
   },
-  Primary14Medium: {
-    color: Colors.primary,
-    fontSize: 14,
-    fontFamily: 'Medium',
-  },
+
   Grey16Medium: {
     color: Colors.grey,
     fontSize: 16,
@@ -243,67 +295,15 @@ export const Fonts = {
     fontSize: 16,
     fontFamily: 'Medium',
   },
-  Black15Medium: {
-    color: Colors.black,
-    fontSize: 15,
-    fontFamily: 'Medium',
-  },
-  Black14Medium: {
-    color: Colors.black,
-    fontSize: 14,
-    fontFamily: 'Medium',
-  },
-  Black14: {
-    color: Colors.black,
-    fontSize: 14,
-  },
+
   White14Medium: {
     color: Colors.white,
     fontSize: 14,
     fontFamily: 'Medium',
   },
-  Primary15Medium: {
-    color: Colors.primary,
-    fontSize: 15,
-    fontFamily: 'Medium',
-  },
-  Primary18Medium: {
-    color: Colors.primary,
-    fontSize: 18,
-    fontFamily: 'Medium',
-  },
-  Primary16Medium: {
-    color: Colors.primary,
-    fontSize: 16,
-    fontFamily: 'Medium',
-  },
-  Black16Medium: {
-    color: Colors.black,
-    fontSize: 16,
-    fontFamily: 'Medium',
-  },
-  Primary22Medium: {
-    color: Colors.primary,
-    fontSize: 22,
-    fontFamily: 'Medium',
-  },
-  Black14Regular: {
-    color: Colors.black,
-    fontSize: 14,
-    fontFamily: 'Regular',
-  },
+
   Grey14Regular: {
     color: Colors.grey,
-    fontSize: 14,
-    fontFamily: 'Regular',
-  },
-  Black16Regular: {
-    color: Colors.black,
-    fontSize: 16,
-    fontFamily: 'Regular',
-  },
-  Primary14Regular: {
-    color: Colors.primary,
     fontSize: 14,
     fontFamily: 'Regular',
   },

@@ -3,18 +3,26 @@ import React, { useEffect } from 'react';
 import { Fonts } from '@constants/style';
 import MyStatusBar from '@components/myStatusBar';
 import { useAuthContext } from '@contexts/AuthContext';
-
+import Device from 'react-native-device-info';
+const isTablet = Device.isTablet();
 const SplashScreen = (props) => {
   const { loading, loggedIn } = useAuthContext();
   useEffect(() => {
     if (!loading && loggedIn) {
-      props.navigation.navigate('BottomTab');
+      if (isTablet) {
+        props.navigation.navigate('Home');
+      } else {
+        props.navigation.navigate('BottomTab');
+      }
     }
     if (!loading && !loggedIn) {
       setTimeout(() => {
-        props.navigation.push('AuthStack', { screen: 'onboardingScreen' });
-        // props.navigation.push('AuthStack', { screen: 'otpScreen' });
-      }, 1000);
+        if (isTablet) {
+          props.navigation.navigate('onboardingScreen');
+        } else {
+          props.navigation.navigate('AuthStack', { screen: 'onboardingScreen' });
+        }
+      }, 500);
     }
   }, [loading, loggedIn]);
   return (

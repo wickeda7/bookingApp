@@ -16,7 +16,6 @@ import {
 import { AccessToken, LoginManager, Settings } from 'react-native-fbsdk-next';
 
 import { appFirebase } from '../utils/firebaseConfig';
-import { api } from '@api/api';
 import { users } from '@api/users';
 
 WebBrowser.maybeCompleteAuthSession();

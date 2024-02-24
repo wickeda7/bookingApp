@@ -1,22 +1,16 @@
 import 'react-native-gesture-handler';
 import { useFonts } from 'expo-font';
 import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator, TransitionPresets } from '@react-navigation/stack';
-import { withTranslation } from 'react-i18next';
 
+import { withTranslation } from 'react-i18next';
+import TabNavigator from '@navigation/TabNavigator';
+import DrawerNavigator from '@navigation/DrawerNavigator';
 import AuthContextProvider from '@contexts/AuthContext';
 import StoreContextProvider from '@contexts/StoreContext';
 import BookingContextProvider from '@contexts/BookingContext';
 import WorkersContextProvider from '@contexts/WorkersContext';
-import SplashScreen from '@screens/splashScreen';
-import AuthStack from '@navigation/AuthStack';
-import BottomTab from '@navigation/bottomTab';
-import UserStack from '@navigation/UserStack';
-import StoresStack from '@navigation/StoresStack';
-import WorkersStack from '@navigation/WorkersStack';
-import ReportsStack from '@navigation/ReportsStack';
-import TopTabDetails from '@navigation/topTabDetails';
-import DetailScreen from '@screens/stores/detailScreen';
+import AdminContextProvider from '@contexts/AdminContext';
+
 import i18n from '@languages/index';
 
 import * as BackgroundFetch from 'expo-background-fetch';
@@ -65,7 +59,7 @@ async function registerForPushNotificationsAsync() {
     token = (await Notifications.getExpoPushTokenAsync({ projectId: Constants.expoConfig.extra.eas.projectId })).data;
     console.log(token);
   } else {
-    alert('Must use physical device for Push Notifications');
+    //alert('Must use physical device for Push Notifications');
   }
 
   return token;
@@ -88,7 +82,7 @@ TaskManager.defineTask(BACKGROUND_FETCH_TASK, async () => {
 
 async function registerBackgroundFetchAsync() {
   return BackgroundFetch.registerTaskAsync(BACKGROUND_FETCH_TASK, {
-    minimumInterval: 60 * 2, // 15 minutes
+    minimumInterval: 15, // 15 minutes
     stopOnTerminate: false, // android only,
     startOnBoot: true, // android only
   }).then(() => BackgroundFetch.setMinimumIntervalAsync(60 * 2));
@@ -97,37 +91,15 @@ async function registerBackgroundFetchAsync() {
 async function unregisterBackgroundFetchAsync() {
   return BackgroundFetch.unregisterTaskAsync(BACKGROUND_FETCH_TASK);
 }
-const Stack = createStackNavigator();
-
+const isTablet = Devi.isTablet();
 const MainNavigation = () => {
-  const isTablet = Devi.isTablet();
-  console.log('isTablet APP', isTablet);
   return (
     <NavigationContainer>
       <AuthContextProvider>
         <StoreContextProvider>
           <BookingContextProvider>
             <WorkersContextProvider>
-              <Stack.Navigator
-                screenOptions={{
-                  ...TransitionPresets.SlideFromRightIOS,
-                }}
-              >
-                <Stack.Screen name='splashScreen' component={SplashScreen} options={{ headerShown: false }} />
-                <Stack.Screen name='AuthStack' component={AuthStack} options={{ headerShown: false }} />
-                <Stack.Screen name='BottomTab' component={BottomTab} options={{ headerShown: false }} />
-                <Stack.Screen name='UserStack' component={UserStack} options={{ headerShown: false }} />
-                <Stack.Screen name='StoresStack' component={StoresStack} options={{ headerShown: false }} />
-                <Stack.Screen
-                  name='TopTabDetails'
-                  component={TopTabDetails}
-                  options={({ navigation }) => ({
-                    header: () => <DetailScreen navigation={navigation} />,
-                  })}
-                />
-                <Stack.Screen name='WorkersStack' component={WorkersStack} options={{ headerShown: false }} />
-                <Stack.Screen name='ReportsStack' component={ReportsStack} options={{ headerShown: false }} />
-              </Stack.Navigator>
+              <AdminContextProvider>{isTablet ? <DrawerNavigator /> : <TabNavigator />}</AdminContextProvider>
             </WorkersContextProvider>
           </BookingContextProvider>
         </StoreContextProvider>
