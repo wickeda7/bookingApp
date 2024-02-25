@@ -67,7 +67,21 @@
     "email": "Email",
     "phone": "Phone",
     "specialty": "Specialty",
-    "createdAt": "Created Date"
+    "createdAt": "Created Date",
+    "edit": "Edit",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "emailAddress": "Email Address",
+    "phoneNumber": "Phone Number",
+    "experience": "Years of Experience",
+    "color": "Assign Display Color for Staff",
+    "selectColor": "Select Color",
+    "hours": "Hours Available for Appointments",
+    "about": "About",
+    "profileImage": "Profile Image",
+    "images": "Images",
+    "addTime": "Add Time",
+    "save": "Save"
   },
   "incomeScreen": {
     "income": "Income Report By Each Day",

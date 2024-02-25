@@ -65,7 +65,6 @@ const AccountScreen = (props) => {
     return t(`accountScreen:${key}`);
   }
   const { userData, updateUser, uploadProfileImage, updateEmail } = useAuthContext();
-  console.log('userData', userData);
   const { email, id: userId, userInfo } = userData;
   const { id, profileImg, firstName, phoneNumber, lastName, firebase } = userInfo ?? {};
   const { url } = profileImg ?? {};
@@ -465,16 +464,14 @@ const AccountScreen = (props) => {
 
       <TouchableOpacity
         onPress={() => updateUserData()}
-        style={{
-          justifyContent: 'center',
-          alignItems: 'center',
-          marginHorizontal: Default.fixPadding * 1.5,
-          marginVertical: Default.fixPadding * 1.5,
-          paddingVertical: Default.fixPadding,
-          borderRadius: 10,
-          backgroundColor: Colors.primary,
-          ...Default.shadow,
-        }}
+        style={[
+          Style.buttonStyle,
+          {
+            marginHorizontal: Default.fixPadding * 1.5,
+            marginVertical: Default.fixPadding * 1.5,
+            backgroundColor: Colors.primary,
+          },
+        ]}
       >
         <Text style={Fonts.White18Bold}>{tr('update')}</Text>
       </TouchableOpacity>

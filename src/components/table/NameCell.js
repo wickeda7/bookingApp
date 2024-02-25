@@ -8,7 +8,7 @@ const NameCell = ({ data, header, size }) => {
   const lastName = data.userInfo.lastName;
 
   return (
-    <View style={{ flex: size, flexDirection: 'row', alignItems: 'center' }}>
+    <View style={{ flex: size, flexDirection: 'row', alignItems: 'center', marginLeft: Default.fixPadding * 1.5 }}>
       <Avatar.Image
         size={35}
         source={{

@@ -32,7 +32,7 @@ export const formatPhoneNumber = (value) => {
     // After dash
     formattedNumber = `${firstSix()}-${trailer(6)}`;
   }
-
+  if (!formattedNumber) return value;
   return formattedNumber;
 };
 

@@ -5,6 +5,7 @@ import Staff from '@screens/admin/Staff';
 import SplashScreen from '@screens/splashScreen';
 import OnboardingScreen from '@screens/auth/onboardingScreen';
 import LoginScreen from '@screens/auth/loginScreen';
+import EditStaff from '@screens/admin/EditStaff';
 const Drawer = createDrawerNavigator();
 const DrawerNavigator = () => {
   return (
@@ -26,6 +27,11 @@ const DrawerNavigator = () => {
       <Drawer.Screen
         name='loginScreen'
         component={LoginScreen}
+        options={{ headerShown: false, drawerItemStyle: { display: 'none' } }}
+      />
+      <Drawer.Screen
+        name='EditStaff'
+        component={EditStaff}
         options={{ headerShown: false, drawerItemStyle: { display: 'none' } }}
       />
     </Drawer.Navigator>

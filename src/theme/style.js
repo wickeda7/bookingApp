@@ -37,9 +37,11 @@ export default StyleSheet.create({
   tableRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: Default.fixPadding,
+    padding: Default.fixPadding * 0.5,
     backgroundColor: Colors.white,
-    marginLeft: Default.fixPadding * 1.5,
+  },
+  tableRowSelected: {
+    backgroundColor: '#ffffad',
   },
   tableHeaderText16: Fonts.Primary16Bold,
   tableHeaderText16Medium: { ...Fonts.Primary16Medium, marginLeft: Default.fixPadding * 1.5 },
@@ -47,5 +49,23 @@ export default StyleSheet.create({
   divider: {
     height: 1,
     backgroundColor: Colors.bord,
+  },
+  inputStyle: {
+    ...Fonts.Black14Regular,
+    height: 35,
+    marginVertical: Default.fixPadding * 0.5,
+    marginRight: Default.fixPadding * 3,
+    borderWidth: 1,
+    borderRadius: 5,
+    borderColor: Colors.grey,
+    padding: 10,
+  },
+  buttonStyle: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: Default.fixPadding,
+    marginTop: Default.fixPadding,
+    borderRadius: 10,
+    ...Default.shadow,
   },
 });
