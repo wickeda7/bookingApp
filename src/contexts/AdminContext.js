@@ -35,6 +35,7 @@ const AdminContextProvider = ({ children }) => {
     // const response = await stores.deleteStaff(id);
     // setStaff(response);
   };
+
   const value = {
     staff,
     setStaff,

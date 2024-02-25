@@ -1,4 +1,13 @@
-import { KeyboardAvoidingView, Platform, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import {
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import React, { useEffect, useRef, useState } from 'react';
 import MyStatusBar from '@components/myStatusBar';
 import { Colors, Default, Fonts, StaffColors } from '@constants/style';
@@ -13,6 +22,8 @@ import HoursList from '@components/StaffHoursList';
 import StaffImage from '@components/StaffImage';
 import { useAdminContext } from '@contexts/AdminContext';
 import Loader from '@components/loader';
+import { users } from '@api/users';
+import { setBackgroundColorAsync } from 'expo-system-ui';
 const EditStaff = (props) => {
   const staffArr = props.route.params.staff;
   const { t, i18n } = useTranslation();
@@ -27,7 +38,7 @@ const EditStaff = (props) => {
   const [userInfo, setUserInfo] = useState(null);
   const [formattedNumber, setFormattedNumber] = useState();
   const { visible, setVisible, setImageType, setSelectedImage } = useAdminContext();
-
+  const [isLoading, setIsLoading] = useState(false);
   useEffect(() => {
     if (!staff) return;
     parseReduceData(staff);
@@ -39,7 +50,6 @@ const EditStaff = (props) => {
     setFormattedNumber(formatPhoneNumber(staff.userInfo.phoneNumber));
   };
 
-  console.log('userInfo', userInfo);
   const toggleClose = (type) => {
     setVisible(!visible);
     setImageType(type);
@@ -53,9 +63,28 @@ const EditStaff = (props) => {
     setFormattedNumber(formattedNumber);
     setUserInfo((prevState) => ({ ...prevState, phoneNumber: number }));
   };
+  const updateUserData = async () => {
+    const id = userInfo.id;
+    const data = { ...userInfo };
+    delete data.selected;
+    delete data.selected;
+    delete data.images;
+    delete data.profileImg;
+    delete data.id;
+    setIsLoading(true);
+    if (email !== staff.email) {
+      const temp = {
+        email,
+      };
+      const res = await users.updateEmail(staff.id, temp);
+    }
+    const response = await users.updateUser(id, data);
+    setIsLoading(false);
+  };
   if (!userInfo) return <Loader visible={true} />;
   return (
     <KeyboardAvoidingView style={Style.mainContainer} behavior={Platform.OS === 'ios' ? 'padding' : null}>
+      <Loader visible={isLoading} />
       <MyStatusBar />
       <View style={[Style.primaryNav, { flexDirection: isRtl ? 'row-reverse' : 'row' }]}>
         <TouchableOpacity style={Style.navBackButton} onPress={() => props.navigation.navigate('Staff')}>
@@ -192,7 +221,8 @@ const EditStaff = (props) => {
           style={{
             flex: 1,
             flexDirection: 'column',
-            minHeight: 200,
+            minHeight: 100,
+            maxHeight: 300,
           }}
         >
           <Text style={Fonts.Black15Medium}>{tr('hours')}</Text>
@@ -202,7 +232,7 @@ const EditStaff = (props) => {
           style={{
             flex: 1,
             flexDirection: 'column',
-            minHeight: 200,
+            minHeight: 100,
           }}
         >
           <Text style={Fonts.Black15Medium}>{tr('about')}</Text>
@@ -332,7 +362,6 @@ const EditStaff = (props) => {
           </TouchableOpacity>
         </View>
       </View>
-
       <RBSheet
         ref={refRBSheet}
         height={450}

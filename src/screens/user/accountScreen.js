@@ -22,7 +22,7 @@ import { useTranslation } from 'react-i18next';
 import MyStatusBar from '@components/myStatusBar';
 import { useAuthContext } from '@contexts/AuthContext';
 import { Avatar } from 'react-native-paper';
-
+import Style from '@theme/style';
 const ModalUpdate = ({ visibleUpdate, children }) => {
   const [showModal, setShowModal] = useState(visibleUpdate);
   const scaleValue = useRef(new Animated.Value(0)).current;
