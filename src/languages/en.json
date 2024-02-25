@@ -81,7 +81,16 @@
     "profileImage": "Profile Image",
     "images": "Images",
     "addTime": "Add Time",
-    "save": "Save"
+    "save": "Save",
+    "imageInfo": "Press image to delete",
+    "changeProfile": "Change profile Photo",
+    "camera": "Camera",
+    "gallery": "Gallery",
+    "remove": "Remove image",
+    "addmage": "Add More Image",
+    "deleteMessage": "Are you sure you want to delete this image?",
+    "delete": "Delete",
+    "cancel": "Cancel"
   },
   "incomeScreen": {
     "income": "Income Report By Each Day",

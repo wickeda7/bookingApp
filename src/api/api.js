@@ -145,7 +145,8 @@ export const api = {
       throw error;
     }
   },
-  uploadProfileImage: async (id, file) => {
+  uploadProfileImage: async (id, file, type) => {
+    const field = type ? type : 'profileImg';
     try {
       const url = `${STRAPIURL}/api/upload`;
       const formData = new FormData();
@@ -159,7 +160,7 @@ export const api = {
       });
       formData.append('ref', 'api::user-info.user-info');
       formData.append('refId', id);
-      formData.append('field', 'profileImg');
+      formData.append('field', field);
       const headers = {
         accept: 'application/json',
         'Accept-Language': 'en-US,en;q=0.8',
@@ -170,6 +171,15 @@ export const api = {
       return res.data;
     } catch (error) {
       console.log('error uploadProfileImage', error);
+    }
+  },
+  deleteImage: async (id) => {
+    try {
+      const url = `${STRAPIURL}/api/upload/files/${id}`;
+      const response = await axios.delete(url);
+      return response.data;
+    } catch (error) {
+      throw error;
     }
   },
 };

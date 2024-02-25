@@ -7,10 +7,12 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useTranslation } from 'react-i18next';
 import RBSheet from 'react-native-raw-bottom-sheet';
 
-import * as ImagePicker from 'expo-image-picker';
 import { formatPhoneNumber, uploadProfileImage } from '@utils/helper';
-import { Avatar } from 'react-native-paper';
-import HoursList from '@components/HoursList';
+
+import HoursList from '@components/StaffHoursList';
+import StaffImage from '@components/StaffImage';
+import { useAdminContext } from '@contexts/AdminContext';
+import Loader from '@components/loader';
 const EditStaff = (props) => {
   const staffArr = props.route.params.staff;
   const { t, i18n } = useTranslation();
@@ -21,10 +23,10 @@ const EditStaff = (props) => {
   const staff = staffArr[0];
   const refRBSheet = useRef();
 
-  const [visible, setVisible] = useState(false);
   const [email, setEmail] = useState();
-  const [userInfo, setUserInfo] = useState({});
+  const [userInfo, setUserInfo] = useState(null);
   const [formattedNumber, setFormattedNumber] = useState();
+  const { visible, setVisible, setImageType, setSelectedImage } = useAdminContext();
 
   useEffect(() => {
     if (!staff) return;
@@ -36,56 +38,13 @@ const EditStaff = (props) => {
     setUserInfo(staff.userInfo);
     setFormattedNumber(formatPhoneNumber(staff.userInfo.phoneNumber));
   };
-  const toggleClose = () => {
-    setVisible(!visible);
-  };
-  const toastRemoveImage = () => {
-    Toast.show(tr('removeImage'), {
-      duration: Toast.durations.SHORT,
-      position: Toast.positions.BOTTOM,
-      shadow: true,
-      animation: true,
-      hideOnPress: true,
-      delay: 0,
-    });
-    setVisible(false);
-  };
 
-  const [pickedImage, setPickedImage] = useState();
-  const pickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
-
-    if (!result.canceled) {
-      setPickedImage(result.assets[0].uri);
-
-      const uri = Platform.OS === 'ios' ? result.assets[0].uri.replace('file://', '') : result.assets[0].uri;
-      await uploadProfileImage(id, uri);
-      setVisible(false);
-    }
-  };
-  const openCamera = async () => {
-    const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
-
-    if (permissionResult.granted === false) {
-      alert("You've refused to allow this app to access your camera!");
-      return;
-    }
-
-    const result = await ImagePicker.launchCameraAsync();
-
-    if (!result.canceled) {
-      setPickedImage(result.assets[0].uri);
-      const uri = Platform.OS === 'ios' ? result.assets[0].uri.replace('file://', '') : result.assets[0].uri;
-      await uploadProfileImage(id, uri);
-      setVisible(false);
-    }
-  };
   console.log('userInfo', userInfo);
+  const toggleClose = (type) => {
+    setVisible(!visible);
+    setImageType(type);
+  };
+
   const handleOnchange = (text, input) => {
     setUserInfo((prevState) => ({ ...prevState, [input]: text }));
   };
@@ -94,6 +53,7 @@ const EditStaff = (props) => {
     setFormattedNumber(formattedNumber);
     setUserInfo((prevState) => ({ ...prevState, phoneNumber: number }));
   };
+  if (!userInfo) return <Loader visible={true} />;
   return (
     <KeyboardAvoidingView style={Style.mainContainer} behavior={Platform.OS === 'ios' ? 'padding' : null}>
       <MyStatusBar />
@@ -193,7 +153,7 @@ const EditStaff = (props) => {
             style={Style.inputStyle}
             onChangeText={(text) => handleOnchange(text, 'experience')}
             selectionColor={Colors.primary}
-            value={userInfo.experience}
+            value={userInfo.experience.toString()}
           />
         </View>
         <View
@@ -246,7 +206,14 @@ const EditStaff = (props) => {
           }}
         >
           <Text style={Fonts.Black15Medium}>{tr('about')}</Text>
-          <TextInput style={[Style.inputStyle, { minHeight: 100 }]} numberOfLines={10} multiline={true} />
+          <TextInput
+            style={[Style.inputStyle, { minHeight: 100 }]}
+            numberOfLines={10}
+            multiline={true}
+            onChangeText={(text) => handleOnchange(text, 'about')}
+            selectionColor={Colors.primary}
+            value={userInfo.about}
+          />
         </View>
       </View>
       <View
@@ -266,7 +233,10 @@ const EditStaff = (props) => {
         >
           <Text style={Fonts.Black15Medium}>{tr('profileImage')}</Text>
           <TouchableOpacity
-            onPress={toggleClose}
+            onPress={() => {
+              setSelectedImage(userInfo.profileImg);
+              toggleClose('profileImg');
+            }}
             style={{
               position: 'absolute',
               alignItems: 'center',
@@ -274,7 +244,7 @@ const EditStaff = (props) => {
               height: 40,
               width: 40,
               top: -10,
-              left: 80,
+              left: 180,
               borderRadius: 20,
               backgroundColor: Colors.white,
             }}
@@ -292,6 +262,7 @@ const EditStaff = (props) => {
               <Ionicons style={{ color: Colors.white }} name='camera-outline' size={20} />
             </View>
           </TouchableOpacity>
+          <StaffImage type='profileImg' images={userInfo.profileImg} id={userInfo.id} setUserInfo={setUserInfo} />
         </View>
         <View
           style={{
@@ -302,7 +273,7 @@ const EditStaff = (props) => {
         >
           <Text style={Fonts.Black15Medium}>{tr('images')}</Text>
           <TouchableOpacity
-            onPress={toggleClose}
+            onPress={() => toggleClose('images')}
             style={{
               position: 'absolute',
               alignItems: 'center',
@@ -310,7 +281,7 @@ const EditStaff = (props) => {
               height: 40,
               width: 40,
               top: -10,
-              left: 50,
+              left: 180,
               borderRadius: 20,
               backgroundColor: Colors.white,
             }}
@@ -328,6 +299,15 @@ const EditStaff = (props) => {
               <Ionicons style={{ color: Colors.white }} name='camera-outline' size={20} />
             </View>
           </TouchableOpacity>
+          <StaffImage type='images' images={userInfo.images} id={userInfo.id} setUserInfo={setUserInfo} />
+          <View style={[Style.infoAlert, { position: 'relative', paddingLeft: 30 }]}>
+            <View style={{ position: 'absolute', top: 4, left: 5 }}>
+              <Ionicons name={'information-circle-outline'} size={20} color={Colors.info} />
+            </View>
+            <Text style={Style.infoText}>
+              <Text style={{ marginLeft: 15, paddingLeft: 25 }}>{tr('imageInfo')}</Text>
+            </Text>
+          </View>
         </View>
       </View>
       <View

@@ -34,6 +34,7 @@ export const Colors = {
   disable1: '#999999',
   bord: '#E4E4E4',
   bg1: '#F5F5F5',
+  info: '#0d47a1',
 };
 export const StaffColors = [
   '#cdb4db',

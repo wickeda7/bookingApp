@@ -60,12 +60,21 @@ export const users = {
       throw error;
     }
   },
-  uploadProfileImage: async (id, file) => {
+  uploadProfileImage: async (id, file, type) => {
     try {
-      const response = await api.uploadProfileImage(id, file);
+      const response = await api.uploadProfileImage(id, file, type);
       return response;
     } catch (error) {
       console.log('error uploadProfileImage', error);
+      throw error;
+    }
+  },
+  deleteImage: async (id) => {
+    try {
+      const response = await api.deleteImage(id);
+      return response;
+    } catch (error) {
+      console.log('error deleteImage', error);
       throw error;
     }
   },

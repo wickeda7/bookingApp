@@ -3,7 +3,7 @@ import React from 'react';
 import { Avatar } from 'react-native-paper';
 import { Default, Fonts, Colors, DefaultImage } from '@constants/style';
 const NameCell = ({ data, header, size }) => {
-  const image = data.userInfo.profileImg.url ? data.userInfo.profileImg.url : DefaultImage;
+  const image = data.userInfo.profileImg?.url ? data.userInfo.profileImg.url : DefaultImage;
   const firstName = data.userInfo.firstName;
   const lastName = data.userInfo.lastName;
 

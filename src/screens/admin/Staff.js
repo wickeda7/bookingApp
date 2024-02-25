@@ -13,6 +13,7 @@ import Header from '@components/table/Header';
 import Row from '@components/table/Row';
 import { tableRows } from '@utils/helper';
 import { use } from 'i18next';
+import Loader from '@components/loader';
 const Staff = (props) => {
   const { t, i18n } = useTranslation();
   const isRtl = i18n.dir() === 'rtl';
@@ -67,6 +68,7 @@ const Staff = (props) => {
       staff: [item],
     });
   };
+  if (isLoading) return <Loader visible={true} />;
   return (
     <KeyboardAvoidingView style={Style.mainContainer} behavior={Platform.OS === 'ios' ? 'padding' : null}>
       <MyStatusBar />

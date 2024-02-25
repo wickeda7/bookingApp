@@ -7,12 +7,16 @@ const AdminContextProvider = ({ children }) => {
   const [services, setServices] = useState([]);
   const [images, setImages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-
+  const [visible, setVisible] = useState(false);
+  const [imageType, setImageType] = useState('');
+  const [selectedImage, setSelectedImage] = useState(null);
   const getStaff = async (id) => {
+    setIsLoading(true);
     const response = await stores.getStoreById(id);
     setStaff(response.employee);
     setServices(response.services);
     setImages(response.images);
+    setIsLoading(false);
   };
   const selectStaff = (item) => {
     const newStaff = staff.map((i) => {
@@ -23,6 +27,7 @@ const AdminContextProvider = ({ children }) => {
     });
     setStaff(newStaff);
   };
+
   const deleteStaff = async (staffs) => {
     if (staffs.length === 0) return;
     setIsLoading(true);
@@ -41,6 +46,12 @@ const AdminContextProvider = ({ children }) => {
     selectStaff,
     deleteStaff,
     isLoading,
+    visible,
+    setVisible,
+    imageType,
+    setImageType,
+    selectedImage,
+    setSelectedImage,
   };
 
   return <AdminContext.Provider value={value}>{children}</AdminContext.Provider>;

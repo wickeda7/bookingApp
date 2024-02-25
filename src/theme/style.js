@@ -68,4 +68,15 @@ export default StyleSheet.create({
     borderRadius: 10,
     ...Default.shadow,
   },
+  infoAlert: {
+    padding: Default.fixPadding * 0.5,
+    backgroundColor: '#e3f2fd',
+    borderColor: Colors.info,
+    borderWidth: 1,
+    borderRadius: 8,
+  },
+  infoText: {
+    ...Fonts.Black14Regular,
+    color: Colors.info,
+  },
 });
