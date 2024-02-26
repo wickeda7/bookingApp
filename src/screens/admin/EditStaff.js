@@ -1,46 +1,58 @@
-import {
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { KeyboardAvoidingView, Platform, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import React, { useEffect, useRef, useState } from 'react';
 import MyStatusBar from '@components/myStatusBar';
 import { Colors, Default, Fonts, StaffColors } from '@constants/style';
 import Style from '@theme/style';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import FontIcon from 'react-native-vector-icons/FontAwesome';
 import { useTranslation } from 'react-i18next';
 import RBSheet from 'react-native-raw-bottom-sheet';
 
-import { formatPhoneNumber, uploadProfileImage } from '@utils/helper';
+import { formatPhoneNumber } from '@utils/helper';
 
 import HoursList from '@components/StaffHoursList';
 import StaffImage from '@components/StaffImage';
 import { useAdminContext } from '@contexts/AdminContext';
+import { useAuthContext } from '@contexts/AuthContext';
 import Loader from '@components/loader';
 import { users } from '@api/users';
-import { setBackgroundColorAsync } from 'expo-system-ui';
+
 const EditStaff = (props) => {
   const staffArr = props.route.params.staff;
+  let staff = {};
+
   const { t, i18n } = useTranslation();
   const isRtl = i18n.dir() === 'rtl';
   function tr(key) {
     return t(`staff:${key}`);
   }
-  const staff = staffArr[0];
   const refRBSheet = useRef();
-
   const [email, setEmail] = useState();
-  const [userInfo, setUserInfo] = useState(null);
+  const [userInfo, setUserInfo] = useState({
+    about: '',
+    displayColor: '',
+    experience: '',
+    firstName: '',
+    hours: [],
+    images: [],
+    lastName: '',
+    phoneNumber: '',
+    profileImg: '',
+    specialty: '',
+  });
   const [formattedNumber, setFormattedNumber] = useState();
-  const { visible, setVisible, setImageType, setSelectedImage } = useAdminContext();
+  const { visible, setVisible, setImageType, setSelectedImage, updateStaffState } = useAdminContext();
+  const { userData } = useAuthContext();
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(false);
+  const [info, setInfo] = useState(false);
+  const storeId = userData.storeAdmin.id;
+  if (typeof staffArr === 'object') {
+    staff = staffArr[0];
+  }
+
   useEffect(() => {
-    if (!staff) return;
+    if (Object.keys(staff).length === 0) return;
     parseReduceData(staff);
   }, [staff]);
 
@@ -49,25 +61,34 @@ const EditStaff = (props) => {
     setUserInfo(staff.userInfo);
     setFormattedNumber(formatPhoneNumber(staff.userInfo.phoneNumber));
   };
-
   const toggleClose = (type) => {
-    setVisible(!visible);
-    setImageType(type);
+    if (!userInfo.id) {
+      setError(true);
+    } else {
+      setVisible(!visible);
+      setImageType(type);
+    }
   };
 
   const handleOnchange = (text, input) => {
+    setError(false);
     setUserInfo((prevState) => ({ ...prevState, [input]: text }));
   };
   const onTextChange = (number) => {
+    setError(false);
     const formattedNumber = formatPhoneNumber(number);
     setFormattedNumber(formattedNumber);
     setUserInfo((prevState) => ({ ...prevState, phoneNumber: number }));
   };
   const updateUserData = async () => {
+    setError(false);
     const id = userInfo.id;
+    if (!id) {
+      const res = await users.createStaff(userInfo);
+      return;
+    }
     const data = { ...userInfo };
-    delete data.selected;
-    delete data.selected;
+    delete staff.selected;
     delete data.images;
     delete data.profileImg;
     delete data.id;
@@ -76,11 +97,21 @@ const EditStaff = (props) => {
       const temp = {
         email,
       };
-      const res = await users.updateEmail(staff.id, temp);
+      await users.updateEmail(staff.id, temp);
+      staff.email = email;
     }
-    const response = await users.updateUser(id, data);
+    await users.updateUser(id, data);
+    const newStaff = { ...staff, userInfo: { ...staff.userInfo, ...data } };
+    updateStaffState(newStaff, 'put');
+
     setIsLoading(false);
   };
+  const generateCode = () => {
+    let r = (Math.random() + 1).toString(36).substring(6);
+
+    handleOnchange(`${storeId}_${r}`, 'code');
+  };
+  console.log('userInfo', userInfo);
   if (!userInfo) return <Loader visible={true} />;
   return (
     <KeyboardAvoidingView style={Style.mainContainer} behavior={Platform.OS === 'ios' ? 'padding' : null}>
@@ -90,7 +121,7 @@ const EditStaff = (props) => {
         <TouchableOpacity style={Style.navBackButton} onPress={() => props.navigation.navigate('Staff')}>
           <Ionicons name={isRtl ? 'arrow-forward' : 'arrow-back'} size={25} color={Colors.white} />
         </TouchableOpacity>
-        <Text style={Fonts.White20Bold}>{tr('edit')}</Text>
+        <Text style={Fonts.White20Bold}>{userInfo.id ? tr('edit') : tr('add')}</Text>
       </View>
       <View style={[Style.contentContainer, { flexDirection: isRtl ? 'row-reverse' : 'row' }]}>
         <View
@@ -127,12 +158,13 @@ const EditStaff = (props) => {
             flexDirection: 'column',
           }}
         >
-          <Text style={Fonts.Black15Medium}>{tr('emailAddress')}</Text>
+          <Text style={Fonts.Black15Medium}>{tr('phoneNumber')}</Text>
           <TextInput
             style={Style.inputStyle}
-            onChangeText={(text) => setEmail(text)}
+            onChangeText={(text) => onTextChange(text)}
             selectionColor={Colors.primary}
-            value={email}
+            value={formattedNumber}
+            keyboardType='phone-pad'
           />
         </View>
         <View
@@ -141,13 +173,60 @@ const EditStaff = (props) => {
             flexDirection: 'column',
           }}
         >
-          <Text style={Fonts.Black15Medium}>{tr('phoneNumber')}</Text>
-          <TextInput
-            style={Style.inputStyle}
-            onChangeText={(text) => onTextChange(text)}
-            selectionColor={Colors.primary}
-            value={formattedNumber}
-          />
+          {userInfo.id ? (
+            <>
+              <Text style={Fonts.Black15Medium}>{tr('emailAddress')}</Text>
+              <TextInput
+                style={Style.inputStyle}
+                onChangeText={(text) => setEmail(text)}
+                selectionColor={Colors.primary}
+                value={email}
+                keyboardType='email-address'
+              />
+            </>
+          ) : (
+            <>
+              <Text style={Fonts.Black15Medium}>
+                {tr('accessCode')}{' '}
+                <TouchableOpacity onPress={() => setInfo((prev) => !prev)}>
+                  <FontIcon name={'question-circle-o'} size={20} color={Colors.info} />
+                </TouchableOpacity>
+              </Text>
+              <TextInput
+                style={[Style.inputStyle, { position: 'relative' }]}
+                onChangeText={(text) => handleOnchange(text, 'code')}
+                selectionColor={Colors.primary}
+                value={userInfo.code}
+              />
+              <TouchableOpacity
+                onPress={() => generateCode()}
+                style={[
+                  Style.buttonStyle,
+                  {
+                    backgroundColor: Colors.primary,
+                    width: 110,
+                    position: 'absolute',
+                    paddingVertical: 6,
+                    right: 32,
+                    top: 21,
+                    borderRadius: 5,
+                  },
+                ]}
+              >
+                <Text style={[Fonts.white14SemiBold, { color: Colors.white }]}>{tr('generate')}</Text>
+              </TouchableOpacity>
+              {info && (
+                <View style={[Style.infoAlert, { position: 'relative', paddingLeft: 30 }]}>
+                  <View style={{ position: 'absolute', top: 4, left: 5 }}>
+                    <FontIcon name={'question-circle-o'} size={20} color={Colors.info} />
+                  </View>
+                  <Text style={Style.infoText}>
+                    <Text style={{ marginLeft: 15, paddingLeft: 25 }}>{tr('generateDesc')}</Text>
+                  </Text>
+                </View>
+              )}
+            </>
+          )}
         </View>
       </View>
       <View
@@ -182,7 +261,7 @@ const EditStaff = (props) => {
             style={Style.inputStyle}
             onChangeText={(text) => handleOnchange(text, 'experience')}
             selectionColor={Colors.primary}
-            value={userInfo.experience.toString()}
+            value={userInfo.experience ? userInfo.experience.toString() : ''}
           />
         </View>
         <View
@@ -196,7 +275,10 @@ const EditStaff = (props) => {
             style={[Style.buttonStyle, { width: 125, backgroundColor: Colors.white }]}
             onPress={() => refRBSheet.current.open()}
           >
-            <Text numberOfLines={1} style={[Fonts.Black16Bold, { color: userInfo.displayColor }]}>
+            <Text
+              numberOfLines={1}
+              style={[Fonts.Black16Bold, { color: userInfo.displayColor ? userInfo.displayColor : 'black' }]}
+            >
               {tr('selectColor')}
             </Text>
           </TouchableOpacity>
@@ -221,7 +303,7 @@ const EditStaff = (props) => {
           style={{
             flex: 1,
             flexDirection: 'column',
-            minHeight: 100,
+            minHeight: 120,
             maxHeight: 300,
           }}
         >
@@ -232,7 +314,7 @@ const EditStaff = (props) => {
           style={{
             flex: 1,
             flexDirection: 'column',
-            minHeight: 100,
+            minHeight: 120,
           }}
         >
           <Text style={Fonts.Black15Medium}>{tr('about')}</Text>
@@ -330,14 +412,26 @@ const EditStaff = (props) => {
             </View>
           </TouchableOpacity>
           <StaffImage type='images' images={userInfo.images} id={userInfo.id} setUserInfo={setUserInfo} />
-          <View style={[Style.infoAlert, { position: 'relative', paddingLeft: 30 }]}>
-            <View style={{ position: 'absolute', top: 4, left: 5 }}>
-              <Ionicons name={'information-circle-outline'} size={20} color={Colors.info} />
+          {error && (
+            <View style={[Style.errorAlert, { position: 'relative', paddingLeft: 30 }]}>
+              <View style={{ position: 'absolute', top: 4, left: 5 }}>
+                <Ionicons name={'information-circle-outline'} size={20} color={Colors.red} />
+              </View>
+              <Text style={Style.errorText}>
+                <Text style={{ marginLeft: 15, paddingLeft: 25 }}>{tr('imageError')}</Text>
+              </Text>
             </View>
-            <Text style={Style.infoText}>
-              <Text style={{ marginLeft: 15, paddingLeft: 25 }}>{tr('imageInfo')}</Text>
-            </Text>
-          </View>
+          )}
+          {userInfo.id && (
+            <View style={[Style.infoAlert, { position: 'relative', paddingLeft: 30 }]}>
+              <View style={{ position: 'absolute', top: 4, left: 5 }}>
+                <Ionicons name={'information-circle-outline'} size={20} color={Colors.info} />
+              </View>
+              <Text style={Style.infoText}>
+                <Text style={{ marginLeft: 15, paddingLeft: 25 }}>{tr('imageInfo')}</Text>
+              </Text>
+            </View>
+          )}
         </View>
       </View>
       <View

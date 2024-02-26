@@ -79,4 +79,15 @@ export default StyleSheet.create({
     ...Fonts.Black14Regular,
     color: Colors.info,
   },
+  errorAlert: {
+    padding: Default.fixPadding * 0.5,
+    backgroundColor: '#fae0e4',
+    borderColor: Colors.red,
+    borderWidth: 1,
+    borderRadius: 8,
+  },
+  errorText: {
+    ...Fonts.Black14Regular,
+    color: Colors.red,
+  },
 });

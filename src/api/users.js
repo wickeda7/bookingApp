@@ -60,6 +60,18 @@ export const users = {
       throw error;
     }
   },
+  createStaff: async (data) => {
+    try {
+      delete data.images;
+      delete data.profileImg;
+      if (data.experience === '') delete data.experience;
+      const response = await api.createStaff(data);
+      return response;
+    } catch (error) {
+      console.log('error createStaff', error);
+      throw error;
+    }
+  },
   uploadProfileImage: async (id, file, type) => {
     try {
       const response = await api.uploadProfileImage(id, file, type);

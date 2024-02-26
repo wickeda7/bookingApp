@@ -20,10 +20,11 @@ const Staff = (props) => {
   function tr(key) {
     return t(`staff:${key}`);
   }
-  const [edit, setEdit] = useState(false);
+
   const [orientation, setOrientation] = useState(null);
   const [selectedStaff, setSelectedStaff] = useState([]);
   const { userData } = useAuthContext();
+  console.log('userData', userData);
   const { staff, getStaff, selectStaff, deleteStaff, isLoading } = useAdminContext();
 
   useEffect(() => {
@@ -86,20 +87,21 @@ const Staff = (props) => {
                   : { flex: 18, alignItems: 'center', justifyContent: 'center' }
               }
             ></View>
-            <View style={[Style.navRightButton, { backgroundColor: edit ? Colors.white : Colors.primary }]}>
+            <View style={[Style.navRightButton, { backgroundColor: Colors.primary }]}>
               <TouchableOpacity
                 onPress={() =>
+                  //console.log('selectedStaff', selectedStaff)
                   props.navigation.navigate('EditStaff', {
                     staff: selectedStaff,
                   })
                 }
               >
-                <Icons6 name={'user-gear'} size={22} color={edit ? Colors.primary : Colors.white} />
+                <Icons6 name={'user-gear'} size={22} color={Colors.white} />
               </TouchableOpacity>
             </View>
-            <View style={[Style.navRightButton, { backgroundColor: edit ? Colors.white : Colors.primary }]}>
-              <TouchableOpacity onPress={() => setEdit((prev) => !prev)}>
-                <Icons6 name={'user-plus'} size={22} color={edit ? Colors.primary : Colors.white} />
+            <View style={[Style.navRightButton, { backgroundColor: Colors.primary }]}>
+              <TouchableOpacity onPress={() => props.navigation.navigate('EditStaff', { staff: 'new' })}>
+                <Icons6 name={'user-plus'} size={22} color={Colors.white} />
               </TouchableOpacity>
             </View>
             <View style={[Style.navRightButton, { backgroundColor: Colors.primary }]}>

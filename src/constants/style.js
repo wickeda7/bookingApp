@@ -10,7 +10,6 @@ export const Colors = {
   extraLightGrey: '#949494',
   regularGrey: '#E7E4E4',
   blue: '#0C569B',
-  red: '#E82E20',
   transparent: 'transparent',
   lightYellow: '#F4F2E3',
   yellow: '#FFE8C8',
@@ -263,13 +262,6 @@ export const Fonts = {
     fontSize: 14,
     fontFamily: 'Bold',
   },
-
-  Yellow20Bold: {
-    color: Colors.yellow,
-    fontSize: 20,
-    fontFamily: 'Bold',
-  },
-
   White20Bold: {
     color: Colors.white,
     fontSize: 20,
@@ -278,6 +270,11 @@ export const Fonts = {
   White18Bold: {
     color: Colors.white,
     fontSize: 18,
+    fontFamily: 'Bold',
+  },
+  Yellow20Bold: {
+    color: Colors.yellow,
+    fontSize: 20,
     fontFamily: 'Bold',
   },
 

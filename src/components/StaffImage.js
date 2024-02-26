@@ -17,11 +17,11 @@ const StaffImage = ({ type, images, id, setUserInfo }) => {
   function tr(key) {
     return t(`staff:${key}`);
   }
-  const { visible, setVisible, imageType, setImageType, selectedImage, setSelectedImage } = useAdminContext();
+  const { visible, setVisible, imageType, setImageType, selectedImage, setSelectedImage, staff } = useAdminContext();
   const [pickedImage, setPickedImage] = useState();
   const [isLoading, setIsLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
-
+  console.log('Staff', staff);
   let image = '';
   if (type === 'profileImg') {
     image = images?.url ? images.url : DefaultImage;

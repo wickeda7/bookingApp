@@ -35,10 +35,20 @@ const AdminContextProvider = ({ children }) => {
     // const response = await stores.deleteStaff(id);
     // setStaff(response);
   };
-
+  const updateStaffState = (data, method) => {
+    console.log('updateStaffState data', data);
+    if (method === 'put') {
+      const newStaff = staff.map((i) => {
+        if (i.id === data.id) {
+          return data;
+        }
+        return i;
+      });
+      setStaff(newStaff);
+    }
+  };
   const value = {
     staff,
-    setStaff,
     getStaff,
     services,
     setServices,
@@ -53,6 +63,7 @@ const AdminContextProvider = ({ children }) => {
     setImageType,
     selectedImage,
     setSelectedImage,
+    updateStaffState,
   };
 
   return <AdminContext.Provider value={value}>{children}</AdminContext.Provider>;

@@ -40,7 +40,7 @@ const HoursList = ({ data, setUserInfo }) => {
     const hour = moment(date).format('h:mm A');
     if (newHour) {
       const result = hours.map((a) => Number(a.id));
-      const maxID = Math.max(...result);
+      const maxID = result.length === 0 ? 1 : Math.max(...result);
       const newItem = { id: (maxID + 1).toString(), hours: newHour + ' - ' + hour };
       const newHours = [...hours, newItem];
       setHours(newHours);
