@@ -119,7 +119,7 @@ const Staff = (props) => {
             <View style={[Style.navRightButton, { backgroundColor: Colors.primary }]}>
               <TouchableOpacity
                 onPress={() => {
-                  props.navigation.navigate('EditStaff', { staffId: 'new' });
+                  props.navigation.navigate('EditStaff', { staffId: 'new', randomNum: randomNum() });
                   dispatch(resetSeletedRow());
                 }}
               >

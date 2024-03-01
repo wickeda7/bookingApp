@@ -31,9 +31,12 @@ const StaffImage = ({ type, setUserInfo, userInfo, staff }) => {
     if (!status) return;
     if (status === 'fulfilled') {
       setIsLoading(false);
+      setVisible(false);
+      if (!staff) {
+        return;
+      }
       const selectedStaff = staffData.find((i) => i.id === staff.id);
       setUserInfo(selectedStaff.userInfo);
-      setVisible(false);
     } else if (status === 'error') {
       setIsLoading(false);
     } else {
@@ -52,7 +55,7 @@ const StaffImage = ({ type, setUserInfo, userInfo, staff }) => {
     setVisible(!visible);
   };
   const uploadProfileImage = async (file) => {
-    const userId = staff.id;
+    const userId = staff?.id ? staff.id : null;
     dispatch(uploadImage({ id, file, imageType, userId }));
   };
 

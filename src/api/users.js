@@ -66,7 +66,8 @@ export const users = {
       delete data.profileImg;
       if (data.experience === '') delete data.experience;
       const response = await api.createStaff(data);
-      return response;
+      const { id, attributes } = response.data;
+      return { ...attributes, id };
     } catch (error) {
       console.log('error createStaff', error);
       throw error;

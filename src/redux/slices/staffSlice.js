@@ -4,6 +4,7 @@ import { use } from 'i18next';
 
 const initialState = {
   staffData: [],
+  newStaff: [],
   isLoading: false,
   status: null,
 };
@@ -94,7 +95,11 @@ export const staffSlice = createSlice({
         const userId = action.payload.userId;
         const newImage = action.payload.newImage;
         const imageType = action.payload.imageType;
-
+        if (!userId) {
+          state.status = 'fulfilled';
+          state.isLoading = false;
+          return;
+        }
         state.staffData = state.staffData.map((item) => {
           if (item.id === userId) {
             let temp = { ...item, userInfo: { ...item.userInfo } };

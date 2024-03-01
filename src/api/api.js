@@ -137,10 +137,8 @@ export const api = {
   },
   createStaff: async (data) => {
     try {
-      console.log('createStaff data', data);
       const url = `${STRAPIURL}/api/user-infos`;
       const res = await axios.post(url, { data: data });
-      console.log('createStaff res', res);
       return res.data;
     } catch (error) {
       console.log('error createStaff', error);

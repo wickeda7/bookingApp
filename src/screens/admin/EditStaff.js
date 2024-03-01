@@ -54,7 +54,8 @@ const EditStaff = (props) => {
   const [userInfo, setUserInfo] = useState({});
   const [formattedNumber, setFormattedNumber] = useState();
 
-  const [error, setError] = useState(false);
+  const [imageErr, setImageErr] = useState(false);
+  const [inputErr, setInputErr] = useState([]);
   const [info, setInfo] = useState(false);
 
   const storeId = userData?.storeAdmin.id;
@@ -65,6 +66,8 @@ const EditStaff = (props) => {
     if (staffId !== 'new') {
       parseReduceData(staffId);
     }
+    setInputErr([]);
+    setImageErr(false);
   }, [ranNum]);
 
   // useFocusEffect(
@@ -87,8 +90,8 @@ const EditStaff = (props) => {
     setFormattedNumber(formatPhoneNumber(temp.userInfo.phoneNumber));
   };
   const toggleClose = (type) => {
-    if (!userInfo.id) {
-      setError(true);
+    if (!user) {
+      setImageErr(true);
     } else {
       setVisible(!visible);
       setImageType(type);
@@ -96,20 +99,37 @@ const EditStaff = (props) => {
   };
 
   const handleOnchange = (text, input) => {
-    setError(false);
+    setImageErr(false);
+    setInputErr([]);
     setUserInfo((prevState) => ({ ...prevState, [input]: text }));
   };
   const onTextChange = (number) => {
-    setError(false);
+    setImageErr(false);
+    setInputErr([]);
     const formattedNumber = formatPhoneNumber(number);
     setFormattedNumber(formattedNumber);
     setUserInfo((prevState) => ({ ...prevState, phoneNumber: number }));
   };
   const updateUserData = async () => {
-    setError(false);
+    setImageErr(false);
+    setInputErr([]);
+    let err = [];
     const id = userInfo.id;
     if (!id) {
+      if (!userInfo.code) {
+        err.push('code');
+      }
+      if (!userInfo.phoneNumber) {
+        err.push('phoneNumber');
+      }
+      if (err.length > 0) {
+        setInputErr(err);
+        return;
+      }
       const res = await users.createStaff(userInfo);
+      if (res) {
+        setUserInfo(res);
+      }
       return;
     }
     const data = { ...userInfo };
@@ -134,6 +154,7 @@ const EditStaff = (props) => {
     setUserInfo({});
     setEmail('');
     setFormattedNumber('');
+    setUser(null);
     props.navigation.navigate('Staff');
   };
   if (!userInfo) return <Loader visible={true} />;
@@ -187,9 +208,11 @@ const EditStaff = (props) => {
             flexDirection: 'column',
           }}
         >
-          <Text style={Fonts.Black15Medium}>{tr('phoneNumber')}</Text>
+          <Text style={[Fonts.Black15Medium, { color: inputErr.includes('phoneNumber') ? Colors.red : Colors.black }]}>
+            {tr('phoneNumber')}
+          </Text>
           <TextInput
-            style={Style.inputStyle}
+            style={[Style.inputStyle, { borderColor: inputErr.includes('phoneNumber') ? Colors.red : Colors.grey }]}
             onChangeText={(text) => onTextChange(text)}
             selectionColor={Colors.primary}
             value={formattedNumber}
@@ -202,7 +225,7 @@ const EditStaff = (props) => {
             flexDirection: 'column',
           }}
         >
-          {userInfo.id ? (
+          {user ? (
             <>
               <Text style={Fonts.Black15Medium}>{tr('emailAddress')}</Text>
               <TextInput
@@ -215,17 +238,21 @@ const EditStaff = (props) => {
             </>
           ) : (
             <>
-              <Text style={Fonts.Black15Medium}>
+              <Text style={[Fonts.Black15Medium, { color: inputErr.includes('code') ? Colors.red : Colors.black }]}>
                 {tr('accessCode')}{' '}
                 <TouchableOpacity onPress={() => setInfo((prev) => !prev)}>
                   <FontIcon name={'question-circle-o'} size={20} color={Colors.info} />
                 </TouchableOpacity>
               </Text>
               <TextInput
-                style={[Style.inputStyle, { position: 'relative' }]}
+                style={[
+                  Style.inputStyle,
+                  { borderColor: inputErr.includes('code') ? Colors.red : Colors.grey, position: 'relative' },
+                ]}
                 onChangeText={(text) => handleOnchange(text, 'code')}
                 selectionColor={Colors.primary}
                 value={userInfo.code}
+                editable={false}
               />
               <TouchableOpacity
                 onPress={() => generateCode()}
@@ -441,13 +468,23 @@ const EditStaff = (props) => {
             </View>
           </TouchableOpacity>
           <StaffImage type='images' setUserInfo={setUserInfo} userInfo={userInfo} staff={user} />
-          {error && (
+          {imageErr && (
             <View style={[Style.errorAlert, { position: 'relative', paddingLeft: 30 }]}>
               <View style={{ position: 'absolute', top: 4, left: 5 }}>
                 <Ionicons name={'information-circle-outline'} size={20} color={Colors.red} />
               </View>
               <Text style={Style.errorText}>
                 <Text style={{ marginLeft: 15, paddingLeft: 25 }}>{tr('imageError')}</Text>
+              </Text>
+            </View>
+          )}
+          {inputErr.length > 0 && (
+            <View style={[Style.errorAlert, { position: 'relative', paddingLeft: 30 }]}>
+              <View style={{ position: 'absolute', top: 4, left: 5 }}>
+                <Ionicons name={'information-circle-outline'} size={20} color={Colors.red} />
+              </View>
+              <Text style={Style.errorText}>
+                <Text style={{ marginLeft: 15, paddingLeft: 25 }}>{tr('inputError')}</Text>
               </Text>
             </View>
           )}
