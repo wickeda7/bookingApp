@@ -12,35 +12,43 @@ import { useAdminContext } from '@contexts/AdminContext';
 import Header from '@components/table/Header';
 import Row from '@components/table/Row';
 import { tableRows } from '@utils/helper';
-import { use } from 'i18next';
 import Loader from '@components/loader';
+import { useSelector, useDispatch } from 'react-redux';
+import { getStoreById } from '@redux/actions/staffAction';
+import { selectRow, resetSeletedRow, getStaff } from '@redux/slices/staffSlice';
+
 const Staff = (props) => {
   const { t, i18n } = useTranslation();
   const isRtl = i18n.dir() === 'rtl';
   function tr(key) {
     return t(`staff:${key}`);
   }
-
   const [orientation, setOrientation] = useState(null);
-  const [selectedStaff, setSelectedStaff] = useState([]);
+  const { deleteStaff } = useAdminContext();
   const { userData } = useAuthContext();
-  console.log('userData', userData);
-  const { staff, getStaff, selectStaff, deleteStaff, isLoading } = useAdminContext();
 
+  const dispatch = useDispatch();
+
+  const { staffData, isLoading } = useSelector((state) => state.staff);
+
+  const x = 3;
+  let y = 2;
+  function update(arg) {
+    return Math.random() + y * arg;
+  }
+  //y = 2; ?;
+  const result = update(x);
+  console.log('result', result); // 10
   useEffect(() => {
     if (userData.role.id !== 4) return;
-    getStaff(userData.storeAdmin.id);
-
+    dispatch(getStoreById(userData.storeAdmin.id));
     checkOrientation();
     const subscription = ScreenOrientation.addOrientationChangeListener(handleOrientationChange);
     return () => {
       ScreenOrientation.removeOrientationChangeListeners(subscription);
     };
   }, []);
-  useEffect(() => {
-    const selected = staff.filter((item) => item.selected);
-    setSelectedStaff(selected);
-  }, [staff]);
+
   const checkOrientation = async () => {
     const orientation = await ScreenOrientation.getOrientationAsync();
     setOrientation(orientation);
@@ -59,14 +67,17 @@ const Staff = (props) => {
     { size: 1, name: 'specialty' },
     { size: 1, name: 'createdAt' },
   ];
-  const rows = tableRows(staff, header, 'staff');
-  const lastRow = staff.length - 1;
+  const rows = tableRows(staffData, header, 'staff');
+  const lastRow = staffData.length - 1;
+
   const handlePress = (item) => {
-    selectStaff(item);
+    dispatch(selectRow(item.id));
   };
+
   const handleLongPress = (item) => {
+    dispatch(resetSeletedRow());
     props.navigation.navigate('EditStaff', {
-      staff: [item],
+      staffId: item.id,
     });
   };
   if (isLoading) return <Loader visible={true} />;
@@ -74,7 +85,13 @@ const Staff = (props) => {
     <KeyboardAvoidingView style={Style.mainContainer} behavior={Platform.OS === 'ios' ? 'padding' : null}>
       <MyStatusBar />
       <View style={[Style.primaryNav, { flexDirection: isRtl ? 'row-reverse' : 'row' }]}>
-        <TouchableOpacity style={Style.navBackButton} onPress={() => props.navigation.navigate('Home')}>
+        <TouchableOpacity
+          style={Style.navBackButton}
+          onPress={() => {
+            props.navigation.navigate('Home');
+            dispatch(resetSeletedRow());
+          }}
+        >
           <Ionicons name={isRtl ? 'arrow-forward' : 'arrow-back'} size={25} color={Colors.white} />
         </TouchableOpacity>
         <Text style={Fonts.White20Bold}>{tr('staff')}</Text>
@@ -89,18 +106,26 @@ const Staff = (props) => {
             ></View>
             <View style={[Style.navRightButton, { backgroundColor: Colors.primary }]}>
               <TouchableOpacity
-                onPress={() =>
-                  //console.log('selectedStaff', selectedStaff)
+                onPress={() => {
+                  const selectedStaff = staffData.find((i) => i.selected);
+                  if (!selectedStaff) return;
+                  dispatch(getStaff(selectedStaff.id));
                   props.navigation.navigate('EditStaff', {
-                    staff: selectedStaff,
-                  })
-                }
+                    staffId: selectedStaff.id,
+                  });
+                  dispatch(resetSeletedRow());
+                }}
               >
                 <Icons6 name={'user-gear'} size={22} color={Colors.white} />
               </TouchableOpacity>
             </View>
             <View style={[Style.navRightButton, { backgroundColor: Colors.primary }]}>
-              <TouchableOpacity onPress={() => props.navigation.navigate('EditStaff', { staff: 'new' })}>
+              <TouchableOpacity
+                onPress={() => {
+                  props.navigation.navigate('EditStaff', { staffId: 'new' });
+                  dispatch(resetSeletedRow());
+                }}
+              >
                 <Icons6 name={'user-plus'} size={22} color={Colors.white} />
               </TouchableOpacity>
             </View>
@@ -117,7 +142,7 @@ const Staff = (props) => {
         <Header data={header} type={'staff'} />
       </View>
       <ScrollView showsVerticalScrollIndicator={false}>
-        {staff.map((item, index) => (
+        {staffData.map((item, index) => (
           <View key={index}>
             <TouchableOpacity
               style={[Style.contentContainer, { flexDirection: isRtl ? 'row-reverse' : 'row' }]}

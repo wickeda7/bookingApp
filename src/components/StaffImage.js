@@ -10,48 +10,70 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { users } from '@api/users';
 import Loader from '@components/loader';
 import Toast from 'react-native-root-toast';
-
-const StaffImage = ({ type, images, id, setUserInfo }) => {
+import { updateStaffState } from '@redux/slices/staffSlice';
+import { useDispatch } from 'react-redux';
+const StaffImage = ({ type, setUserInfo, userInfo, staff }) => {
   const { t, i18n } = useTranslation();
   const isRtl = i18n.dir() === 'rtl';
   function tr(key) {
     return t(`staff:${key}`);
   }
-  const { visible, setVisible, imageType, setImageType, selectedImage, setSelectedImage, staff } = useAdminContext();
-  const [pickedImage, setPickedImage] = useState();
+  const { visible, setVisible, imageType, setImageType, selectedImage, setSelectedImage } = useAdminContext();
   const [isLoading, setIsLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  console.log('Staff', staff);
+  const dispatch = useDispatch();
+
+  let profileImg = userInfo?.profileImg;
+  let images = userInfo?.images;
+  const id = userInfo.id;
   let image = '';
   if (type === 'profileImg') {
-    image = images?.url ? images.url : DefaultImage;
+    image = profileImg?.url ? profileImg.url : DefaultImage;
   }
   const toggleClose = () => {
     setVisible(!visible);
   };
   const uploadProfileImage = async (file) => {
+    let prevUserInfo = userInfo;
+
+    let newUserInfo = {};
     setIsLoading(true);
     const response = await users.uploadProfileImage(id, file, imageType);
 
     const newImage = { id: response[0].id, url: response[0].url };
     if (imageType === 'profileImg') {
-      setUserInfo((prevState) => ({ ...prevState, profileImg: newImage }));
+      newUserInfo = { ...prevUserInfo, profileImg: newImage };
     } else {
+      console.log('images', images);
+
+      console.log('prevUserInfo', prevUserInfo);
       images.push(newImage);
-      setUserInfo((prevState) => ({ ...prevState, images }));
+      console.log('newImage', newImage);
+      newUserInfo = { ...prevUserInfo, images: images };
     }
+    const newStaff = { ...staff, userInfo: { ...staff.userInfo, ...newUserInfo } };
+
+    dispatch(updateStaffState({ data: newStaff, method: 'put' }));
+    // updateStaffState(newStaff, 'put');
+    setUserInfo(newUserInfo);
     setIsLoading(false);
   };
 
   const toastRemoveImage = async () => {
+    const prevUserInfo = userInfo;
+    let newUserInfo = {};
     setIsLoading(true);
     const response = await users.deleteImage(selectedImage.id);
     if (imageType === 'profileImg') {
-      setUserInfo((prevState) => ({ ...prevState, profileImg: null }));
+      newUserInfo = { ...prevUserInfo, profileImg: null };
     } else {
       const newImages = images.filter((item) => item.id !== selectedImage.id);
-      setUserInfo((prevState) => ({ ...prevState, images: newImages }));
+      newUserInfo = { ...prevUserInfo, images: newImages };
     }
+    const newStaff = { ...staff, userInfo: { ...staff.userInfo, ...newUserInfo } };
+    dispatch(updateStaffState({ data: newStaff, method: 'put' }));
+    //updateStaffState(newStaff, 'put');
+    setUserInfo(newUserInfo);
     setIsLoading(false);
     Toast.show(tr('removeImage'), {
       duration: Toast.durations.SHORT,
@@ -72,8 +94,6 @@ const StaffImage = ({ type, images, id, setUserInfo }) => {
     });
 
     if (!result.canceled) {
-      setPickedImage(result.assets[0].uri);
-
       const uri = Platform.OS === 'ios' ? result.assets[0].uri.replace('file://', '') : result.assets[0].uri;
       await uploadProfileImage(uri);
       setVisible(false);
@@ -90,7 +110,6 @@ const StaffImage = ({ type, images, id, setUserInfo }) => {
     const result = await ImagePicker.launchCameraAsync();
 
     if (!result.canceled) {
-      setPickedImage(result.assets[0].uri);
       const uri = Platform.OS === 'ios' ? result.assets[0].uri.replace('file://', '') : result.assets[0].uri;
       await uploadProfileImage(uri);
       setVisible(false);

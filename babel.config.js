@@ -21,6 +21,7 @@ module.exports = function (api) {
             '@constants': './src/constants',
             '@navigation': './src/navigation',
             '@theme': './src/theme',
+            '@redux': './src/redux',
           },
         },
       ],

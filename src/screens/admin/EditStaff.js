@@ -1,5 +1,5 @@
 import { KeyboardAvoidingView, Platform, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import MyStatusBar from '@components/myStatusBar';
 import { Colors, Default, Fonts, StaffColors } from '@constants/style';
 import Style from '@theme/style';
@@ -16,19 +16,23 @@ import { useAdminContext } from '@contexts/AdminContext';
 import { useAuthContext } from '@contexts/AuthContext';
 import Loader from '@components/loader';
 import { users } from '@api/users';
+import { useFocusEffect } from '@react-navigation/native';
+import { useSelector, useDispatch } from 'react-redux';
+import { updateUser, updateEmail } from '@redux/actions/staffAction';
+import { useIsFocused } from '@react-navigation/native';
+import { use } from 'i18next';
 
 const EditStaff = (props) => {
-  const staffArr = props.route.params.staff;
-  let staff = {};
+  const { navigation, route } = props;
 
+  const staffId = route.params?.staffId;
+  const isFocused = useIsFocused();
   const { t, i18n } = useTranslation();
   const isRtl = i18n.dir() === 'rtl';
   function tr(key) {
     return t(`staff:${key}`);
   }
-  const refRBSheet = useRef();
-  const [email, setEmail] = useState();
-  const [userInfo, setUserInfo] = useState({
+  const staffObj = {
     about: '',
     displayColor: '',
     experience: '',
@@ -39,27 +43,41 @@ const EditStaff = (props) => {
     phoneNumber: '',
     profileImg: '',
     specialty: '',
-  });
-  const [formattedNumber, setFormattedNumber] = useState();
-  const { visible, setVisible, setImageType, setSelectedImage, updateStaffState } = useAdminContext();
+  };
+  const { visible, setVisible, setImageType, setSelectedImage } = useAdminContext();
   const { userData } = useAuthContext();
-  const [isLoading, setIsLoading] = useState(false);
+  const refRBSheet = useRef();
+
+  const [user, setUser] = useState(null);
+  const [email, setEmail] = useState();
+  const [userInfo, setUserInfo] = useState({});
+  const [formattedNumber, setFormattedNumber] = useState();
+
   const [error, setError] = useState(false);
   const [info, setInfo] = useState(false);
-  const storeId = userData.storeAdmin.id;
-  if (typeof staffArr === 'object') {
-    staff = staffArr[0];
-  }
 
-  useEffect(() => {
-    if (Object.keys(staff).length === 0) return;
-    parseReduceData(staff);
-  }, [staff]);
+  const storeId = userData?.storeAdmin.id;
+  const { staffData, isLoading, editStaff } = useSelector((state) => state.staff);
+  const dispatch = useDispatch();
 
-  const parseReduceData = (staff) => {
-    setEmail(staff.email);
-    setUserInfo(staff.userInfo);
-    setFormattedNumber(formatPhoneNumber(staff.userInfo.phoneNumber));
+  useFocusEffect(
+    useCallback(() => {
+      let isActive = true;
+      if (staffId !== 'new') {
+        parseReduceData(staffId);
+      }
+      return () => {
+        isActive = false;
+      };
+    }, [staffId])
+  );
+
+  const parseReduceData = (id) => {
+    const temp = staffData.find((item) => item.id === id);
+    setUser(temp);
+    setEmail(temp.email);
+    setUserInfo(temp.userInfo);
+    setFormattedNumber(formatPhoneNumber(temp.userInfo.phoneNumber));
   };
   const toggleClose = (type) => {
     if (!userInfo.id) {
@@ -88,40 +106,44 @@ const EditStaff = (props) => {
       return;
     }
     const data = { ...userInfo };
-    delete staff.selected;
     delete data.images;
     delete data.profileImg;
     delete data.id;
-    setIsLoading(true);
-    if (email !== staff.email) {
-      const temp = {
+    if (email !== user.email) {
+      const data = {
         email,
       };
-      await users.updateEmail(staff.id, temp);
-      staff.email = email;
+      dispatch(updateEmail({ id: user.id, data }));
     }
-    await users.updateUser(id, data);
-    const newStaff = { ...staff, userInfo: { ...staff.userInfo, ...data } };
-    updateStaffState(newStaff, 'put');
-
-    setIsLoading(false);
+    dispatch(updateUser({ userId: user.id, id, data }));
+    //const newStaff = { ...user, userInfo: { ...user.userInfo, ...data } };
   };
   const generateCode = () => {
     let r = (Math.random() + 1).toString(36).substring(6);
 
     handleOnchange(`${storeId}_${r}`, 'code');
   };
-  console.log('userInfo', userInfo);
+  const navBack = () => {
+    setUserInfo({});
+    setEmail('');
+    setFormattedNumber('');
+    props.navigation.navigate('Staff');
+  };
   if (!userInfo) return <Loader visible={true} />;
   return (
     <KeyboardAvoidingView style={Style.mainContainer} behavior={Platform.OS === 'ios' ? 'padding' : null}>
       <Loader visible={isLoading} />
       <MyStatusBar />
       <View style={[Style.primaryNav, { flexDirection: isRtl ? 'row-reverse' : 'row' }]}>
-        <TouchableOpacity style={Style.navBackButton} onPress={() => props.navigation.navigate('Staff')}>
+        <TouchableOpacity
+          style={Style.navBackButton}
+          onPress={() => {
+            navBack();
+          }}
+        >
           <Ionicons name={isRtl ? 'arrow-forward' : 'arrow-back'} size={25} color={Colors.white} />
         </TouchableOpacity>
-        <Text style={Fonts.White20Bold}>{userInfo.id ? tr('edit') : tr('add')}</Text>
+        <Text style={Fonts.White20Bold}>{userInfo?.id ? tr('edit') : tr('add')}</Text>
       </View>
       <View style={[Style.contentContainer, { flexDirection: isRtl ? 'row-reverse' : 'row' }]}>
         <View
@@ -374,7 +396,7 @@ const EditStaff = (props) => {
               <Ionicons style={{ color: Colors.white }} name='camera-outline' size={20} />
             </View>
           </TouchableOpacity>
-          <StaffImage type='profileImg' images={userInfo.profileImg} id={userInfo.id} setUserInfo={setUserInfo} />
+          <StaffImage type='profileImg' setUserInfo={setUserInfo} userInfo={userInfo} staff={user} />
         </View>
         <View
           style={{
@@ -411,7 +433,7 @@ const EditStaff = (props) => {
               <Ionicons style={{ color: Colors.white }} name='camera-outline' size={20} />
             </View>
           </TouchableOpacity>
-          <StaffImage type='images' images={userInfo.images} id={userInfo.id} setUserInfo={setUserInfo} />
+          <StaffImage type='images' setUserInfo={setUserInfo} userInfo={userInfo} staff={user} />
           {error && (
             <View style={[Style.errorAlert, { position: 'relative', paddingLeft: 30 }]}>
               <View style={{ position: 'absolute', top: 4, left: 5 }}>

@@ -17,9 +17,8 @@ const HoursList = ({ data, setUserInfo }) => {
   const [open, setOpen] = useState(false);
   const [date, setDate] = useState(new Date());
   const [newHour, setNewHour] = useState(null);
-
   useEffect(() => {
-    if (!data) return;
+    if (!data) setHours(null);
     setHours(data);
   }, [data]);
 
@@ -39,10 +38,10 @@ const HoursList = ({ data, setUserInfo }) => {
     setDate(date);
     const hour = moment(date).format('h:mm A');
     if (newHour) {
-      const result = hours.map((a) => Number(a.id));
-      const maxID = result.length === 0 ? 1 : Math.max(...result);
+      const result = hours ? hours.map((a) => Number(a.id)) : [];
+      const maxID = result.length === 0 ? 0 : Math.max(...result);
       const newItem = { id: (maxID + 1).toString(), hours: newHour + ' - ' + hour };
-      const newHours = [...hours, newItem];
+      const newHours = hours ? [...hours, newItem] : [newItem];
       setHours(newHours);
       setUserInfo((prevState) => ({ ...prevState, hours: newHours }));
       setNewHour(null);
@@ -71,16 +70,17 @@ const HoursList = ({ data, setUserInfo }) => {
       </ScaleDecorator>
     );
   };
-  if (!hours) return null;
   return (
     <View style={{ marginTop: Default.fixPadding, flexDirection: 'row' }}>
       <View style={{ flex: 0.7 }}>
-        <DraggableFlatList
-          data={hours}
-          onDragEnd={({ data }) => updateHours(data)}
-          keyExtractor={(item) => item.id}
-          renderItem={renderItem}
-        />
+        {hours && (
+          <DraggableFlatList
+            data={hours}
+            onDragEnd={({ data }) => updateHours(data)}
+            keyExtractor={(item) => item.id}
+            renderItem={renderItem}
+          />
+        )}
       </View>
       <View style={{ flex: 1 }}>
         <TouchableOpacity

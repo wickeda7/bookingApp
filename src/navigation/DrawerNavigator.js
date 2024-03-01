@@ -32,7 +32,8 @@ const DrawerNavigator = () => {
       <Drawer.Screen
         name='EditStaff'
         component={EditStaff}
-        options={{ headerShown: false, drawerItemStyle: { display: 'none' } }}
+        options={{ headerShown: false, drawerItemStyle: { display: 'none' }, lazy: false }}
+        unmountOnBlur={true}
       />
     </Drawer.Navigator>
   );
