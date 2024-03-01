@@ -11,7 +11,10 @@ import { users } from '@api/users';
 import Loader from '@components/loader';
 import Toast from 'react-native-root-toast';
 import { updateStaffState } from '@redux/slices/staffSlice';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { uploadImage } from '@redux/actions/staffAction';
+import { use } from 'i18next';
+import { useEffect } from 'react';
 const StaffImage = ({ type, setUserInfo, userInfo, staff }) => {
   const { t, i18n } = useTranslation();
   const isRtl = i18n.dir() === 'rtl';
@@ -22,6 +25,21 @@ const StaffImage = ({ type, setUserInfo, userInfo, staff }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const dispatch = useDispatch();
+  const { status, staffData } = useSelector((state) => state.staff);
+
+  useEffect(() => {
+    if (!status) return;
+    if (status === 'fulfilled') {
+      setIsLoading(false);
+      const selectedStaff = staffData.find((i) => i.id === staff.id);
+      setUserInfo(selectedStaff.userInfo);
+      setVisible(false);
+    } else if (status === 'error') {
+      setIsLoading(false);
+    } else {
+      setIsLoading(true);
+    }
+  }, [status]);
 
   let profileImg = userInfo?.profileImg;
   let images = userInfo?.images;
@@ -34,29 +52,8 @@ const StaffImage = ({ type, setUserInfo, userInfo, staff }) => {
     setVisible(!visible);
   };
   const uploadProfileImage = async (file) => {
-    let prevUserInfo = userInfo;
-
-    let newUserInfo = {};
-    setIsLoading(true);
-    const response = await users.uploadProfileImage(id, file, imageType);
-
-    const newImage = { id: response[0].id, url: response[0].url };
-    if (imageType === 'profileImg') {
-      newUserInfo = { ...prevUserInfo, profileImg: newImage };
-    } else {
-      console.log('images', images);
-
-      console.log('prevUserInfo', prevUserInfo);
-      images.push(newImage);
-      console.log('newImage', newImage);
-      newUserInfo = { ...prevUserInfo, images: images };
-    }
-    const newStaff = { ...staff, userInfo: { ...staff.userInfo, ...newUserInfo } };
-
-    dispatch(updateStaffState({ data: newStaff, method: 'put' }));
-    // updateStaffState(newStaff, 'put');
-    setUserInfo(newUserInfo);
-    setIsLoading(false);
+    const userId = staff.id;
+    dispatch(uploadImage({ id, file, imageType, userId }));
   };
 
   const toastRemoveImage = async () => {
@@ -96,7 +93,6 @@ const StaffImage = ({ type, setUserInfo, userInfo, staff }) => {
     if (!result.canceled) {
       const uri = Platform.OS === 'ios' ? result.assets[0].uri.replace('file://', '') : result.assets[0].uri;
       await uploadProfileImage(uri);
-      setVisible(false);
     }
   };
   const openCamera = async () => {
@@ -112,7 +108,6 @@ const StaffImage = ({ type, setUserInfo, userInfo, staff }) => {
     if (!result.canceled) {
       const uri = Platform.OS === 'ios' ? result.assets[0].uri.replace('file://', '') : result.assets[0].uri;
       await uploadProfileImage(uri);
-      setVisible(false);
     }
   };
   const renderItemPhoto = ({ item, index }) => {
@@ -142,6 +137,9 @@ const StaffImage = ({ type, setUserInfo, userInfo, staff }) => {
 
   return (
     <View style={{ marginTop: Default.fixPadding * 3, flexDirection: 'row' }}>
+      {/* <Text style={{ ...Fonts.Black18Bold, marginHorizontal: Default.fixPadding * 2 }}>
+        {isLoading ? 'loading' : 'waiting'} status {status}
+      </Text> */}
       {type === 'profileImg' ? (
         <Avatar.Image
           size={128}

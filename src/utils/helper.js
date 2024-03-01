@@ -4,8 +4,10 @@ import tableMap from '@constants/map';
 import { t } from 'i18next';
 export const formatPhoneNumber = (value) => {
   //https://aprilescobar.medium.com/phone-number-formatting-made-easy-1b887872ab2f
+  if (!value) return;
   let formattedNumber;
   const length = value.length;
+
   // Filter non numbers
   const regex = () => value.replace(/[^0-9\.]+/g, '');
   // Set area code with parenthesis around it

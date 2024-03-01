@@ -1,20 +1,17 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { getStoreById, updateUser, updateEmail } from '../actions/staffAction';
+import { getStoreById, updateUser, updateEmail, uploadImage } from '../actions/staffAction';
+import { use } from 'i18next';
 
 const initialState = {
   staffData: [],
-  editStaff: {},
   isLoading: false,
+  status: null,
 };
 
 export const staffSlice = createSlice({
   name: 'staff',
   initialState,
   reducers: {
-    getStaff: (state, action) => {
-      const temp = state.staffData.find((i) => i.id === action.payload);
-      state.editStaff = temp;
-    },
     selectRow: (state, action) => {
       state.staffData.map((i) => {
         if (i.id === action.payload) {
@@ -92,11 +89,42 @@ export const staffSlice = createSlice({
       })
       .addCase(updateEmail.rejected, (state, action) => {
         state.isLoading = false;
+      })
+      .addCase(uploadImage.fulfilled, (state, action) => {
+        const userId = action.payload.userId;
+        const newImage = action.payload.newImage;
+        const imageType = action.payload.imageType;
+
+        state.staffData = state.staffData.map((item) => {
+          if (item.id === userId) {
+            let temp = { ...item, userInfo: { ...item.userInfo } };
+            if (imageType === 'profileImg') {
+              temp.userInfo.profileImg = newImage;
+            } else {
+              let images = temp.userInfo.images || [];
+              images.unshift(newImage);
+              temp.userInfo.images = images;
+            }
+            return temp;
+          }
+          return item;
+        });
+
+        state.status = 'fulfilled';
+        state.isLoading = false;
+      })
+      .addCase(uploadImage.pending, (state, action) => {
+        state.status = 'pending';
+        state.isLoading = true;
+      })
+      .addCase(uploadImage.rejected, (state, action) => {
+        state.status = 'error';
+        state.isLoading = false;
       });
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { selectRow, resetSeletedRow, getStaff, updateStaffState } = staffSlice.actions;
+export const { selectRow, resetSeletedRow, updateStaffState } = staffSlice.actions;
 
 export default staffSlice.reducer;

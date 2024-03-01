@@ -26,6 +26,7 @@ const EditStaff = (props) => {
   const { navigation, route } = props;
 
   const staffId = route.params?.staffId;
+  const ranNum = route.params?.randomNum;
   const isFocused = useIsFocused();
   const { t, i18n } = useTranslation();
   const isRtl = i18n.dir() === 'rtl';
@@ -57,20 +58,26 @@ const EditStaff = (props) => {
   const [info, setInfo] = useState(false);
 
   const storeId = userData?.storeAdmin.id;
-  const { staffData, isLoading, editStaff } = useSelector((state) => state.staff);
+  const { staffData, isLoading } = useSelector((state) => state.staff);
   const dispatch = useDispatch();
+  useEffect(() => {
+    if (!staffId) return;
+    if (staffId !== 'new') {
+      parseReduceData(staffId);
+    }
+  }, [ranNum]);
 
-  useFocusEffect(
-    useCallback(() => {
-      let isActive = true;
-      if (staffId !== 'new') {
-        parseReduceData(staffId);
-      }
-      return () => {
-        isActive = false;
-      };
-    }, [staffId])
-  );
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     let isActive = true;
+  //     // if (staffId !== 'new') {
+  //     //   parseReduceData(staffId);
+  //     // }
+  //     return () => {
+  //       isActive = false;
+  //     };
+  //   }, [staffId])
+  // );
 
   const parseReduceData = (id) => {
     const temp = staffData.find((item) => item.id === id);

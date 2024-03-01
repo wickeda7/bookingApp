@@ -29,3 +29,13 @@ export const updateEmail = createAsyncThunk('updateEmail', async ({ id, data }) 
     throw error;
   }
 });
+export const uploadImage = createAsyncThunk('uploadImage', async ({ id, file, imageType, userId }) => {
+  try {
+    const res = await users.uploadProfileImage(id, file, imageType);
+    const newImage = { id: res[0].id, url: res[0].url };
+    return { imageType, newImage, userId };
+  } catch (error) {
+    console.log('error staffAction uploadImage', error);
+    throw error;
+  }
+});

@@ -31,14 +31,9 @@ const Staff = (props) => {
 
   const { staffData, isLoading } = useSelector((state) => state.staff);
 
-  const x = 3;
-  let y = 2;
-  function update(arg) {
-    return Math.random() + y * arg;
+  function randomNum() {
+    return Math.floor(1000 + Math.random() * 9000);
   }
-  //y = 2; ?;
-  const result = update(x);
-  console.log('result', result); // 10
   useEffect(() => {
     if (userData.role.id !== 4) return;
     dispatch(getStoreById(userData.storeAdmin.id));
@@ -78,6 +73,7 @@ const Staff = (props) => {
     dispatch(resetSeletedRow());
     props.navigation.navigate('EditStaff', {
       staffId: item.id,
+      randomNum: randomNum(),
     });
   };
   if (isLoading) return <Loader visible={true} />;
@@ -112,6 +108,7 @@ const Staff = (props) => {
                   dispatch(getStaff(selectedStaff.id));
                   props.navigation.navigate('EditStaff', {
                     staffId: selectedStaff.id,
+                    randomNum: randomNum(),
                   });
                   dispatch(resetSeletedRow());
                 }}
