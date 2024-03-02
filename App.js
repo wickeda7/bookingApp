@@ -21,6 +21,9 @@ import * as Notifications from 'expo-notifications';
 import { Platform } from 'react-native';
 import Constants from 'expo-constants';
 import Devi from 'react-native-device-info';
+import * as Linking from 'expo-linking';
+
+const prefix = Linking.createURL('/');
 
 const BACKGROUND_FETCH_TASK = 'background-fetch';
 
@@ -93,8 +96,51 @@ async function unregisterBackgroundFetchAsync() {
 }
 const isTablet = Devi.isTablet();
 const MainNavigation = () => {
+  // const config = {
+  //   screens: {
+  //     profileScreen: {
+  //       path: '?',
+  //     },
+  //   },
+  // };
+  // const state = {
+  //   routes: [
+  //     {
+  //       name: 'profileScreen',
+  //       params: { access: 'code' },
+  //     },
+  //   ],
+  // };
+  // const config = {
+  //   screens: {
+  //     BottomTab: {
+  //       screens: {
+  //       path: 'profileScreen?',
+  //       parse: {
+  //         id: (id) => `user-${id}`,
+  //       },
+  //       stringify: {
+  //         id: (id) => id.replace(/^user-/, ''),
+  //       },
+  //     },
+  //   },
+  // };
+  const config = {
+    screens: {
+      BottomTab: {
+        screens: {
+          profileScreen: '?',
+        },
+      },
+      splashScreen: '',
+    },
+  };
+  const linking = {
+    prefixes: [prefix],
+    config,
+  };
   return (
-    <NavigationContainer>
+    <NavigationContainer linking={linking}>
       <AuthContextProvider>
         <StoreContextProvider>
           <BookingContextProvider>

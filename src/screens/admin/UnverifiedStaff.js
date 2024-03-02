@@ -15,7 +15,6 @@ import { formatPhoneNumber } from '@utils/helper';
 import moment from 'moment';
 import { selectRow, resetSeletedRow } from '@redux/slices/staffSlice';
 import { deleteStaff } from '@redux/actions/staffAction';
-import * as SMS from 'expo-sms';
 const UnverifiedStaff = (props) => {
   const ranNum = props.route.params?.randomNum;
   const { t, i18n } = useTranslation();
@@ -39,7 +38,6 @@ const UnverifiedStaff = (props) => {
   }, [newStaff]);
 
   useEffect(() => {
-    checkSMS();
     checkOrientation();
     const subscription = ScreenOrientation.addOrientationChangeListener(handleOrientationChange);
     return () => {
@@ -47,11 +45,6 @@ const UnverifiedStaff = (props) => {
     };
   }, []);
 
-  const checkSMS = async () => {
-    const isAvailable = await SMS.isAvailableAsync();
-    console.log('isAvailable', isAvailable);
-    setSmsAvailable(isAvailable);
-  };
   const checkOrientation = async () => {
     const orientation = await ScreenOrientation.getOrientationAsync();
     setOrientation(orientation);
@@ -87,21 +80,7 @@ const UnverifiedStaff = (props) => {
       randomNum: randomNum(),
     });
   };
-  const handlePressSend = async (item) => {
-    console.log('handlePressSend', smsAvailable);
-    const { result } = await SMS.sendSMSAsync(
-      ['6266754894'],
-      'My sample HelloWorld message'
-      // {
-      //   attachments: {
-      //     uri: 'path/myfile.png',
-      //     mimeType: 'image/png',
-      //     filename: 'myfile.png',
-      //   },
-      // }
-    );
-    console.log('result', result);
-  };
+  const handlePressSend = async (item) => {};
   const handleDelete = () => {
     const staffIds = newStaff.reduce((acc, item) => {
       if (item.selected) {

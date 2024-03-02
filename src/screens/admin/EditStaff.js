@@ -21,7 +21,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { updateUser, updateEmail } from '@redux/actions/staffAction';
 import { useIsFocused } from '@react-navigation/native';
 import { updateStaffState } from '@redux/slices/staffSlice';
-
+import * as Linking from 'expo-linking';
 const EditStaff = (props) => {
   const { navigation, route } = props;
 
@@ -113,7 +113,6 @@ const EditStaff = (props) => {
     setInputErr([]);
     const formattedNumber = formatPhoneNumber(number);
     setFormattedNumber(formattedNumber);
-    console.log('phoneNumber', number);
     setUserInfo((prevState) => ({ ...prevState, phoneNumber: number }));
   };
   const updateUserData = async () => {
@@ -121,6 +120,12 @@ const EditStaff = (props) => {
     setInputErr([]);
     let err = [];
     const id = userInfo.id;
+    if (userInfo.phoneNumber !== '') {
+      userInfo.phoneNumber = userInfo.phoneNumber.replace(/[^\d\+]/g, '');
+    }
+    const redirectUrl = Linking.createURL('profileScreen', {
+      queryParams: { access: 'code' },
+    });
     if (!id) {
       if (!userInfo.code) {
         err.push('code');
@@ -135,7 +140,6 @@ const EditStaff = (props) => {
       const res = await users.createStaff(userInfo);
       if (res) {
         setUserInfo(res);
-        console.log('res', res);
         dispatch(updateStaffState({ data: res, method: 'post' }));
       }
       return;
