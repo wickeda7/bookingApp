@@ -91,4 +91,31 @@ export const users = {
       throw error;
     }
   },
+  unverifiedStaff: async (id) => {
+    try {
+      const response = await api.unverifiedStaff(id);
+      let data = [];
+      if (response.data.length > 0) {
+        data = response.data.map((item) => {
+          return {
+            ...item.attributes,
+            id: item.id,
+          };
+        });
+      }
+      return data;
+    } catch (error) {
+      console.log('error deleteImage', error);
+      throw error;
+    }
+  },
+  deleteStaff: async (ids, type) => {
+    try {
+      const response = await api.deleteStaff(ids, type);
+      return response;
+    } catch (error) {
+      console.log('error deleteStaff', error);
+      throw error;
+    }
+  },
 };

@@ -14,7 +14,7 @@ import Row from '@components/table/Row';
 import { tableRows } from '@utils/helper';
 import Loader from '@components/loader';
 import { useSelector, useDispatch } from 'react-redux';
-import { getStoreById } from '@redux/actions/staffAction';
+import { getStoreById, unverifiedStaff } from '@redux/actions/staffAction';
 import { selectRow, resetSeletedRow, getStaff } from '@redux/slices/staffSlice';
 
 const Staff = (props) => {
@@ -29,14 +29,15 @@ const Staff = (props) => {
 
   const dispatch = useDispatch();
 
-  const { staffData, isLoading } = useSelector((state) => state.staff);
-
+  const { staffData, isLoading, totalNewStaff } = useSelector((state) => state.staff);
+  console.log('staffData Staff', staffData);
   function randomNum() {
     return Math.floor(1000 + Math.random() * 9000);
   }
   useEffect(() => {
     if (userData.role.id !== 4) return;
     dispatch(getStoreById(userData.storeAdmin.id));
+    dispatch(unverifiedStaff(userData.storeAdmin.id));
     checkOrientation();
     const subscription = ScreenOrientation.addOrientationChangeListener(handleOrientationChange);
     return () => {
@@ -66,16 +67,17 @@ const Staff = (props) => {
   const lastRow = staffData.length - 1;
 
   const handlePress = (item) => {
-    dispatch(selectRow(item.id));
+    dispatch(selectRow({ id: item.id, type: 'staff' }));
   };
 
   const handleLongPress = (item) => {
-    dispatch(resetSeletedRow());
+    dispatch(resetSeletedRow('staff'));
     props.navigation.navigate('EditStaff', {
       staffId: item.id,
       randomNum: randomNum(),
     });
   };
+  const handleDelete = () => {};
   if (isLoading) return <Loader visible={true} />;
   return (
     <KeyboardAvoidingView style={Style.mainContainer} behavior={Platform.OS === 'ios' ? 'padding' : null}>
@@ -85,7 +87,7 @@ const Staff = (props) => {
           style={Style.navBackButton}
           onPress={() => {
             props.navigation.navigate('Home');
-            dispatch(resetSeletedRow());
+            dispatch(resetSeletedRow('staff'));
           }}
         >
           <Ionicons name={isRtl ? 'arrow-forward' : 'arrow-back'} size={25} color={Colors.white} />
@@ -110,7 +112,7 @@ const Staff = (props) => {
                     staffId: selectedStaff.id,
                     randomNum: randomNum(),
                   });
-                  dispatch(resetSeletedRow());
+                  dispatch(resetSeletedRow('staff'));
                 }}
               >
                 <Icons6 name={'user-gear'} size={22} color={Colors.white} />
@@ -120,16 +122,32 @@ const Staff = (props) => {
               <TouchableOpacity
                 onPress={() => {
                   props.navigation.navigate('EditStaff', { staffId: 'new', randomNum: randomNum() });
-                  dispatch(resetSeletedRow());
+                  dispatch(resetSeletedRow('staff'));
                 }}
               >
                 <Icons6 name={'user-plus'} size={22} color={Colors.white} />
               </TouchableOpacity>
             </View>
             <View style={[Style.navRightButton, { backgroundColor: Colors.primary }]}>
-              <TouchableOpacity onPress={() => deleteStaff(selectedStaff)} disabled={isLoading}>
+              <TouchableOpacity onPress={() => handleDelete()} disabled={isLoading}>
                 <Icons6 name={'user-xmark'} size={22} color={isLoading ? Colors.lightPrimary : Colors.white} />
               </TouchableOpacity>
+            </View>
+            <View style={[Style.navRightButton, { backgroundColor: Colors.primary, position: 'relative' }]}>
+              <TouchableOpacity
+                onPress={() => {
+                  props.navigation.navigate('UnverifiedStaff', { randomNum: randomNum() });
+                  dispatch(resetSeletedRow('staff'));
+                }}
+                disabled={isLoading}
+              >
+                <Icons6 name={'user-check'} size={22} color={isLoading ? Colors.lightPrimary : Colors.white} />
+              </TouchableOpacity>
+              {totalNewStaff > 0 && (
+                <View style={[Style.tick]}>
+                  <Text style={{ color: Colors.white, fontSize: 12, fontFamily: 'Bold' }}>{totalNewStaff}</Text>
+                </View>
+              )}
             </View>
           </View>
         </View>

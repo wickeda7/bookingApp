@@ -11,10 +11,19 @@ export const getStoreById = createAsyncThunk('getStoreById', async (id) => {
     throw error;
   }
 });
+export const unverifiedStaff = createAsyncThunk('unverifiedStaff', async (id) => {
+  try {
+    const res = await users.unverifiedStaff(id);
+    return res;
+  } catch (error) {
+    console.log('error staffAction getStoreById', error);
+    throw error;
+  }
+});
 export const updateUser = createAsyncThunk('updateUser', async ({ userId, id, data }) => {
   try {
     const res = await users.updateUser(id, data);
-    return { userId, data };
+    return { userId, data, id };
   } catch (error) {
     console.log('error staffAction updateUser', error);
     throw error;
@@ -36,6 +45,16 @@ export const uploadImage = createAsyncThunk('uploadImage', async ({ id, file, im
     return { imageType, newImage, userId };
   } catch (error) {
     console.log('error staffAction uploadImage', error);
+    throw error;
+  }
+});
+export const deleteStaff = createAsyncThunk('deleteStaff', async ({ ids, type }) => {
+  try {
+    const res = await users.deleteStaff(ids, type);
+    //const newImage = { id: res[0].id, url: res[0].url };
+    return { type, ids };
+  } catch (error) {
+    console.log('error staffAction deleteStaff', error);
     throw error;
   }
 });

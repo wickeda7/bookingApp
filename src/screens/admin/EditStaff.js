@@ -20,13 +20,14 @@ import { useFocusEffect } from '@react-navigation/native';
 import { useSelector, useDispatch } from 'react-redux';
 import { updateUser, updateEmail } from '@redux/actions/staffAction';
 import { useIsFocused } from '@react-navigation/native';
-import { use } from 'i18next';
+import { updateStaffState } from '@redux/slices/staffSlice';
 
 const EditStaff = (props) => {
   const { navigation, route } = props;
 
   const staffId = route.params?.staffId;
   const ranNum = route.params?.randomNum;
+  const userInfoId = route.params?.userInfoId;
   const isFocused = useIsFocused();
   const { t, i18n } = useTranslation();
   const isRtl = i18n.dir() === 'rtl';
@@ -57,14 +58,18 @@ const EditStaff = (props) => {
   const [imageErr, setImageErr] = useState(false);
   const [inputErr, setInputErr] = useState([]);
   const [info, setInfo] = useState(false);
-
-  const storeId = userData?.storeAdmin.id;
-  const { staffData, isLoading } = useSelector((state) => state.staff);
+  const storeId = userData?.storeAdmin?.id;
+  const { staffData, isLoading, newStaff } = useSelector((state) => state.staff);
   const dispatch = useDispatch();
   useEffect(() => {
-    if (!staffId) return;
-    if (staffId !== 'new') {
+    if (staffId && staffId !== 'new') {
       parseReduceData(staffId);
+    }
+    if (userInfoId) {
+      const temp = newStaff.find((item) => item.id === userInfoId);
+      setUserInfo(temp);
+      setFormattedNumber(formatPhoneNumber(temp.phoneNumber));
+      // setUserInfo(staffObj);
     }
     setInputErr([]);
     setImageErr(false);
@@ -108,6 +113,7 @@ const EditStaff = (props) => {
     setInputErr([]);
     const formattedNumber = formatPhoneNumber(number);
     setFormattedNumber(formattedNumber);
+    console.log('phoneNumber', number);
     setUserInfo((prevState) => ({ ...prevState, phoneNumber: number }));
   };
   const updateUserData = async () => {
@@ -129,6 +135,8 @@ const EditStaff = (props) => {
       const res = await users.createStaff(userInfo);
       if (res) {
         setUserInfo(res);
+        console.log('res', res);
+        dispatch(updateStaffState({ data: res, method: 'post' }));
       }
       return;
     }
@@ -136,13 +144,13 @@ const EditStaff = (props) => {
     delete data.images;
     delete data.profileImg;
     delete data.id;
-    if (email !== user.email) {
+    if (user && email !== user.email) {
       const data = {
         email,
       };
       dispatch(updateEmail({ id: user.id, data }));
     }
-    dispatch(updateUser({ userId: user.id, id, data }));
+    dispatch(updateUser({ userId: user?.id, id, data }));
     //const newStaff = { ...user, userInfo: { ...user.userInfo, ...data } };
   };
   const generateCode = () => {
@@ -155,7 +163,11 @@ const EditStaff = (props) => {
     setEmail('');
     setFormattedNumber('');
     setUser(null);
-    props.navigation.navigate('Staff');
+    if (user) {
+      props.navigation.navigate('Staff');
+    } else {
+      props.navigation.navigate('UnverifiedStaff');
+    }
   };
   if (!userInfo) return <Loader visible={true} />;
   return (
@@ -488,7 +500,7 @@ const EditStaff = (props) => {
               </Text>
             </View>
           )}
-          {userInfo.id && (
+          {user && (
             <View style={[Style.infoAlert, { position: 'relative', paddingLeft: 30 }]}>
               <View style={{ position: 'absolute', top: 4, left: 5 }}>
                 <Ionicons name={'information-circle-outline'} size={20} color={Colors.info} />

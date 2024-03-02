@@ -90,4 +90,15 @@ export default StyleSheet.create({
     ...Fonts.Black14Regular,
     color: Colors.red,
   },
+  tick: {
+    position: 'absolute',
+    top: 3,
+    left: 3,
+    height: 20,
+    width: 20,
+    borderRadius: 10,
+    backgroundColor: '#ffb703',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 });

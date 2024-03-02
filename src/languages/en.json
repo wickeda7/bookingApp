@@ -96,7 +96,9 @@
     "generate": "Generate Code",
     "generateDesc": "Click generate to create access code for staff",
     "add": "Add New Staff",
-    "inputError": "Phone number is required and Access code is required. Please click generate access code."
+    "inputError": "Phone number is required and Access code is required. Please click generate access code.",
+    "unverifiedStaff": "Unverified Staff",
+    "resend": "Resend"
   },
   "incomeScreen": {
     "income": "Income Report By Each Day",

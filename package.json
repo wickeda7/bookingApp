@@ -34,6 +34,7 @@
     "expo-location": "~16.5.3",
     "expo-notifications": "~0.27.6",
     "expo-screen-orientation": "~6.4.1",
+    "expo-sms": "~11.7.1",
     "expo-status-bar": "~1.11.1",
     "expo-system-ui": "~2.9.3",
     "expo-task-manager": "~11.7.2",

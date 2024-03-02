@@ -13,10 +13,10 @@ const Cell = ({ data, type, header }) => {
       result = moment(data.createdAt).format('MM-DD-YYYY');
       break;
     case 'phone':
-      result = formatPhoneNumber(data.userInfo.phoneNumber);
+      result = formatPhoneNumber(data.userInfo?.phoneNumber);
       break;
     case 'specialty':
-      result = data.userInfo.specialty;
+      result = data.userInfo?.specialty;
       break;
   }
 

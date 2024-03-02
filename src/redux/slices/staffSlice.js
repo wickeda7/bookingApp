@@ -1,10 +1,18 @@
-import { createSlice } from '@reduxjs/toolkit';
-import { getStoreById, updateUser, updateEmail, uploadImage } from '../actions/staffAction';
+import { compose, createSlice } from '@reduxjs/toolkit';
+import {
+  getStoreById,
+  updateUser,
+  updateEmail,
+  uploadImage,
+  unverifiedStaff,
+  deleteStaff,
+} from '../actions/staffAction';
 import { use } from 'i18next';
 
 const initialState = {
   staffData: [],
   newStaff: [],
+  totalNewStaff: 0,
   isLoading: false,
   status: null,
 };
@@ -14,18 +22,36 @@ export const staffSlice = createSlice({
   initialState,
   reducers: {
     selectRow: (state, action) => {
-      state.staffData.map((i) => {
-        if (i.id === action.payload) {
-          i.selected = !i.selected;
-        }
-        return i;
-      });
+      const id = action.payload.id;
+      const type = action.payload.type;
+      if (type === 'unverified') {
+        state.newStaff.map((i) => {
+          if (i.id === id) {
+            i.selected = !i.selected;
+          }
+          return i;
+        });
+      } else {
+        state.staffData.map((i) => {
+          if (i.id === id) {
+            i.selected = !i.selected;
+          }
+          return i;
+        });
+      }
     },
-    resetSeletedRow: (state) => {
-      state.staffData.map((i) => {
-        delete i.selected;
-        return i;
-      });
+    resetSeletedRow: (state, action) => {
+      if (action.payload === 'staff') {
+        state.staffData = state.staffData.map((i) => {
+          delete i.selected;
+          return i;
+        });
+      } else {
+        state.newStaff.map((i) => {
+          delete i.selected;
+          return i;
+        });
+      }
     },
     updateStaffState: (state, action) => {
       const data = action.payload.data;
@@ -37,6 +63,10 @@ export const staffSlice = createSlice({
           }
           return i;
         });
+      }
+      if (method === 'post') {
+        state.newStaff.unshift(data);
+        state.totalNewStaff = state.totalNewStaff + 1;
       }
     },
   },
@@ -56,14 +86,25 @@ export const staffSlice = createSlice({
       .addCase(updateUser.fulfilled, (state, action) => {
         const userId = action.payload.userId;
         const data = action.payload.data;
-        state.staffData = state.staffData.map((item) => {
-          if (item.id === userId) {
-            const userInfo = { ...item.userInfo, ...data };
-            return { ...item, userInfo };
-          }
-          return item;
-        });
-
+        const id = action.payload.id;
+        console.log('updateUser.fulfilled', userId, data, id);
+        if (userId) {
+          state.staffData = state.staffData.map((item) => {
+            if (item.id === userId) {
+              const userInfo = { ...item.userInfo, ...data };
+              return { ...item, userInfo };
+            }
+            return item;
+          });
+        }
+        if (id) {
+          state.newStaff = state.newStaff.map((item) => {
+            if (item.id === id) {
+              return { ...item, ...data };
+            }
+            return item;
+          });
+        }
         state.isLoading = false;
       })
       .addCase(updateUser.pending, (state, action) => {
@@ -124,6 +165,34 @@ export const staffSlice = createSlice({
       })
       .addCase(uploadImage.rejected, (state, action) => {
         state.status = 'error';
+        state.isLoading = false;
+      })
+      .addCase(unverifiedStaff.fulfilled, (state, action) => {
+        state.newStaff = action.payload;
+        state.totalNewStaff = action.payload.length;
+        state.isLoading = false;
+      })
+      .addCase(unverifiedStaff.pending, (state, action) => {
+        state.isLoading = true;
+      })
+      .addCase(unverifiedStaff.rejected, (state, action) => {
+        state.isLoading = false;
+      })
+      .addCase(deleteStaff.fulfilled, (state, action) => {
+        const ids = action.payload.ids;
+        const type = action.payload.type;
+        if (type === 'unverified') {
+          state.newStaff = state.newStaff.filter((i) => !ids.includes(i.id));
+          state.totalNewStaff = state.totalNewStaff - ids.length;
+        } else {
+          state.staffData = state.staffData.filter((i) => !ids.includes(i.id));
+        }
+        state.isLoading = false;
+      })
+      .addCase(deleteStaff.pending, (state, action) => {
+        state.isLoading = true;
+      })
+      .addCase(deleteStaff.rejected, (state, action) => {
         state.isLoading = false;
       });
   },

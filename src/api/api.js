@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-import { STRAPIURL } from '@env';
-//const STRAPIURL = 'http://localhost:1337';
+//import { STRAPIURL } from '@env';
+const STRAPIURL = 'http://localhost:1337';
 export const api = {
   getUser: async (email) => {
     const url = `${STRAPIURL}/api/users/${email}`;
@@ -187,6 +187,25 @@ export const api = {
     try {
       const url = `${STRAPIURL}/api/upload/files/${id}`;
       const response = await axios.delete(url);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  unverifiedStaff: async (id) => {
+    try {
+      const url = `${STRAPIURL}/api/user-infos?filters[code][$startsWithi]=${id}_`;
+      const response = await axios.get(url);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  deleteStaff: async (ids, type) => {
+    try {
+      // type = 'unverified'  api/user-infos/deleteStaff
+      const url = `${STRAPIURL}/api/user-infos/deleteStaff`;
+      const response = await axios.post(url, { data: ids });
       return response.data;
     } catch (error) {
       throw error;
