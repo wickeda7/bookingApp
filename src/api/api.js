@@ -224,4 +224,13 @@ export const api = {
       throw error;
     }
   },
+  sendCode: async (item) => {
+    try {
+      const url = `${STRAPIURL}/api/access-codes/sendCode`;
+      const response = await axios.post(url, { data: item });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
 };

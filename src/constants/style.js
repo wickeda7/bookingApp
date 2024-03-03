@@ -368,6 +368,11 @@ export const Fonts = {
     fontSize: 14,
     fontFamily: 'Regular',
   },
+  Green14Bold: {
+    color: Colors.success,
+    fontSize: 14,
+    fontFamily: 'Bold',
+  },
 };
 
 export const Default = {

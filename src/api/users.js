@@ -117,4 +117,16 @@ export const users = {
       throw error;
     }
   },
+  sendCode: async (item) => {
+    let data = { ...item };
+    delete data.id;
+    delete data.createdAt;
+    delete data.updatedAt;
+    try {
+      const response = await api.sendCode(data);
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  },
 };
