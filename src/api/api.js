@@ -213,4 +213,15 @@ export const api = {
       throw error;
     }
   },
+  getAccessCode: async (userId, code) => {
+    try {
+      ///api/access-codes/getCode
+      const url = `${STRAPIURL}/api/access-codes/getCode/${userId}/${code}`;
+      const response = await axios.get(url);
+      return response.data;
+    } catch (error) {
+      console.log('error getAccessCode', error);
+      throw error;
+    }
+  },
 };

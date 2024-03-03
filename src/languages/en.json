@@ -235,7 +235,8 @@
     "cancel": "Cancel",
     "help": "Help & support",
     "enterCode": "Enter access code",
-    "submit": "Submit"
+    "submit": "Submit",
+    "invalidCode": "Invalid access code"
   },
   "accountScreen": {
     "account": "My account",

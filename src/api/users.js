@@ -108,4 +108,13 @@ export const users = {
       throw error;
     }
   },
+  getAccessCode: async (userId, code) => {
+    try {
+      const response = await api.getAccessCode(userId, code);
+      return response;
+    } catch (error) {
+      console.log('error getAccessCode', error);
+      throw error;
+    }
+  },
 };

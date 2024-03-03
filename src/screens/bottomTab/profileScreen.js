@@ -24,7 +24,6 @@ const ProfileScreen = (props) => {
   const image = userData?.userInfo?.profileImg?.url || DefaultImage;
   const name = userData?.userInfo?.firstName || ' ';
   const lastName = userData?.userInfo?.lastName || ' ';
-
   if (!userData) return null;
   return (
     <View style={{ flex: 1, backgroundColor: Colors.white }}>
@@ -109,39 +108,7 @@ const ProfileScreen = (props) => {
                     }}
                   />
                 </TouchableOpacity>
-                <TouchableOpacity
-                  style={{
-                    flexDirection: isRtl ? 'row-reverse' : 'row',
-                    alignItems: 'center',
-                    padding: Default.fixPadding * 1.5,
-                  }}
-                  onPress={() => setAccessCode(true)}
-                >
-                  <MaterialIcons
-                    name='password'
-                    size={25}
-                    color={Colors.primary}
-                    style={{ marginHorizontal: Default.fixPadding * 0.5, flex: 1 }}
-                  />
-                  <Text
-                    style={{
-                      ...Fonts.Black16Medium,
-                      flex: 8,
-                    }}
-                  >
-                    {tr('enterCode')}
-                  </Text>
 
-                  <Ionicons
-                    name={isRtl ? 'chevron-back' : 'chevron-forward-outline'}
-                    size={25}
-                    color={Colors.black}
-                    style={{
-                      flex: 1,
-                      justifyContent: 'flex-end',
-                    }}
-                  />
-                </TouchableOpacity>
                 <TouchableOpacity
                   style={{
                     flexDirection: isRtl ? 'row-reverse' : 'row',
@@ -424,7 +391,39 @@ const ProfileScreen = (props) => {
                   />
                 </TouchableOpacity>
               </View>
+              <TouchableOpacity
+                style={{
+                  flexDirection: isRtl ? 'row-reverse' : 'row',
+                  alignItems: 'center',
+                  padding: Default.fixPadding * 1.5,
+                }}
+                onPress={() => setAccessCode(true)}
+              >
+                <MaterialIcons
+                  name='password'
+                  size={25}
+                  color={Colors.primary}
+                  style={{ marginHorizontal: Default.fixPadding * 0.5, flex: 1 }}
+                />
+                <Text
+                  style={{
+                    ...Fonts.Black16Medium,
+                    flex: 8,
+                  }}
+                >
+                  {tr('enterCode')}
+                </Text>
 
+                <Ionicons
+                  name={isRtl ? 'chevron-back' : 'chevron-forward-outline'}
+                  size={25}
+                  color={Colors.black}
+                  style={{
+                    flex: 1,
+                    justifyContent: 'flex-end',
+                  }}
+                />
+              </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => setVisible(true)}
                 style={{

@@ -8,6 +8,7 @@ import { useAuthContext } from '@contexts/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Loader from '@components/loader';
 import { users } from '@api/users';
+import Toast from 'react-native-root-toast';
 const AccessCode = ({ setAccessCode }) => {
   const { t, i18n } = useTranslation();
   const isRtl = i18n.dir() === 'rtl';
@@ -16,20 +17,38 @@ const AccessCode = ({ setAccessCode }) => {
   }
   const [code, setCode] = useState('');
   const [visible, setVisible] = useState(false);
-  const { logout, userData, setUserData } = useAuthContext();
+  const { userData, setUserData } = useAuthContext();
   const submit = async () => {
-    console.log('submit', userData);
-    userData.userInfo.code = '';
-    console.log('submit2', userData);
+    const userId = userData.id;
     setVisible(true);
     try {
-      const response = await users.accessCode();
+      const response = await users.getAccessCode(userId, code);
+      if (!response.data) {
+        setVisible(false);
+        Toast.show(tr('invalidCode'), {
+          duration: Toast.durations.LONG,
+          position: Toast.positions.CENTER,
+          shadow: true,
+          animation: true,
+          hideOnPress: true,
+          delay: 0,
+          backgroundColor: Colors.red,
+          onHidden: () => {
+            setAccessCode(false);
+          },
+        });
+
+        return;
+      }
+      setUserData(response.data);
+      await AsyncStorage.setItem('@user', JSON.stringify(response.data));
+      setAccessCode(false);
+      setVisible(false);
     } catch (error) {
+      setVisible(false);
+      setAccessCode(false);
       console.log('error submit access code', error);
     }
-    //setAccessCode(false);
-    //     await AsyncStorage.setItem('@user', JSON.stringify(userData));
-    //       setUserData(userData);
   };
   return (
     <View

@@ -9,8 +9,8 @@ import RBSheet from 'react-native-raw-bottom-sheet';
 
 import { formatPhoneNumber } from '@utils/helper';
 
-import HoursList from '@components/StaffHoursList';
-import StaffImage from '@components/StaffImage';
+import HoursList from '@components/admin/StaffHoursList';
+import StaffImage from '@components/admin/StaffImage';
 import { useAdminContext } from '@contexts/AdminContext';
 import { useAuthContext } from '@contexts/AuthContext';
 import Loader from '@components/loader';
