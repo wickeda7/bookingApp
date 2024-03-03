@@ -105,7 +105,7 @@ export const users = {
       }
       return data;
     } catch (error) {
-      console.log('error deleteImage', error);
+      console.log('error unverifiedStaff', error);
       throw error;
     }
   },
@@ -113,6 +113,16 @@ export const users = {
     try {
       const response = await api.deleteStaff(ids, type);
       return response;
+    } catch (error) {
+      console.log('error deleteStaff', error);
+      throw error;
+    }
+  },
+  createAccessCode: async (data) => {
+    try {
+      const response = await api.createAccessCode(data);
+      const { id, attributes } = response.data;
+      return { ...attributes, id };
     } catch (error) {
       console.log('error deleteStaff', error);
       throw error;

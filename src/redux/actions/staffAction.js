@@ -58,3 +58,12 @@ export const deleteStaff = createAsyncThunk('deleteStaff', async ({ ids, type })
     throw error;
   }
 });
+export const createAccessCode = createAsyncThunk('createAccessCode', async (data) => {
+  try {
+    const res = await users.createAccessCode(data);
+    return res;
+  } catch (error) {
+    console.log('error staffAction createAccessCode', error);
+    throw error;
+  }
+});

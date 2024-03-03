@@ -71,9 +71,7 @@ const AuthContextProvider = ({ children }) => {
         role: 1,
         firebase: user.providerId,
       };
-      console.log('updateUserData data', data);
       const res = await users.register(data);
-      console.log('updateUserData res', res);
       await AsyncStorage.setItem('@user', JSON.stringify(res.user));
       setUserData(res.user);
     } else {

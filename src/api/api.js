@@ -194,7 +194,7 @@ export const api = {
   },
   unverifiedStaff: async (id) => {
     try {
-      const url = `${STRAPIURL}/api/user-infos?filters[code][$startsWithi]=${id}_`;
+      const url = `${STRAPIURL}/api/access-codes?filters[code][$startsWithi]=${id}_`;
       const response = await axios.get(url);
       return response.data;
     } catch (error) {
@@ -208,6 +208,16 @@ export const api = {
       const response = await axios.post(url, { data: ids });
       return response.data;
     } catch (error) {
+      throw error;
+    }
+  },
+  createAccessCode: async (data) => {
+    const url = `${STRAPIURL}/api/access-codes`;
+    try {
+      const response = await axios.post(url, { data: data });
+      return response.data;
+    } catch (error) {
+      console.log('error createAccessCode', error);
       throw error;
     }
   },

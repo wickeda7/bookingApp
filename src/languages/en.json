@@ -95,7 +95,7 @@
     "accessCode": "Access Code",
     "generate": "Generate Code",
     "generateDesc": "Click generate to create access code for staff",
-    "add": "Add New Staff",
+    "createCode": "Create Access Code",
     "inputError": "Phone number is required and Access code is required. Please click generate access code.",
     "unverifiedStaff": "Unverified Staff",
     "resend": "Resend"
@@ -232,7 +232,9 @@
     "logout": "Logout",
     "areYouSure": "Are you sure you want to logout?",
     "cancel": "Cancel",
-    "help": "Help & support"
+    "help": "Help & support",
+    "enterCode": "Enter access code",
+    "submit": "Submit"
   },
   "accountScreen": {
     "account": "My account",

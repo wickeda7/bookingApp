@@ -16,6 +16,7 @@ import Loader from '@components/loader';
 import { useSelector, useDispatch } from 'react-redux';
 import { getStoreById, unverifiedStaff } from '@redux/actions/staffAction';
 import { selectRow, resetSeletedRow, getStaff } from '@redux/slices/staffSlice';
+import CreateAccessCode from './CreateAccessCode';
 
 const Staff = (props) => {
   const { t, i18n } = useTranslation();
@@ -24,13 +25,11 @@ const Staff = (props) => {
     return t(`staff:${key}`);
   }
   const [orientation, setOrientation] = useState(null);
-  const { deleteStaff } = useAdminContext();
   const { userData } = useAuthContext();
-
+  const [visible, setVisible] = useState(false);
   const dispatch = useDispatch();
 
   const { staffData, isLoading, totalNewStaff } = useSelector((state) => state.staff);
-  console.log('staffData Staff', staffData);
   function randomNum() {
     return Math.floor(1000 + Math.random() * 9000);
   }
@@ -121,8 +120,7 @@ const Staff = (props) => {
             <View style={[Style.navRightButton, { backgroundColor: Colors.primary }]}>
               <TouchableOpacity
                 onPress={() => {
-                  props.navigation.navigate('EditStaff', { staffId: 'new', randomNum: randomNum() });
-                  dispatch(resetSeletedRow('staff'));
+                  setVisible((prev) => !prev);
                 }}
               >
                 <Icons6 name={'user-plus'} size={22} color={Colors.white} />
@@ -170,6 +168,7 @@ const Staff = (props) => {
           </View>
         ))}
       </ScrollView>
+      <CreateAccessCode visible={visible} setVisible={setVisible} storeId={userData.storeAdmin.id} />
     </KeyboardAvoidingView>
   );
 };

@@ -4,10 +4,12 @@ import { Colors, Default, Fonts, DefaultImage } from '@constants/style';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { useTranslation } from 'react-i18next';
 import MyStatusBar from '@components/myStatusBar';
 import { useAuthContext } from '@contexts/AuthContext';
 import { Avatar } from 'react-native-paper';
+import AccessCode from '@components/AccessCode';
 const ProfileScreen = (props) => {
   const { t, i18n } = useTranslation();
 
@@ -18,6 +20,7 @@ const ProfileScreen = (props) => {
   }
   const { logout, userData } = useAuthContext();
   const [visible, setVisible] = useState(false);
+  const [accessCode, setAccessCode] = useState(false);
   const image = userData?.userInfo?.profileImg?.url || DefaultImage;
   const name = userData?.userInfo?.firstName || ' ';
   const lastName = userData?.userInfo?.lastName || ' ';
@@ -54,361 +57,397 @@ const ProfileScreen = (props) => {
             alignSelf: 'center',
           }}
         />
-
+        <Text style={{ ...Fonts.Black16Bold, textAlign: 'center' }}>
+          {name} {lastName}
+        </Text>
+        <Text style={{ ...Fonts.Grey14Medium, textAlign: 'center' }}>{userData.email}</Text>
         <ScrollView showsVerticalScrollIndicator={false}>
-          <Text style={{ ...Fonts.Black16Bold, textAlign: 'center' }}>
-            {name} {lastName}
-          </Text>
-          <Text style={{ ...Fonts.Grey14Medium, textAlign: 'center' }}>{userData.email}</Text>
-
-          <View
-            style={{
-              marginVertical: Default.fixPadding * 2,
-              marginHorizontal: Default.fixPadding * 1.5,
-              borderRadius: 10,
-              backgroundColor: Colors.white,
-              ...Default.shadow,
-            }}
-          >
-            <TouchableOpacity
-              style={{
-                flexDirection: isRtl ? 'row-reverse' : 'row',
-                alignItems: 'center',
-                padding: Default.fixPadding * 1.5,
-              }}
-              onPress={() => props.navigation.navigate('UserStack', { screen: 'accountScreen' })}
-            >
-              <FontAwesome
-                name='user-o'
-                size={25}
-                color={Colors.primary}
-                style={{ marginHorizontal: Default.fixPadding * 0.5, flex: 1 }}
-              />
-              <Text
+          {accessCode ? (
+            <AccessCode setAccessCode={setAccessCode} />
+          ) : (
+            <>
+              <View
                 style={{
-                  ...Fonts.Black16Medium,
-                  flex: 8,
-                  textAlign: isRtl ? 'right' : 'left',
+                  marginVertical: Default.fixPadding * 2,
+                  marginHorizontal: Default.fixPadding * 1.5,
+                  borderRadius: 10,
+                  backgroundColor: Colors.white,
+                  ...Default.shadow,
                 }}
               >
-                {tr('account')}
-              </Text>
+                <TouchableOpacity
+                  style={{
+                    flexDirection: isRtl ? 'row-reverse' : 'row',
+                    alignItems: 'center',
+                    padding: Default.fixPadding * 1.5,
+                  }}
+                  onPress={() => props.navigation.navigate('UserStack', { screen: 'accountScreen' })}
+                >
+                  <FontAwesome
+                    name='user-o'
+                    size={25}
+                    color={Colors.primary}
+                    style={{ marginHorizontal: Default.fixPadding * 0.5, flex: 1 }}
+                  />
+                  <Text
+                    style={{
+                      ...Fonts.Black16Medium,
+                      flex: 8,
+                      textAlign: isRtl ? 'right' : 'left',
+                    }}
+                  >
+                    {tr('account')}
+                  </Text>
 
-              <Ionicons
-                name={isRtl ? 'chevron-back' : 'chevron-forward-outline'}
-                size={25}
-                color={Colors.black}
-                style={{
-                  flex: 1,
-                  justifyContent: 'flex-end',
-                }}
-              />
-            </TouchableOpacity>
+                  <Ionicons
+                    name={isRtl ? 'chevron-back' : 'chevron-forward-outline'}
+                    size={25}
+                    color={Colors.black}
+                    style={{
+                      flex: 1,
+                      justifyContent: 'flex-end',
+                    }}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={{
+                    flexDirection: isRtl ? 'row-reverse' : 'row',
+                    alignItems: 'center',
+                    padding: Default.fixPadding * 1.5,
+                  }}
+                  onPress={() => setAccessCode(true)}
+                >
+                  <MaterialIcons
+                    name='password'
+                    size={25}
+                    color={Colors.primary}
+                    style={{ marginHorizontal: Default.fixPadding * 0.5, flex: 1 }}
+                  />
+                  <Text
+                    style={{
+                      ...Fonts.Black16Medium,
+                      flex: 8,
+                    }}
+                  >
+                    {tr('enterCode')}
+                  </Text>
 
-            <TouchableOpacity
-              style={{
-                flexDirection: isRtl ? 'row-reverse' : 'row',
-                alignItems: 'center',
-                padding: Default.fixPadding * 1.5,
-              }}
-              onPress={() => props.navigation.navigate('UserStack', { screen: 'chatScreen' })}
-            >
-              <Ionicons
-                name='chatbubble-ellipses-outline'
-                size={25}
-                color={Colors.primary}
-                style={{ marginHorizontal: Default.fixPadding * 0.5, flex: 1 }}
-              />
-              <Text
-                style={{
-                  ...Fonts.Black16Medium,
-                  flex: 8,
-                }}
-              >
-                {tr('chat')}
-              </Text>
+                  <Ionicons
+                    name={isRtl ? 'chevron-back' : 'chevron-forward-outline'}
+                    size={25}
+                    color={Colors.black}
+                    style={{
+                      flex: 1,
+                      justifyContent: 'flex-end',
+                    }}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={{
+                    flexDirection: isRtl ? 'row-reverse' : 'row',
+                    alignItems: 'center',
+                    padding: Default.fixPadding * 1.5,
+                  }}
+                  onPress={() => props.navigation.navigate('UserStack', { screen: 'chatScreen' })}
+                >
+                  <Ionicons
+                    name='chatbubble-ellipses-outline'
+                    size={25}
+                    color={Colors.primary}
+                    style={{ marginHorizontal: Default.fixPadding * 0.5, flex: 1 }}
+                  />
+                  <Text
+                    style={{
+                      ...Fonts.Black16Medium,
+                      flex: 8,
+                    }}
+                  >
+                    {tr('chat')}
+                  </Text>
 
-              <Ionicons
-                name={isRtl ? 'chevron-back' : 'chevron-forward-outline'}
-                size={25}
-                color={Colors.black}
-                style={{
-                  flex: 1,
-                  justifyContent: 'flex-end',
-                }}
-              />
-            </TouchableOpacity>
-          </View>
+                  <Ionicons
+                    name={isRtl ? 'chevron-back' : 'chevron-forward-outline'}
+                    size={25}
+                    color={Colors.black}
+                    style={{
+                      flex: 1,
+                      justifyContent: 'flex-end',
+                    }}
+                  />
+                </TouchableOpacity>
+              </View>
 
-          <View
-            style={{
-              marginBottom: Default.fixPadding * 2,
-              marginHorizontal: Default.fixPadding * 1.5,
-              borderRadius: 10,
-              backgroundColor: Colors.white,
-              ...Default.shadow,
-            }}
-          >
-            <TouchableOpacity
-              onPress={() => props.navigation.navigate('UserStack', { screen: 'favoriteScreen' })}
-              style={{
-                flexDirection: isRtl ? 'row-reverse' : 'row',
-                alignItems: 'center',
-                padding: Default.fixPadding * 1.5,
-              }}
-            >
-              <Ionicons
-                name='heart-outline'
-                size={25}
-                color={Colors.primary}
-                style={{ marginHorizontal: Default.fixPadding * 0.5, flex: 1 }}
-              />
-              <Text
+              <View
                 style={{
-                  ...Fonts.Black16Medium,
-                  flex: 8,
-                }}
-              >
-                {tr('favorite')}
-              </Text>
-
-              <Ionicons
-                name={isRtl ? 'chevron-back' : 'chevron-forward-outline'}
-                size={25}
-                color={Colors.black}
-                style={{
-                  flex: 1,
-                  justifyContent: 'flex-end',
-                }}
-              />
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={{
-                flexDirection: isRtl ? 'row-reverse' : 'row',
-                alignItems: 'center',
-                padding: Default.fixPadding * 1.5,
-              }}
-              onPress={() => props.navigation.navigate('UserStack', { screen: 'languageScreen' })}
-            >
-              <Ionicons
-                name='globe-outline'
-                size={25}
-                color={Colors.primary}
-                style={{ marginHorizontal: Default.fixPadding * 0.5, flex: 1 }}
-              />
-              <Text
-                style={{
-                  ...Fonts.Black16Medium,
-                  flex: 8,
-                }}
-              >
-                {tr('languages')}
-              </Text>
-
-              <Ionicons
-                name={isRtl ? 'chevron-back' : 'chevron-forward-outline'}
-                size={25}
-                color={Colors.black}
-                style={{
-                  flex: 1,
-                  justifyContent: 'flex-end',
-                }}
-              />
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={{
-                flexDirection: isRtl ? 'row-reverse' : 'row',
-                alignItems: 'center',
-                padding: Default.fixPadding * 1.5,
-              }}
-              onPress={() => props.navigation.navigate('UserStack', { screen: 'settingScreen' })}
-            >
-              <Ionicons
-                name='notifications-outline'
-                size={25}
-                color={Colors.primary}
-                style={{ marginHorizontal: Default.fixPadding * 0.5, flex: 1 }}
-              />
-              <Text
-                style={{
-                  ...Fonts.Black16Medium,
-                  flex: 8,
+                  marginBottom: Default.fixPadding * 2,
+                  marginHorizontal: Default.fixPadding * 1.5,
+                  borderRadius: 10,
+                  backgroundColor: Colors.white,
+                  ...Default.shadow,
                 }}
               >
-                {tr('notification')}
-              </Text>
+                <TouchableOpacity
+                  onPress={() => props.navigation.navigate('UserStack', { screen: 'favoriteScreen' })}
+                  style={{
+                    flexDirection: isRtl ? 'row-reverse' : 'row',
+                    alignItems: 'center',
+                    padding: Default.fixPadding * 1.5,
+                  }}
+                >
+                  <Ionicons
+                    name='heart-outline'
+                    size={25}
+                    color={Colors.primary}
+                    style={{ marginHorizontal: Default.fixPadding * 0.5, flex: 1 }}
+                  />
+                  <Text
+                    style={{
+                      ...Fonts.Black16Medium,
+                      flex: 8,
+                    }}
+                  >
+                    {tr('favorite')}
+                  </Text>
 
-              <Ionicons
-                name={isRtl ? 'chevron-back' : 'chevron-forward-outline'}
-                size={25}
-                color={Colors.black}
-                style={{
-                  flex: 1,
-                  justifyContent: 'flex-end',
-                }}
-              />
-            </TouchableOpacity>
+                  <Ionicons
+                    name={isRtl ? 'chevron-back' : 'chevron-forward-outline'}
+                    size={25}
+                    color={Colors.black}
+                    style={{
+                      flex: 1,
+                      justifyContent: 'flex-end',
+                    }}
+                  />
+                </TouchableOpacity>
 
-            <TouchableOpacity
-              style={{
-                flexDirection: isRtl ? 'row-reverse' : 'row',
-                alignItems: 'center',
-                padding: Default.fixPadding * 1.5,
-              }}
-              onPress={() => props.navigation.navigate('UserStack', { screen: 'inviteFriendScreen' })}
-            >
-              <Ionicons
-                name='share-social-outline'
-                size={25}
-                color={Colors.primary}
-                style={{ marginHorizontal: Default.fixPadding * 0.5, flex: 1 }}
-              />
-              <Text
+                <TouchableOpacity
+                  style={{
+                    flexDirection: isRtl ? 'row-reverse' : 'row',
+                    alignItems: 'center',
+                    padding: Default.fixPadding * 1.5,
+                  }}
+                  onPress={() => props.navigation.navigate('UserStack', { screen: 'languageScreen' })}
+                >
+                  <Ionicons
+                    name='globe-outline'
+                    size={25}
+                    color={Colors.primary}
+                    style={{ marginHorizontal: Default.fixPadding * 0.5, flex: 1 }}
+                  />
+                  <Text
+                    style={{
+                      ...Fonts.Black16Medium,
+                      flex: 8,
+                    }}
+                  >
+                    {tr('languages')}
+                  </Text>
+
+                  <Ionicons
+                    name={isRtl ? 'chevron-back' : 'chevron-forward-outline'}
+                    size={25}
+                    color={Colors.black}
+                    style={{
+                      flex: 1,
+                      justifyContent: 'flex-end',
+                    }}
+                  />
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={{
+                    flexDirection: isRtl ? 'row-reverse' : 'row',
+                    alignItems: 'center',
+                    padding: Default.fixPadding * 1.5,
+                  }}
+                  onPress={() => props.navigation.navigate('UserStack', { screen: 'settingScreen' })}
+                >
+                  <Ionicons
+                    name='notifications-outline'
+                    size={25}
+                    color={Colors.primary}
+                    style={{ marginHorizontal: Default.fixPadding * 0.5, flex: 1 }}
+                  />
+                  <Text
+                    style={{
+                      ...Fonts.Black16Medium,
+                      flex: 8,
+                    }}
+                  >
+                    {tr('notification')}
+                  </Text>
+
+                  <Ionicons
+                    name={isRtl ? 'chevron-back' : 'chevron-forward-outline'}
+                    size={25}
+                    color={Colors.black}
+                    style={{
+                      flex: 1,
+                      justifyContent: 'flex-end',
+                    }}
+                  />
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={{
+                    flexDirection: isRtl ? 'row-reverse' : 'row',
+                    alignItems: 'center',
+                    padding: Default.fixPadding * 1.5,
+                  }}
+                  onPress={() => props.navigation.navigate('UserStack', { screen: 'inviteFriendScreen' })}
+                >
+                  <Ionicons
+                    name='share-social-outline'
+                    size={25}
+                    color={Colors.primary}
+                    style={{ marginHorizontal: Default.fixPadding * 0.5, flex: 1 }}
+                  />
+                  <Text
+                    style={{
+                      ...Fonts.Black16Medium,
+                      flex: 8,
+                    }}
+                  >
+                    {tr('invite')}
+                  </Text>
+
+                  <Ionicons
+                    name={isRtl ? 'chevron-back' : 'chevron-forward-outline'}
+                    size={25}
+                    color={Colors.black}
+                    style={{
+                      flex: 1,
+                      justifyContent: 'flex-end',
+                    }}
+                  />
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={{
+                    flexDirection: isRtl ? 'row-reverse' : 'row',
+                    alignItems: 'center',
+                    padding: Default.fixPadding * 1.5,
+                  }}
+                  onPress={() => props.navigation.navigate('StoresStack', { screen: 'couponScreen' })}
+                >
+                  <MaterialCommunityIcons
+                    name='ticket-percent-outline'
+                    size={25}
+                    color={Colors.primary}
+                    style={{ marginHorizontal: Default.fixPadding * 0.5, flex: 1 }}
+                  />
+                  <Text
+                    style={{
+                      ...Fonts.Black16Medium,
+                      flex: 8,
+                    }}
+                  >
+                    {tr('coupon')}
+                  </Text>
+
+                  <Ionicons
+                    name={isRtl ? 'chevron-back' : 'chevron-forward-outline'}
+                    size={25}
+                    color={Colors.black}
+                    style={{
+                      flex: 1,
+                      justifyContent: 'flex-end',
+                    }}
+                  />
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={{
+                    flexDirection: isRtl ? 'row-reverse' : 'row',
+                    alignItems: 'center',
+                    padding: Default.fixPadding * 1.5,
+                  }}
+                  onPress={() => props.navigation.navigate('UserStack', { screen: 'termsOfServicesScreen' })}
+                >
+                  <MaterialCommunityIcons
+                    name='clipboard-text-outline'
+                    size={25}
+                    color={Colors.primary}
+                    style={{ marginHorizontal: Default.fixPadding * 0.5, flex: 1 }}
+                  />
+                  <Text
+                    style={{
+                      ...Fonts.Black16Medium,
+                      flex: 8,
+                    }}
+                  >
+                    {tr('termsOfService')}
+                  </Text>
+
+                  <Ionicons
+                    name={isRtl ? 'chevron-back' : 'chevron-forward-outline'}
+                    size={25}
+                    color={Colors.black}
+                    style={{
+                      flex: 1,
+                      justifyContent: 'flex-end',
+                    }}
+                  />
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={{
+                    flexDirection: isRtl ? 'row-reverse' : 'row',
+                    padding: Default.fixPadding * 1.5,
+                    alignItems: 'center',
+                  }}
+                  onPress={() => props.navigation.navigate('UserStack', { screen: 'helpSupportScreen' })}
+                >
+                  <MaterialCommunityIcons
+                    name='help-circle-outline'
+                    size={25}
+                    color={Colors.primary}
+                    style={{ marginHorizontal: Default.fixPadding * 0.5, flex: 1 }}
+                  />
+                  <Text
+                    style={{
+                      ...Fonts.Black16Medium,
+                      flex: 8,
+                    }}
+                  >
+                    {tr('help')}
+                  </Text>
+
+                  <Ionicons
+                    name={isRtl ? 'chevron-back' : 'chevron-forward-outline'}
+                    size={25}
+                    color={Colors.black}
+                    style={{
+                      flex: 1,
+                      justifyContent: 'flex-end',
+                    }}
+                  />
+                </TouchableOpacity>
+              </View>
+
+              <TouchableOpacity
+                onPress={() => setVisible(true)}
                 style={{
-                  ...Fonts.Black16Medium,
-                  flex: 8,
+                  flexDirection: isRtl ? 'row-reverse' : 'row',
+                  alignItems: 'center',
+                  marginBottom: Default.fixPadding * 2,
+                  marginHorizontal: Default.fixPadding * 1.5,
+                  padding: Default.fixPadding * 1.5,
+                  borderRadius: 10,
+                  backgroundColor: Colors.white,
+                  ...Default.shadow,
                 }}
               >
-                {tr('invite')}
-              </Text>
-
-              <Ionicons
-                name={isRtl ? 'chevron-back' : 'chevron-forward-outline'}
-                size={25}
-                color={Colors.black}
-                style={{
-                  flex: 1,
-                  justifyContent: 'flex-end',
-                }}
-              />
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={{
-                flexDirection: isRtl ? 'row-reverse' : 'row',
-                alignItems: 'center',
-                padding: Default.fixPadding * 1.5,
-              }}
-              onPress={() => props.navigation.navigate('StoresStack', { screen: 'couponScreen' })}
-            >
-              <MaterialCommunityIcons
-                name='ticket-percent-outline'
-                size={25}
-                color={Colors.primary}
-                style={{ marginHorizontal: Default.fixPadding * 0.5, flex: 1 }}
-              />
-              <Text
-                style={{
-                  ...Fonts.Black16Medium,
-                  flex: 8,
-                }}
-              >
-                {tr('coupon')}
-              </Text>
-
-              <Ionicons
-                name={isRtl ? 'chevron-back' : 'chevron-forward-outline'}
-                size={25}
-                color={Colors.black}
-                style={{
-                  flex: 1,
-                  justifyContent: 'flex-end',
-                }}
-              />
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={{
-                flexDirection: isRtl ? 'row-reverse' : 'row',
-                alignItems: 'center',
-                padding: Default.fixPadding * 1.5,
-              }}
-              onPress={() => props.navigation.navigate('UserStack', { screen: 'termsOfServicesScreen' })}
-            >
-              <MaterialCommunityIcons
-                name='clipboard-text-outline'
-                size={25}
-                color={Colors.primary}
-                style={{ marginHorizontal: Default.fixPadding * 0.5, flex: 1 }}
-              />
-              <Text
-                style={{
-                  ...Fonts.Black16Medium,
-                  flex: 8,
-                }}
-              >
-                {tr('termsOfService')}
-              </Text>
-
-              <Ionicons
-                name={isRtl ? 'chevron-back' : 'chevron-forward-outline'}
-                size={25}
-                color={Colors.black}
-                style={{
-                  flex: 1,
-                  justifyContent: 'flex-end',
-                }}
-              />
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={{
-                flexDirection: isRtl ? 'row-reverse' : 'row',
-                padding: Default.fixPadding * 1.5,
-                alignItems: 'center',
-              }}
-              onPress={() => props.navigation.navigate('UserStack', { screen: 'helpSupportScreen' })}
-            >
-              <MaterialCommunityIcons
-                name='help-circle-outline'
-                size={25}
-                color={Colors.primary}
-                style={{ marginHorizontal: Default.fixPadding * 0.5, flex: 1 }}
-              />
-              <Text
-                style={{
-                  ...Fonts.Black16Medium,
-                  flex: 8,
-                }}
-              >
-                {tr('help')}
-              </Text>
-
-              <Ionicons
-                name={isRtl ? 'chevron-back' : 'chevron-forward-outline'}
-                size={25}
-                color={Colors.black}
-                style={{
-                  flex: 1,
-                  justifyContent: 'flex-end',
-                }}
-              />
-            </TouchableOpacity>
-          </View>
-
-          <TouchableOpacity
-            onPress={() => setVisible(true)}
-            style={{
-              flexDirection: isRtl ? 'row-reverse' : 'row',
-              alignItems: 'center',
-              marginBottom: Default.fixPadding * 2,
-              marginHorizontal: Default.fixPadding * 1.5,
-              padding: Default.fixPadding * 1.5,
-              borderRadius: 10,
-              backgroundColor: Colors.white,
-              ...Default.shadow,
-            }}
-          >
-            <Ionicons
-              name='log-out-outline'
-              size={25}
-              color={Colors.red}
-              style={{ marginHorizontal: Default.fixPadding * 0.5 }}
-            />
-            <Text style={Fonts.Red16Medium}>{tr('logout')}</Text>
-          </TouchableOpacity>
+                <Ionicons
+                  name='log-out-outline'
+                  size={25}
+                  color={Colors.red}
+                  style={{ marginHorizontal: Default.fixPadding * 0.5 }}
+                />
+                <Text style={Fonts.Red16Medium}>{tr('logout')}</Text>
+              </TouchableOpacity>
+            </>
+          )}
 
           <Modal animationType='fade' transparent={true} visible={visible}>
             <View

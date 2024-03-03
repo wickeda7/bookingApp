@@ -6,6 +6,7 @@ import {
   uploadImage,
   unverifiedStaff,
   deleteStaff,
+  createAccessCode,
 } from '../actions/staffAction';
 import { use } from 'i18next';
 
@@ -64,10 +65,6 @@ export const staffSlice = createSlice({
           return i;
         });
       }
-      if (method === 'post') {
-        state.newStaff.unshift(data);
-        state.totalNewStaff = state.totalNewStaff + 1;
-      }
     },
   },
   extraReducers: (builder) => {
@@ -97,14 +94,14 @@ export const staffSlice = createSlice({
             return item;
           });
         }
-        if (id) {
-          state.newStaff = state.newStaff.map((item) => {
-            if (item.id === id) {
-              return { ...item, ...data };
-            }
-            return item;
-          });
-        }
+        // if (id) {
+        //   state.newStaff = state.newStaff.map((item) => {
+        //     if (item.id === id) {
+        //       return { ...item, ...data };
+        //     }
+        //     return item;
+        //   });
+        // }
         state.isLoading = false;
       })
       .addCase(updateUser.pending, (state, action) => {
@@ -113,7 +110,19 @@ export const staffSlice = createSlice({
       .addCase(updateUser.rejected, (state, action) => {
         state.isLoading = false;
       })
+      .addCase(createAccessCode.fulfilled, (state, action) => {
+        const data = action.payload;
+        state.newStaff.unshift(data);
+        state.totalNewStaff = state.totalNewStaff + 1;
 
+        state.isLoading = false;
+      })
+      .addCase(createAccessCode.pending, (state, action) => {
+        state.isLoading = true;
+      })
+      .addCase(createAccessCode.rejected, (state, action) => {
+        state.isLoading = false;
+      })
       .addCase(updateEmail.fulfilled, (state, action) => {
         const userId = action.payload.id;
         const data = action.payload.data;

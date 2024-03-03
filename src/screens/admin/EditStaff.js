@@ -1,10 +1,9 @@
 import { KeyboardAvoidingView, Platform, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import MyStatusBar from '@components/myStatusBar';
 import { Colors, Default, Fonts, StaffColors } from '@constants/style';
 import Style from '@theme/style';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import FontIcon from 'react-native-vector-icons/FontAwesome';
 import { useTranslation } from 'react-i18next';
 import RBSheet from 'react-native-raw-bottom-sheet';
 
@@ -15,37 +14,20 @@ import StaffImage from '@components/StaffImage';
 import { useAdminContext } from '@contexts/AdminContext';
 import { useAuthContext } from '@contexts/AuthContext';
 import Loader from '@components/loader';
-import { users } from '@api/users';
-import { useFocusEffect } from '@react-navigation/native';
 import { useSelector, useDispatch } from 'react-redux';
 import { updateUser, updateEmail } from '@redux/actions/staffAction';
-import { useIsFocused } from '@react-navigation/native';
-import { updateStaffState } from '@redux/slices/staffSlice';
-import * as Linking from 'expo-linking';
 const EditStaff = (props) => {
   const { navigation, route } = props;
 
   const staffId = route.params?.staffId;
   const ranNum = route.params?.randomNum;
   const userInfoId = route.params?.userInfoId;
-  const isFocused = useIsFocused();
   const { t, i18n } = useTranslation();
   const isRtl = i18n.dir() === 'rtl';
   function tr(key) {
     return t(`staff:${key}`);
   }
-  const staffObj = {
-    about: '',
-    displayColor: '',
-    experience: '',
-    firstName: '',
-    hours: [],
-    images: [],
-    lastName: '',
-    phoneNumber: '',
-    profileImg: '',
-    specialty: '',
-  };
+
   const { visible, setVisible, setImageType, setSelectedImage } = useAdminContext();
   const { userData } = useAuthContext();
   const refRBSheet = useRef();
@@ -56,36 +38,20 @@ const EditStaff = (props) => {
   const [formattedNumber, setFormattedNumber] = useState();
 
   const [imageErr, setImageErr] = useState(false);
-  const [inputErr, setInputErr] = useState([]);
-  const [info, setInfo] = useState(false);
-  const storeId = userData?.storeAdmin?.id;
   const { staffData, isLoading, newStaff } = useSelector((state) => state.staff);
   const dispatch = useDispatch();
   useEffect(() => {
-    if (staffId && staffId !== 'new') {
+    if (staffId) {
       parseReduceData(staffId);
     }
     if (userInfoId) {
       const temp = newStaff.find((item) => item.id === userInfoId);
       setUserInfo(temp);
       setFormattedNumber(formatPhoneNumber(temp.phoneNumber));
-      // setUserInfo(staffObj);
     }
-    setInputErr([]);
+
     setImageErr(false);
   }, [ranNum]);
-
-  // useFocusEffect(
-  //   useCallback(() => {
-  //     let isActive = true;
-  //     // if (staffId !== 'new') {
-  //     //   parseReduceData(staffId);
-  //     // }
-  //     return () => {
-  //       isActive = false;
-  //     };
-  //   }, [staffId])
-  // );
 
   const parseReduceData = (id) => {
     const temp = staffData.find((item) => item.id === id);
@@ -105,46 +71,22 @@ const EditStaff = (props) => {
 
   const handleOnchange = (text, input) => {
     setImageErr(false);
-    setInputErr([]);
     setUserInfo((prevState) => ({ ...prevState, [input]: text }));
   };
   const onTextChange = (number) => {
     setImageErr(false);
-    setInputErr([]);
     const formattedNumber = formatPhoneNumber(number);
     setFormattedNumber(formattedNumber);
     setUserInfo((prevState) => ({ ...prevState, phoneNumber: number }));
   };
   const updateUserData = async () => {
     setImageErr(false);
-    setInputErr([]);
-    let err = [];
+
     const id = userInfo.id;
-    if (userInfo.phoneNumber !== '') {
-      userInfo.phoneNumber = userInfo.phoneNumber.replace(/[^\d\+]/g, '');
-    }
-    const redirectUrl = Linking.createURL('profileScreen', {
-      queryParams: { access: 'code' },
-    });
-    if (!id) {
-      if (!userInfo.code) {
-        err.push('code');
-      }
-      if (!userInfo.phoneNumber) {
-        err.push('phoneNumber');
-      }
-      if (err.length > 0) {
-        setInputErr(err);
-        return;
-      }
-      const res = await users.createStaff(userInfo);
-      if (res) {
-        setUserInfo(res);
-        dispatch(updateStaffState({ data: res, method: 'post' }));
-      }
-      return;
-    }
     const data = { ...userInfo };
+    if (data.phoneNumber !== '') {
+      data.phoneNumber = data.phoneNumber.replace(/[^\d\+]/g, '');
+    }
     delete data.images;
     delete data.profileImg;
     delete data.id;
@@ -157,21 +99,13 @@ const EditStaff = (props) => {
     dispatch(updateUser({ userId: user?.id, id, data }));
     //const newStaff = { ...user, userInfo: { ...user.userInfo, ...data } };
   };
-  const generateCode = () => {
-    let r = (Math.random() + 1).toString(36).substring(6);
 
-    handleOnchange(`${storeId}_${r}`, 'code');
-  };
   const navBack = () => {
     setUserInfo({});
     setEmail('');
     setFormattedNumber('');
     setUser(null);
-    if (user) {
-      props.navigation.navigate('Staff');
-    } else {
-      props.navigation.navigate('UnverifiedStaff');
-    }
+    props.navigation.navigate('Staff');
   };
   if (!userInfo) return <Loader visible={true} />;
   return (
@@ -187,7 +121,7 @@ const EditStaff = (props) => {
         >
           <Ionicons name={isRtl ? 'arrow-forward' : 'arrow-back'} size={25} color={Colors.white} />
         </TouchableOpacity>
-        <Text style={Fonts.White20Bold}>{userInfo?.id ? tr('edit') : tr('add')}</Text>
+        <Text style={Fonts.White20Bold}>{tr('edit')}</Text>
       </View>
       <View style={[Style.contentContainer, { flexDirection: isRtl ? 'row-reverse' : 'row' }]}>
         <View
@@ -224,11 +158,9 @@ const EditStaff = (props) => {
             flexDirection: 'column',
           }}
         >
-          <Text style={[Fonts.Black15Medium, { color: inputErr.includes('phoneNumber') ? Colors.red : Colors.black }]}>
-            {tr('phoneNumber')}
-          </Text>
+          <Text style={[Fonts.Black15Medium]}>{tr('phoneNumber')}</Text>
           <TextInput
-            style={[Style.inputStyle, { borderColor: inputErr.includes('phoneNumber') ? Colors.red : Colors.grey }]}
+            style={[Style.inputStyle]}
             onChangeText={(text) => onTextChange(text)}
             selectionColor={Colors.primary}
             value={formattedNumber}
@@ -241,64 +173,14 @@ const EditStaff = (props) => {
             flexDirection: 'column',
           }}
         >
-          {user ? (
-            <>
-              <Text style={Fonts.Black15Medium}>{tr('emailAddress')}</Text>
-              <TextInput
-                style={Style.inputStyle}
-                onChangeText={(text) => setEmail(text)}
-                selectionColor={Colors.primary}
-                value={email}
-                keyboardType='email-address'
-              />
-            </>
-          ) : (
-            <>
-              <Text style={[Fonts.Black15Medium, { color: inputErr.includes('code') ? Colors.red : Colors.black }]}>
-                {tr('accessCode')}{' '}
-                <TouchableOpacity onPress={() => setInfo((prev) => !prev)}>
-                  <FontIcon name={'question-circle-o'} size={20} color={Colors.info} />
-                </TouchableOpacity>
-              </Text>
-              <TextInput
-                style={[
-                  Style.inputStyle,
-                  { borderColor: inputErr.includes('code') ? Colors.red : Colors.grey, position: 'relative' },
-                ]}
-                onChangeText={(text) => handleOnchange(text, 'code')}
-                selectionColor={Colors.primary}
-                value={userInfo.code}
-                editable={false}
-              />
-              <TouchableOpacity
-                onPress={() => generateCode()}
-                style={[
-                  Style.buttonStyle,
-                  {
-                    backgroundColor: Colors.primary,
-                    width: 110,
-                    position: 'absolute',
-                    paddingVertical: 6,
-                    right: 32,
-                    top: 21,
-                    borderRadius: 5,
-                  },
-                ]}
-              >
-                <Text style={[Fonts.white14SemiBold, { color: Colors.white }]}>{tr('generate')}</Text>
-              </TouchableOpacity>
-              {info && (
-                <View style={[Style.infoAlert, { position: 'relative', paddingLeft: 30 }]}>
-                  <View style={{ position: 'absolute', top: 4, left: 5 }}>
-                    <FontIcon name={'question-circle-o'} size={20} color={Colors.info} />
-                  </View>
-                  <Text style={Style.infoText}>
-                    <Text style={{ marginLeft: 15, paddingLeft: 25 }}>{tr('generateDesc')}</Text>
-                  </Text>
-                </View>
-              )}
-            </>
-          )}
+          <Text style={Fonts.Black15Medium}>{tr('emailAddress')}</Text>
+          <TextInput
+            style={Style.inputStyle}
+            onChangeText={(text) => setEmail(text)}
+            selectionColor={Colors.primary}
+            value={email}
+            keyboardType='email-address'
+          />
         </View>
       </View>
       <View
@@ -494,16 +376,7 @@ const EditStaff = (props) => {
               </Text>
             </View>
           )}
-          {inputErr.length > 0 && (
-            <View style={[Style.errorAlert, { position: 'relative', paddingLeft: 30 }]}>
-              <View style={{ position: 'absolute', top: 4, left: 5 }}>
-                <Ionicons name={'information-circle-outline'} size={20} color={Colors.red} />
-              </View>
-              <Text style={Style.errorText}>
-                <Text style={{ marginLeft: 15, paddingLeft: 25 }}>{tr('inputError')}</Text>
-              </Text>
-            </View>
-          )}
+
           {user && (
             <View style={[Style.infoAlert, { position: 'relative', paddingLeft: 30 }]}>
               <View style={{ position: 'absolute', top: 4, left: 5 }}>
