@@ -16,6 +16,8 @@ import { selectRow, resetSeletedRow } from '@redux/slices/staffSlice';
 import { createAccessCode } from '@redux/actions/staffAction';
 import CreateAccessCode from './CreateAccessCode';
 import { useAuthContext } from '@contexts/AuthContext';
+import UnverifiedRow from '@components/admin/UnverifiedRow';
+
 const UnverifiedStaff = (props) => {
   const ranNum = props.route.params?.randomNum;
   const { t, i18n } = useTranslation();
@@ -29,6 +31,7 @@ const UnverifiedStaff = (props) => {
   const dispatch = useDispatch();
   const { newStaff, isLoading } = useSelector((state) => state.staff);
   const [visible, setVisible] = useState(false);
+  const [disable, setDisable] = useState(false);
 
   const { userData } = useAuthContext();
   useEffect(() => {
@@ -80,7 +83,7 @@ const UnverifiedStaff = (props) => {
     dispatch(resetSeletedRow('unverified'));
     setVisible(true);
   };
-  const handlePressSend = async (item) => {};
+
   const handleDelete = () => {
     const staffIds = newStaff.reduce((acc, item) => {
       if (item.selected) {
@@ -137,59 +140,15 @@ const UnverifiedStaff = (props) => {
       </View>
       <ScrollView showsVerticalScrollIndicator={false}>
         {data.map((item, index) => {
-          const size = header[index]?.size ? header[index].size : 1;
-          const headerName = header[index]?.name ? header[index].name : '';
           return (
-            <View key={index}>
-              <TouchableOpacity
-                style={[Style.contentContainer, { flexDirection: isRtl ? 'row-reverse' : 'row' }]}
-                onPress={() => handlePress(item)}
-                onLongPress={() => handleLongPress(item)}
-              >
-                <View style={[Style.tableRow, item.selected && Style.tableRowSelected]}>
-                  <View
-                    style={{
-                      flex: 1.5,
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                      marginLeft: Default.fixPadding * 1.5,
-                    }}
-                  >
-                    <Text style={{ fontSize: 14, marginLeft: Default.fixPadding }}>
-                      {item.firstName} {item.lastName}
-                    </Text>
-                  </View>
-                  <View style={{ flex: 1 }}>
-                    <Text style={{ fontSize: 14, marginLeft: Default.fixPadding }}>
-                      {formatPhoneNumber(item.phoneNumber)}
-                    </Text>
-                  </View>
-                  <View style={{ flex: 1 }}>
-                    <Text style={{ fontSize: 14, marginLeft: Default.fixPadding }}>{item.code}</Text>
-                  </View>
-                  <View style={{ flex: 1 }}>
-                    <Text style={{ fontSize: 14, marginLeft: Default.fixPadding }}>
-                      {moment(item.createdAt).format('MM-DD-YYYY h:mm A')}
-                    </Text>
-                  </View>
-                  <View style={{ flex: 1 }}>
-                    <Text style={{ fontSize: 14, marginLeft: Default.fixPadding }}>
-                      {moment(item.updatedAt).format('MM-DD-YYYY h:mm A')}
-                    </Text>
-                  </View>
-                  <View style={{ flex: 1 }}>
-                    <TouchableOpacity
-                      style={[Style.buttonStyle, { backgroundColor: Colors.success, width: 80 }]}
-                      onPress={() => handlePressSend(item)}
-                      onLongPress={() => handleLongPress(item)}
-                    >
-                      <Text style={Fonts.White14Bold}>{tr('resend')}</Text>
-                    </TouchableOpacity>
-                  </View>
-                </View>
-              </TouchableOpacity>
-              {lastRow !== index && <View style={[Style.divider, { marginHorizontal: Default.fixPadding * 1.5 }]} />}
-            </View>
+            <UnverifiedRow
+              item={item}
+              index={index}
+              handlePress={handlePress}
+              handleLongPress={handleLongPress}
+              lastRow={lastRow}
+              key={index}
+            />
           );
         })}
       </ScrollView>
