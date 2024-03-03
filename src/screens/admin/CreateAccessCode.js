@@ -11,7 +11,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { formatPhoneNumber } from '@utils/helper';
 import { useSelector, useDispatch } from 'react-redux';
 import { createAccessCode } from '@redux/actions/staffAction';
-const CreateAccessCode = ({ visible, setVisible, storeId }) => {
+const CreateAccessCode = ({ visible, setVisible, storeId, data }) => {
   const { t, i18n } = useTranslation();
   const isRtl = i18n.dir() === 'rtl';
   function tr(key) {
@@ -31,6 +31,11 @@ const CreateAccessCode = ({ visible, setVisible, storeId }) => {
     setInputErr([]);
     if (visible) {
       refRBSheet.current.open();
+      if (data) {
+        setUserInfo(data);
+      } else {
+        setUserInfo({});
+      }
     } else {
       refRBSheet.current.close();
     }
@@ -49,21 +54,30 @@ const CreateAccessCode = ({ visible, setVisible, storeId }) => {
     handleOnchange(`${storeId}_${r}`, 'code');
   };
   const updateUserData = async () => {
-    if (userInfo?.phoneNumber && userInfo?.phoneNumber !== '') {
-      userInfo.phoneNumber = userInfo.phoneNumber.replace(/[^\d\+]/g, '');
+    let method = 'POST';
+    let temp = { ...userInfo };
+    if (temp.id) {
+      method = 'PUT';
+      delete temp.createdAt;
+      delete temp.updatedAt;
+      delete temp.selected;
+    }
+    if (temp?.phoneNumber && temp?.phoneNumber !== '') {
+      temp.phoneNumber = temp.phoneNumber.replace(/[^\d\+]/g, '');
     }
     let err = [];
-    if (!userInfo.code) {
+    if (!temp.code) {
       err.push('code');
     }
-    if (!userInfo.phoneNumber) {
+    if (!temp.phoneNumber) {
       err.push('phoneNumber');
     }
     if (err.length > 0) {
       setInputErr(err);
       return;
     }
-    dispatch(createAccessCode(userInfo));
+
+    dispatch(createAccessCode({ data: temp, method }));
     setVisible(false);
   };
   return (

@@ -1,7 +1,7 @@
 import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import MyStatusBar from '@components/myStatusBar';
-import { Colors, Default, Fonts, DefaultImage } from '@constants/style';
+import { Colors, Default, Fonts } from '@constants/style';
 import Style from '@theme/style';
 import { useTranslation } from 'react-i18next';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -10,11 +10,12 @@ import * as ScreenOrientation from 'expo-screen-orientation';
 import Header from '@components/table/Header';
 import Loader from '@components/loader';
 import { useSelector, useDispatch } from 'react-redux';
-import { Avatar } from 'react-native-paper';
 import { formatPhoneNumber } from '@utils/helper';
 import moment from 'moment';
 import { selectRow, resetSeletedRow } from '@redux/slices/staffSlice';
-import { deleteStaff } from '@redux/actions/staffAction';
+import { createAccessCode } from '@redux/actions/staffAction';
+import CreateAccessCode from './CreateAccessCode';
+import { useAuthContext } from '@contexts/AuthContext';
 const UnverifiedStaff = (props) => {
   const ranNum = props.route.params?.randomNum;
   const { t, i18n } = useTranslation();
@@ -23,11 +24,13 @@ const UnverifiedStaff = (props) => {
     return t(`staff:${key}`);
   }
   const [orientation, setOrientation] = useState(null);
-  const [smsAvailable, setSmsAvailable] = useState(false);
   const [data, setData] = useState([]);
+  const [editData, setEditData] = useState(null);
   const dispatch = useDispatch();
   const { newStaff, isLoading } = useSelector((state) => state.staff);
+  const [visible, setVisible] = useState(false);
 
+  const { userData } = useAuthContext();
   useEffect(() => {
     if (!ranNum) return;
     setData(newStaff);
@@ -61,11 +64,10 @@ const UnverifiedStaff = (props) => {
     { size: 1, name: 'phone' },
     { size: 1, name: 'accessCode' },
     { size: 1, name: 'createdAt' },
+    { size: 1, name: 'updatedAt' },
     { size: 1, name: '' },
   ];
-  function randomNum() {
-    return Math.floor(1000 + Math.random() * 9000);
-  }
+
   //const rows = tableRows(data, header, 'staff');
   const lastRow = data.length - 1;
 
@@ -74,11 +76,9 @@ const UnverifiedStaff = (props) => {
   };
 
   const handleLongPress = (item) => {
+    setEditData(item);
     dispatch(resetSeletedRow('unverified'));
-    props.navigation.navigate('EditStaff', {
-      userInfoId: item.id,
-      randomNum: randomNum(),
-    });
+    setVisible(true);
   };
   const handlePressSend = async (item) => {};
   const handleDelete = () => {
@@ -88,7 +88,7 @@ const UnverifiedStaff = (props) => {
       }
       return acc;
     }, []);
-    dispatch(deleteStaff({ ids: staffIds, type: 'unverified' }));
+    dispatch(createAccessCode({ data: staffIds, method: 'DELETE' }));
   };
   if (isLoading) return <Loader visible={true} />;
   return (
@@ -117,16 +117,11 @@ const UnverifiedStaff = (props) => {
             <View style={[Style.navRightButton, { backgroundColor: Colors.primary }]}>
               <TouchableOpacity
                 onPress={() => {
-                  const selectedStaff = newStaff.find((i) => i.selected);
-                  if (!selectedStaff) return;
-                  props.navigation.navigate('EditStaff', {
-                    userInfoId: selectedStaff.id,
-                    randomNum: randomNum(),
-                  });
-                  dispatch(resetSeletedRow('unverified'));
+                  setEditData(null);
+                  setVisible((prev) => !prev);
                 }}
               >
-                <Icons6 name={'user-gear'} size={22} color={Colors.white} />
+                <Icons6 name={'user-plus'} size={22} color={Colors.white} />
               </TouchableOpacity>
             </View>
             <View style={[Style.navRightButton, { backgroundColor: Colors.primary }]}>
@@ -143,7 +138,6 @@ const UnverifiedStaff = (props) => {
       <ScrollView showsVerticalScrollIndicator={false}>
         {data.map((item, index) => {
           const size = header[index]?.size ? header[index].size : 1;
-          const color = item?.displayColor ? item.displayColor : 'black';
           const headerName = header[index]?.name ? header[index].name : '';
           return (
             <View key={index}>
@@ -161,13 +155,7 @@ const UnverifiedStaff = (props) => {
                       marginLeft: Default.fixPadding * 1.5,
                     }}
                   >
-                    <Avatar.Image
-                      size={35}
-                      source={{
-                        uri: `${DefaultImage}`,
-                      }}
-                    />
-                    <Text style={{ fontSize: 14, marginLeft: Default.fixPadding, color: color }}>
+                    <Text style={{ fontSize: 14, marginLeft: Default.fixPadding }}>
                       {item.firstName} {item.lastName}
                     </Text>
                   </View>
@@ -181,7 +169,12 @@ const UnverifiedStaff = (props) => {
                   </View>
                   <View style={{ flex: 1 }}>
                     <Text style={{ fontSize: 14, marginLeft: Default.fixPadding }}>
-                      {moment(item.createdAt).format('MM-DD-YYYY')}
+                      {moment(item.createdAt).format('MM-DD-YYYY h:mm A')}
+                    </Text>
+                  </View>
+                  <View style={{ flex: 1 }}>
+                    <Text style={{ fontSize: 14, marginLeft: Default.fixPadding }}>
+                      {moment(item.updatedAt).format('MM-DD-YYYY h:mm A')}
                     </Text>
                   </View>
                   <View style={{ flex: 1 }}>
@@ -200,6 +193,7 @@ const UnverifiedStaff = (props) => {
           );
         })}
       </ScrollView>
+      <CreateAccessCode visible={visible} setVisible={setVisible} storeId={userData.storeAdmin.id} data={editData} />
     </KeyboardAvoidingView>
   );
 };

@@ -5,7 +5,6 @@ const STRAPIURL = 'http://localhost:1337';
 export const api = {
   getUser: async (email) => {
     const url = `${STRAPIURL}/api/users/${email}`;
-    // console.warn('url', url);
     try {
       const response = await axios.get(url);
 
@@ -16,7 +15,6 @@ export const api = {
   },
   register: async (data) => {
     const url = `${STRAPIURL}/api/users/register`;
-    // console.warn('url', url);
     const headers = {
       'Content-Type': 'application/json',
       accept: 'application/json',
@@ -131,20 +129,11 @@ export const api = {
       const response = await axios.put(url, data);
       return response.data;
     } catch (error) {
-      console.log('error updateUser', error);
+      console.log('error updateEmail', error);
       throw error;
     }
   },
-  createStaff: async (data) => {
-    try {
-      const url = `${STRAPIURL}/api/user-infos`;
-      const res = await axios.post(url, { data: data });
-      return res.data;
-    } catch (error) {
-      console.log('error createStaff', error);
-      throw error;
-    }
-  },
+
   updateUser: async (id, data) => {
     try {
       const url = `${STRAPIURL}/api/user-infos/${id}`;
@@ -201,21 +190,24 @@ export const api = {
       throw error;
     }
   },
-  deleteStaff: async (ids, type) => {
-    try {
-      // type = 'unverified'  api/user-infos/deleteStaff
-      const url = `${STRAPIURL}/api/user-infos/deleteStaff`;
-      const response = await axios.post(url, { data: ids });
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
-  },
-  createAccessCode: async (data) => {
+
+  createAccessCode: async ({ data, method }) => {
     const url = `${STRAPIURL}/api/access-codes`;
     try {
-      const response = await axios.post(url, { data: data });
-      return response.data;
+      if (method === 'PUT') {
+        const id = data.id;
+        delete data.id;
+        const response = await axios.put(`${url}/${id}`, { data });
+        return response.data;
+      } else if (method === 'POST') {
+        const response = await axios.post(url, { data: data });
+        return response.data;
+      } else if (method === 'DELETE') {
+        const response = await axios.post(`${url}/deleteCode`, { data });
+        return response.data;
+      }
+      // const response = await axios.post(url, { data: data });
+      // return response.data;
     } catch (error) {
       console.log('error createAccessCode', error);
       throw error;

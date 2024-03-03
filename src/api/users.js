@@ -60,19 +60,7 @@ export const users = {
       throw error;
     }
   },
-  createStaff: async (data) => {
-    try {
-      delete data.images;
-      delete data.profileImg;
-      if (data.experience === '') delete data.experience;
-      const response = await api.createStaff(data);
-      const { id, attributes } = response.data;
-      return { ...attributes, id };
-    } catch (error) {
-      console.log('error createStaff', error);
-      throw error;
-    }
-  },
+
   uploadProfileImage: async (id, file, type) => {
     try {
       const response = await api.uploadProfileImage(id, file, type);
@@ -109,22 +97,14 @@ export const users = {
       throw error;
     }
   },
-  deleteStaff: async (ids, type) => {
+
+  createAccessCode: async ({ data, method }) => {
     try {
-      const response = await api.deleteStaff(ids, type);
-      return response;
-    } catch (error) {
-      console.log('error deleteStaff', error);
-      throw error;
-    }
-  },
-  createAccessCode: async (data) => {
-    try {
-      const response = await api.createAccessCode(data);
+      const response = await api.createAccessCode({ data, method });
       const { id, attributes } = response.data;
       return { ...attributes, id };
     } catch (error) {
-      console.log('error deleteStaff', error);
+      console.log('error createAccessCode', error);
       throw error;
     }
   },

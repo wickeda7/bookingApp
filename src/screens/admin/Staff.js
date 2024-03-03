@@ -8,7 +8,6 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import Icons6 from 'react-native-vector-icons/FontAwesome6';
 import * as ScreenOrientation from 'expo-screen-orientation';
 import { useAuthContext } from '@contexts/AuthContext';
-import { useAdminContext } from '@contexts/AdminContext';
 import Header from '@components/table/Header';
 import Row from '@components/table/Row';
 import { tableRows } from '@utils/helper';

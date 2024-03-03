@@ -5,7 +5,6 @@ import {
   updateEmail,
   uploadImage,
   unverifiedStaff,
-  deleteStaff,
   createAccessCode,
 } from '../actions/staffAction';
 import { use } from 'i18next';
@@ -84,7 +83,6 @@ export const staffSlice = createSlice({
         const userId = action.payload.userId;
         const data = action.payload.data;
         const id = action.payload.id;
-        console.log('updateUser.fulfilled', userId, data, id);
         if (userId) {
           state.staffData = state.staffData.map((item) => {
             if (item.id === userId) {
@@ -94,14 +92,6 @@ export const staffSlice = createSlice({
             return item;
           });
         }
-        // if (id) {
-        //   state.newStaff = state.newStaff.map((item) => {
-        //     if (item.id === id) {
-        //       return { ...item, ...data };
-        //     }
-        //     return item;
-        //   });
-        // }
         state.isLoading = false;
       })
       .addCase(updateUser.pending, (state, action) => {
@@ -111,9 +101,22 @@ export const staffSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(createAccessCode.fulfilled, (state, action) => {
-        const data = action.payload;
-        state.newStaff.unshift(data);
-        state.totalNewStaff = state.totalNewStaff + 1;
+        const data = action.payload.data;
+        const method = action.payload.method;
+        if (method === 'PUT') {
+          state.newStaff = state.newStaff.map((item) => {
+            if (item.id === data.id) {
+              return { ...item, ...data };
+            }
+            return item;
+          });
+        } else if (method === 'POST') {
+          state.newStaff.unshift(data);
+          state.totalNewStaff = state.totalNewStaff + 1;
+        } else if (method === 'DELETE') {
+          state.newStaff = state.newStaff.filter((i) => !data.includes(i.id));
+          state.totalNewStaff = state.totalNewStaff - data.length;
+        }
 
         state.isLoading = false;
       })
@@ -185,23 +188,6 @@ export const staffSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(unverifiedStaff.rejected, (state, action) => {
-        state.isLoading = false;
-      })
-      .addCase(deleteStaff.fulfilled, (state, action) => {
-        const ids = action.payload.ids;
-        const type = action.payload.type;
-        if (type === 'unverified') {
-          state.newStaff = state.newStaff.filter((i) => !ids.includes(i.id));
-          state.totalNewStaff = state.totalNewStaff - ids.length;
-        } else {
-          state.staffData = state.staffData.filter((i) => !ids.includes(i.id));
-        }
-        state.isLoading = false;
-      })
-      .addCase(deleteStaff.pending, (state, action) => {
-        state.isLoading = true;
-      })
-      .addCase(deleteStaff.rejected, (state, action) => {
         state.isLoading = false;
       });
   },

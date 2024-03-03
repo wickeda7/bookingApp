@@ -48,20 +48,14 @@ export const uploadImage = createAsyncThunk('uploadImage', async ({ id, file, im
     throw error;
   }
 });
-export const deleteStaff = createAsyncThunk('deleteStaff', async ({ ids, type }) => {
+
+export const createAccessCode = createAsyncThunk('createAccessCode', async ({ data, method }) => {
   try {
-    const res = await users.deleteStaff(ids, type);
-    //const newImage = { id: res[0].id, url: res[0].url };
-    return { type, ids };
-  } catch (error) {
-    console.log('error staffAction deleteStaff', error);
-    throw error;
-  }
-});
-export const createAccessCode = createAsyncThunk('createAccessCode', async (data) => {
-  try {
-    const res = await users.createAccessCode(data);
-    return res;
+    const res = await users.createAccessCode({ data, method });
+    if (method === 'DELETE') {
+      return { data: data, method: method };
+    }
+    return { data: res, method: method };
   } catch (error) {
     console.log('error staffAction createAccessCode', error);
     throw error;

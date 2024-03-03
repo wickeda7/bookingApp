@@ -98,7 +98,8 @@
     "createCode": "Create Access Code",
     "inputError": "Phone number is required and Access code is required. Please click generate access code.",
     "unverifiedStaff": "Unverified Staff",
-    "resend": "Resend"
+    "resend": "Resend",
+    "updatedAt": "Updated Date"
   },
   "incomeScreen": {
     "income": "Income Report By Each Day",
