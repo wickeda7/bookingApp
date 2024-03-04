@@ -16,6 +16,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { getStoreById, unverifiedStaff } from '@redux/actions/staffAction';
 import { selectRow, resetSeletedRow, getStaff } from '@redux/slices/staffSlice';
 import CreateAccessCode from './CreateAccessCode';
+import UnAuthorized from '@components/UnAuthorized';
 
 const Staff = (props) => {
   const { t, i18n } = useTranslation();
@@ -76,9 +77,11 @@ const Staff = (props) => {
     });
   };
   const handleDelete = () => {};
-  if (isLoading) return <Loader visible={true} />;
+  if (userData?.role?.id !== 4) return <UnAuthorized />;
+
   return (
     <KeyboardAvoidingView style={Style.mainContainer} behavior={Platform.OS === 'ios' ? 'padding' : null}>
+      <Loader visible={isLoading} />
       <MyStatusBar />
       <View style={[Style.primaryNav, { flexDirection: isRtl ? 'row-reverse' : 'row' }]}>
         <TouchableOpacity

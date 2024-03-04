@@ -93,9 +93,9 @@ const UnverifiedStaff = (props) => {
     }, []);
     dispatch(createAccessCode({ data: staffIds, method: 'DELETE' }));
   };
-  if (isLoading) return <Loader visible={true} />;
   return (
     <KeyboardAvoidingView style={Style.mainContainer} behavior={Platform.OS === 'ios' ? 'padding' : null}>
+      <Loader visible={isLoading} />
       <MyStatusBar />
       <View style={[Style.primaryNav, { flexDirection: isRtl ? 'row-reverse' : 'row' }]}>
         <TouchableOpacity

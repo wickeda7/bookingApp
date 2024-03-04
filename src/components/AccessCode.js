@@ -40,10 +40,22 @@ const AccessCode = ({ setAccessCode }) => {
 
         return;
       }
+      const message = `Welcome to ${response.data.storeEmployee.name}! We're so glad you're joining the team!`;
+      Toast.show(tr(message), {
+        duration: Toast.durations.LONG,
+        position: Toast.positions.TOP,
+        shadow: true,
+        animation: true,
+        hideOnPress: true,
+        delay: 0,
+        backgroundColor: Colors.success,
+        onHidden: () => {
+          setAccessCode(false);
+          setVisible(false);
+        },
+      });
       setUserData(response.data);
       await AsyncStorage.setItem('@user', JSON.stringify(response.data));
-      setAccessCode(false);
-      setVisible(false);
     } catch (error) {
       setVisible(false);
       setAccessCode(false);

@@ -7,7 +7,8 @@ import { useTranslation } from 'react-i18next';
 import { useAuthContext } from '@contexts/AuthContext';
 import { useBookingContext } from '@contexts/BookingContext';
 import Feather from 'react-native-vector-icons/Feather';
-
+import Device from 'react-native-device-info';
+import ComingSoon from '@components/ComingSoon';
 const WorkerHome = ({ props }) => {
   const { userData } = useAuthContext();
   const { t, i18n } = useTranslation();
@@ -18,7 +19,7 @@ const WorkerHome = ({ props }) => {
   function tr(key) {
     return t(`homeScreen:${key}`);
   }
-
+  const isTablet = Device.isTablet();
   useEffect(() => {
     const getData = async () => {
       // get booking within the week of the calendar
@@ -27,7 +28,7 @@ const WorkerHome = ({ props }) => {
     };
     getData();
   }, []);
-
+  if (isTablet) return <ComingSoon />;
   if (data.length === 0)
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>

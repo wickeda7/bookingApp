@@ -137,7 +137,7 @@ const InformationScreen = (props) => {
         >
           <Text style={Fonts.Black16Bold}>{tr('about')}</Text>
           <Text style={Fonts.Grey14Regular}>
-            {about.substring(0, 200)}...
+            {about ? `${about.substring(0, 200)}...` : ''}
             <Text style={Fonts.Primary14Regular}>{tr('readMore')}</Text>
           </Text>
         </View>

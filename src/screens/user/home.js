@@ -5,7 +5,8 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useTranslation } from 'react-i18next';
 import { useStoreContext } from '@contexts/StoreContext';
 import * as Location from 'expo-location';
-
+import Device from 'react-native-device-info';
+import ComingSoon from '@components/ComingSoon';
 const UserHome = ({ props }) => {
   const { setCounty, setLatitude, setLongitude } = useStoreContext();
   const { t, i18n } = useTranslation();
@@ -14,6 +15,7 @@ const UserHome = ({ props }) => {
   function tr(key) {
     return t(`homeScreen:${key}`);
   }
+  const isTablet = Device.isTablet();
   useEffect(() => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
@@ -71,6 +73,7 @@ const UserHome = ({ props }) => {
       title: 'Body beauty',
     },
   ];
+  if (isTablet) return <ComingSoon />;
 
   const renderItem = ({ item, index }) => {
     const isEnd = index === dataList.length - 1 || index === dataList.length - 2;
