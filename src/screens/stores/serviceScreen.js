@@ -13,6 +13,7 @@ const ServiceScreen = (props) => {
   const dispatch = useDispatch();
   const service = props.route.params.service;
   let screen = props.route.params?.screen ? props.route.params?.screen : '';
+
   const isRtl = i18n.dir() === 'rtl';
   function tr(key) {
     return t(`serviceScreen:${key}`);

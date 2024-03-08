@@ -29,6 +29,7 @@ const ConfirmationScreen = (props) => {
   const dispatch = useDispatch();
   const { selectedStore } = useStoreContext();
   const { userData } = useAuthContext();
+  const [callBack, setCallBack] = useState(false);
   let time = null;
   const today = moment().format('YYYY-MM-DD');
 
@@ -271,8 +272,9 @@ const ConfirmationScreen = (props) => {
             style={[
               Style.contentContainer,
               {
-                flexDirection: 'row-reverse',
-                paddingHorizontal: Default.fixPadding * 1.5,
+                flexDirection: 'row',
+
+                width: '100%',
               },
             ]}
           >
@@ -281,8 +283,32 @@ const ConfirmationScreen = (props) => {
                 <FontIcon name={'question-circle-o'} size={20} color={Colors.info} />
               </View>
               <Text style={Style.infoText}>
-                <Text style={{ marginLeft: 15, paddingLeft: 25 }}>{tr('generateDesc')}</Text>
+                <Text style={{ marginLeft: 15, paddingLeft: 25 }}>
+                  Would you like us to text you at {formatPhoneNumber(selectedStore.phone)} when we are ready?
+                </Text>
               </Text>
+              <View style={{ flexDirection: 'row', marginTop: 5 }}>
+                <TouchableOpacity
+                  onPress={() => {
+                    setCallBack((prev) => !prev);
+                  }}
+                  style={{
+                    alignContent: 'center',
+                    justifyContent: 'flex-end',
+                    padding: 0,
+                    flexDirection: 'row',
+                  }}
+                >
+                  <Ionicons
+                    name={callBack ? 'radio-button-on-outline' : 'ellipse-outline'}
+                    //name={'radio-button-on-outline'}
+                    size={22}
+                    color={Colors.info}
+                    style={{ paddingHorizontal: 0 }}
+                  />
+                  <Text style={{ color: Colors.info, marginLeft: 5, marginTop: 3, fontWeight: '700' }}>Yes</Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
         )}
