@@ -6,16 +6,19 @@ import { useTranslation } from 'react-i18next';
 
 import MyStatusBar from '@components/myStatusBar';
 import { useBookingContext } from '@contexts/BookingContext';
-import { useStoreContext } from '@contexts/StoreContext';
+import { useSelector, useDispatch } from 'react-redux';
+import { setBookingTime } from '@redux/slices/bookingSlice';
+
 import CalendarComponent from '@components/calendar/calendar';
-import { use } from 'i18next';
 
 const ScheduleScreen = (props) => {
   const { t, i18n } = useTranslation();
-  const { selectedSpecialist, selectedTime, setSelectedTime, specialistBookings, selectedDate } = useBookingContext();
-  const { selectedStore } = useStoreContext();
+  const { specialistBookings, selectedDate } = useBookingContext();
+  const { bookingTime, specialist } = useSelector((state) => state.booking);
+  const dispatch = useDispatch();
+
   const [bookings, setBookings] = useState([]);
-  const [timeOption, setTimeOption] = useState(selectedSpecialist?.userInfo?.hours);
+  const [timeOption, setTimeOption] = useState(specialist?.userInfo?.hours);
 
   const isRtl = i18n.dir() === 'rtl';
 
@@ -24,9 +27,16 @@ const ScheduleScreen = (props) => {
   }
 
   useEffect(() => {
+    getBookings();
+    BackHandler.addEventListener('hardwareBackPress', backAction);
+
+    return () => BackHandler.removeEventListener('hardwareBackPress', backAction);
+  }, []);
+
+  useEffect(() => {
     const date = selectedDate?.dateString ? selectedDate.dateString : selectedDate;
     if (!date) return;
-    setSelectedTime(null);
+    dispatch(setBookingTime(null));
     const bookedTimeSlot = bookings.reduce((acc, booking) => {
       if (booking.date === date) {
         acc.push(booking.timeslot);
@@ -34,14 +44,14 @@ const ScheduleScreen = (props) => {
       return acc;
     }, []);
     if (bookedTimeSlot.length === 0) {
-      setTimeOption(selectedSpecialist?.userInfo?.hours);
+      setTimeOption(specialist?.userInfo?.hours);
     } else {
       createNewTimeOption(bookedTimeSlot);
     }
   }, [selectedDate]);
 
   const getBookings = () => {
-    const specialistId = selectedSpecialist.id;
+    const specialistId = specialist.id;
     const { appointmentsSpecialist } = specialistBookings.find((booking) => booking.id === specialistId);
     setBookings(appointmentsSpecialist);
   };
@@ -51,7 +61,7 @@ const ScheduleScreen = (props) => {
       if (bookedTimeSlot.includes(+time.id)) {
         return { ...time, booked: true };
       } else {
-        return time;
+        return { ...time, booked: false };
       }
     });
     setTimeOption(newTimeOption);
@@ -60,21 +70,15 @@ const ScheduleScreen = (props) => {
     props.navigation.pop();
     return true;
   };
-  useEffect(() => {
-    getBookings();
-    BackHandler.addEventListener('hardwareBackPress', backAction);
-
-    return () => BackHandler.removeEventListener('hardwareBackPress', backAction);
-  }, []);
 
   const statusTime = (id) => {
-    setSelectedTime(id);
+    dispatch(setBookingTime(id));
   };
 
   const renderItem = ({ item, index }) => {
     const isEnd = index === timeOption.length - 1 || index === timeOption.length - 2;
     const disabled = item.booked ? true : false;
-    let bg = selectedTime === item.id ? Colors.primary : Colors.white;
+    let bg = bookingTime === item.id ? Colors.primary : Colors.white;
     if (item.booked) {
       bg = Colors.lightGrey;
     }
@@ -99,7 +103,7 @@ const ScheduleScreen = (props) => {
         }}
       >
         <View style={{ marginHorizontal: Default.fixPadding }}>
-          <Text style={selectedTime === item.id ? Fonts.White14Medium : Fonts.Grey14Medium}>{item.hours}</Text>
+          <Text style={bookingTime === item.id ? Fonts.White14Medium : Fonts.Grey14Medium}>{item.hours}</Text>
         </View>
       </TouchableOpacity>
     );
@@ -143,7 +147,7 @@ const ScheduleScreen = (props) => {
       />
       <TouchableOpacity
         onPress={() => {
-          if (selectedTime) {
+          if (bookingTime) {
             props.navigation.navigate('confirmationScreen');
           }
         }}

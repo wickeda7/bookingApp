@@ -1,19 +1,15 @@
 import { createContext, useEffect, useState, useContext } from 'react';
 import { useAuthContext } from '@contexts/AuthContext';
-import { useStoreContext } from '@contexts/StoreContext';
 import { booking } from '@api/booking';
 const BookingContext = createContext({});
 
 const BookingContextProvider = ({ children }) => {
-  const [selectedSpecialist, setSelectedSpecialist] = useState(null);
-  const [services, setServices] = useState([]);
-  const [selectedTime, setSelectedTime] = useState(null);
   const [selectedDate, setSelectedDate] = useState(null);
   const [specialistBookings, setSpecialistBookings] = useState([]);
-  const { selectedStore } = useStoreContext();
   const { userData } = useAuthContext();
   const [cancelBooking, setCancelBooking] = useState(null);
   const [cancelId, setCancelId] = useState(null);
+
   const getSpecialistBooking = async (specialists) => {
     const ids = specialists.map((item) => item.id).join('_');
     const response = await booking.getSpecialistBooking(ids);
@@ -35,44 +31,9 @@ const BookingContextProvider = ({ children }) => {
     }
   };
 
-  const confirmBooking = async () => {
-    // console.log('confirmBooking', selectedDate); //dateString: "2024-02-16"
-    //return;
-    const date = selectedDate.dateString ? selectedDate.dateString : selectedDate.toString();
-    console.log('confirmBooking', date);
-    const data = {
-      data: {
-        timeslot: selectedTime,
-        services: JSON.stringify(services),
-        date: date,
-        store: selectedStore.id,
-        client: userData.id,
-        specialist: selectedSpecialist.id,
-        userID: userData.id,
-        specialistID: selectedSpecialist.id,
-        storeID: selectedStore.id,
-      },
-    };
-
-    try {
-      const response = await booking.post(data);
-      return response;
-    } catch (error) {
-      console.log('error confirmBooking', error);
-    }
-
-    // do something
-  };
   const value = {
-    selectedSpecialist,
-    setSelectedSpecialist,
-    services,
-    setServices,
-    selectedTime,
-    setSelectedTime,
     selectedDate,
     setSelectedDate,
-    confirmBooking,
     getSpecialistBooking,
     specialistBookings,
     getUserBooking,

@@ -1,4 +1,4 @@
-import { compose, createSlice } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 import {
   getStoreById,
   updateUser,
@@ -7,7 +7,6 @@ import {
   unverifiedStaff,
   createAccessCode,
 } from '../actions/staffAction';
-import { use } from 'i18next';
 
 const initialState = {
   staffData: [],

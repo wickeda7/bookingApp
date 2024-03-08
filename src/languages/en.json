@@ -108,7 +108,8 @@
   },
   "serviceScreen": {
     "other": "Other",
-    "bookAppointment": "BOOK APPOINTMENT"
+    "bookAppointment": "APPOINTMENT",
+    "walkIn": "WALK-IN"
   },
   "informationScreen": {
     "about": "About",

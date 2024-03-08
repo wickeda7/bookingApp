@@ -6,8 +6,10 @@ import { useTranslation } from 'react-i18next';
 import MyStatusBar from '@components/myStatusBar';
 import { useStoreContext } from '@contexts/StoreContext';
 import { useBookingContext } from '@contexts/BookingContext';
+import { useSelector, useDispatch } from 'react-redux';
+import { setSpecialist } from '@redux/slices/bookingSlice';
+
 import { Avatar } from 'react-native-paper';
-import { STRAPIURL } from '@env';
 import { options1 } from '@api/tempData';
 import Loader from '@components/loader';
 
@@ -19,7 +21,9 @@ const BookAppointmentScreen = (props) => {
     selectedStore: { employee },
   } = useStoreContext();
 
-  const { selectedSpecialist, setSelectedSpecialist, getSpecialistBooking } = useBookingContext();
+  const { getSpecialistBooking } = useBookingContext();
+  const { bookingType, specialist } = useSelector((state) => state.booking);
+  const dispatch = useDispatch();
 
   const options = [...employee, ...options1];
   const [visible, setVisible] = useState(false);
@@ -43,7 +47,6 @@ const BookAppointmentScreen = (props) => {
 
     return () => BackHandler.removeEventListener('hardwareBackPress', backAction);
   }, []);
-
   const renderItem = ({ item, index }) => {
     const isFirst = index === 0;
     const image = item.userInfo?.profileImg?.url ? item.userInfo.profileImg.url : DefaultImage;
@@ -57,7 +60,7 @@ const BookAppointmentScreen = (props) => {
           marginHorizontal: Default.fixPadding * 1.5,
         }}
         onPress={() => {
-          setSelectedSpecialist(item);
+          dispatch(setSpecialist(item));
         }}
       >
         <View
@@ -85,8 +88,7 @@ const BookAppointmentScreen = (props) => {
             }}
           >
             <Text style={Fonts.Black16Medium}>
-              {' '}
-              {item.userInfo.firstName} {item.userInfo.lastName}
+              {item?.userInfo?.firstName} {item?.userInfo?.lastName}
             </Text>
             {item.other ? (
               <Text style={Fonts.Grey14Medium}>{item.other}</Text>
@@ -99,11 +101,11 @@ const BookAppointmentScreen = (props) => {
         <View style={{ flex: 1 }}>
           <TouchableOpacity
             onPress={() => {
-              setSelectedSpecialist(item);
+              dispatch(setSpecialist(item));
             }}
           >
             <Ionicons
-              name={selectedSpecialist?.id === item.id ? 'radio-button-on-outline' : 'ellipse-outline'}
+              name={specialist?.id === item.id ? 'radio-button-on-outline' : 'ellipse-outline'}
               size={30}
               color={Colors.primary}
             />
@@ -139,9 +141,8 @@ const BookAppointmentScreen = (props) => {
 
       <TouchableOpacity
         onPress={() => {
-          if (selectedSpecialist) {
-            props.navigation.navigate('scheduleScreen');
-          }
+          if (bookingType === 'walkIn') props.navigation.navigate('confirmationScreen');
+          else if (bookingType === 'appointment') props.navigation.navigate('scheduleScreen');
         }}
         style={{
           alignItems: 'center',

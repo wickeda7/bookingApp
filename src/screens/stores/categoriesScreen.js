@@ -27,7 +27,6 @@ const CategoriesScreen = ({ navigation, route }) => {
   }, []);
 
   const handleSelectedStore = (store) => {
-    console.log('handleSelectedStore', store);
     setSelectedStore(store);
     navigation.navigate('TopTabDetails', { screen: 'serviceScreen' });
     //navigation.push('TopTabDetails', { screen: 'serviceScreen' });

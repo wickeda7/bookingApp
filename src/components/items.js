@@ -4,15 +4,19 @@ import { useTranslation } from 'react-i18next';
 import { Colors, Default, Fonts } from '@constants/style';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { formatPrice } from '@utils/helper';
-import { useBookingContext } from '@contexts/BookingContext';
+import { useSelector, useDispatch } from 'react-redux';
+import { setServices, resetState } from '@redux/slices/bookingSlice';
 
 const Items = ({ items, key }) => {
-  const { services, setServices } = useBookingContext();
+  const { services } = useSelector((state) => state.booking);
+  const dispatch = useDispatch();
+
   const [menu, setMenu] = useState(null);
   useEffect(() => {
     if (items) {
       setMenu(items);
     }
+    dispatch(resetState());
   }, []);
   const { t, i18n } = useTranslation();
 
@@ -26,22 +30,7 @@ const Items = ({ items, key }) => {
         return menuItem;
       }
     });
-    const service = services.find((service) => service.id === item.id);
-    if (service) {
-      const newServices = services.map((service) => {
-        if (service.id === item.id) {
-          const newVal = { ...service, selected: !service.selected };
-          return newVal;
-        } else {
-          return service;
-        }
-      });
-      setServices(newServices);
-    } else {
-      const newItem = { ...item, selected: true };
-      setServices([...services, newItem]);
-    }
-
+    dispatch(setServices(item));
     setMenu(newMenu);
   };
   if (!menu) return null;

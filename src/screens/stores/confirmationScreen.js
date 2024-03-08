@@ -8,7 +8,12 @@ import { ScrollView } from 'react-native-gesture-handler';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useTranslation } from 'react-i18next';
 import MyStatusBar from '@components/myStatusBar';
+
 import { useBookingContext } from '@contexts/BookingContext';
+import { useAuthContext } from '@contexts/AuthContext';
+import { useSelector, useDispatch } from 'react-redux';
+import { addBooking } from '@redux/actions/bookingAction';
+
 import { useStoreContext } from '@contexts/StoreContext';
 import { formatPhoneNumber, formatPrice } from '@utils/helper';
 import ItemRow from '@components/itemRow';
@@ -16,17 +21,19 @@ import Loader from '@components/loader';
 
 const ConfirmationScreen = (props) => {
   const { t, i18n } = useTranslation();
-  const { selectedSpecialist, selectedDate, selectedTime, services, confirmBooking } = useBookingContext();
+  const { selectedDate } = useBookingContext();
+  const { bookingTime, error, specialist, services, isLoading } = useSelector((state) => state.booking);
+  const dispatch = useDispatch();
+  const { selectedStore } = useStoreContext();
+  const { userData } = useAuthContext();
+
   const {
     userInfo: { firstName, lastName, hours, specialty },
-  } = selectedSpecialist;
-  const time = hours.find((item) => item.id === selectedTime);
-  const result = services.filter((service) => service.selected === true);
+  } = specialist;
+  const time = hours.find((item) => item.id === bookingTime);
   let total = 0;
 
-  const { selectedStore } = useStoreContext();
   const isRtl = i18n.dir() === 'rtl';
-  const [visible, setVisible] = useState(false);
   const [confirmed, setConfirmed] = useState(false);
   function tr(key) {
     return t(`confirmationScreen:${key}`);
@@ -43,13 +50,29 @@ const ConfirmationScreen = (props) => {
   const [text, onChangeText] = useState();
 
   const onConfirm = async () => {
-    setVisible(true);
-    const res = await confirmBooking();
-    setVisible(false);
-    setConfirmed(true);
-    setTimeout(() => {
-      props.navigation.navigate('bookingScreen');
-    }, 2500);
+    const data = {
+      data: {
+        timeslot: bookingTime,
+        services: JSON.stringify(services),
+        date: selectedDate.dateString ? selectedDate.dateString : selectedDate.toString(),
+        store: selectedStore.id,
+        client: userData.id,
+        specialist: specialist.id,
+        userID: userData.id,
+        specialistID: specialist.id,
+        storeID: selectedStore.id,
+      },
+    };
+    try {
+      dispatch(addBooking(data));
+      if (error) return;
+      setConfirmed(true);
+      setTimeout(() => {
+        props.navigation.navigate('bookingScreen');
+      }, 2500);
+    } catch (error) {
+      console.log('error confirmBooking', error);
+    }
   };
   const navigate = () => {
     if (confirmed) {
@@ -69,7 +92,7 @@ const ConfirmationScreen = (props) => {
           backgroundColor: Colors.primary,
         }}
       >
-        <Loader visible={visible} />
+        <Loader visible={isLoading} />
         <TouchableOpacity style={{ marginHorizontal: Default.fixPadding * 1.5 }} onPress={() => navigate()}>
           <Ionicons name={isRtl ? 'arrow-forward' : 'arrow-back'} size={30} color={Colors.white} />
         </TouchableOpacity>
@@ -332,7 +355,7 @@ const ConfirmationScreen = (props) => {
             style={{ flex: 1, padding: Default.fixPadding * 1.5 }}
           />
         </TouchableOpacity>
-        {result.map((item, index) => {
+        {services.map((item, index) => {
           total += item.price * 100;
           return <ItemRow item={item} key={item.id} />;
         })}

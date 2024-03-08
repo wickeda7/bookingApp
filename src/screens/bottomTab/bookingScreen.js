@@ -6,19 +6,11 @@ import { Colors, Default, Fonts } from '@constants/style';
 import OngoingScreen from '@screens/stores/ongoingScreen';
 import HistoryScreen from '@screens/stores/historyScreen';
 import MyStatusBar from '@components/myStatusBar';
-import { useBookingContext } from '@contexts/BookingContext';
 const Tab = createMaterialTopTabNavigator();
 
 function CustomTabBar({ state, descriptors, navigation }) {
   const { t } = useTranslation();
-  const { setSelectedDate, setSelectedTime, setServices } = useBookingContext();
-  useEffect(() => {
-    setTimeout(() => {
-      setSelectedTime(null);
-      setServices([]);
-      setSelectedDate(null);
-    }, 1000);
-  }, []);
+
   function tr(key) {
     return t(`bookingScreen:${key}`);
   }
