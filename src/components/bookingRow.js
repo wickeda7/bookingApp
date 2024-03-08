@@ -9,7 +9,14 @@ import { useBookingContext } from '@contexts/BookingContext';
 const BookingRow = ({ item, showStatus, done, props, setVisible }) => {
   const { t, i18n } = useTranslation();
   const isRtl = i18n.dir() === 'rtl';
-  const temp = item.specialist.userInfo.hours.find((hour) => +hour.id === item.timeslot);
+  let temp = null;
+  if (item.specialist) {
+    temp = item.specialist.userInfo.hours.find((hour) => +hour.id === item.timeslot);
+  } else {
+    const storeHours = item.store.timeslot;
+    temp = storeHours.find((hour) => +hour.id === item.timeslot);
+  }
+
   const time = temp.hours.split('-');
   const time1 = time[1].split(' ');
   const aTime = `( ${time[0]})`;

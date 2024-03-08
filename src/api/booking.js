@@ -32,4 +32,16 @@ export const booking = {
       throw error;
     }
   },
+  getStoreBooking: async (storeId, userId) => {
+    try {
+      const response = await api.getStoreBooking(storeId, userId);
+      const res = response.reduce((acc, item) => {
+        const { id, attributes } = item;
+        return [...acc, { ...attributes, id }];
+      }, []);
+      return res;
+    } catch (error) {
+      throw error;
+    }
+  },
 };

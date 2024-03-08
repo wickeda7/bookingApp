@@ -1,8 +1,10 @@
 import { Text, View, TouchableOpacity, Image, BackHandler, TextInput } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { Colors, Fonts, Default } from '@constants/style';
+import Style from '@theme/style';
 import React, { useEffect, useState } from 'react';
 import Octicons from 'react-native-vector-icons/Octicons';
+import FontIcon from 'react-native-vector-icons/FontAwesome';
 import DashedLine from 'react-native-dashed-line';
 import { ScrollView } from 'react-native-gesture-handler';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -18,19 +20,27 @@ import { useStoreContext } from '@contexts/StoreContext';
 import { formatPhoneNumber, formatPrice } from '@utils/helper';
 import ItemRow from '@components/itemRow';
 import Loader from '@components/loader';
+import moment from 'moment';
 
 const ConfirmationScreen = (props) => {
   const { t, i18n } = useTranslation();
   const { selectedDate } = useBookingContext();
-  const { bookingTime, error, specialist, services, isLoading } = useSelector((state) => state.booking);
+  const { bookingTime, error, specialist, services, isLoading, bookingType } = useSelector((state) => state.booking);
   const dispatch = useDispatch();
   const { selectedStore } = useStoreContext();
   const { userData } = useAuthContext();
+  let time = null;
+  const today = moment().format('YYYY-MM-DD');
 
-  const {
-    userInfo: { firstName, lastName, hours, specialty },
-  } = specialist;
-  const time = hours.find((item) => item.id === bookingTime);
+  if (Object.keys(specialist).length > 0) {
+    const {
+      userInfo: { firstName, lastName, hours, specialty },
+    } = specialist;
+    time = hours.find((item) => item.id === bookingTime);
+  } else {
+    const storeTimeSlot = selectedStore?.timeslot ? selectedStore.timeslot : [];
+    time = storeTimeSlot.find((item) => item.id === bookingTime);
+  }
   let total = 0;
 
   const isRtl = i18n.dir() === 'rtl';
@@ -69,7 +79,7 @@ const ConfirmationScreen = (props) => {
       setConfirmed(true);
       setTimeout(() => {
         props.navigation.navigate('bookingScreen');
-      }, 2500);
+      }, 200);
     } catch (error) {
       console.log('error confirmBooking', error);
     }
@@ -191,10 +201,18 @@ const ConfirmationScreen = (props) => {
                 {tr('date')}
               </Text>
             </View>
-            {selectedDate.month ? (
-              <Text style={Fonts.Grey14Medium}>{`${selectedDate.month}-${selectedDate.day}-${selectedDate.year}`}</Text>
+            {bookingType === 'appointment' ? (
+              <>
+                {selectedDate.month ? (
+                  <Text
+                    style={Fonts.Grey14Medium}
+                  >{`${selectedDate.month}-${selectedDate.day}-${selectedDate.year}`}</Text>
+                ) : (
+                  <Text style={Fonts.Grey14Medium}>{selectedDate}</Text>
+                )}
+              </>
             ) : (
-              <Text style={Fonts.Grey14Medium}>{selectedDate}</Text>
+              <Text style={Fonts.Black16Medium}>{tr('walkIn')}</Text>
             )}
           </View>
 
@@ -220,7 +238,7 @@ const ConfirmationScreen = (props) => {
                 {tr('time')}
               </Text>
             </View>
-            <Text style={Fonts.Grey14Medium}>{time.hours}</Text>
+            {bookingType === 'appointment' && <Text style={Fonts.Grey14Medium}>{time.hours}</Text>}
           </View>
 
           <View
@@ -248,7 +266,26 @@ const ConfirmationScreen = (props) => {
             <Text style={Fonts.Grey14Medium}>{formatPhoneNumber(selectedStore.phone)}</Text>
           </View>
         </View>
-
+        {bookingType === 'walkIn' && (
+          <View
+            style={[
+              Style.contentContainer,
+              {
+                flexDirection: 'row-reverse',
+                paddingHorizontal: Default.fixPadding * 1.5,
+              },
+            ]}
+          >
+            <View style={[Style.infoAlert, { position: 'relative', paddingLeft: 30 }]}>
+              <View style={{ position: 'absolute', top: 4, left: 5 }}>
+                <FontIcon name={'question-circle-o'} size={20} color={Colors.info} />
+              </View>
+              <Text style={Style.infoText}>
+                <Text style={{ marginLeft: 15, paddingLeft: 25 }}>{tr('generateDesc')}</Text>
+              </Text>
+            </View>
+          </View>
+        )}
         <View
           style={{
             paddingHorizontal: Default.fixPadding * 1.5,
@@ -258,24 +295,38 @@ const ConfirmationScreen = (props) => {
         >
           <Text style={Fonts.Black16Medium}>{tr('specialist')}</Text>
         </View>
-        <Text
-          style={{
-            ...Fonts.Grey16Medium,
-            marginHorizontal: Default.fixPadding * 1.5,
-            marginVertical: Default.fixPadding,
-          }}
-        >
-          {firstName} {lastName}
-        </Text>
-        <Text
-          style={{
-            ...Fonts.Grey16Medium,
-            marginHorizontal: Default.fixPadding * 1.5,
-            marginBottom: Default.fixPadding,
-          }}
-        >
-          ({specialty})
-        </Text>
+        {Object.keys(specialist).length > 0 ? (
+          <>
+            <Text
+              style={{
+                ...Fonts.Grey16Medium,
+                marginHorizontal: Default.fixPadding * 1.5,
+                marginVertical: Default.fixPadding,
+              }}
+            >
+              {specialist.userInfo.firstName} {specialist.userInfo.lastName}
+            </Text>
+            <Text
+              style={{
+                ...Fonts.Grey16Medium,
+                marginHorizontal: Default.fixPadding * 1.5,
+                marginBottom: Default.fixPadding,
+              }}
+            >
+              ({specialist.userInfo.specialty})
+            </Text>
+          </>
+        ) : (
+          <Text
+            style={{
+              ...Fonts.Grey16Medium,
+              marginHorizontal: Default.fixPadding * 1.5,
+              marginBottom: Default.fixPadding,
+            }}
+          >
+            NONE
+          </Text>
+        )}
 
         <View
           style={{

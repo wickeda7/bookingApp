@@ -155,7 +155,8 @@
     "CouponCode": "Apply coupon code",
     "totalPay": "Estimated total/",
     "total": "Estimated total",
-    "confirm": "Confirm"
+    "confirm": "Confirm",
+    "walkIn": "WALK-IN"
   },
   "paymentMethodScreen": {
     "paymentMethod": "Select payment method",

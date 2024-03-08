@@ -5,10 +5,9 @@ import { Colors, Default, Fonts } from '@constants/style';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { formatPrice } from '@utils/helper';
 import { useSelector, useDispatch } from 'react-redux';
-import { setServices, resetState } from '@redux/slices/bookingSlice';
+import { setServices } from '@redux/slices/bookingSlice';
 
 const Items = ({ items, key }) => {
-  const { services } = useSelector((state) => state.booking);
   const dispatch = useDispatch();
 
   const [menu, setMenu] = useState(null);
@@ -16,7 +15,6 @@ const Items = ({ items, key }) => {
     if (items) {
       setMenu(items);
     }
-    dispatch(resetState());
   }, []);
   const { t, i18n } = useTranslation();
 

@@ -6,6 +6,10 @@ import { Colors, Default, Fonts } from '@constants/style';
 import OngoingScreen from '@screens/stores/ongoingScreen';
 import HistoryScreen from '@screens/stores/historyScreen';
 import MyStatusBar from '@components/myStatusBar';
+import { useBookingContext } from '@contexts/BookingContext';
+import { useDispatch } from 'react-redux';
+import { resetState } from '@redux/slices/bookingSlice';
+
 const Tab = createMaterialTopTabNavigator();
 
 function CustomTabBar({ state, descriptors, navigation }) {
@@ -14,6 +18,18 @@ function CustomTabBar({ state, descriptors, navigation }) {
   function tr(key) {
     return t(`bookingScreen:${key}`);
   }
+  const { setSelectedDate } = useBookingContext();
+  const dispatch = useDispatch();
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      setTimeout(() => {
+        setSelectedDate(null);
+        dispatch(resetState());
+      }, 1000);
+    });
+
+    return unsubscribe;
+  }, [navigation]);
 
   return (
     <View

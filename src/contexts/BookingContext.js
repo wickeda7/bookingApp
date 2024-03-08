@@ -16,6 +16,10 @@ const BookingContextProvider = ({ children }) => {
     setSpecialistBookings(response.data);
     return response.data;
   };
+  const getStoreBooking = async (storeId, userId) => {
+    const response = await booking.getStoreBooking(storeId, userId);
+    return response;
+  };
 
   const deleteHistory = async (id) => {
     console.log('deleteHistory', id);
@@ -42,6 +46,7 @@ const BookingContextProvider = ({ children }) => {
     setCancelBooking,
     cancelId,
     setCancelId,
+    getStoreBooking,
   };
   return <BookingContext.Provider value={value}>{children}</BookingContext.Provider>;
 };

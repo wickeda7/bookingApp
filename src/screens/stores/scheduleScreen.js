@@ -5,27 +5,30 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useTranslation } from 'react-i18next';
 
 import MyStatusBar from '@components/myStatusBar';
+import { useAuthContext } from '@contexts/AuthContext';
 import { useBookingContext } from '@contexts/BookingContext';
 import { useSelector, useDispatch } from 'react-redux';
 import { setBookingTime } from '@redux/slices/bookingSlice';
-
+import { useStoreContext } from '@contexts/StoreContext';
 import CalendarComponent from '@components/calendar/calendar';
 
 const ScheduleScreen = (props) => {
+  const { navigation } = props;
   const { t, i18n } = useTranslation();
-  const { specialistBookings, selectedDate } = useBookingContext();
+  const { specialistBookings, selectedDate, getStoreBooking } = useBookingContext();
   const { bookingTime, specialist } = useSelector((state) => state.booking);
   const dispatch = useDispatch();
-
+  const { selectedStore } = useStoreContext();
+  const { userData } = useAuthContext();
   const [bookings, setBookings] = useState([]);
-  const [timeOption, setTimeOption] = useState(specialist?.userInfo?.hours);
+  const [timeOption, setTimeOption] = useState();
 
   const isRtl = i18n.dir() === 'rtl';
-
   function tr(key) {
     return t(`scheduleScreen:${key}`);
   }
 
+  const storeTimeSlot = selectedStore?.timeslot ? selectedStore.timeslot : [];
   useEffect(() => {
     getBookings();
     BackHandler.addEventListener('hardwareBackPress', backAction);
@@ -34,29 +37,48 @@ const ScheduleScreen = (props) => {
   }, []);
 
   useEffect(() => {
+    const unsubscribe = navigation.addListener('blur', () => {
+      setBookings([]);
+      setTimeOption();
+    });
+
+    return unsubscribe;
+  }, [navigation]);
+
+  useEffect(() => {
     const date = selectedDate?.dateString ? selectedDate.dateString : selectedDate;
     if (!date) return;
     dispatch(setBookingTime(null));
-    const bookedTimeSlot = bookings.reduce((acc, booking) => {
+    getBookingTime(date);
+  }, [selectedDate]);
+
+  const getBookingTime = async (date) => {
+    const bookingHours = Object.keys(specialist).length === 0 ? storeTimeSlot : specialist.userInfo.hours;
+    const bookingDates = bookings.length > 0 ? bookings : await getStoreBooking(selectedStore.id, userData.id);
+    const bookedTimeSlot = bookingDates.reduce((acc, booking) => {
       if (booking.date === date) {
         acc.push(booking.timeslot);
       }
       return acc;
     }, []);
     if (bookedTimeSlot.length === 0) {
-      setTimeOption(specialist?.userInfo?.hours);
+      setTimeOption(bookingHours);
     } else {
-      createNewTimeOption(bookedTimeSlot);
+      createNewTimeOption(bookedTimeSlot, bookingHours);
     }
-  }, [selectedDate]);
-
-  const getBookings = () => {
-    const specialistId = specialist.id;
-    const { appointmentsSpecialist } = specialistBookings.find((booking) => booking.id === specialistId);
-    setBookings(appointmentsSpecialist);
+  };
+  const getBookings = async () => {
+    if (Object.keys(specialist).length > 0) {
+      const specialistId = specialist.id;
+      const { appointmentsSpecialist } = specialistBookings.find((booking) => booking.id === specialistId);
+      setBookings(appointmentsSpecialist);
+    } else {
+      const storeBooking = await getStoreBooking(selectedStore.id, userData.id);
+      setBookings(storeBooking);
+    }
   };
 
-  const createNewTimeOption = (bookedTimeSlot) => {
+  const createNewTimeOption = (bookedTimeSlot, timeOption) => {
     const newTimeOption = timeOption.map((time) => {
       if (bookedTimeSlot.includes(+time.id)) {
         return { ...time, booked: true };
