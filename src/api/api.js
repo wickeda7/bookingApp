@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-import { STRAPIURL } from '@env';
-//const STRAPIURL = 'http://localhost:1337';
+//import { STRAPIURL } from '@env';
+const STRAPIURL = 'http://localhost:1337';
 export const api = {
   getUser: async (email) => {
     const url = `${STRAPIURL}/api/users/${email}`;
@@ -239,6 +239,16 @@ export const api = {
       const url = `${STRAPIURL}/api/appointments?filters[userID][$eq]=${userId}&filters[storeId][$eq]=${storeId}&filters[done][$eq]=false&filters[specialistId][$eq]=null`;
       const response = await axios.get(url);
       return response.data.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  updateToken: async (id, pushToken) => {
+    ///api/user-infos/notificationToken
+    try {
+      const url = `${STRAPIURL}/api/user-infos/notificationToken`;
+      const response = await axios.post(url, { id, pushToken });
+      return response.data;
     } catch (error) {
       throw error;
     }

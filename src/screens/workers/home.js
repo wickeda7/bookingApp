@@ -9,6 +9,7 @@ import { useBookingContext } from '@contexts/BookingContext';
 import Feather from 'react-native-vector-icons/Feather';
 import Device from 'react-native-device-info';
 import ComingSoon from '@components/ComingSoon';
+import NotificationsHelper from '@utils/notifications';
 const WorkerHome = ({ props }) => {
   const { userData } = useAuthContext();
   const { t, i18n } = useTranslation();
@@ -45,6 +46,7 @@ const WorkerHome = ({ props }) => {
     );
   return (
     <>
+      <NotificationsHelper />
       <View
         style={{
           flexDirection: isRtl ? 'row-reverse' : 'row',

@@ -7,6 +7,7 @@ import { useStoreContext } from '@contexts/StoreContext';
 import * as Location from 'expo-location';
 import Device from 'react-native-device-info';
 import ComingSoon from '@components/ComingSoon';
+import NotificationsHelper from '@utils/notifications';
 const UserHome = ({ props }) => {
   const { setCounty, setLatitude, setLongitude } = useStoreContext();
   const { t, i18n } = useTranslation();
@@ -116,6 +117,7 @@ const UserHome = ({ props }) => {
 
   return (
     <>
+      <NotificationsHelper />
       <View
         style={{
           paddingVertical: 0,

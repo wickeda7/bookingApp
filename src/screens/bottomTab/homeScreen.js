@@ -8,7 +8,7 @@ import { useAuthContext } from '@contexts/AuthContext';
 import WorkerHome from '@screens/workers/home';
 import UserHome from '@screens/user/home';
 import AdminHome from '@screens/admin/home';
-import Devi from 'react-native-device-info';
+
 const HomeScreen = (props) => {
   const { userData } = useAuthContext();
   const { t, i18n } = useTranslation();
@@ -16,11 +16,10 @@ const HomeScreen = (props) => {
   const isRtl = i18n.dir() === 'rtl';
   const name = userData?.userInfo?.firstName ? userData.userInfo.firstName + ' ' + userData.userInfo.lastName : '';
   const roleId = userData?.role.id || null; // 3 === worker, 1 === user, 4 === admin
-  const isTablet = Devi.isTablet();
+
   function tr(key) {
     return t(`homeScreen:${key}`);
   }
-
   return (
     <View style={{ flex: 1, backgroundColor: Colors.white }}>
       <MyStatusBar />

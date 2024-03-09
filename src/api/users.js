@@ -129,4 +129,13 @@ export const users = {
       throw error;
     }
   },
+  updateToken: async (id, token) => {
+    try {
+      const response = await api.updateToken(id, token);
+      return response;
+    } catch (error) {
+      console.log('error updateToken', error);
+      throw error;
+    }
+  },
 };

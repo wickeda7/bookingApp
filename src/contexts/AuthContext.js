@@ -78,7 +78,6 @@ const AuthContextProvider = ({ children }) => {
       await AsyncStorage.setItem('@user', JSON.stringify(res));
       setUserData(res);
     }
-    //console.log('updateUserData setLoggedIn true');
     setLoggedIn(true);
     setLoading(false);
   };
@@ -91,12 +90,6 @@ const AuthContextProvider = ({ children }) => {
         await signInWithCredential(auth, credential);
       }
     }
-    //  else {
-    //   console.log('handleEffect setLoggedIn true');
-    //   setUserData(user);
-    //   setLoggedIn(true);
-    //   setLoading(false);
-    // }
   };
 
   const getLocalUser = async () => {
@@ -185,6 +178,21 @@ const AuthContextProvider = ({ children }) => {
     await AsyncStorage.setItem('@user', JSON.stringify(newInfo));
     return response;
   };
+  const updateToken = async (id, token) => {
+    try {
+      const response = await users.updateToken(id, token);
+      const { pushToken } = response.data;
+
+      const newUserInfo = { ...userData.userInfo, pushToken };
+      const newInfo = { ...userData, userInfo: newUserInfo };
+      setUserData(newInfo);
+      await AsyncStorage.setItem('@user', JSON.stringify(newInfo));
+
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  };
   const value = {
     loading,
     setLoading,
@@ -201,6 +209,7 @@ const AuthContextProvider = ({ children }) => {
     updateUser,
     updateEmail,
     uploadProfileImage,
+    updateToken,
   };
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
