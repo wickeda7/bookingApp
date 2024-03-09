@@ -12,13 +12,13 @@ import { Text } from 'react-native';
 import Icons6 from 'react-native-vector-icons/FontAwesome6';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useAuthContext } from '@contexts/AuthContext';
+import UserStack from '@navigation/UserStack';
 
 const Drawer = createDrawerNavigator();
 
 const DrawerNavigator = () => {
   const { userData } = useAuthContext();
   const roleId = userData?.role.id ? userData.role.id : 1; // 3 === worker, 1 === user, 4 === admin
-  console.log('userData!!!!!', userData);
   return (
     <Drawer.Navigator
       screenOptions={{
@@ -113,6 +113,11 @@ const DrawerNavigator = () => {
       <Drawer.Screen
         name='UnverifiedStaff'
         component={UnverifiedStaff}
+        options={{ headerShown: false, drawerItemStyle: { display: 'none' } }}
+      />
+      <Drawer.Screen
+        name='UserStack'
+        component={UserStack}
         options={{ headerShown: false, drawerItemStyle: { display: 'none' } }}
       />
     </Drawer.Navigator>

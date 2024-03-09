@@ -11,7 +11,7 @@ const BACKGROUND_FETCH_TASK = 'background-fetch';
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
     shouldShowAlert: true,
-    shouldPlaySound: false,
+    shouldPlaySound: true,
     shouldSetBadge: false,
   }),
 });
@@ -101,7 +101,7 @@ const NotificationsHelper = () => {
 
   useEffect(() => {
     if (!expoPushToken) return;
-    alert(`Notifications token ${expoPushToken} - ${userData.userInfo.id}`);
+    if (!userData.userInfo) return;
     if (userData.userInfo.pushToken !== expoPushToken) {
       updateToken(userData.userInfo.id, expoPushToken);
     }
@@ -111,12 +111,13 @@ const NotificationsHelper = () => {
     registerForPushNotificationsAsync().then((token) => setExpoPushToken(token));
 
     notificationListener.current = Notifications.addNotificationReceivedListener((notification) => {
+      console.log('notification', notification);
       setNotification(notification);
     });
 
     responseListener.current = Notifications.addNotificationResponseReceivedListener((response) => {
       alert(`response ${response}`);
-      console.log(response);
+      console.log('response', response);
     });
 
     return () => {
