@@ -101,4 +101,16 @@ export default StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  borderGreen: {
+    borderColor: 'green',
+    borderWidth: 1,
+  },
+  borderBlue: {
+    borderColor: 'blue',
+    borderWidth: 1,
+  },
+  borderBlack: {
+    borderColor: 'black',
+    borderWidth: 1,
+  },
 });

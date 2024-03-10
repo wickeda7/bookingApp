@@ -8,8 +8,11 @@ import * as Location from 'expo-location';
 import Device from 'react-native-device-info';
 import ComingSoon from '@components/ComingSoon';
 import NotificationsHelper from '@utils/notifications';
+import { useAuthContext } from '@contexts/AuthContext';
 const UserHome = ({ props }) => {
   const { setCounty, setLatitude, setLongitude } = useStoreContext();
+  const { userData } = useAuthContext();
+  const name = userData?.userInfo?.firstName ? userData.userInfo.firstName + ' ' + userData.userInfo.lastName : '';
   const { t, i18n } = useTranslation();
 
   const isRtl = i18n.dir() === 'rtl';
@@ -118,6 +121,42 @@ const UserHome = ({ props }) => {
   return (
     <>
       <NotificationsHelper />
+      <View style={{ paddingVertical: Default.fixPadding, backgroundColor: Colors.primary }}>
+        <View style={{ flexDirection: isRtl ? 'row-reverse' : 'row', marginHorizontal: Default.fixPadding * 1.5 }}>
+          <View style={{ flex: 9 }}>
+            <View style={{ flexDirection: isRtl ? 'row-reverse' : 'row' }}>
+              <Text style={Fonts.White20Bold}>{tr('hii')}, </Text>
+              <Text style={Fonts.Yellow20Bold}>{name}</Text>
+            </View>
+            <View
+              style={{
+                flexDirection: isRtl ? 'row-reverse' : 'row',
+                alignItems: 'center',
+                marginTop: Default.fixPadding * 0.5,
+              }}
+            ></View>
+          </View>
+          <TouchableOpacity
+            onPress={() => props.navigation.navigate('UserStack', { screen: 'notificationScreen' })}
+            style={{ flex: 1, marginVertical: Default.fixPadding }}
+          >
+            <Ionicons name='notifications-outline' size={30} color={Colors.white} />
+            <View
+              style={{
+                position: 'absolute',
+                justifyContent: 'center',
+                alignItems: 'center',
+                width: 8,
+                height: 8,
+                top: '15%',
+                left: '45%',
+                borderRadius: 4,
+                backgroundColor: Colors.white,
+              }}
+            />
+          </TouchableOpacity>
+        </View>
+      </View>
       <View
         style={{
           paddingVertical: 0,

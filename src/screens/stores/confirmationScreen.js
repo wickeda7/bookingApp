@@ -21,6 +21,7 @@ import { formatPhoneNumber, formatPrice } from '@utils/helper';
 import ItemRow from '@components/itemRow';
 import Loader from '@components/loader';
 import moment from 'moment';
+import { use } from 'i18next';
 
 const ConfirmationScreen = (props) => {
   const { t, i18n } = useTranslation();
@@ -30,9 +31,17 @@ const ConfirmationScreen = (props) => {
   const { selectedStore } = useStoreContext();
   const { userData } = useAuthContext();
   const [callBack, setCallBack] = useState(false);
+  const [date, setDate] = useState(null);
   let time = null;
   const today = moment().format('YYYY-MM-DD');
 
+  useEffect(() => {
+    if (!selectedDate) {
+      setDate(today);
+    } else {
+      setDate(selectedDate);
+    }
+  }, []);
   if (Object.keys(specialist).length > 0) {
     const {
       userInfo: { firstName, lastName, hours, specialty },
@@ -65,7 +74,7 @@ const ConfirmationScreen = (props) => {
       data: {
         timeslot: bookingTime,
         services: JSON.stringify(services),
-        date: selectedDate.dateString ? selectedDate.dateString : selectedDate.toString(),
+        date: date.dateString ? date.dateString : date.toString(),
         store: selectedStore.id,
         client: userData.id,
         specialist: specialist.id,
@@ -202,18 +211,10 @@ const ConfirmationScreen = (props) => {
                 {tr('date')}
               </Text>
             </View>
-            {bookingType === 'appointment' ? (
-              <>
-                {selectedDate.month ? (
-                  <Text
-                    style={Fonts.Grey14Medium}
-                  >{`${selectedDate.month}-${selectedDate.day}-${selectedDate.year}`}</Text>
-                ) : (
-                  <Text style={Fonts.Grey14Medium}>{selectedDate}</Text>
-                )}
-              </>
+            {date?.month ? (
+              <Text style={Fonts.Grey14Medium}>{`${date.month}-${date.day}-${date.year}`}</Text>
             ) : (
-              <Text style={Fonts.Black16Medium}>{tr('walkIn')}</Text>
+              <Text style={Fonts.Grey14Medium}>{date}</Text>
             )}
           </View>
 
@@ -239,7 +240,11 @@ const ConfirmationScreen = (props) => {
                 {tr('time')}
               </Text>
             </View>
-            {bookingType === 'appointment' && <Text style={Fonts.Grey14Medium}>{time.hours}</Text>}
+            {bookingType === 'appointment' ? (
+              <Text style={Fonts.Grey14Medium}>{time.hours}</Text>
+            ) : (
+              <Text style={Fonts.Black16Medium}>{tr('walkIn')}</Text>
+            )}
           </View>
 
           <View

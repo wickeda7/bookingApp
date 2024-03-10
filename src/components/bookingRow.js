@@ -9,23 +9,28 @@ import { useBookingContext } from '@contexts/BookingContext';
 const BookingRow = ({ item, showStatus, done, props, setVisible }) => {
   const { t, i18n } = useTranslation();
   const isRtl = i18n.dir() === 'rtl';
+  function tr(key) {
+    return t(`ongoingScreen:${key}`);
+  }
   let temp = null;
+  let aTime = '';
   if (item.specialist) {
     temp = item.specialist.userInfo.hours.find((hour) => +hour.id === item.timeslot);
   } else {
     const storeHours = item.store.timeslot;
     temp = storeHours.find((hour) => +hour.id === item.timeslot);
   }
+  if (item.timeslot) {
+    const time = temp.hours.split('-');
+    aTime = `( ${time[0]})`;
+  } else {
+    aTime = `( ${tr('walkIn')})`;
+  }
 
-  const time = temp.hours.split('-');
-  const time1 = time[1].split(' ');
-  const aTime = `( ${time[0]})`;
   const date = moment(item.date).format('MMM Do YYYY');
   const status = item.confirmed ? 'Confirmed' : 'Pending';
   const { setCancelBooking } = useBookingContext();
-  function tr(key) {
-    return t(`ongoingScreen:${key}`);
-  }
+
   return (
     <>
       <Image source={{ uri: `${item.store.logo.url}` }} style={{ width: 131, height: 143 }} />

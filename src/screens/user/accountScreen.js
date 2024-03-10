@@ -104,6 +104,7 @@ const AccountScreen = (props) => {
   };
 
   const [pickedImage, setPickedImage] = useState();
+
   const updateUserData = async () => {
     if (email !== textEmail) {
       await updateEmail({ textEmail, userId });
@@ -165,7 +166,11 @@ const AccountScreen = (props) => {
       >
         <TouchableOpacity
           style={{ marginHorizontal: Default.fixPadding * 1.5 }}
-          onPress={() => props.navigation.navigate('profileScreen')}
+          onPress={() => {
+            console.log('props', props.navigation);
+            props.navigation.goBack();
+            //props.navigation.navigate('profileScreen');
+          }}
         >
           <Ionicons name={isRtl ? 'arrow-forward' : 'arrow-back'} size={30} color={Colors.white} />
         </TouchableOpacity>

@@ -42,8 +42,6 @@ async function registerForPushNotificationsAsync() {
     // Learn more about projectId:
     // https://docs.expo.dev/push-notifications/push-notifications-setup/#configure-projectid
     token = (await Notifications.getExpoPushTokenAsync({ projectId: Constants.expoConfig.extra.eas.projectId })).data;
-
-    console.log('Notifications token', token);
   } else {
     //alert('Must use physical device for Push Notifications');
   }
@@ -102,7 +100,7 @@ const NotificationsHelper = () => {
   useEffect(() => {
     if (!expoPushToken) return;
     if (!userData.userInfo) return;
-    if (userData.userInfo.pushToken !== expoPushToken) {
+    if (userData?.userInfo?.pushToken !== expoPushToken) {
       updateToken(userData.userInfo.id, expoPushToken);
     }
   }, [expoPushToken]);

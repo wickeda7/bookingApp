@@ -44,4 +44,16 @@ export const booking = {
       throw error;
     }
   },
+  getWalkIn: async (storeId, date) => {
+    try {
+      const response = await api.getWalkIn(storeId, date);
+      const res = response.data.reduce((acc, item) => {
+        const { id, attributes } = item;
+        return [...acc, { ...attributes, id }];
+      }, []);
+      return res;
+    } catch (error) {
+      throw error;
+    }
+  },
 };

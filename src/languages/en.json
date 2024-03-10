@@ -195,7 +195,8 @@
     "cancel": "Cancel",
     "areYouSure": "Are you sure you want to cancel appointment?",
     "yes": "YES",
-    "no": "NO"
+    "no": "NO",
+    "walkIn": "WALK-IN"
   },
   "ongoingDetail": {
     "date": "Date",
