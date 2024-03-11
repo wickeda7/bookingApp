@@ -84,7 +84,8 @@ const EditStaff = (props) => {
 
     const id = userInfo.id;
     const data = { ...userInfo };
-    if (data.phoneNumber !== '') {
+    console.log('data', data.phoneNumber);
+    if (data.phoneNumber !== null && data.phoneNumber !== '') {
       data.phoneNumber = data.phoneNumber.replace(/[^\d\+]/g, '');
     }
     delete data.images;

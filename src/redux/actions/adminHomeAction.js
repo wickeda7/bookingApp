@@ -1,12 +1,12 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { booking } from '@api/booking';
 
-export const getWalkIn = createAsyncThunk('getWalkIn', async ({ storeId, today }) => {
+export const getBooking = createAsyncThunk('getBooking', async ({ storeId, today }) => {
   try {
-    const response = await booking.getWalkIn(storeId, today);
+    const response = await booking.getBooking(storeId, today);
     return response;
   } catch (error) {
-    console.log('error adminHomeAction getWalkIn', error.response.data.error.message);
+    console.log('error adminHomeAction getBooking', error.response.data.error.message);
     throw error.response.data.error.message;
   }
 });

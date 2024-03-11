@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { getWalkIn } from '../actions/adminHomeAction';
+import { getBooking } from '../actions/adminHomeAction';
 const initialState = {
   staff: [],
   walkin: [],
@@ -24,14 +24,15 @@ export const adminHomeSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(getWalkIn.pending, (state) => {
+      .addCase(getBooking.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(getWalkIn.fulfilled, (state, action) => {
-        state.walkin = action.payload;
+      .addCase(getBooking.fulfilled, (state, action) => {
+        state.appointment = action.payload.appointment;
+        state.walkin = action.payload.walkin;
         state.isLoading = false;
       })
-      .addCase(getWalkIn.rejected, (state) => {
+      .addCase(getBooking.rejected, (state) => {
         state.isLoading = false;
       });
   },

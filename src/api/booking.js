@@ -37,6 +37,7 @@ export const booking = {
       const response = await api.getStoreBooking(storeId, userId);
       const res = response.reduce((acc, item) => {
         const { id, attributes } = item;
+
         return [...acc, { ...attributes, id }];
       }, []);
       return res;
@@ -44,15 +45,47 @@ export const booking = {
       throw error;
     }
   },
-  getWalkIn: async (storeId, date) => {
+
+  getBooking: async (storeId, date) => {
     try {
-      const response = await api.getWalkIn(storeId, date);
-      const res = response.data.reduce((acc, item) => {
-        const { id, attributes } = item;
-        return [...acc, { ...attributes, id }];
-      }, []);
+      const response = await api.getBooking(storeId, date);
+      const res = response.data.reduce(
+        (acc, item) => {
+          const { id, attributes } = item;
+          let attr = { ...attributes };
+          let clientData = {};
+          let specialistData = {};
+          if (attr.specialist.data) {
+            const { attributes, id } = attr.specialist.data.attributes.userInfo.data;
+
+            const userInfo = { ...attributes, id };
+            specialistData['id'] = attr.specialist.data.id;
+            specialistData['email'] = attr.specialist.data.attributes.email;
+            specialistData['userInfo'] = userInfo;
+          } else {
+            specialistData = null;
+          }
+          if (attr.client.data) {
+            const { attributes, id } = attr.client.data.attributes.userInfo.data;
+            const userInfo = { ...attributes, id };
+            clientData['id'] = attr.client.data.id;
+            clientData['email'] = attr.client.data.attributes.email;
+            clientData['userInfo'] = userInfo;
+          }
+          const services = typeof attr.services === 'string' ? JSON.parse(attr.services) : attr.services;
+          const final = { ...attr, client: clientData, specialist: specialistData, services, id };
+          if (final.timeslot === null) {
+            acc['walkin'].push(final);
+          } else {
+            acc['appointment'].push(final);
+          }
+          return acc;
+        },
+        { walkin: [], appointment: [] }
+      );
       return res;
     } catch (error) {
+      console.log('error adminHomeAction getBooking', error.response.data.error.message);
       throw error;
     }
   },

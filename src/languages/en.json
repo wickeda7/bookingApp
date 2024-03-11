@@ -46,7 +46,17 @@
     "search": "Search",
     "welcome": "Welcome",
     "lookingFor": "What are you looking for?",
-    "noBooking": "No booking yet"
+    "noBooking": "No booking yet",
+    "walkIn": "WALK-IN",
+    "appointment": "APPOINTMENT",
+    "services": "Services",
+    "request": "Requested for",
+    "staff": "Staff",
+    "servicename": "Service Name",
+    "price": "Price",
+    "additional": "Additional",
+    "total": "Total",
+    "notes": "Notes"
   },
   "reports": {
     "reports": "Reports",

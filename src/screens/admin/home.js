@@ -1,15 +1,19 @@
-import { StyleSheet, Text, View, Platform, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, Platform, TouchableOpacity, FlatList, ScrollView, Button } from 'react-native';
 import React, { useEffect } from 'react';
 import { Colors, Default, Fonts } from '@constants/style';
+import Style from '@theme/style';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import NotificationsHelper from '@utils/notifications';
 import { useTranslation } from 'react-i18next';
 import { useAuthContext } from '@contexts/AuthContext';
-import { setStaff, setWalkin, setAppointment } from '@redux/slices/adminHomeSlice';
+import { setStaff, setAppointment } from '@redux/slices/adminHomeSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import Loader from '@components/loader';
 import moment from 'moment';
-import { getWalkIn } from '@redux/actions/adminHomeAction';
+import { getBooking } from '@redux/actions/adminHomeAction';
+import StaffRow from '@components/admin/StaffRow';
+import CustomerRow from '@components/admin/CustomerRow';
+import Accordion from '@components/Accordion';
 const AdminHome = () => {
   const { t, i18n } = useTranslation();
   const isRtl = i18n.dir() === 'rtl';
@@ -18,38 +22,18 @@ const AdminHome = () => {
   }
   const { userData } = useAuthContext();
   const dispatch = useDispatch();
-  const { isLoading } = useSelector((state) => state.adminHome);
-  const staff = userData.storeAdmin.employee;
+  const { isLoading, staff, walkin, appointment } = useSelector((state) => state.adminHome);
+  const employee = userData.storeAdmin.employee;
   const today = moment().format('YYYY-MM-DD');
   const storeId = userData.storeAdmin.id;
-
   useEffect(() => {
-    dispatch(setStaff(staff));
-    setStaffAppointment();
-    dispatch(getWalkIn({ storeId, today }));
+    dispatch(getBooking({ storeId, today }));
+    dispatch(setStaff(employee));
+    //setStaffAppointment();
   }, []);
-  const setStaffAppointment = () => {
-    const appointmentWithStaff = staff.reduce((acc, ele) => {
-      const hours = ele.userInfo.hours;
-      const appointment = ele.appointmentsSpecialist.filter((app) => app.date === today);
-      if (appointment.length > 0) {
-        const apps = appointment.map((app) => {
-          const time = hours.find((hour) => +hour.id === app.timeslot);
-          if (time) {
-            let temp = { ...app };
-            temp.timeslot = time.hours;
-            return temp;
-          } else {
-            return app;
-          }
-        });
-        acc = [...acc, ...apps];
-      }
-      return acc;
-    }, []);
-    dispatch(setAppointment(appointmentWithStaff));
-  };
 
+  //https://www.geeksforgeeks.org/create-an-expandable-listview-in-react-native/
+  const renderItem = ({ item }) => <CustomerRow item={item} />;
   return (
     <>
       <NotificationsHelper />
@@ -100,8 +84,18 @@ const AdminHome = () => {
           </View>
         </View>
       </View>
-      <View>
-        <Text>Home</Text>
+      <View style={[Style.mainContainer, { flexDirection: 'row', padding: Default.fixPadding * 1.5 }]}>
+        <View style={[{ flex: 2 }]}>
+          {staff.map((item, index) => {
+            return <StaffRow key={index} item={item} />;
+          })}
+        </View>
+        <View style={[styles.borderLeft, { flex: 4 }]}>
+          <ScrollView contentInsetAdjustmentBehavior='automatic' style={styles.container}>
+            <Accordion data={walkin} />
+            <Accordion data={appointment} />
+          </ScrollView>
+        </View>
       </View>
     </>
   );
@@ -109,4 +103,20 @@ const AdminHome = () => {
 
 export default AdminHome;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  borderLeft: {
+    borderLeftColor: Colors.bord,
+    borderLeftWidth: 1,
+    marginLeft: Default.fixPadding * 2,
+    paddingLeft: Default.fixPadding * 1.5,
+  },
+  container: {
+    flex: 1,
+  },
+  textSmall: {
+    fontSize: 16,
+  },
+  seperator: {
+    height: 12,
+  },
+});
