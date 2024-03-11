@@ -6,6 +6,9 @@ import SplashScreen from '@screens/splashScreen';
 import OnboardingScreen from '@screens/auth/onboardingScreen';
 import LoginScreen from '@screens/auth/loginScreen';
 import EditStaff from '@screens/admin/EditStaff';
+import Test from '../screens/admin/Test';
+import Test2 from '../screens/admin/Test2';
+import Test3 from '../screens/admin/Test3';
 import UnverifiedStaff from '@screens/admin/UnverifiedStaff';
 import { Colors, Fonts } from '../constants/style';
 import { Text } from 'react-native';
@@ -89,6 +92,45 @@ const DrawerNavigator = () => {
           drawerItemStyle: { borderRadius: 5, marginHorizontal: 2 },
           drawerLabel: ({ focused, color }) => {
             return <Text style={[focused ? Fonts.White16Bold : Fonts.Primary16Bold]}>Profile</Text>;
+          },
+          drawerActiveBackgroundColor: Colors.primary,
+          drawerInactiveBackgroundColor: Colors.white,
+        }}
+      />
+      <Drawer.Screen
+        name='Test'
+        component={Test}
+        options={{
+          headerShown: false,
+          drawerItemStyle: { borderRadius: 5, marginHorizontal: 2 },
+          drawerLabel: ({ focused, color }) => {
+            return <Text style={[focused ? Fonts.White16Bold : Fonts.Primary16Bold]}>Test</Text>;
+          },
+          drawerActiveBackgroundColor: Colors.primary,
+          drawerInactiveBackgroundColor: Colors.white,
+        }}
+      />
+      <Drawer.Screen
+        name='Test2'
+        component={Test2}
+        options={{
+          headerShown: false,
+          drawerItemStyle: { borderRadius: 5, marginHorizontal: 2 },
+          drawerLabel: ({ focused, color }) => {
+            return <Text style={[focused ? Fonts.White16Bold : Fonts.Primary16Bold]}>Test2</Text>;
+          },
+          drawerActiveBackgroundColor: Colors.primary,
+          drawerInactiveBackgroundColor: Colors.white,
+        }}
+      />
+      <Drawer.Screen
+        name='Test3'
+        component={Test3}
+        options={{
+          headerShown: false,
+          drawerItemStyle: { borderRadius: 5, marginHorizontal: 2 },
+          drawerLabel: ({ focused, color }) => {
+            return <Text style={[focused ? Fonts.White16Bold : Fonts.Primary16Bold]}>Test3</Text>;
           },
           drawerActiveBackgroundColor: Colors.primary,
           drawerInactiveBackgroundColor: Colors.white,
