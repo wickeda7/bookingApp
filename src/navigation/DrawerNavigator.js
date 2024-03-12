@@ -104,7 +104,7 @@ const DrawerNavigator = () => {
           headerShown: false,
           drawerItemStyle: { borderRadius: 5, marginHorizontal: 2 },
           drawerLabel: ({ focused, color }) => {
-            return <Text style={[focused ? Fonts.White16Bold : Fonts.Primary16Bold]}>Test</Text>;
+            return <Text style={[focused ? Fonts.White16Bold : Fonts.Primary16Bold]}>Color Drag</Text>;
           },
           drawerActiveBackgroundColor: Colors.primary,
           drawerInactiveBackgroundColor: Colors.white,
@@ -117,7 +117,7 @@ const DrawerNavigator = () => {
           headerShown: false,
           drawerItemStyle: { borderRadius: 5, marginHorizontal: 2 },
           drawerLabel: ({ focused, color }) => {
-            return <Text style={[focused ? Fonts.White16Bold : Fonts.Primary16Bold]}>Test2</Text>;
+            return <Text style={[focused ? Fonts.White16Bold : Fonts.Primary16Bold]}>Chess</Text>;
           },
           drawerActiveBackgroundColor: Colors.primary,
           drawerInactiveBackgroundColor: Colors.white,
@@ -130,7 +130,7 @@ const DrawerNavigator = () => {
           headerShown: false,
           drawerItemStyle: { borderRadius: 5, marginHorizontal: 2 },
           drawerLabel: ({ focused, color }) => {
-            return <Text style={[focused ? Fonts.White16Bold : Fonts.Primary16Bold]}>Test3</Text>;
+            return <Text style={[focused ? Fonts.White16Bold : Fonts.Primary16Bold]}>Scrolling</Text>;
           },
           drawerActiveBackgroundColor: Colors.primary,
           drawerInactiveBackgroundColor: Colors.white,

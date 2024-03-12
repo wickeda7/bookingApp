@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Platform, TouchableOpacity, FlatList, ScrollView, Button } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, ScrollView } from 'react-native';
 import React, { useEffect } from 'react';
 import { Colors, Default, Fonts } from '@constants/style';
 import Style from '@theme/style';
@@ -14,6 +14,7 @@ import { getBooking } from '@redux/actions/adminHomeAction';
 import StaffRow from '@components/admin/StaffRow';
 import CustomerRow from '@components/admin/CustomerRow';
 import Accordion from '@components/Accordion';
+import { DraxProvider, DraxView, DraxViewDragStatus, DraxSnapbackTargetPreset } from 'react-native-drax';
 const AdminHome = () => {
   const { t, i18n } = useTranslation();
   const isRtl = i18n.dir() === 'rtl';
@@ -35,7 +36,7 @@ const AdminHome = () => {
   //https://www.geeksforgeeks.org/create-an-expandable-listview-in-react-native/
   const renderItem = ({ item }) => <CustomerRow item={item} />;
   return (
-    <>
+    <DraxProvider>
       <NotificationsHelper />
       <Loader visible={isLoading} />
       <View
@@ -97,7 +98,7 @@ const AdminHome = () => {
           </ScrollView>
         </View>
       </View>
-    </>
+    </DraxProvider>
   );
 };
 

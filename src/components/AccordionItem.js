@@ -18,7 +18,6 @@ const AccordionItem = ({ children, item, expanded, onHeaderPress }) => {
     acc.push(ele.name);
     return acc;
   }, []);
-
   const borderColor = timeslot ? Colors.info : Colors.success;
   const type = timeslot ? 'appointment' : 'walkIn';
   const titleContent = (
@@ -49,7 +48,7 @@ const AccordionItem = ({ children, item, expanded, onHeaderPress }) => {
           <Icon name={expanded ? 'chevron-up' : 'chevron-down'} size={14} color={borderColor} />
         </View>
       </TouchableOpacity>
-      {expanded && <ServicesTable services={services} />}
+      {expanded && <ServicesTable booking={item} />}
     </View>
   );
 };
