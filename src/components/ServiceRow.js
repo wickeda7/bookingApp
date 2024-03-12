@@ -1,22 +1,21 @@
-import { StyleSheet, Text, View, TextInput } from 'react-native';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native';
 import React from 'react';
-import { Default } from '@constants/style';
+import { Default, Fonts, Colors } from '@constants/style';
 import Style from '@theme/style';
 import { formatPrice } from '@utils/helper';
 import { useTranslation } from 'react-i18next';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import { DraxView, DraxViewDragStatus, DraxSnapbackTargetPreset } from 'react-native-drax';
 
-const ServiceRow = ({ item, setService, specialist }) => {
+const ServiceRow = ({ item, setService, row }) => {
   const { t, i18n } = useTranslation();
   const isRtl = i18n.dir() === 'rtl';
   function tr(key) {
     return t(`homeScreen:${key}`);
   }
-
-  console.log('ServiceRow -> specialist', specialist);
+  console.log('ServiceRow -> row', row);
+  const specialist = item.specialist;
   const color = specialist ? specialist.userInfo.displayColor : '#000';
-  console.log('ServiceRow -> color', color);
   return (
     <>
       {specialist ? (
@@ -52,7 +51,64 @@ const ServiceRow = ({ item, setService, specialist }) => {
             ]}
           >
             <View style={[{ flex: 1, paddingLeft: 10 }]}>
-              <Text>button here</Text>
+              {row === 0 && item.status === 'pending' && (
+                <TouchableOpacity
+                  activeOpacity={0.8}
+                  onPress={() => {
+                    setService(item, 'staff');
+                  }}
+                  style={[
+                    Style.buttonStyle,
+                    {
+                      backgroundColor: item.status === 'pending' ? Colors.success : Colors.red,
+                      marginTop: 0,
+                      flexDirection: 'row',
+                      width: 150,
+                    },
+                  ]}
+                >
+                  {item.status === 'pending' ? (
+                    <AntIcon size={18} name='adduser' color={Colors.white} />
+                  ) : (
+                    <AntIcon size={18} name='deleteuser' color={Colors.white} />
+                  )}
+
+                  <Text style={[{ paddingHorizontal: Default.fixPadding * 0.5 }, Fonts.White14Bold]}>
+                    {item.status === 'pending'
+                      ? `${tr('addstaff')} ${specialist.userInfo.firstName}`
+                      : tr('removestaff')}
+                  </Text>
+                </TouchableOpacity>
+              )}
+              {item.status === 'working' && (
+                <TouchableOpacity
+                  activeOpacity={0.8}
+                  onPress={() => {
+                    setService(item, 'staff');
+                  }}
+                  style={[
+                    Style.buttonStyle,
+                    {
+                      backgroundColor: item.status === 'pending' ? Colors.success : Colors.red,
+                      marginTop: 0,
+                      flexDirection: 'row',
+                      width: 150,
+                    },
+                  ]}
+                >
+                  {item.status === 'pending' ? (
+                    <AntIcon size={18} name='adduser' color={Colors.white} />
+                  ) : (
+                    <AntIcon size={18} name='deleteuser' color={Colors.white} />
+                  )}
+
+                  <Text style={[{ paddingHorizontal: Default.fixPadding * 0.5 }, Fonts.White14Bold]}>
+                    {item.status === 'pending'
+                      ? `${tr('addstaff')} ${specialist.userInfo.firstName}`
+                      : tr('removestaff')}
+                  </Text>
+                </TouchableOpacity>
+              )}
             </View>
             <View style={[{ flex: 2, flexDirection: 'row' }]}>
               <Text style={{ fontSize: 14, marginTop: 5, marginRight: 5 }}>{tr('notes')}: </Text>
@@ -68,7 +124,7 @@ const ServiceRow = ({ item, setService, specialist }) => {
           receiverPayload={item}
           onReceiveDragDrop={(event) => {
             // console.log('ServiceRow -> onReceiveDragDrop', event.dragged.payload, event);
-            setService(event.dragged.payload);
+            setService(event.dragged.payload, 'service');
             DraxViewDragStatus.Inactive;
             return DraxSnapbackTargetPreset.None;
           }}
