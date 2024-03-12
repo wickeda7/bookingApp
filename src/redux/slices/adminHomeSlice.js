@@ -14,34 +14,31 @@ export const adminHomeSlice = createSlice({
   reducers: {
     setStaffService: (state, action) => {
       let { item, type } = action.payload;
-      if (type === 'staff') {
+      if (type === 'remove') {
         let { specialist, status, bookingId, type: bookingType, id } = item;
         const available = status === 'pending' ? false : true;
         const newStatus = status === 'pending' ? 'working' : 'pending';
-        specialist = { ...specialist, available };
-        const objectIndex = state.staff.findIndex((obj) => obj.id === specialist.id);
-        state.staff.splice(objectIndex, 1);
-        state.staff.push(specialist);
 
-        let booking = state[bookingType].map((obj) => {
-          if (obj.id === bookingId) {
-            console.log('services', obj.services);
-            console.log('services id', id);
-            console.log('services length', obj.services.length);
-            console.log('services status', status);
-            let services = obj.services.map((obj) => {
-              if (obj.id === id) {
-                let prevSpecialist = status === 'pending' ? obj.specialist : null;
-                return { ...obj, status: newStatus, specialist: prevSpecialist };
-              }
-              return obj;
-            });
-            let prevSpecialist = status === 'pending' ? obj.specialist : null;
-            return { ...obj, services: services, specialist: prevSpecialist };
-          }
-          return obj;
-        });
-        state[bookingType] = booking;
+        const objectIndex = state.staff.findIndex((obj) => obj.id === specialist.id);
+        const isAvailable = state.staff[objectIndex].available;
+        if (!isAvailable) {
+          specialist = { ...specialist, available };
+          state.staff.splice(objectIndex, 1);
+          state.staff.push(specialist);
+        }
+
+        const bookingIndex = state[bookingType].findIndex((obj) => obj.id === bookingId);
+        const booking = { ...state[bookingType][bookingIndex] };
+        let bookingServices = booking.services;
+        let bookingSpecialist = { ...booking.specialist };
+        const serviceIndex = bookingServices.findIndex((obj) => obj.id === id);
+        const specialistNum = bookingServices.filter((obj) => obj.specialist !== null).length;
+        if (specialistNum === 1) {
+          bookingSpecialist = null;
+        }
+        let service = { ...bookingServices[serviceIndex], specialist: null, status: 'pending' };
+        bookingServices[serviceIndex] = service;
+        state[bookingType][bookingIndex] = { ...booking, services: bookingServices, specialist: bookingSpecialist };
       }
     },
     setStaff: (state, action) => {
