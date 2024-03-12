@@ -13,16 +13,36 @@ export const adminHomeSlice = createSlice({
   initialState,
   reducers: {
     setStaffService: (state, action) => {
-      let { staff, booking } = action.payload;
-      staff = { ...staff, available: false };
-      const objectIndex = state.staff.findIndex((obj) => obj.id === staff.id);
-      let prevStaff = state.staff;
-      prevStaff.splice(objectIndex, 1);
-      prevStaff.push(staff);
-      state.staff = prevStaff;
-      console.log('adminHomeSlice -> booking', booking);
-      // console.log('adminHomeSlice -> object', object);
-      // console.log('adminHomeSlice -> action', staff, service);
+      let { item, type } = action.payload;
+      if (type === 'staff') {
+        let { specialist, status, bookingId, type: bookingType, id } = item;
+        const available = status === 'pending' ? false : true;
+        const newStatus = status === 'pending' ? 'working' : 'pending';
+        specialist = { ...specialist, available };
+        const objectIndex = state.staff.findIndex((obj) => obj.id === specialist.id);
+        state.staff.splice(objectIndex, 1);
+        state.staff.push(specialist);
+
+        let booking = state[bookingType].map((obj) => {
+          if (obj.id === bookingId) {
+            console.log('services', obj.services);
+            console.log('services id', id);
+            console.log('services length', obj.services.length);
+            console.log('services status', status);
+            let services = obj.services.map((obj) => {
+              if (obj.id === id) {
+                let prevSpecialist = status === 'pending' ? obj.specialist : null;
+                return { ...obj, status: newStatus, specialist: prevSpecialist };
+              }
+              return obj;
+            });
+            let prevSpecialist = status === 'pending' ? obj.specialist : null;
+            return { ...obj, services: services, specialist: prevSpecialist };
+          }
+          return obj;
+        });
+        state[bookingType] = booking;
+      }
     },
     setStaff: (state, action) => {
       const staff = action.payload.map((item) => {
