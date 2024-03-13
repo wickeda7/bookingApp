@@ -56,7 +56,12 @@
     "price": "Price",
     "additional": "Additional",
     "total": "Total",
-    "notes": "Notes"
+    "notes": "Notes",
+    "addstaff": "Add",
+    "removestaff": "Remove",
+    "pending": "PENDING",
+    "working": "WORKING",
+    "finished": "FINISHED"
   },
   "reports": {
     "reports": "Reports",

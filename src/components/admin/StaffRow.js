@@ -10,6 +10,7 @@ const StaffRow = ({ item }) => {
   const appNum = appointment.filter((app) => app.specialist.id === item.id);
   const { userInfo, available } = item;
   const color = userInfo.displayColor ? userInfo.displayColor : '#000';
+
   return (
     <>
       {available ? (
@@ -19,35 +20,9 @@ const StaffRow = ({ item }) => {
           dragReleasedStyle={styles.dragging}
           hoverDraggingStyle={styles.hoverDragging}
           dragPayload={item}
-          // onDragStart={(event) => {
-          //   // console.log('StaffRow -> Start', event);
-          //   // return DraxSnapbackTargetPreset.None;
-          // }}
-          // onDrag={(event) => {
-          //   // console.log('StaffRow -> Drag', event);
-          // }}
-          // onDragEnter={(event) => {
-          //   console.log('StaffRow -> Enter into receiver', event);
-          // }}
-          // onDragOver={(event) => {
-          //   console.log('StaffRow -> dragged over a receiver', event);
-          // }}
-          // onDragExit={(event) => {
-          //   console.log('StaffRow -> when this view is dragged out of a receiver', event);
-          // }}
           onDragEnd={(event) => {
-            // console.log(
-            //   'StaffRow -> when this view drag ends outside of a receiver (or is cancelled) snapbackToDefaultPosition',
-            //   event
-            // );
             return DraxSnapbackTargetPreset.None;
           }}
-          // onDragDrop={(event) => {
-          //   console.log(
-          //     'StaffRow -> : when this view drag ends successfully over a receiver return DraxSnapbackTargetPreset.None',
-          //     event
-          //   );
-          // }}
         >
           <View style={[styles.row, { borderColor: color }]}>
             <View style={{ flex: 10, flexDirection: 'row' }}>

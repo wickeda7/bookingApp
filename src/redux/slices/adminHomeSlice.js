@@ -16,61 +16,45 @@ export const adminHomeSlice = createSlice({
       let service = action.payload.service;
       let type = action.payload.type;
       let staff = action.payload?.staff;
-      // console.log('adminHomeSlice -> setStaffService -> service', service);
-      // console.log('adminHomeSlice -> setStaffService -> staff', staff);
 
       let { specialist, status, bookingId, type: bookingType, id } = service;
-      console.log('adminHomeSlice -> setStaffService -> specialist', specialist);
-      console.log('adminHomeSlice -> setStaffService -> status', status);
-      console.log('adminHomeSlice -> setStaffService -> bookingId', bookingId);
-      console.log('adminHomeSlice -> setStaffService -> type', bookingType);
-      console.log('adminHomeSlice -> setStaffService -> id', id);
-      const available = status === 'pending' ? false : true;
-      const newStatus = status === 'pending' ? 'working' : 'pending';
-      if (type === 'remove') {
-        const objectIndex = state.staff.findIndex((obj) => obj.id === specialist.id);
-        const isAvailable = state.staff[objectIndex].available;
-        if (!isAvailable) {
-          specialist = { ...specialist, available: true };
-          state.staff.splice(objectIndex, 1);
-          state.staff.push(specialist);
-        }
 
-        const bookingIndex = state[bookingType].findIndex((obj) => obj.id === bookingId);
-        const booking = { ...state[bookingType][bookingIndex] };
-        let bookingServices = booking.services;
-        let bookingSpecialist = { ...booking.specialist };
-        const serviceIndex = bookingServices.findIndex((obj) => obj.id === id);
-        const specialistNum = bookingServices.filter((obj) => obj.specialist !== null).length;
+      const available = status === 'pending' ? false : true;
+
+      const bookingIndex = state[bookingType].findIndex((obj) => obj.id === bookingId);
+      const booking = { ...state[bookingType][bookingIndex] };
+      let bookingServices = booking.services;
+      let bookingSpecialist = { ...booking.specialist };
+      const specialistNum = bookingServices.filter((obj) => obj.specialist !== null).length;
+      const serviceIndex = bookingServices.findIndex((obj) => obj.id === id);
+      let serv = {};
+
+      if (type === 'remove') {
         if (specialistNum === 1) {
           bookingSpecialist = null;
         }
-        let serv = { ...bookingServices[serviceIndex], specialist: null, status: 'pending' };
-        bookingServices[serviceIndex] = serv;
-        state[bookingType][bookingIndex] = { ...booking, services: bookingServices, specialist: bookingSpecialist };
+        serv = { ...bookingServices[serviceIndex], specialist: null, status: 'pending' };
       } else {
-        const objectIndex = state.staff.findIndex((obj) => obj.id === staff.id);
-        const isAvailable = state.staff[objectIndex].available;
-        console.log('adminHomeSlice -> setStaffService -> isAvailable', isAvailable);
-        if (isAvailable) {
-          staff = { ...staff, available: false };
-          state.staff.splice(objectIndex, 1);
-          state.staff.push(staff);
+        if (Object.keys(bookingSpecialist).length === 0) {
+          bookingSpecialist = staff;
         }
+        serv = { ...bookingServices[serviceIndex], specialist: staff, status: 'working' };
+      }
 
-        const bookingIndex = state[bookingType].findIndex((obj) => obj.id === bookingId);
-        const booking = { ...state[bookingType][bookingIndex] };
-        let bookingServices = booking.services;
-        let bookingSpecialist = { ...booking.specialist };
-        console.log('adminHomeSlice -> setStaffService -> bookingSpecialist', bookingSpecialist);
-        const serviceIndex = bookingServices.findIndex((obj) => obj.id === id);
-        const specialistNum = bookingServices.filter((obj) => obj.specialist !== null).length;
-        // if (specialistNum === 1) {
-        //   bookingSpecialist = null;
-        // }
-        let serv = { ...bookingServices[serviceIndex], specialist: staff, status: 'working' };
-        bookingServices[serviceIndex] = serv;
-        state[bookingType][bookingIndex] = { ...booking, services: bookingServices, specialist: bookingSpecialist };
+      bookingServices[serviceIndex] = serv;
+
+      state[bookingType][bookingIndex] = { ...booking, services: bookingServices, specialist: bookingSpecialist };
+
+      const specialistId = specialist ? specialist.id : staff.id;
+      const objectIndex = state.staff.findIndex((obj) => obj.id === specialistId);
+      if (staff) {
+        staff = { ...staff, available: false };
+        state.staff.splice(objectIndex, 1);
+        state.staff.push(staff);
+      } else {
+        if (specialistNum === 1) {
+          state.staff[objectIndex].available = true;
+        }
       }
     },
     setStaff: (state, action) => {

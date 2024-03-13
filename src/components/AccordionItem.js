@@ -14,6 +14,7 @@ const AccordionItem = ({ children, item, expanded, onHeaderPress }) => {
   }
   let { timeslot, createdAt, callBack, client, specialist, services } = item;
   services = typeof services === 'string' ? JSON.parse(services) : services;
+  if (!services) services = [];
   const servArr = services.reduce((acc, ele) => {
     acc.push(ele.name);
     return acc;
@@ -48,7 +49,7 @@ const AccordionItem = ({ children, item, expanded, onHeaderPress }) => {
           <Icon name={expanded ? 'chevron-up' : 'chevron-down'} size={14} color={borderColor} />
         </View>
       </TouchableOpacity>
-      {expanded && <ServicesTable booking={item} />}
+      {expanded && <ServicesTable services={services} />}
     </View>
   );
 };

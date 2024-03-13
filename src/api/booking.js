@@ -72,7 +72,19 @@ export const booking = {
             clientData['email'] = attr.client.data.attributes.email;
             clientData['userInfo'] = userInfo;
           }
-          const services = typeof attr.services === 'string' ? JSON.parse(attr.services) : attr.services;
+          let services = typeof attr.services === 'string' ? JSON.parse(attr.services) : attr.services;
+          const type = attr.timeslot === null ? 'walkin' : 'appointment';
+          services = services.map((service) => {
+            return {
+              ...service,
+              specialist: specialistData,
+              client: clientData,
+              storeId,
+              status: 'pending',
+              bookingId: id,
+              type,
+            };
+          });
           const final = { ...attr, client: clientData, specialist: specialistData, services, id };
           if (final.timeslot === null) {
             acc['walkin'].push(final);

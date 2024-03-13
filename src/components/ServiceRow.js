@@ -13,160 +13,87 @@ const ServiceRow = ({ item, setService, row }) => {
   function tr(key) {
     return t(`homeScreen:${key}`);
   }
-  console.log('ServiceRow -> row', row);
   const specialist = item.specialist;
   const color = specialist ? specialist.userInfo.displayColor : '#000';
+  const firstName = specialist ? specialist.userInfo.firstName : '';
+  const lastName = specialist ? specialist.userInfo.lastName : '';
   return (
-    <>
-      {specialist ? (
-        <>
-          <View style={[Style.mainContainer, { flexDirection: 'row', marginHorizontal: Default.fixPadding * 1.5 }]}>
-            <View style={[{ flex: 2, paddingLeft: 10, flexDirection: 'row' }]}>
-              <AntIcon size={15} name='menu-unfold' color={specialist.userInfo.displayColor} />
-              <Text
-                style={[
-                  { marginHorizontal: Default.fixPadding, color: specialist.userInfo.displayColor, fontSize: 14 },
-                ]}
-              >
-                {specialist.userInfo.firstName} {specialist.userInfo.lastName}
+    <DraxView
+      receiverPayload={item}
+      onReceiveDragDrop={(event) => {
+        const userId = event.dragged.payload.id;
+        const receivedId = event.receiver.payload.specialist?.id;
+        if (receivedId === undefined || userId === receivedId) {
+          setService(event.receiver.payload, 'service', event.dragged.payload);
+        }
+        DraxViewDragStatus.Inactive;
+        return DraxSnapbackTargetPreset.None;
+      }}
+    >
+      <View style={[Style.mainContainer, { flexDirection: 'row', marginHorizontal: Default.fixPadding * 1.5 }]}>
+        <View style={[{ flex: 2, paddingLeft: 10, flexDirection: 'row' }]}>
+          <AntIcon size={15} name='menu-unfold' color={color} />
+          <Text style={[{ marginHorizontal: Default.fixPadding, color: color, fontSize: 14 }]}>
+            {firstName} {lastName}
+          </Text>
+        </View>
+        <View style={[{ flex: 4 }]}>
+          <Text style={{ fontSize: 14 }}>{item.name}</Text>
+        </View>
+        <View style={[{ flex: 1 }]}>
+          <Text style={{ fontSize: 14 }}>{formatPrice(item.price * 100)}</Text>
+        </View>
+        <View style={[{ flex: 1 }]}>
+          <TextInput style={[Style.inputStyle, { width: '80%', height: 20, marginVertical: 0 }]} />
+        </View>
+        <View style={[{ flex: 1 }]}>
+          <Text style={{ fontSize: 14 }}>$20.00</Text>
+        </View>
+      </View>
+      <View
+        style={[
+          Style.mainContainer,
+          { flexDirection: 'row', marginHorizontal: Default.fixPadding * 1.5, marginTop: Default.fixPadding },
+        ]}
+      >
+        <View style={[{ flex: 1, paddingLeft: 10 }]}>
+          {specialist && (
+            <TouchableOpacity
+              activeOpacity={0.8}
+              onPress={() => {
+                setService(item, 'remove');
+              }}
+              style={[
+                Style.buttonStyle,
+                {
+                  backgroundColor: Colors.red,
+                  marginTop: 0,
+                  flexDirection: 'row',
+                  width: 100,
+                },
+              ]}
+            >
+              <AntIcon size={18} name='deleteuser' color={Colors.white} />
+              <Text style={[{ paddingHorizontal: Default.fixPadding * 0.5 }, Fonts.White14Bold]}>
+                {tr('removestaff')}
               </Text>
-            </View>
-            <View style={[{ flex: 4 }]}>
-              <Text style={{ fontSize: 14 }}>{item.name}</Text>
-            </View>
-            <View style={[{ flex: 1 }]}>
-              <Text style={{ fontSize: 14 }}>{formatPrice(item.price * 100)}</Text>
-            </View>
-            <View style={[{ flex: 1 }]}>
-              <TextInput style={[Style.inputStyle, { width: '80%', height: 20, marginVertical: 0 }]} />
-            </View>
-            <View style={[{ flex: 1 }]}>
-              <Text style={{ fontSize: 14 }}>$20.00</Text>
-            </View>
-          </View>
-          <View
-            style={[
-              Style.mainContainer,
-              { flexDirection: 'row', marginHorizontal: Default.fixPadding * 1.5, marginTop: Default.fixPadding },
-            ]}
-          >
-            <View style={[{ flex: 1, paddingLeft: 10 }]}>
-              {row === 0 && item.status === 'pending' && (
-                <TouchableOpacity
-                  activeOpacity={0.8}
-                  onPress={() => {
-                    setService(item, 'staff');
-                  }}
-                  style={[
-                    Style.buttonStyle,
-                    {
-                      backgroundColor: item.status === 'pending' ? Colors.success : Colors.red,
-                      marginTop: 0,
-                      flexDirection: 'row',
-                      width: 150,
-                    },
-                  ]}
-                >
-                  {item.status === 'pending' ? (
-                    <AntIcon size={18} name='adduser' color={Colors.white} />
-                  ) : (
-                    <AntIcon size={18} name='deleteuser' color={Colors.white} />
-                  )}
-
-                  <Text style={[{ paddingHorizontal: Default.fixPadding * 0.5 }, Fonts.White14Bold]}>
-                    {item.status === 'pending'
-                      ? `${tr('addstaff')} ${specialist.userInfo.firstName}`
-                      : tr('removestaff')}
-                  </Text>
-                </TouchableOpacity>
-              )}
-              {item.status === 'working' && (
-                <TouchableOpacity
-                  activeOpacity={0.8}
-                  onPress={() => {
-                    setService(item, 'staff');
-                  }}
-                  style={[
-                    Style.buttonStyle,
-                    {
-                      backgroundColor: item.status === 'pending' ? Colors.success : Colors.red,
-                      marginTop: 0,
-                      flexDirection: 'row',
-                      width: 150,
-                    },
-                  ]}
-                >
-                  {item.status === 'pending' ? (
-                    <AntIcon size={18} name='adduser' color={Colors.white} />
-                  ) : (
-                    <AntIcon size={18} name='deleteuser' color={Colors.white} />
-                  )}
-
-                  <Text style={[{ paddingHorizontal: Default.fixPadding * 0.5 }, Fonts.White14Bold]}>
-                    {item.status === 'pending'
-                      ? `${tr('addstaff')} ${specialist.userInfo.firstName}`
-                      : tr('removestaff')}
-                  </Text>
-                </TouchableOpacity>
-              )}
-            </View>
-            <View style={[{ flex: 2, flexDirection: 'row' }]}>
-              <Text style={{ fontSize: 14, marginTop: 5, marginRight: 5 }}>{tr('notes')}: </Text>
-              <TextInput multiline={true} numberOfLines={5} style={[Style.inputStyle, { width: '90%', height: 50 }]} />
-            </View>
-          </View>
-          <View
-            style={[Style.divider, { marginHorizontal: Default.fixPadding, marginVertical: Default.fixPadding * 1.5 }]}
+            </TouchableOpacity>
+          )}
+        </View>
+        <View style={[{ flex: 2, flexDirection: 'row' }]}>
+          <Text style={{ fontSize: 14, marginTop: 5, marginRight: 5 }}>{tr('notes')}: </Text>
+          <TextInput
+            multiline={true}
+            numberOfLines={5}
+            style={[Style.inputStyle, { width: '90%', height: 50 }]}
+            placeholder={`Status: ${tr(item.status)}`}
           />
-        </>
-      ) : (
-        <DraxView
-          receiverPayload={item}
-          onReceiveDragDrop={(event) => {
-            // console.log('ServiceRow -> onReceiveDragDrop', event.dragged.payload, event);
-            setService(event.dragged.payload, 'service');
-            DraxViewDragStatus.Inactive;
-            return DraxSnapbackTargetPreset.None;
-          }}
-        >
-          <View style={[Style.mainContainer, { flexDirection: 'row', marginHorizontal: Default.fixPadding * 1.5 }]}>
-            <View style={[{ flex: 2, paddingLeft: 10 }]}>
-              <Text style={{ fontSize: 14 }}>
-                {' '}
-                <AntIcon size={15} name='menu-unfold' color={color} />
-              </Text>
-            </View>
-            <View style={[{ flex: 4 }]}>
-              <Text style={{ fontSize: 14 }}>{item.name}</Text>
-            </View>
-            <View style={[{ flex: 1 }]}>
-              <Text style={{ fontSize: 14 }}>{formatPrice(item.price * 100)}</Text>
-            </View>
-            <View style={[{ flex: 1 }]}>
-              <TextInput style={[Style.inputStyle, { width: '80%', height: 20, marginVertical: 0 }]} />
-            </View>
-            <View style={[{ flex: 1 }]}>
-              <Text style={{ fontSize: 14 }}>$20.00</Text>
-            </View>
-          </View>
-          <View
-            style={[
-              Style.mainContainer,
-              { flexDirection: 'row', marginHorizontal: Default.fixPadding * 1.5, marginTop: Default.fixPadding },
-            ]}
-          >
-            <View style={[{ flex: 1, paddingLeft: 10 }]}></View>
-            <View style={[{ flex: 2, flexDirection: 'row' }]}>
-              <Text style={{ fontSize: 14, marginTop: 5, marginRight: 5 }}>{tr('notes')}: </Text>
-              <TextInput multiline={true} numberOfLines={5} style={[Style.inputStyle, { width: '90%', height: 50 }]} />
-            </View>
-          </View>
-          <View
-            style={[Style.divider, { marginHorizontal: Default.fixPadding, marginVertical: Default.fixPadding * 1.5 }]}
-          />
-        </DraxView>
-      )}
-    </>
+        </View>
+      </View>
+      <View
+        style={[Style.divider, { marginHorizontal: Default.fixPadding, marginVertical: Default.fixPadding * 1.5 }]}
+      />
+    </DraxView>
   );
 };
 

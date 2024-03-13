@@ -6,19 +6,21 @@ import ServiceRow from './ServiceRow';
 import { useTranslation } from 'react-i18next';
 import { setStaffService } from '@redux/slices/adminHomeSlice';
 import { useDispatch } from 'react-redux';
-const ServicesTable = ({ booking }) => {
+const ServicesTable = ({ services }) => {
   const { t, i18n } = useTranslation();
   const isRtl = i18n.dir() === 'rtl';
-  const { services, specialist } = booking;
-  //const services = booking.services;
   function tr(key) {
     return t(`homeScreen:${key}`);
   }
   const dispatch = useDispatch();
-  const setService = (staff) => {
-    // console.log('ServiceRow -> setService staff', staff);
-    dispatch(setStaffService({ staff, booking }));
+  const setService = (service, type, staff) => {
+    if (type === 'service') {
+      dispatch(setStaffService({ type, service, staff }));
+    } else {
+      dispatch(setStaffService({ type, service }));
+    }
   };
+
   return (
     <>
       <View style={[Style.divider, { marginHorizontal: Default.fixPadding }]} />
@@ -33,7 +35,7 @@ const ServicesTable = ({ booking }) => {
       </View>
       <ScrollView showsVerticalScrollIndicator={false}>
         {services.map((service, index) => (
-          <ServiceRow key={index} item={service} setService={setService} specialist={specialist} />
+          <ServiceRow key={index} item={service} setService={setService} row={index} />
         ))}
       </ScrollView>
     </>
