@@ -5,15 +5,28 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useSelector } from 'react-redux';
 import { Default, Colors } from '@constants/style';
 import { DraxProvider, DraxView, DraxViewDragStatus, DraxSnapbackTargetPreset } from 'react-native-drax';
-const StaffRow = ({ item }) => {
+import { appointmentTime } from '@utils/helper';
+const StaffRow = ({ item, busy }) => {
   const { appointment } = useSelector((state) => state.adminHome);
+  // console.log('appointment', appointment);
+  // console.log('item', item);
   const appNum = appointment.filter((app) => app.specialist.id === item.id);
+  let time = '';
+  if (appNum.length > 0) {
+    const {
+      timeslot,
+      specialist: {
+        userInfo: { hours },
+      },
+    } = appNum[0];
+    time = appointmentTime(hours, timeslot);
+  }
   const { userInfo, available } = item;
   const color = userInfo.displayColor ? userInfo.displayColor : '#000';
 
   return (
     <>
-      {available ? (
+      {!busy ? (
         <DraxView
           style={[styles.centeredContent]}
           draggingStyle={styles.dragging}
@@ -33,6 +46,7 @@ const StaffRow = ({ item }) => {
             </View>
             {appNum.length > 0 && (
               <View style={[styles.appNumContainer, { position: 'relative' }]}>
+                <Text style={[styles.time, { color: color }]}>{time}</Text>
                 <Ionicons name='notifications-outline' size={20} color={color} />
                 <View style={styles.dot}>
                   <Text style={styles.dotText}>{appNum.length}</Text>
@@ -43,7 +57,7 @@ const StaffRow = ({ item }) => {
         </DraxView>
       ) : (
         <View style={[styles.row, { borderColor: Colors.disable, backgroundColor: Colors.bord }]}>
-          <View style={{ flex: 10, flexDirection: 'row' }}>
+          <View style={{ flex: 7, flexDirection: 'row' }}>
             <AntIcon size={15} name='menu-fold' color={color} />
             <Text style={[{ marginHorizontal: Default.fixPadding, color: color, fontSize: 14 }]}>
               {userInfo.firstName} {userInfo.lastName}
@@ -86,9 +100,9 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   appNumContainer: {
-    flex: 1,
+    flex: 3,
     alignItems: 'flex-end',
-    paddingRight: 20,
+    paddingRight: 10,
   },
   dot: {
     width: 13,
@@ -97,9 +111,15 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     position: 'absolute',
     top: 0,
-    left: 15,
+    right: 20,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  time: {
+    position: 'absolute',
+    top: 3,
+    left: 5,
+    fontSize: 12,
   },
   dotText: {
     color: 'white',

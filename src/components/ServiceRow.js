@@ -1,28 +1,33 @@
 import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Default, Fonts, Colors } from '@constants/style';
 import Style from '@theme/style';
 import { formatPrice } from '@utils/helper';
 import { useTranslation } from 'react-i18next';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import { DraxView, DraxViewDragStatus, DraxSnapbackTargetPreset } from 'react-native-drax';
+import NumericInput from '@wwdrew/react-native-numeric-textinput';
 
-const ServiceRow = ({ item, setService, row }) => {
+const ServiceRow = ({ item, setService, handleTextChange }) => {
   const { t, i18n } = useTranslation();
   const isRtl = i18n.dir() === 'rtl';
   function tr(key) {
     return t(`homeScreen:${key}`);
   }
+
   const specialist = item.specialist;
   const color = specialist ? specialist.userInfo.displayColor : '#000';
   const firstName = specialist ? specialist.userInfo.firstName : '';
   const lastName = specialist ? specialist.userInfo.lastName : '';
+  const price = item.price;
+  const additional = item.additional ? item.additional.toString() : '';
+  const total = item.total ? item.total : price;
   return (
     <DraxView
       receiverPayload={item}
       onReceiveDragDrop={(event) => {
         const userId = event.dragged.payload.id;
-        const receivedId = event.receiver.payload.specialist?.id;
+        const receivedId = event.receiver.payload.specialist?.id ? event.receiver.payload.specialist.id : undefined;
         if (receivedId === undefined || userId === receivedId) {
           setService(event.receiver.payload, 'service', event.dragged.payload);
         }
@@ -41,13 +46,20 @@ const ServiceRow = ({ item, setService, row }) => {
           <Text style={{ fontSize: 14 }}>{item.name}</Text>
         </View>
         <View style={[{ flex: 1 }]}>
-          <Text style={{ fontSize: 14 }}>{formatPrice(item.price * 100)}</Text>
+          <Text style={{ fontSize: 14 }}>{formatPrice(price * 100)}</Text>
         </View>
         <View style={[{ flex: 1 }]}>
-          <TextInput style={[Style.inputStyle, { width: '80%', height: 20, marginVertical: 0 }]} />
+          <NumericInput
+            type='decimal'
+            decimalPlaces={2}
+            value={additional}
+            onUpdate={(value) => handleTextChange(value, item, 'additional')}
+            style={[Style.inputStyle, { width: '80%', height: 25, marginVertical: 0, padding: 4 }]}
+            selectionColor={Colors.primary}
+          />
         </View>
         <View style={[{ flex: 1 }]}>
-          <Text style={{ fontSize: 14 }}>$20.00</Text>
+          <Text style={{ fontSize: 14 }}>{formatPrice(total * 100)}</Text>
         </View>
       </View>
       <View
@@ -85,8 +97,10 @@ const ServiceRow = ({ item, setService, row }) => {
           <TextInput
             multiline={true}
             numberOfLines={5}
+            selectionColor={Colors.primary}
             style={[Style.inputStyle, { width: '90%', height: 50 }]}
             placeholder={`Status: ${tr(item.status)}`}
+            onEndEditing={(text) => handleTextChange(text, item, 'notes')}
           />
         </View>
       </View>

@@ -6,6 +6,7 @@ import { Colors, Default } from '@constants/style';
 import { useTranslation } from 'react-i18next';
 import ServicesTable from './ServicesTable';
 import moment from 'moment';
+import { appointmentTime } from '@utils/helper';
 const AccordionItem = ({ children, item, expanded, onHeaderPress }) => {
   const { t, i18n } = useTranslation();
   const isRtl = i18n.dir() === 'rtl';
@@ -13,6 +14,10 @@ const AccordionItem = ({ children, item, expanded, onHeaderPress }) => {
     return t(`homeScreen:${key}`);
   }
   let { timeslot, createdAt, callBack, client, specialist, services } = item;
+  let time = moment(createdAt).format('h:mm A');
+  if (timeslot) {
+    time = appointmentTime(specialist?.userInfo?.hours, timeslot);
+  }
   services = typeof services === 'string' ? JSON.parse(services) : services;
   if (!services) services = [];
   const servArr = services.reduce((acc, ele) => {
@@ -25,7 +30,7 @@ const AccordionItem = ({ children, item, expanded, onHeaderPress }) => {
     <>
       <Text style={[styles.accordTitle, { color: borderColor }]}>
         {tr(type)}
-        {'  '} {moment(createdAt).format('h:mm A')} {'  '}
+        {'  '} {time} {'  '}
         {client?.userInfo?.firstName} {client?.userInfo?.lastName} {'  '}
         {specialist && `${tr('request')} ${specialist?.userInfo?.firstName} ${specialist?.userInfo?.firstName}`}
       </Text>

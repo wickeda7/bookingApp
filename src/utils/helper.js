@@ -107,4 +107,11 @@ export const tableRows = (data, header, type) => {
   }, []);
   return headerMap;
 };
+export const appointmentTime = (hours, timeslot) => {
+  let time = '';
+  const temp = hours.find((hour) => +hour.id === timeslot);
+  let hour = temp.hours.split('-');
+  time = hour[0];
+  return time;
+};
 export default { formatPhoneNumber, parseReduceData, formatPrice, imageUrlToBase64, parseEvents, tableRows };

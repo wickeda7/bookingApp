@@ -61,7 +61,9 @@
     "removestaff": "Remove",
     "pending": "PENDING",
     "working": "WORKING",
-    "finished": "FINISHED"
+    "finished": "FINISHED",
+    "delete": "Delete",
+    "submit": "Submit"
   },
   "reports": {
     "reports": "Reports",

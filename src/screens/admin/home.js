@@ -23,18 +23,15 @@ const AdminHome = () => {
   }
   const { userData } = useAuthContext();
   const dispatch = useDispatch();
-  const { isLoading, staff, walkin, appointment } = useSelector((state) => state.adminHome);
+  const { isLoading, staffAvailable, staffUnAvailable, walkin, appointment } = useSelector((state) => state.adminHome);
   const employee = userData.storeAdmin.employee;
   const today = moment().format('YYYY-MM-DD');
   const storeId = userData.storeAdmin.id;
   useEffect(() => {
     dispatch(getBooking({ storeId, today }));
     dispatch(setStaff(employee));
-    //setStaffAppointment();
   }, []);
-
   //https://www.geeksforgeeks.org/create-an-expandable-listview-in-react-native/
-  const renderItem = ({ item }) => <CustomerRow item={item} />;
   return (
     <DraxProvider>
       <NotificationsHelper />
@@ -87,8 +84,11 @@ const AdminHome = () => {
       </View>
       <View style={[Style.mainContainer, { flexDirection: 'row', padding: Default.fixPadding * 1.5 }]}>
         <View style={[{ flex: 2 }]}>
-          {staff.map((item, index) => {
-            return <StaffRow key={index} item={item} />;
+          {staffAvailable.map((item, index) => {
+            return <StaffRow key={index} item={item} busy={false} />;
+          })}
+          {staffUnAvailable.map((item, index) => {
+            return <StaffRow key={index} item={item} busy={true} />;
           })}
         </View>
         <View style={[styles.borderLeft, { flex: 4 }]}>
