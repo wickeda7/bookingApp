@@ -8,7 +8,7 @@ import AntIcon from 'react-native-vector-icons/AntDesign';
 import { DraxView, DraxViewDragStatus, DraxSnapbackTargetPreset } from 'react-native-drax';
 import NumericInput from '@wwdrew/react-native-numeric-textinput';
 
-const ServiceRow = ({ item, setService, handleTextChange }) => {
+const ServiceRow = ({ item, setService, setStaff, handleTextChange }) => {
   const { t, i18n } = useTranslation();
   const isRtl = i18n.dir() === 'rtl';
   function tr(key) {
@@ -19,17 +19,22 @@ const ServiceRow = ({ item, setService, handleTextChange }) => {
   const color = specialist ? specialist.userInfo.displayColor : '#000';
   const firstName = specialist ? specialist.userInfo.firstName : '';
   const lastName = specialist ? specialist.userInfo.lastName : '';
+  const id = specialist ? specialist.id : '';
   const price = item.price;
   const additional = item.additional ? item.additional.toString() : '';
   const total = item.total ? item.total : price;
+  const editable = item.status === 'pending' ? false : true;
+  const notes = item.notes ? item.notes : `Status: ${tr(item.status)}`;
   return (
     <DraxView
       receiverPayload={item}
       onReceiveDragDrop={(event) => {
         const userId = event.dragged.payload.id;
         const receivedId = event.receiver.payload.specialist?.id ? event.receiver.payload.specialist.id : undefined;
+        console.log('event', event);
         if (receivedId === undefined || userId === receivedId) {
           setService(event.receiver.payload, 'service', event.dragged.payload);
+          setStaff(event.dragged.payload);
         }
         DraxViewDragStatus.Inactive;
         return DraxSnapbackTargetPreset.None;
@@ -39,7 +44,7 @@ const ServiceRow = ({ item, setService, handleTextChange }) => {
         <View style={[{ flex: 2, paddingLeft: 10, flexDirection: 'row' }]}>
           <AntIcon size={15} name='menu-unfold' color={color} />
           <Text style={[{ marginHorizontal: Default.fixPadding, color: color, fontSize: 14 }]}>
-            {firstName} {lastName}
+            {firstName} {lastName} {id}
           </Text>
         </View>
         <View style={[{ flex: 4 }]}>
@@ -56,6 +61,7 @@ const ServiceRow = ({ item, setService, handleTextChange }) => {
             onUpdate={(value) => handleTextChange(value, item, 'additional')}
             style={[Style.inputStyle, { width: '80%', height: 25, marginVertical: 0, padding: 4 }]}
             selectionColor={Colors.primary}
+            editable={editable}
           />
         </View>
         <View style={[{ flex: 1 }]}>
@@ -74,6 +80,7 @@ const ServiceRow = ({ item, setService, handleTextChange }) => {
               activeOpacity={0.8}
               onPress={() => {
                 setService(item, 'remove');
+                setStaff(item);
               }}
               style={[
                 Style.buttonStyle,
@@ -99,8 +106,10 @@ const ServiceRow = ({ item, setService, handleTextChange }) => {
             numberOfLines={5}
             selectionColor={Colors.primary}
             style={[Style.inputStyle, { width: '90%', height: 50 }]}
-            placeholder={`Status: ${tr(item.status)}`}
+            placeholder={notes}
             onEndEditing={(text) => handleTextChange(text, item, 'notes')}
+            editable={editable}
+            //value={notes}
           />
         </View>
       </View>

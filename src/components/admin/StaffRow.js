@@ -21,7 +21,7 @@ const StaffRow = ({ item, busy }) => {
     } = appNum[0];
     time = appointmentTime(hours, timeslot);
   }
-  const { userInfo, available } = item;
+  const { userInfo } = item;
   const color = userInfo.displayColor ? userInfo.displayColor : '#000';
 
   return (
@@ -36,12 +36,15 @@ const StaffRow = ({ item, busy }) => {
           onDragEnd={(event) => {
             return DraxSnapbackTargetPreset.None;
           }}
+          // onDragStart={(event) => {
+          //   console.log('onDragStart event', event);
+          // }}
         >
           <View style={[styles.row, { borderColor: color }]}>
             <View style={{ flex: 10, flexDirection: 'row' }}>
               <AntIcon size={15} name='menu-fold' color={color} />
               <Text style={[{ marginHorizontal: Default.fixPadding, color: color, fontSize: 14 }]}>
-                {userInfo.firstName} {userInfo.lastName}
+                {userInfo.firstName} {userInfo.lastName} {item.id}
               </Text>
             </View>
             {appNum.length > 0 && (

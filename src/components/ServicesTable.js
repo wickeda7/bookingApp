@@ -4,7 +4,7 @@ import Style from '@theme/style';
 import { Default, Fonts, Colors } from '@constants/style';
 import ServiceRow from './ServiceRow';
 import { useTranslation } from 'react-i18next';
-import { setStaffService, updatePrice } from '@redux/slices/adminHomeSlice';
+import { updateService, updateStaff, updatePrice } from '@redux/slices/adminHomeSlice';
 import { useDispatch } from 'react-redux';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import { use } from 'i18next';
@@ -16,21 +16,16 @@ const ServicesTable = ({ services }) => {
   }
   const dispatch = useDispatch();
   const setService = (service, type, staff) => {
-    if (type === 'service') {
-      dispatch(setStaffService({ type, service, staff }));
-    } else {
-      dispatch(setStaffService({ type, service }));
-    }
+    dispatch(updateService({ type, service, staff }));
+  };
+  const setStaff = (staff) => {
+    dispatch(updateStaff(staff));
   };
   const handleSubmit = () => {};
   const handleDelete = () => {};
   const handleTextChange = (text, item, field) => {
-    if (field === 'additional') {
-      dispatch(updatePrice({ text, item }));
-    }
-
-    // console.log(text);
-    // console.log(item, field);
+    const value = field === 'additional' ? text : text.nativeEvent.text;
+    dispatch(updatePrice({ value, item, field }));
   };
 
   const status = services.find((obj) => obj.status === 'working');
@@ -48,7 +43,13 @@ const ServicesTable = ({ services }) => {
       </View>
       <ScrollView showsVerticalScrollIndicator={false}>
         {services.map((service, index) => (
-          <ServiceRow key={index} item={service} setService={setService} handleTextChange={handleTextChange} />
+          <ServiceRow
+            key={index}
+            item={service}
+            setService={setService}
+            handleTextChange={handleTextChange}
+            setStaff={setStaff}
+          />
         ))}
       </ScrollView>
       <View
