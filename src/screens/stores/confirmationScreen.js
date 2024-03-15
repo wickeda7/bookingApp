@@ -81,6 +81,7 @@ const ConfirmationScreen = (props) => {
         userID: userData.id,
         specialistID: specialist.id,
         storeID: selectedStore.id,
+        callBack: callBack,
       },
     };
     try {
@@ -337,15 +338,17 @@ const ConfirmationScreen = (props) => {
             >
               {specialist.userInfo.firstName} {specialist.userInfo.lastName}
             </Text>
-            <Text
-              style={{
-                ...Fonts.Grey16Medium,
-                marginHorizontal: Default.fixPadding * 1.5,
-                marginBottom: Default.fixPadding,
-              }}
-            >
-              ({specialist.userInfo.specialty})
-            </Text>
+            {specialist.userInfo.specialty && (
+              <Text
+                style={{
+                  ...Fonts.Grey16Medium,
+                  marginHorizontal: Default.fixPadding * 1.5,
+                  marginBottom: Default.fixPadding,
+                }}
+              >
+                ({specialist.userInfo.specialty})
+              </Text>
+            )}
           </>
         ) : (
           <Text

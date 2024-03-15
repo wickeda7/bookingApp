@@ -1,12 +1,12 @@
 import { StyleSheet, Text, View, TouchableOpacity, ScrollView } from 'react-native';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Colors, Default, Fonts } from '@constants/style';
 import Style from '@theme/style';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import NotificationsHelper from '@utils/notifications';
 import { useTranslation } from 'react-i18next';
 import { useAuthContext } from '@contexts/AuthContext';
-import { setStaff, setAppointment } from '@redux/slices/adminHomeSlice';
+import { setStaff, setAppointment, setWalkin } from '@redux/slices/adminHomeSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import Loader from '@components/loader';
 import moment from 'moment';
@@ -21,6 +21,8 @@ const AdminHome = () => {
   function tr(key) {
     return t(`homeScreen:${key}`);
   }
+  const [notification, setNotification] = useState(null);
+  const [notificationNumber, setNotificationNumber] = useState(0);
   const { userData } = useAuthContext();
   const dispatch = useDispatch();
   const { isLoading, staffAvailable, staffUnAvailable, walkin, appointment } = useSelector((state) => state.adminHome);
@@ -31,10 +33,96 @@ const AdminHome = () => {
     dispatch(getBooking({ storeId, today }));
     dispatch(setStaff(employee));
   }, []);
-  //https://www.geeksforgeeks.org/create-an-expandable-listview-in-react-native/
+  useEffect(() => {
+    if (notification) {
+      //console.log('notification home', notification);
+
+      console.log('notification home notification.request.content.data............', notification.request.content.data);
+      const data = notification.request.content.data;
+      if (data.specialistID) {
+        const staffA = staffAvailable.find((obj) => obj.id === data.specialistID);
+        const staffU = staffUnAvailable.find((obj) => obj.id === data.specialistID);
+        if (staffA) {
+          data.specialist = staffA;
+        }
+        if (staffU) {
+          data.specialist = staffU;
+        }
+      }
+      setNotificationNumber(notificationNumber + 1);
+      if (data.timeslot) {
+        dispatch(setAppointment(data));
+      } else {
+        dispatch(setWalkin(data));
+      }
+    }
+  }, [notification]);
+
+  const test = () => {
+    setNotificationNumber(0);
+    const data = {
+      callBack: true,
+      canceled: false,
+      confirmed: false,
+      createdAt: '2024-03-15T17:04:21.606Z',
+      date: '2024-03-15',
+      done: false,
+      id: 34,
+      services: [
+        {
+          createdAt: '2024-02-20T05:37:30.346Z',
+          description: null,
+          enable: true,
+          id: 1,
+          name: 'Gel Manicure111',
+          price: 40,
+          priceOption: null,
+          selected: true,
+          sort: null,
+          updatedAt: '2024-02-20T05:39:26.229Z',
+        },
+        {
+          createdAt: '2024-02-20T05:39:57.240Z',
+          description: null,
+          enable: true,
+          id: 2,
+          name: 'Gel removal222',
+          price: 3,
+          priceOption: null,
+          selected: true,
+          sort: null,
+          updatedAt: '2024-02-20T05:39:57.240Z',
+        },
+      ],
+      specialistID: 5,
+      storeID: 1,
+      timeslot: 2,
+      updatedAt: '2024-03-15T17:04:21.606Z',
+      userID: 10,
+    };
+    if (data.specialistID) {
+      console.log('staffAvailable', staffAvailable, staffUnAvailable, data.specialistID);
+      const staffA = staffAvailable.find((obj) => obj.id === data.specialistID);
+      const staffU = staffUnAvailable.find((obj) => obj.id === data.specialistID);
+      if (staffA) {
+        data.specialist = staffA;
+      }
+      if (staffU) {
+        data.specialist = staffU;
+      }
+      console.log('staffA', staffA);
+      console.log('staffU', staffU);
+    }
+
+    if (data.timeslot) {
+      dispatch(setAppointment(data));
+    } else {
+      dispatch(setWalkin(data));
+    }
+  };
   return (
     <DraxProvider>
-      <NotificationsHelper />
+      <NotificationsHelper setNotification={setNotification} />
       <Loader visible={isLoading} />
       <View
         style={{
@@ -59,25 +147,27 @@ const AdminHome = () => {
             }}
           >
             <TouchableOpacity
-              onPress={() => props.navigation.navigate('UserStack', { screen: 'notificationScreen' })}
+              onPress={() => setNotificationNumber(0)}
               style={{ position: 'absolute', top: 5, right: 10 }}
             >
               <Ionicons name='notifications-outline' size={45} color={Colors.white} />
-              <View
-                style={{
-                  position: 'absolute',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  width: 20,
-                  height: 20,
-                  top: 6,
-                  right: 20,
-                  borderRadius: 8,
-                  backgroundColor: Colors.white,
-                }}
-              >
-                <Text style={Fonts.Black14}>10</Text>
-              </View>
+              {notificationNumber > 0 && (
+                <View
+                  style={{
+                    position: 'absolute',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    width: 20,
+                    height: 20,
+                    top: 6,
+                    right: 20,
+                    borderRadius: 8,
+                    backgroundColor: Colors.white,
+                  }}
+                >
+                  <Text style={Fonts.Black14}>{notificationNumber}</Text>
+                </View>
+              )}
             </TouchableOpacity>
           </View>
         </View>

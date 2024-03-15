@@ -13,7 +13,8 @@ const AccordionItem = ({ children, item, expanded, onHeaderPress }) => {
   function tr(key) {
     return t(`homeScreen:${key}`);
   }
-  let { timeslot, createdAt, callBack, client, specialist, services } = item;
+  //console.log('item', item);
+  let { timeslot, createdAt, callBack, client, specialist, services, confirmed } = item;
   let time = moment(createdAt).format('h:mm A');
   if (timeslot) {
     time = appointmentTime(specialist?.userInfo?.hours, timeslot);
@@ -32,7 +33,7 @@ const AccordionItem = ({ children, item, expanded, onHeaderPress }) => {
         {tr(type)}
         {'  '} {time} {'  '}
         {client?.userInfo?.firstName} {client?.userInfo?.lastName} {'  '}
-        {specialist && `${tr('request')} ${specialist?.userInfo?.firstName} ${specialist?.userInfo?.firstName}`}
+        {specialist && `${tr('request')} ${specialist?.userInfo?.firstName} ${specialist?.userInfo?.lastName}`}
       </Text>
       <Text style={[styles.accordTitle, { color: borderColor, marginTop: Default.fixPadding * 0.5 }]}>
         {tr('services')}: {'  '}
@@ -50,6 +51,11 @@ const AccordionItem = ({ children, item, expanded, onHeaderPress }) => {
             <Micons name='textsms' size={30} color={borderColor} />
           </View>
         )}
+        {type === 'appointment' && !confirmed ? (
+          <View style={{ flex: 2 }}>
+            <Micons name='textsms' size={30} color={borderColor} />
+          </View>
+        ) : null}
         <View style={{ flex: 0.5, alignItems: 'flex-end' }}>
           <Icon name={expanded ? 'chevron-up' : 'chevron-down'} size={14} color={borderColor} />
         </View>

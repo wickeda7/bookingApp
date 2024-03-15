@@ -8,7 +8,9 @@ import { DraxProvider, DraxView, DraxViewDragStatus, DraxSnapbackTargetPreset } 
 import { appointmentTime } from '@utils/helper';
 const StaffRow = ({ item, busy }) => {
   const { appointment } = useSelector((state) => state.adminHome);
-  const appNum = appointment.filter((app) => app.specialist.id === item.id);
+  const appNum = appointment.filter((app) => {
+    if (app.specialist) return app.specialist.id === item.id;
+  });
   let time = '';
   if (appNum.length > 0) {
     const {
@@ -48,7 +50,7 @@ const StaffRow = ({ item, busy }) => {
             <View style={{ flex: 10, flexDirection: 'row' }}>
               <AntIcon size={15} name='menu-fold' color={color} />
               <Text style={[{ marginHorizontal: Default.fixPadding, color: color, fontSize: 14 }]}>
-                {userInfo.firstName} {userInfo.lastName}
+                {userInfo.firstName} {userInfo.lastName} {item.id}
               </Text>
             </View>
             {appNum.length > 0 && (
@@ -67,7 +69,7 @@ const StaffRow = ({ item, busy }) => {
           <View style={{ flex: 7, flexDirection: 'row' }}>
             <AntIcon size={15} name='menu-fold' color={color} />
             <Text style={[{ marginHorizontal: Default.fixPadding, color: color, fontSize: 14 }]}>
-              {userInfo.firstName} {userInfo.lastName}
+              {userInfo.firstName} {userInfo.lastName} {item.id}
             </Text>
           </View>
           {appNum.length > 0 && (

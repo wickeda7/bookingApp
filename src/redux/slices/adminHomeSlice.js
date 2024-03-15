@@ -138,10 +138,12 @@ export const adminHomeSlice = createSlice({
       state.isLoading = true;
     },
     setWalkin: (state, action) => {
-      state.walkin = action.payload;
+      console.log('action.payload setWalkin', action.payload);
+      state.walkin = [action.payload, ...state.walkin];
     },
     setAppointment: (state, action) => {
-      state.appointment = [...state.appointment, ...action.payload];
+      console.log('action.payload setAppointment', action.payload);
+      state.appointment = [action.payload, ...state.appointment];
     },
   },
   extraReducers: (builder) => {
@@ -172,6 +174,14 @@ export const adminHomeSlice = createSlice({
   },
 });
 
-export const { setStaff, setWalkin, setAppointment, updateService, updateStaff, updatePrice, resetMessage } =
-  adminHomeSlice.actions;
+export const {
+  setStaff,
+  setWalkin,
+  setAppointment,
+  updateService,
+  updateStaff,
+  updatePrice,
+  resetMessage,
+  addBooking,
+} = adminHomeSlice.actions;
 export default adminHomeSlice.reducer;

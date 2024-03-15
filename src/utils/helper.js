@@ -109,6 +109,10 @@ export const tableRows = (data, header, type) => {
 };
 export const appointmentTime = (hours, timeslot) => {
   let time = '';
+  if (!hours) {
+    const time = moment().format('h:mm A');
+    return time;
+  }
   const temp = hours.find((hour) => +hour.id === timeslot);
   let hour = temp.hours.split('-');
   time = hour[0];

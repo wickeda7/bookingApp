@@ -76,10 +76,10 @@ async function unregisterBackgroundFetchAsync() {
   return BackgroundFetch.unregisterTaskAsync(BACKGROUND_FETCH_TASK);
 }
 
-const NotificationsHelper = () => {
+const NotificationsHelper = ({ setNotification }) => {
   const { userData, updateToken } = useAuthContext();
   const [expoPushToken, setExpoPushToken] = useState('');
-  const [notification, setNotification] = useState(false);
+  //const [notification, setNotification] = useState(false);
   const notificationListener = useRef();
   const responseListener = useRef();
   const [isRegistered, setIsRegistered] = useState(false);
@@ -109,7 +109,6 @@ const NotificationsHelper = () => {
     registerForPushNotificationsAsync().then((token) => setExpoPushToken(token));
 
     notificationListener.current = Notifications.addNotificationReceivedListener((notification) => {
-      console.log('notification', notification);
       setNotification(notification);
     });
 

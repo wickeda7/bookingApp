@@ -50,7 +50,7 @@ const ServiceRow = ({ item, setService, setStaff, handleTextChange }) => {
         <View style={[{ flex: 2, paddingLeft: 10, flexDirection: 'row' }]}>
           <AntIcon size={15} name='menu-unfold' color={color} />
           <Text style={[{ marginHorizontal: Default.fixPadding, color: color, fontSize: 14 }]}>
-            {firstName} {lastName}
+            {firstName} {lastName} {id}
           </Text>
         </View>
         <View style={[{ flex: 4 }]}>
