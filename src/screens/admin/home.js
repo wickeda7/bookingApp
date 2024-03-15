@@ -98,24 +98,6 @@ const AdminHome = () => {
           </ScrollView>
         </View>
       </View>
-      {/* <TouchableOpacity onPress={() => console.log(walkin)} style={{ position: 'absolute', top: 5, right: 10 }}>
-        <Ionicons name='notifications-outline' size={45} color={Colors.white} />
-        <View
-          style={{
-            position: 'absolute',
-            justifyContent: 'center',
-            alignItems: 'center',
-            width: 80,
-            height: 80,
-            top: 6,
-            right: 20,
-            borderRadius: 8,
-            backgroundColor: 'orange',
-          }}
-        >
-          <Text style={Fonts.Black14}>10</Text>
-        </View>
-      </TouchableOpacity> */}
     </DraxProvider>
   );
 };

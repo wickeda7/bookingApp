@@ -8,8 +8,6 @@ import { DraxProvider, DraxView, DraxViewDragStatus, DraxSnapbackTargetPreset } 
 import { appointmentTime } from '@utils/helper';
 const StaffRow = ({ item, busy }) => {
   const { appointment } = useSelector((state) => state.adminHome);
-  // console.log('appointment', appointment);
-  // console.log('item', item);
   const appNum = appointment.filter((app) => app.specialist.id === item.id);
   let time = '';
   if (appNum.length > 0) {
@@ -39,12 +37,18 @@ const StaffRow = ({ item, busy }) => {
           // onDragStart={(event) => {
           //   console.log('onDragStart event', event);
           // }}
+          // onDragEnter={(event) => {
+          //   console.log('onDragEnter when this view is dragged into a receiver', event);
+          // }}
+          // onDragOver={(event) => {
+          //   console.log('onDragOver while this view is being dragged over a receiver', event);
+          // }}
         >
           <View style={[styles.row, { borderColor: color }]}>
             <View style={{ flex: 10, flexDirection: 'row' }}>
               <AntIcon size={15} name='menu-fold' color={color} />
               <Text style={[{ marginHorizontal: Default.fixPadding, color: color, fontSize: 14 }]}>
-                {userInfo.firstName} {userInfo.lastName} {item.id}
+                {userInfo.firstName} {userInfo.lastName}
               </Text>
             </View>
             {appNum.length > 0 && (

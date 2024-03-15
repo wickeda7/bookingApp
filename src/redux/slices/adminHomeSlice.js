@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { getBooking } from '../actions/adminHomeAction';
+import { getBooking, addInvoice } from '../actions/adminHomeAction';
 import { t } from 'i18next';
 const initialState = {
   staffAvailable: [],
@@ -7,12 +7,35 @@ const initialState = {
   walkin: [],
   appointment: [],
   isLoading: false,
+  message: '',
+  invoice: {},
 };
+function tr(key) {
+  return t(`homeScreen:${key}`);
+}
 
 export const adminHomeSlice = createSlice({
   name: 'adminHome',
   initialState,
   reducers: {
+    resetMessage: (state) => {
+      const keys = Object.keys(state.invoice);
+      const invoice = state.invoice[keys[0]];
+      state.message = '';
+      if (invoice) {
+        const bookingIndex = state[invoice.type].findIndex((obj) => obj.id === invoice.appointment);
+        if (bookingIndex !== -1) {
+          state[invoice.type].splice(bookingIndex, 1);
+        }
+        const objectIndex = state.staffUnAvailable.findIndex((obj) => obj.id === invoice.specialist);
+        if (objectIndex !== -1) {
+          const staff = state.staffUnAvailable[objectIndex];
+          state.staffUnAvailable.splice(objectIndex, 1);
+          state.staffAvailable.push(staff);
+        }
+        delete state.invoice[keys[0]];
+      }
+    },
     updatePrice: (state, action) => {
       let {
         value,
@@ -133,9 +156,22 @@ export const adminHomeSlice = createSlice({
       })
       .addCase(getBooking.rejected, (state) => {
         state.isLoading = false;
+      })
+      .addCase(addInvoice.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(addInvoice.fulfilled, (state, action) => {
+        state.message = t('adminHomeScreen:invoiceCreated');
+        state.isLoading = false;
+        state.invoice = { ...state.invoice, [action.payload.specialist]: action.payload };
+      })
+      .addCase(addInvoice.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = true;
       });
   },
 });
 
-export const { setStaff, setWalkin, setAppointment, updateService, updateStaff, updatePrice } = adminHomeSlice.actions;
+export const { setStaff, setWalkin, setAppointment, updateService, updateStaff, updatePrice, resetMessage } =
+  adminHomeSlice.actions;
 export default adminHomeSlice.reducer;

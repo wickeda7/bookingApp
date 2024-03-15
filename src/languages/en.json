@@ -63,7 +63,8 @@
     "working": "WORKING",
     "finished": "FINISHED",
     "delete": "Delete",
-    "submit": "Submit"
+    "submit": "Submit",
+    "invoiceCompleted": "Invoice Completed"
   },
   "reports": {
     "reports": "Reports",

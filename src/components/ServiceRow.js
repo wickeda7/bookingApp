@@ -31,7 +31,7 @@ const ServiceRow = ({ item, setService, setStaff, handleTextChange }) => {
       onReceiveDragDrop={(event) => {
         const userId = event.dragged.payload.id;
         const receivedId = event.receiver.payload.specialist?.id ? event.receiver.payload.specialist.id : undefined;
-        console.log('event', event);
+        //console.log('event', event);
         if (receivedId === undefined || userId === receivedId) {
           setService(event.receiver.payload, 'service', event.dragged.payload);
           setStaff(event.dragged.payload);
@@ -39,12 +39,18 @@ const ServiceRow = ({ item, setService, setStaff, handleTextChange }) => {
         DraxViewDragStatus.Inactive;
         return DraxSnapbackTargetPreset.None;
       }}
+      // onReceiveDragEnter={(event) => {
+      //   console.log('onReceiveDragEnter when a drag enters this view', event);
+      // }}
+      // onReceiveDragOver={(event) => {
+      //   console.log('onReceiveDragOver while a drag is over this view', event);
+      // }}
     >
       <View style={[Style.mainContainer, { flexDirection: 'row', marginHorizontal: Default.fixPadding * 1.5 }]}>
         <View style={[{ flex: 2, paddingLeft: 10, flexDirection: 'row' }]}>
           <AntIcon size={15} name='menu-unfold' color={color} />
           <Text style={[{ marginHorizontal: Default.fixPadding, color: color, fontSize: 14 }]}>
-            {firstName} {lastName} {id}
+            {firstName} {lastName}
           </Text>
         </View>
         <View style={[{ flex: 4 }]}>

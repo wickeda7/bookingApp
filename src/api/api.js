@@ -263,4 +263,14 @@ export const api = {
       throw error;
     }
   },
+  postInvoice: async (data) => {
+    try {
+      const url = `${STRAPIURL}/api/invoices`;
+      const response = await axios.post(url, { data });
+      return data;
+    } catch (error) {
+      console.log('error postInvoice API', error);
+      throw error;
+    }
+  },
 };

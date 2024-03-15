@@ -101,4 +101,13 @@ export const booking = {
       throw error;
     }
   },
+  postInvoice: async (data) => {
+    try {
+      const response = await api.postInvoice(data);
+      return data;
+    } catch (error) {
+      console.log('error booking postInvoice', error.response.data.error.message);
+      throw error;
+    }
+  },
 };
