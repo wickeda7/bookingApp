@@ -460,7 +460,6 @@ const ProfileScreen = (props) => {
               <View
                 style={{
                   width: 300,
-                  height: 110,
                   paddingHorizontal: Default.fixPadding * 1.5,
                   paddingVertical: Default.fixPadding * 1.5,
                   borderRadius: 10,

@@ -64,7 +64,11 @@
     "finished": "FINISHED",
     "delete": "Delete",
     "submit": "Submit",
-    "invoiceCompleted": "Invoice Completed"
+    "invoiceCompleted": "Invoice Completed",
+    "readysoon": "Your service will be ready in about 10 minutes",
+    "sendClientMessage": "Send message to client that service is ready in 10 minutes",
+    "send": "Send",
+    "cancel": "Cancel"
   },
   "reports": {
     "reports": "Reports",

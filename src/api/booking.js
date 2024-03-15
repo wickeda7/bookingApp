@@ -110,4 +110,13 @@ export const booking = {
       throw error;
     }
   },
+  message: async (data) => {
+    try {
+      const response = await api.message(data);
+      return response.data;
+    } catch (error) {
+      console.log('error booking message', error.response.data.error.message);
+      throw error;
+    }
+  },
 };

@@ -109,7 +109,9 @@ const NotificationsHelper = ({ setNotification }) => {
     registerForPushNotificationsAsync().then((token) => setExpoPushToken(token));
 
     notificationListener.current = Notifications.addNotificationReceivedListener((notification) => {
-      setNotification(notification);
+      if (setNotification) {
+        setNotification(notification);
+      }
     });
 
     responseListener.current = Notifications.addNotificationResponseReceivedListener((response) => {

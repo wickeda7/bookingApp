@@ -273,4 +273,14 @@ export const api = {
       throw error;
     }
   },
+  message: async (data) => {
+    try {
+      const url = `${STRAPIURL}/api/appointments/message`;
+      const response = await axios.post(url, { data });
+      return response.data;
+    } catch (error) {
+      console.log('error message API', error);
+      throw error;
+    }
+  },
 };
