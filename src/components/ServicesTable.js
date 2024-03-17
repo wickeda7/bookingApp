@@ -36,7 +36,6 @@ const ServicesTable = ({ services }) => {
       delay: 0,
       backgroundColor: Colors.success,
       onHidden: () => {
-        console.log('specialistId', specialistId);
         dispatch(resetMessage());
       },
     });

@@ -26,6 +26,7 @@ const WorkerHome = ({ props }) => {
   useEffect(() => {
     const getData = async () => {
       // get booking within the week of the calendar
+      // move this to REDUX
       let res = await getUserBooking(false, 'specialist');
       setData(res);
     };

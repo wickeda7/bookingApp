@@ -18,6 +18,16 @@ export const adminHomeSlice = createSlice({
   name: 'adminHome',
   initialState,
   reducers: {
+    updateAppointment: (state, action) => {
+      const { id, confirmed } = action.payload;
+      const appointment = state.appointment.map((obj) => {
+        if (obj.id === id) {
+          return { ...obj, confirmed: confirmed };
+        }
+        return obj;
+      });
+      state.appointment = appointment;
+    },
     resetMessage: (state) => {
       const keys = Object.keys(state.invoice);
       const invoice = state.invoice[keys[0]];
@@ -183,5 +193,6 @@ export const {
   updatePrice,
   resetMessage,
   addBooking,
+  updateAppointment,
 } = adminHomeSlice.actions;
 export default adminHomeSlice.reducer;

@@ -12,7 +12,6 @@ import Loader from '@components/loader';
 import moment from 'moment';
 import { getBooking } from '@redux/actions/adminHomeAction';
 import StaffRow from '@components/admin/StaffRow';
-import CustomerRow from '@components/admin/CustomerRow';
 import Accordion from '@components/Accordion';
 import { DraxProvider, DraxView, DraxViewDragStatus, DraxSnapbackTargetPreset } from 'react-native-drax';
 const AdminHome = () => {
