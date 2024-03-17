@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { getBooking, addInvoice } from '../actions/adminHomeAction';
+import { getBooking, addInvoice, updateBooking } from '../actions/adminHomeAction';
 import { t } from 'i18next';
 const initialState = {
   staffAvailable: [],
@@ -72,56 +72,56 @@ export const adminHomeSlice = createSlice({
       state[bookingType] = bookings;
     },
 
-    updateService: (state, action) => {
-      let service = action.payload.service;
-      let type = action.payload.type;
-      let staff = action.payload?.staff;
+    // updateService: (state, action) => {
+    //   let service = action.payload.service;
+    //   let type = action.payload.type;
+    //   let staff = action.payload?.staff;
 
-      let { specialist, status, bookingId, type: bookingType, id } = service;
+    //   let { specialist, status, bookingId, type: bookingType, id } = service;
 
-      const bookingIndex = state[bookingType].findIndex((obj) => obj.id === bookingId);
-      const booking = { ...state[bookingType][bookingIndex] };
-      let bookingServices = booking.services;
-      let bookingSpecialist = { ...booking.specialist };
-      const specialistNum = bookingServices.filter((obj) => obj.specialist !== null);
-      const serviceIndex = bookingServices.findIndex((obj) => obj.id === id);
-      let serv = {};
-      if (type === 'remove') {
-        if (specialistNum.length === 1) {
-          bookingSpecialist = null;
-        } else {
-          const temp = specialistNum.filter((obj) => obj.specialist.id !== specialist.id);
-          if (temp.length > 0) {
-            bookingSpecialist = temp[0].specialist;
-          }
-        }
-        serv = { ...bookingServices[serviceIndex], specialist: null, status: 'pending' };
-        bookingServices[serviceIndex] = serv;
-        state[bookingType][bookingIndex] = { ...booking, services: bookingServices, specialist: bookingSpecialist };
-      } else {
-        // if specialist is already assigned it request by user
-        // if specialist is null then assign the user
-        const assign = specialist === null ? staff : specialist;
+    //   const bookingIndex = state[bookingType].findIndex((obj) => obj.id === bookingId);
+    //   const booking = { ...state[bookingType][bookingIndex] };
+    //   let bookingServices = booking.services;
+    //   let bookingSpecialist = { ...booking.specialist };
+    //   const specialistNum = bookingServices.filter((obj) => obj.specialist !== null);
+    //   const serviceIndex = bookingServices.findIndex((obj) => obj.id === id);
+    //   let serv = {};
+    //   if (type === 'remove') {
+    //     if (specialistNum.length === 1) {
+    //       bookingSpecialist = null;
+    //     } else {
+    //       const temp = specialistNum.filter((obj) => obj.specialist.id !== specialist.id);
+    //       if (temp.length > 0) {
+    //         bookingSpecialist = temp[0].specialist;
+    //       }
+    //     }
+    //     serv = { ...bookingServices[serviceIndex], specialist: null, status: 'pending' };
+    //     bookingServices[serviceIndex] = serv;
+    //     state[bookingType][bookingIndex] = { ...booking, services: bookingServices, specialist: bookingSpecialist };
+    //   } else {
+    //     // if specialist is already assigned it request by user
+    //     // if specialist is null then assign the user
+    //     const assign = specialist === null ? staff : specialist;
 
-        if (
-          (bookingServices.length > 1 && specialistNum.length === 0) ||
-          bookingServices.length === specialistNum.length
-        ) {
-          const temp = bookingServices.reduce((acc, obj) => {
-            return [...acc, { ...obj, specialist: assign, status: 'working' }];
-          }, []);
-          state[bookingType][bookingIndex] = { ...booking, services: temp, specialist: assign };
-        } else {
-          serv = { ...bookingServices[serviceIndex], specialist: assign, status: 'working' };
-          bookingServices[serviceIndex] = serv;
-          state[bookingType][bookingIndex] = {
-            ...booking,
-            services: bookingServices,
-            specialist: assign,
-          };
-        }
-      }
-    },
+    //     if (
+    //       (bookingServices.length > 1 && specialistNum.length === 0) ||
+    //       bookingServices.length === specialistNum.length
+    //     ) {
+    //       const temp = bookingServices.reduce((acc, obj) => {
+    //         return [...acc, { ...obj, specialist: assign, status: 'working' }];
+    //       }, []);
+    //       state[bookingType][bookingIndex] = { ...booking, services: temp, specialist: assign };
+    //     } else {
+    //       serv = { ...bookingServices[serviceIndex], specialist: assign, status: 'working' };
+    //       bookingServices[serviceIndex] = serv;
+    //       state[bookingType][bookingIndex] = {
+    //         ...booking,
+    //         services: bookingServices,
+    //         specialist: assign,
+    //       };
+    //     }
+    //   }
+    // },
     updateStaff: (state, action) => {
       if (action.payload.userInfo) {
         const { userInfo, id } = action.payload;
@@ -145,7 +145,6 @@ export const adminHomeSlice = createSlice({
     },
     setStaff: (state, action) => {
       state.staffAvailable = action.payload;
-      state.isLoading = true;
     },
     setWalkin: (state, action) => {
       console.log('action.payload setWalkin', action.payload);
@@ -162,6 +161,16 @@ export const adminHomeSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(getBooking.fulfilled, (state, action) => {
+        const unavailableStaff = action.payload.unavailableStaff;
+        if (unavailableStaff.length > 0) {
+          unavailableStaff.forEach((obj) => {
+            const objectIndex = state.staffAvailable.findIndex((staff) => staff.id === obj);
+            const staff = state.staffAvailable[objectIndex];
+            state.staffAvailable.splice(objectIndex, 1);
+            state.staffUnAvailable.push(staff);
+          });
+        }
+
         state.appointment = action.payload.appointment;
         state.walkin = action.payload.walkin;
         state.isLoading = false;
@@ -180,6 +189,49 @@ export const adminHomeSlice = createSlice({
       .addCase(addInvoice.rejected, (state, action) => {
         state.isLoading = false;
         state.error = true;
+      })
+      .addCase(updateBooking.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(updateBooking.fulfilled, (state, action) => {
+        const { id, services, timeslot, specialists, date, specialistID, callBack, storeID, userID, client, removeId } =
+          action.payload;
+
+        const bookingType = timeslot === null ? 'walkin' : 'appointment';
+        const bookingIndex = state[bookingType].findIndex((obj) => obj.id === id);
+        const booking = { ...state[bookingType][bookingIndex] };
+        const pServices = typeof services === 'object' ? services : JSON.parse(services);
+        const bSpecialistId = booking.specialistID;
+
+        const newId = bSpecialistId ? bSpecialistId : specialistID;
+
+        if (removeId) {
+          const objectIndex = state.staffUnAvailable.findIndex((staff) => staff.id === removeId);
+          if (objectIndex !== -1) {
+            const staff = state.staffUnAvailable[objectIndex];
+            state.staffUnAvailable.splice(objectIndex, 1);
+            state.staffAvailable.push(staff);
+          }
+          state[bookingType][bookingIndex] = {
+            ...booking,
+            specialistID: null,
+            services: pServices,
+            specialist: specialists[0],
+          };
+        } else {
+          state[bookingType][bookingIndex] = {
+            ...booking,
+            specialistID: newId,
+            services: pServices,
+            specialist: specialists[0],
+          };
+        }
+
+        state.isLoading = false;
+      })
+      .addCase(updateBooking.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = true;
       });
   },
 });
@@ -188,7 +240,6 @@ export const {
   setStaff,
   setWalkin,
   setAppointment,
-  updateService,
   updateStaff,
   updatePrice,
   resetMessage,

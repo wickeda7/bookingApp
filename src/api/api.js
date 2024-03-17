@@ -284,4 +284,28 @@ export const api = {
       throw error;
     }
   },
+  updateBooking: async ({ service, type, staff }) => {
+    try {
+      const id = service.bookingId;
+      let tempSer = {};
+      if (type === 'remove') {
+        tempSer = {
+          id: service.id,
+          specialistId: service.specialist?.id,
+        };
+      } else {
+        tempSer = {
+          id: service.id,
+          specialistId: staff.id,
+        };
+      }
+
+      const url = `${STRAPIURL}/api/appointments/booking/${id}`;
+      const response = await axios.put(url, { data: { service: tempSer, type, staff } });
+      return response.data;
+    } catch (error) {
+      console.log('error message API', error);
+      throw error;
+    }
+  },
 };

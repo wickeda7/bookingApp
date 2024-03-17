@@ -4,11 +4,11 @@ import Style from '@theme/style';
 import { Default, Fonts, Colors } from '@constants/style';
 import ServiceRow from './ServiceRow';
 import { useTranslation } from 'react-i18next';
-import { updateService, updateStaff, updatePrice, resetMessage } from '@redux/slices/adminHomeSlice';
+import { updateStaff, updatePrice, resetMessage } from '@redux/slices/adminHomeSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import { formatPrice } from '@utils/helper';
-import { addInvoice } from '@redux/actions/adminHomeAction';
+import { addInvoice, updateBooking } from '@redux/actions/adminHomeAction';
 import Toast from 'react-native-root-toast';
 const ServicesTable = ({ services }) => {
   const { t, i18n } = useTranslation();
@@ -25,10 +25,7 @@ const ServicesTable = ({ services }) => {
   const dispatch = useDispatch();
 
   const setService = (service, type, staff) => {
-    dispatch(updateService({ type, service, staff }));
-    console.log('service', service);
-    console.log('type', type);
-    console.log('staff', staff);
+    dispatch(updateBooking({ type, service, staff }));
   };
 
   if (message !== '') {

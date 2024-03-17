@@ -19,3 +19,12 @@ export const addInvoice = createAsyncThunk('addInvoice', async ({ data }) => {
     throw error.response.data.error.message;
   }
 });
+export const updateBooking = createAsyncThunk('updateBooking', async ({ service, type, staff }) => {
+  try {
+    const response = await booking.updateBooking({ service, type, staff });
+    return response;
+  } catch (error) {
+    console.log('error adminHomeAction postInvoice', error.response.data.error.message);
+    throw error.response.data.error.message;
+  }
+});

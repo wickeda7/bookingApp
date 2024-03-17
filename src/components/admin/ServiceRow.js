@@ -24,6 +24,7 @@ const ServiceRow = ({ item, setService, setStaff, handleTextChange }) => {
   const total = item.total ? item.total : price;
   const editable = item.status === 'pending' ? false : true;
   const notes = item.notes ? item.notes : `Status: ${tr(item.status)}`;
+  //console.log('item', item);
   return (
     <DraxView
       receiverPayload={item}
@@ -89,7 +90,6 @@ const ServiceRow = ({ item, setService, setStaff, handleTextChange }) => {
               onPress={() => {
                 console.log('need to update sevice to db with specialist per service and notify specialis');
                 setService(item, 'remove');
-                setStaff(item);
               }}
               style={[
                 Style.buttonStyle,

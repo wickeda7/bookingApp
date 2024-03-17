@@ -58,17 +58,13 @@ export const booking = {
           let attr = { ...attributes };
           let clientData = {};
           let specialistData = {};
-          let specialistArr = [];
+          let workingId = new Set();
           if (attr.specialists.data.length > 0) {
-            attr.specialists.data.forEach((specialist) => {
-              const { attributes, id } = specialist.attributes.userInfo.data;
-              const data = {
-                id: specialist.id,
-                email: specialist.attributes.email,
-                userInfo: { ...attributes, id },
-              };
-              specialistArr.push(data);
-            });
+            const { attributes, id } = attr.specialists.data[0].attributes.userInfo.data;
+            const userInfo = { ...attributes, id };
+            specialistData['id'] = attr.specialists.data[0].id;
+            specialistData['email'] = attr.specialists.data[0].attributes.email;
+            specialistData['userInfo'] = userInfo;
           }
           if (attr.client.data) {
             const { attributes, id } = attr.client.data.attributes.userInfo.data;
@@ -79,24 +75,37 @@ export const booking = {
           }
           let services = typeof attr.services === 'string' ? JSON.parse(attr.services) : attr.services;
           const type = attr.timeslot === null ? 'walkin' : 'appointment';
-          specialistData = specialistArr.length > 0 ? specialistArr[0] : null;
-          services = services.map((service) => {
-            return {
-              id: service.id,
-              description: service.description,
-              name: service.name,
-              price: service.price,
-              priceOption: service.priceOption,
-              specialist: specialistData,
-              client: clientData,
-              storeId,
-              status: 'pending',
-              bookingId: id,
-              type,
-            };
-          });
+          specialistData = attr.specialists.data.length > 0 ? specialistData : null;
 
+          services = services.map((service) => {
+            if (service.status === 'working') {
+              workingId.add(service.specialist.id);
+            }
+            if (service.bookingId) {
+              return service;
+            } else {
+              return {
+                id: service.id,
+                description: service.description,
+                name: service.name,
+                price: service.price,
+                priceOption: service.priceOption,
+                specialist: service.specialist === undefined ? specialistData : service.specialist,
+                client: clientData,
+                storeId,
+                status: service.status ? service.status : 'pending',
+                bookingId: id,
+                type,
+              };
+            }
+          });
           const final = { ...attr, client: clientData, specialist: specialistData, services, id };
+          if (Array.from(workingId).length > 0) {
+            const temp = Array.from(workingId);
+            temp.forEach((id) => {
+              acc['unavailableStaff'].push(id);
+            });
+          }
           if (final.timeslot === null) {
             acc['walkin'].push(final);
           } else {
@@ -104,7 +113,7 @@ export const booking = {
           }
           return acc;
         },
-        { walkin: [], appointment: [] }
+        { walkin: [], appointment: [], unavailableStaff: [] }
       );
       return res;
     } catch (error) {
@@ -127,6 +136,15 @@ export const booking = {
       return response.data;
     } catch (error) {
       console.log('error booking message', error.response.data.error.message);
+      throw error;
+    }
+  },
+  updateBooking: async ({ service, type, staff }) => {
+    try {
+      const response = await api.updateBooking({ service, type, staff });
+      return response.data;
+    } catch (error) {
+      console.log('error booking updateBooking', error.response.data.error.message);
       throw error;
     }
   },
