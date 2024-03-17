@@ -14,7 +14,6 @@ const ServiceRow = ({ item, setService, setStaff, handleTextChange }) => {
   function tr(key) {
     return t(`homeScreen:${key}`);
   }
-
   const specialist = item.specialist;
   const color = specialist ? specialist.userInfo.displayColor : '#000';
   const firstName = specialist ? specialist.userInfo.firstName : '';
@@ -31,7 +30,10 @@ const ServiceRow = ({ item, setService, setStaff, handleTextChange }) => {
       onReceiveDragDrop={(event) => {
         const userId = event.dragged.payload.id;
         const receivedId = event.receiver.payload.specialist?.id ? event.receiver.payload.specialist.id : undefined;
-        //console.log('event', event);
+        console.log(
+          'need to update sevice to db with specialist per service and notify specialis. this is update to her booking schedule update to db incase her device is not on',
+          event
+        );
         if (receivedId === undefined || userId === receivedId) {
           setService(event.receiver.payload, 'service', event.dragged.payload);
           setStaff(event.dragged.payload);
@@ -85,6 +87,7 @@ const ServiceRow = ({ item, setService, setStaff, handleTextChange }) => {
             <TouchableOpacity
               activeOpacity={0.8}
               onPress={() => {
+                console.log('need to update sevice to db with specialist per service and notify specialis');
                 setService(item, 'remove');
                 setStaff(item);
               }}

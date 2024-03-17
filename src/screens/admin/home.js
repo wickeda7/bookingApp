@@ -12,7 +12,7 @@ import Loader from '@components/loader';
 import moment from 'moment';
 import { getBooking } from '@redux/actions/adminHomeAction';
 import StaffRow from '@components/admin/StaffRow';
-import Accordion from '@components/Accordion';
+import Accordion from '@components/admin/Accordion';
 import { DraxProvider, DraxView, DraxViewDragStatus, DraxSnapbackTargetPreset } from 'react-native-drax';
 const AdminHome = () => {
   const { t, i18n } = useTranslation();
@@ -57,68 +57,6 @@ const AdminHome = () => {
     }
   }, [notification]);
 
-  const test = () => {
-    setNotificationNumber(0);
-    const data = {
-      callBack: true,
-      canceled: false,
-      confirmed: false,
-      createdAt: '2024-03-15T17:04:21.606Z',
-      date: '2024-03-15',
-      done: false,
-      id: 34,
-      services: [
-        {
-          createdAt: '2024-02-20T05:37:30.346Z',
-          description: null,
-          enable: true,
-          id: 1,
-          name: 'Gel Manicure111',
-          price: 40,
-          priceOption: null,
-          selected: true,
-          sort: null,
-          updatedAt: '2024-02-20T05:39:26.229Z',
-        },
-        {
-          createdAt: '2024-02-20T05:39:57.240Z',
-          description: null,
-          enable: true,
-          id: 2,
-          name: 'Gel removal222',
-          price: 3,
-          priceOption: null,
-          selected: true,
-          sort: null,
-          updatedAt: '2024-02-20T05:39:57.240Z',
-        },
-      ],
-      specialistID: 5,
-      storeID: 1,
-      timeslot: 2,
-      updatedAt: '2024-03-15T17:04:21.606Z',
-      userID: 10,
-    };
-    if (data.specialistID) {
-      console.log('staffAvailable', staffAvailable, staffUnAvailable, data.specialistID);
-      const staffA = staffAvailable.find((obj) => obj.id === data.specialistID);
-      const staffU = staffUnAvailable.find((obj) => obj.id === data.specialistID);
-      if (staffA) {
-        data.specialist = staffA;
-      }
-      if (staffU) {
-        data.specialist = staffU;
-      }
-      console.log('staffA', staffA);
-      console.log('staffU', staffU);
-    }
-
-    if (data.timeslot) {
-      dispatch(setAppointment(data));
-    } else {
-      dispatch(setWalkin(data));
-    }
-  };
   return (
     <DraxProvider>
       <NotificationsHelper setNotification={setNotification} />

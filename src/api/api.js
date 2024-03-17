@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-import { STRAPIURL } from '@env';
-//const STRAPIURL = 'http://localhost:1337';
+//import { STRAPIURL } from '@env';
+const STRAPIURL = 'http://localhost:1337';
 export const api = {
   getUser: async (email) => {
     const url = `${STRAPIURL}/api/users/${email}`;
@@ -107,6 +107,7 @@ export const api = {
   getUserBooking: async (id, done = false, type) => {
     try {
       const url = `${STRAPIURL}/api/appointments/user/${id}/${done}/${type}`;
+      console.log('url', url);
       const response = await axios.get(url);
       return response.data;
     } catch (error) {
@@ -256,7 +257,7 @@ export const api = {
   getBooking: async (storeId, date) => {
     try {
       // const url = `${STRAPIURL}/api/appointments?filters[storeId][$eq]=${storeId}&filters[done][$eq]=false&filters[date][$eq]=${date}&filters[timeslot][$notNull]&populate[0]=client&populate[1]=client.userInfo&populate[2]=specialist&populate[3]=specialist.userInfo`;
-      const url = `${STRAPIURL}/api/appointments?filters[storeId][$eq]=${storeId}&filters[done][$eq]=false&filters[date][$eq]=${date}&populate[0]=client&populate[1]=client.userInfo&populate[2]=specialist&populate[3]=specialist.userInfo&sort[0]=id:DESC`;
+      const url = `${STRAPIURL}/api/appointments?filters[storeId][$eq]=${storeId}&filters[done][$eq]=false&filters[date][$eq]=${date}&populate[0]=client&populate[1]=client.userInfo&populate[2]=specialists&populate[3]=specialists.userInfo&sort[0]=id:DESC`;
       const response = await axios.get(url);
       return response.data;
     } catch (error) {

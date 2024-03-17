@@ -26,21 +26,12 @@ const BookingContextProvider = ({ children }) => {
     const response = await booking.deleteHistory(id);
     return response;
   };
-  const getUserBooking = async (done, type) => {
-    if (!userData) {
-      console.log('need to login');
-    } else {
-      const response = await booking.getUserBooking(userData.id, done, type);
-      return response.data;
-    }
-  };
 
   const value = {
     selectedDate,
     setSelectedDate,
     getSpecialistBooking,
     specialistBookings,
-    getUserBooking,
     deleteHistory,
     cancelBooking,
     setCancelBooking,

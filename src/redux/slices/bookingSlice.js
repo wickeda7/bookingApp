@@ -1,10 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { addBooking } from '../actions/bookingAction';
+import { addBooking, getUserBooking } from '../actions/bookingAction';
 
 const initialState = {
   bookingType: null,
   services: [],
   specialist: {},
+  userBookings: [],
   bookingTime: null,
   isLoading: false,
   error: false,
@@ -51,6 +52,18 @@ export const bookingSlice = createSlice({
         state.status = action.payload;
       })
       .addCase(addBooking.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = true;
+      })
+      .addCase(getUserBooking.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getUserBooking.fulfilled, (state, action) => {
+        state.isLoading = false;
+        console.log('action.payload', action.payload);
+        state.userBookings = action.payload;
+      })
+      .addCase(getUserBooking.rejected, (state, action) => {
         state.isLoading = false;
         state.error = true;
       });

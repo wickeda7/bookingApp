@@ -23,9 +23,14 @@ const ServicesTable = ({ services }) => {
   let total = 0;
   const { message } = useSelector((state) => state.adminHome);
   const dispatch = useDispatch();
+
   const setService = (service, type, staff) => {
     dispatch(updateService({ type, service, staff }));
+    console.log('service', service);
+    console.log('type', type);
+    console.log('staff', staff);
   };
+
   if (message !== '') {
     Toast.show(tr('invoiceCompleted'), {
       duration: Toast.durations.LONG,

@@ -18,6 +18,9 @@ export const booking = {
   },
   getUserBooking: async (id, done, type) => {
     try {
+      console.log('id', id);
+      console.log('done', done);
+      console.log('type', type);
       const response = await api.getUserBooking(id, done, type);
       return response;
     } catch (error) {
@@ -55,15 +58,17 @@ export const booking = {
           let attr = { ...attributes };
           let clientData = {};
           let specialistData = {};
-          if (attr.specialist.data) {
-            const { attributes, id } = attr.specialist.data.attributes.userInfo.data;
-
-            const userInfo = { ...attributes, id };
-            specialistData['id'] = attr.specialist.data.id;
-            specialistData['email'] = attr.specialist.data.attributes.email;
-            specialistData['userInfo'] = userInfo;
-          } else {
-            specialistData = null;
+          let specialistArr = [];
+          if (attr.specialists.data.length > 0) {
+            attr.specialists.data.forEach((specialist) => {
+              const { attributes, id } = specialist.attributes.userInfo.data;
+              const data = {
+                id: specialist.id,
+                email: specialist.attributes.email,
+                userInfo: { ...attributes, id },
+              };
+              specialistArr.push(data);
+            });
           }
           if (attr.client.data) {
             const { attributes, id } = attr.client.data.attributes.userInfo.data;
@@ -74,9 +79,14 @@ export const booking = {
           }
           let services = typeof attr.services === 'string' ? JSON.parse(attr.services) : attr.services;
           const type = attr.timeslot === null ? 'walkin' : 'appointment';
+          specialistData = specialistArr.length > 0 ? specialistArr[0] : null;
           services = services.map((service) => {
             return {
-              ...service,
+              id: service.id,
+              description: service.description,
+              name: service.name,
+              price: service.price,
+              priceOption: service.priceOption,
               specialist: specialistData,
               client: clientData,
               storeId,
@@ -85,6 +95,7 @@ export const booking = {
               type,
             };
           });
+
           const final = { ...attr, client: clientData, specialist: specialistData, services, id };
           if (final.timeslot === null) {
             acc['walkin'].push(final);
