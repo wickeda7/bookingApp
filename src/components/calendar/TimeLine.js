@@ -3,16 +3,16 @@ import React, { useEffect, useState } from 'react';
 import groupBy from 'lodash/groupBy';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
-import { ExpandableCalendar, TimelineList, CalendarProvider, CalendarUtils } from 'react-native-calendars';
+import { ExpandableCalendar, TimelineList, CalendarProvider, CalendarUtils, Timeline } from 'react-native-calendars';
 import { Colors, Default, Fonts, calendarTheme } from '@constants/style';
 import { parseEvents } from '@utils/helper';
+import EventView from './EventView';
 const INITIAL_TIME = { hour: 9, minutes: 0 };
 const today = new Date();
-const getDate = (offset = 0) => CalendarUtils.getCalendarDateString(new Date().setDate(today.getDate() + offset));
+const getDate = (offset = 0) => CalendarUtils.getCalendarDateString(new Date().setDate(today.getDate() - 1));
 
 const TimeLine = (props) => {
   const { data } = props;
-  console.log('props', data);
   const [marked, setMarked] = useState({});
   const [event, setEvent] = useState([]);
   useEffect(() => {
@@ -113,6 +113,9 @@ const TimeLine = (props) => {
     rightEdgeSpacing: 24,
     onEventPress: onEventPress,
   };
+  const renderItem = (timelineProps, info) => {
+    return <Timeline {...timelineProps} renderEvent={(item) => <EventView item={item} />} />;
+  };
   if (event.length === 0) return null;
   return (
     <CalendarProvider
@@ -130,6 +133,7 @@ const TimeLine = (props) => {
         // scrollToNow
         scrollToFirst
         initialTime={INITIAL_TIME}
+        renderItem={renderItem}
       />
     </CalendarProvider>
   );

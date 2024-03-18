@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-//import { STRAPIURL } from '@env';
-const STRAPIURL = 'http://localhost:1337';
+import { STRAPIURL } from '@env';
+//const STRAPIURL = 'http://localhost:1337';
 export const api = {
   getUser: async (email) => {
     const url = `${STRAPIURL}/api/users/${email}`;
@@ -107,7 +107,6 @@ export const api = {
   getUserBooking: async (id, done = false, type) => {
     try {
       const url = `${STRAPIURL}/api/appointments/user/${id}/${done}/${type}`;
-      console.log('url', url);
       const response = await axios.get(url);
       return response.data;
     } catch (error) {
@@ -291,12 +290,12 @@ export const api = {
       if (type === 'remove') {
         tempSer = {
           id: service.id,
-          specialistId: service.specialist?.id,
+          specialist: service.specialist,
         };
       } else {
         tempSer = {
           id: service.id,
-          specialistId: staff.id,
+          specialist: staff,
         };
       }
 

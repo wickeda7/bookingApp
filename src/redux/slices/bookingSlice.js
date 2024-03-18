@@ -18,6 +18,35 @@ export const bookingSlice = createSlice({
     setBookingType: (state, action) => {
       state.bookingType = action.payload;
     },
+    updateUserBooking: (state, action) => {
+      const userId = action.payload.userId;
+      const { date, id, services, timeslot } = action.payload.data;
+
+      const items = services.filter((item) => item.specialistID === userId);
+      const index = state.userBookings.findIndex((item) => item.id === id);
+      if (items.length > 0) {
+        if (index === -1) {
+          const { callBack, client, date, specialistID, specialist, storeID, timeslot, userID } = items[0];
+          const data = {
+            id,
+            callBack,
+            client,
+            date,
+            services: items,
+            specialistID,
+            specialists: specialist,
+            timeslot,
+            storeID,
+            userID,
+          };
+          state.userBookings.push(data);
+        } else {
+          state.userBookings[index].services = items;
+        }
+      } else {
+        state.userBookings.splice(index, 1);
+      }
+    },
     setServices: (state, action) => {
       const item = action.payload;
       let map = state.services.reduce((acc, obj, idx) => acc.set(obj.id, idx), new Map());
@@ -60,7 +89,6 @@ export const bookingSlice = createSlice({
       })
       .addCase(getUserBooking.fulfilled, (state, action) => {
         state.isLoading = false;
-        console.log('action.payload', action.payload);
         state.userBookings = action.payload;
       })
       .addCase(getUserBooking.rejected, (state, action) => {
@@ -69,6 +97,7 @@ export const bookingSlice = createSlice({
       });
   },
 });
-export const { setBookingType, setServices, setSpecialist, setBookingTime, resetState } = bookingSlice.actions;
+export const { setBookingType, setServices, setSpecialist, setBookingTime, resetState, updateUserBooking } =
+  bookingSlice.actions;
 
 export default bookingSlice.reducer;

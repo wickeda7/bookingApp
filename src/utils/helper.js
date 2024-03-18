@@ -78,23 +78,42 @@ export const imageUrlToBase64 = async (url) => {
 };
 export const parseEvents = (data) => {
   if (data.length === 0) return [];
-  const EVENT_COLOR = '#e6add8';
+  let EVENT_COLOR = '#e6add8'; //bbd686 8ecae6
   const today = new Date();
   return data.reduce((acc, item) => {
     const date = item.date;
-    const time = item.specialist.userInfo.hours.find((hour) => +hour.id === item.timeslot);
-    const temp = time.hours.split(' - ');
-    const startTime = temp[0];
-    const endTime = temp[1];
+    console.log('item', item);
+    if (item.specialists.length === 0) return acc;
     const services = typeof item.services === 'object' ? item.services : JSON.parse(item.services);
-    acc.push({
-      id: item.id,
-      title: `${item.client.userInfo.firstName} ${item.client.userInfo.lastName}`,
-      start: moment(`${date} ${startTime}`, 'YYYY-MM-DD h:m A').format('YYYY-MM-DD HH:mm'),
-      end: moment(`${date} ${endTime}`, 'YYYY-MM-DD h:m A').format('YYYY-MM-DD HH:mm'),
-      summary: services[0].name,
-      color: EVENT_COLOR,
-    });
+    if (item.timeslot) {
+      const time = item.specialists[0].userInfo.hours.find((hour) => +hour.id === item.timeslot);
+      const temp = time.hours.split(' - ');
+      const startTime = temp[0];
+      const endTime = temp[1];
+      acc.push({
+        id: item.id,
+        title: `${item.client.userInfo.firstName} ${item.client.userInfo.lastName}`,
+        start: moment(`${date} ${startTime}`, 'YYYY-MM-DD h:m A').format('YYYY-MM-DD HH:mm'),
+        end: moment(`${date} ${endTime}`, 'YYYY-MM-DD h:m A').format('YYYY-MM-DD HH:mm'),
+        summary: services[0].name,
+        color: '#8ecae6',
+        timeslot: item.timeslot,
+      });
+    } else {
+      const start = moment().format('YYYY-MM-DD HH:mm');
+      const end = moment().add(60, 'minutes').format('YYYY-MM-DD HH:mm');
+
+      acc.push({
+        id: item.id,
+        title: `${item.client.userInfo.firstName} ${item.client.userInfo.lastName}`,
+        start: start,
+        end: end,
+        summary: services[0].name,
+        color: '#bbd686',
+        timeslot: item.timeslot,
+      });
+    }
+
     return acc;
   }, []);
 };

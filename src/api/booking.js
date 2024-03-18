@@ -18,9 +18,6 @@ export const booking = {
   },
   getUserBooking: async (id, done, type) => {
     try {
-      console.log('id', id);
-      console.log('done', done);
-      console.log('type', type);
       const response = await api.getUserBooking(id, done, type);
       return response;
     } catch (error) {

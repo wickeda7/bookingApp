@@ -13,6 +13,7 @@ import NotificationsHelper from '@utils/notifications';
 import Loader from '@components/loader';
 import { useDispatch, useSelector } from 'react-redux';
 import { getUserBooking } from '@redux/actions/bookingAction';
+import { updateUserBooking } from '@redux/slices/bookingSlice';
 const WorkerHome = ({ props }) => {
   const { userData } = useAuthContext();
   const { t, i18n } = useTranslation();
@@ -25,13 +26,19 @@ const WorkerHome = ({ props }) => {
   const name = userData?.userInfo?.firstName ? userData.userInfo.firstName + ' ' + userData.userInfo.lastName : '';
   const dispatch = useDispatch();
   const { isLoading, userBookings } = useSelector((state) => state.booking);
-
+  const [notification, setNotification] = useState(null);
   useEffect(() => {
     dispatch(getUserBooking({ id: userData.id, done: false, type: 'specialist' }));
   }, []);
+  useEffect(() => {
+    if (notification) {
+      console.log('notification home notification.request.content.data............', userBookings);
+      dispatch(updateUserBooking({ data: notification.request.content.data, userId: userData.id }));
+    }
+  }, [notification]);
   return (
     <>
-      <NotificationsHelper />
+      <NotificationsHelper setNotification={setNotification} />
       <Loader visible={isLoading} />
       <View style={{ paddingVertical: Default.fixPadding, backgroundColor: Colors.primary }}>
         <View style={{ flexDirection: isRtl ? 'row-reverse' : 'row', marginHorizontal: Default.fixPadding * 1.5 }}>
