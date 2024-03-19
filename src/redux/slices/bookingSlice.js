@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { addBooking, getUserBooking } from '../actions/bookingAction';
+import { addBooking, getUserBooking, notifyBooking } from '../actions/bookingAction';
 
 const initialState = {
   bookingType: null,
@@ -18,11 +18,7 @@ export const bookingSlice = createSlice({
     setBookingType: (state, action) => {
       state.bookingType = action.payload;
     },
-    updatePrice: (state, action) => {
-      const booking = action.payload.booking;
-      const bookingIndex = state.userBookings.findIndex((obj) => obj.id === booking.id);
-      state.userBookings[bookingIndex] = booking;
-    },
+
     updateUserBooking: (state, action) => {
       const userId = action.payload.userId;
       const { date, id, services, timeslot } = action.payload.data;
@@ -99,17 +95,39 @@ export const bookingSlice = createSlice({
       .addCase(getUserBooking.rejected, (state, action) => {
         state.isLoading = false;
         state.error = true;
+      })
+      .addCase(notifyBooking.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(notifyBooking.fulfilled, (state, action) => {
+        const data = action.payload;
+        const { bookingId } = data[0];
+        const bookingIndex = state.userBookings.findIndex((obj) => obj.id === bookingId);
+        let booking = { ...state.userBookings[bookingIndex] };
+        let sub = 0;
+        let addition = 0;
+        let tot = 0;
+        for (var value of data) {
+          if (value.price) sub += value.price;
+          if (value.additional) addition += value.additional;
+        }
+        tot = sub + addition;
+        state.userBookings[bookingIndex] = {
+          ...booking,
+          services: JSON.stringify(data),
+          subtotal: sub,
+          additional: addition,
+          total: tot,
+        };
+        state.isLoading = false;
+      })
+      .addCase(notifyBooking.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = true;
       });
   },
 });
-export const {
-  setBookingType,
-  setServices,
-  setSpecialist,
-  setBookingTime,
-  resetState,
-  updateUserBooking,
-  updatePrice,
-} = bookingSlice.actions;
+export const { setBookingType, setServices, setSpecialist, setBookingTime, resetState, updateUserBooking } =
+  bookingSlice.actions;
 
 export default bookingSlice.reducer;

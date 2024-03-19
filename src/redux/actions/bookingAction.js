@@ -20,3 +20,12 @@ export const getUserBooking = createAsyncThunk('getUserBooking', async (data) =>
     throw error.response.data.error.message;
   }
 });
+export const notifyBooking = createAsyncThunk('notifyBooking', async (data) => {
+  try {
+    const response = await booking.notifyBooking(data);
+    return data;
+  } catch (error) {
+    console.log('error bookingAction notifyBooking', error.response.data.error.message);
+    throw error.response.data.error.message;
+  }
+});

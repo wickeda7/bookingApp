@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View, Modal } from 'react-native';
 
 import Icon from 'react-native-vector-icons/FontAwesome';
+
+import Maticons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Micons from 'react-native-vector-icons/MaterialIcons';
 import { Colors, Default, Fonts } from '@constants/style';
 import { useTranslation } from 'react-i18next';
@@ -58,34 +60,36 @@ const AccordionItem = ({ children, item, expanded, onHeaderPress }) => {
       </Modal>
       <TouchableOpacity style={[styles.accordHeader]} onPress={onHeaderPress}>
         <View style={{ flex: 15 }}>{titleContent}</View>
-        {callBack && (
-          <TouchableOpacity
-            style={{ flex: 2 }}
-            onPress={() => {
-              setVisible(true);
-              setMessage(tr('sendMessageReady'));
-              setMessageType('client');
-            }}
-          >
-            <View>
-              <Micons name='textsms' size={30} color={borderColor} />
-            </View>
-          </TouchableOpacity>
-        )}
-        {type === 'appointment' && !confirmed ? (
-          <TouchableOpacity
-            style={{ flex: 2 }}
-            onPress={() => {
-              setVisible(true);
-              setMessage(tr('sendMessageConfirmation'));
-              setMessageType('service');
-            }}
-          >
-            <View>
-              <Micons name='textsms' size={30} color={borderColor} />
-            </View>
-          </TouchableOpacity>
-        ) : null}
+        <View style={{ flex: 2, flexDirection: 'row' }}>
+          {callBack && (
+            <TouchableOpacity
+              onPress={() => {
+                setVisible(true);
+                setMessage(tr('sendMessageReady'));
+                setMessageType('client');
+              }}
+            >
+              <View>
+                <Micons name='textsms' size={30} color={borderColor} />
+              </View>
+            </TouchableOpacity>
+          )}
+
+          {type === 'appointment' && !confirmed ? (
+            <TouchableOpacity
+              onPress={() => {
+                setVisible(true);
+                setMessage(tr('sendMessageConfirmation'));
+                setMessageType('service');
+              }}
+            >
+              <View>
+                <Micons name='textsms' size={30} color={borderColor} />
+              </View>
+            </TouchableOpacity>
+          ) : null}
+          <Maticons name='bell-ring' size={20} color={'red'} style={{ marginLeft: 10 }} />
+        </View>
         <View style={{ flex: 0.5, alignItems: 'flex-end' }}>
           <Icon name={expanded ? 'chevron-up' : 'chevron-down'} size={14} color={borderColor} />
         </View>

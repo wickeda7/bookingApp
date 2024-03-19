@@ -1,8 +1,8 @@
 import { Text, View, TouchableOpacity, Image, BackHandler, StyleSheet, ScrollView } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import MyStatusBar from '@components/myStatusBar';
-import { Colors, Fonts, Default } from '@constants/style';
+import { Colors, Fonts, Default, DefaultImage } from '@constants/style';
 import Style from '@theme/style';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AntIcon from 'react-native-vector-icons/AntDesign';
@@ -11,33 +11,28 @@ import { STRAPIURL } from '@env';
 import { formatPhoneNumber, formatPrice } from '@utils/helper';
 import moment from 'moment';
 import DashedLine from 'react-native-dashed-line';
-import ItemRow from '@components/itemRow';
 import ServiceRow from '@components/workers/ServiceRow';
 import { useDispatch, useSelector } from 'react-redux';
-import { updatePrice } from '@redux/slices/bookingSlice';
+import { notifyBooking } from '@redux/actions/bookingAction';
+import debounce from 'lodash/debounce';
 const BookingDetail = (props) => {
   let booking = props.route.params;
   const { client, specialists, services, date, status, id, timeslot } = booking;
   const {
     email,
-    userInfo: {
-      firstName,
-      lastName,
-      phoneNumber,
-      profileImg: { url },
-    },
+    userInfo: { firstName, lastName, phoneNumber, profileImg },
   } = client;
   const {
     userInfo: { hours },
   } = specialists[0];
-
+  const image = profileImg?.url ? profileImg.url : DefaultImage;
   const dispatch = useDispatch();
   const { userBookings } = useSelector((state) => state.booking);
   const [pServices, setPServices] = useState([]);
   const [subtotal, setSubtotal] = useState(0);
   const [additional, setAdditional] = useState(0);
   const [total, setTotal] = useState(0);
-
+  const ref = useRef();
   let bookingHour = '';
 
   if (timeslot) {
@@ -66,14 +61,23 @@ const BookingDetail = (props) => {
       setAdditional(addition);
       setTotal(tot);
       booking = { ...booking, services: pServices, subtotal: sub, additional: addition, total: tot };
-      console.log('need to update booking and send notification to to admin', booking);
-      setTimeout(() => {
-        dispatch(updatePrice({ booking }));
-      }, 1000);
-      // console.log('pServices changed', pServices);
-      // console.log('booking', booking);
     }
   }, [pServices]);
+
+  const onChange = () => {
+    dispatch(notifyBooking(pServices));
+  };
+  useEffect(() => {
+    ref.current = onChange;
+  }, [onChange]);
+
+  const debouncedCallback = useMemo(() => {
+    const func = () => {
+      ref.current?.();
+    };
+
+    return debounce(func, 1000);
+  }, []);
 
   const { t, i18n } = useTranslation();
   const isRtl = i18n.dir() === 'rtl';
@@ -91,6 +95,7 @@ const BookingDetail = (props) => {
     return () => BackHandler.removeEventListener('hardwareBackPress', backAction);
   }, []);
   const handleTextChange = (value, id, field) => {
+    debouncedCallback();
     let tempServices = [...pServices];
     let serviceIndex = tempServices.findIndex((obj) => obj.id === id);
     let service = { ...tempServices[serviceIndex] };
@@ -139,7 +144,7 @@ const BookingDetail = (props) => {
         <Avatar.Image
           size={128}
           source={{
-            uri: `${url}`,
+            uri: image,
           }}
           style={{
             marginTop: -40,

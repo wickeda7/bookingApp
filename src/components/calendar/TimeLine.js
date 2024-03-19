@@ -31,7 +31,6 @@ const TimeLine = (props) => {
   }, [data]);
   const onEventPress = (event) => {
     const item = data.find((item) => item.id === event.id);
-    console.log('event pressed', item, data, event.id);
     navigation.push('StoresStack', { screen: 'bookingDetail', params: item });
   };
 

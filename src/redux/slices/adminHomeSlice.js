@@ -49,9 +49,10 @@ export const adminHomeSlice = createSlice({
     updatePrice: (state, action) => {
       let {
         value,
-        item: { price, id, type: bookingType, bookingId },
+        item: { price, id, timeslot, bookingId },
         field,
       } = action.payload;
+      const bookingType = timeslot === null ? 'walkin' : 'appointment';
       let bookings = state[bookingType];
       const bookingIndex = bookings.findIndex((obj) => obj.id === bookingId);
       let booking = { ...bookings[bookingIndex] };

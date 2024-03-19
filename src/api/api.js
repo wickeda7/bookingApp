@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-import { STRAPIURL } from '@env';
-//const STRAPIURL = 'http://localhost:1337';
+//import { STRAPIURL } from '@env';
+const STRAPIURL = 'http://localhost:1337';
 export const api = {
   getUser: async (email) => {
     const url = `${STRAPIURL}/api/users/${email}`;
@@ -304,6 +304,16 @@ export const api = {
       return response.data;
     } catch (error) {
       console.log('error message API', error);
+      throw error;
+    }
+  },
+  notifyBooking: async (data) => {
+    try {
+      const url = `${STRAPIURL}/api/appointments/notify`;
+      const response = await axios.post(url, { data });
+      return response.data;
+    } catch (error) {
+      console.log('error notifyBooking API', error);
       throw error;
     }
   },

@@ -19,7 +19,6 @@ const ServiceRow = ({ item, handleTextChange }) => {
   const price = item.price;
   const total = item.total ? item.total : price;
 
-  console.log('ServiceRow', item);
   return (
     <>
       <View style={[Style.mainContainer, { flexDirection: 'row', marginHorizontal: Default.fixPadding }]}>

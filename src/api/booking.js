@@ -145,4 +145,13 @@ export const booking = {
       throw error;
     }
   },
+  notifyBooking: async (data) => {
+    try {
+      const response = await api.notifyBooking(data);
+      return response.data;
+    } catch (error) {
+      console.log('error booking notifyBooking', error.response.data.error.message);
+      throw error;
+    }
+  },
 };
