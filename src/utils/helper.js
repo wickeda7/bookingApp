@@ -82,7 +82,6 @@ export const parseEvents = (data) => {
   const today = new Date();
   return data.reduce((acc, item) => {
     const date = item.date;
-    console.log('item', item);
     if (item.specialists.length === 0) return acc;
     const services = typeof item.services === 'object' ? item.services : JSON.parse(item.services);
     if (item.timeslot) {

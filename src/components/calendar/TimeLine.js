@@ -9,10 +9,10 @@ import { parseEvents } from '@utils/helper';
 import EventView from './EventView';
 const INITIAL_TIME = { hour: 9, minutes: 0 };
 const today = new Date();
-const getDate = (offset = 0) => CalendarUtils.getCalendarDateString(new Date().setDate(today.getDate() - 1));
+const getDate = (offset = 0) => CalendarUtils.getCalendarDateString(new Date().setDate(today.getDate() - offset));
 
 const TimeLine = (props) => {
-  const { data } = props;
+  const { data, navigation } = props;
   const [marked, setMarked] = useState({});
   const [event, setEvent] = useState([]);
   useEffect(() => {
@@ -31,8 +31,8 @@ const TimeLine = (props) => {
   }, [data]);
   const onEventPress = (event) => {
     const item = data.find((item) => item.id === event.id);
-    // console.log('event pressed', item, data, event.id);
-    props.navigation.push('StoresStack', { screen: 'bookingDetail', params: item });
+    console.log('event pressed', item, data, event.id);
+    navigation.push('StoresStack', { screen: 'bookingDetail', params: item });
   };
 
   const onDateChanged = (date, source) => {
@@ -133,6 +133,7 @@ const TimeLine = (props) => {
         // scrollToNow
         scrollToFirst
         initialTime={INITIAL_TIME}
+        keyExtractor={(item) => item.id}
         renderItem={renderItem}
       />
     </CalendarProvider>

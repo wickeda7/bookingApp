@@ -18,6 +18,11 @@ export const bookingSlice = createSlice({
     setBookingType: (state, action) => {
       state.bookingType = action.payload;
     },
+    updatePrice: (state, action) => {
+      const booking = action.payload.booking;
+      const bookingIndex = state.userBookings.findIndex((obj) => obj.id === booking.id);
+      state.userBookings[bookingIndex] = booking;
+    },
     updateUserBooking: (state, action) => {
       const userId = action.payload.userId;
       const { date, id, services, timeslot } = action.payload.data;
@@ -97,7 +102,14 @@ export const bookingSlice = createSlice({
       });
   },
 });
-export const { setBookingType, setServices, setSpecialist, setBookingTime, resetState, updateUserBooking } =
-  bookingSlice.actions;
+export const {
+  setBookingType,
+  setServices,
+  setSpecialist,
+  setBookingTime,
+  resetState,
+  updateUserBooking,
+  updatePrice,
+} = bookingSlice.actions;
 
 export default bookingSlice.reducer;

@@ -22,6 +22,7 @@ const WorkerHome = ({ props }) => {
   function tr(key) {
     return t(`homeScreen:${key}`);
   }
+  const { navigation, route } = props;
   const isTablet = Device.isTablet();
   const name = userData?.userInfo?.firstName ? userData.userInfo.firstName + ' ' + userData.userInfo.lastName : '';
   const dispatch = useDispatch();
@@ -95,7 +96,7 @@ const WorkerHome = ({ props }) => {
               </Text>
             </View>
           ) : (
-            <TimeLine data={userBookings} />
+            <TimeLine data={userBookings} navigation={navigation} />
           )}
         </>
       )}

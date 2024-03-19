@@ -1,19 +1,23 @@
 import { Text, View, TouchableOpacity, Image, BackHandler, StyleSheet, ScrollView } from 'react-native';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import MyStatusBar from '@components/myStatusBar';
 import { Colors, Fonts, Default } from '@constants/style';
+import Style from '@theme/style';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import AntIcon from 'react-native-vector-icons/AntDesign';
 import { Avatar } from 'react-native-paper';
 import { STRAPIURL } from '@env';
 import { formatPhoneNumber, formatPrice } from '@utils/helper';
 import moment from 'moment';
 import DashedLine from 'react-native-dashed-line';
 import ItemRow from '@components/itemRow';
+import ServiceRow from '@components/workers/ServiceRow';
+import { useDispatch, useSelector } from 'react-redux';
+import { updatePrice } from '@redux/slices/bookingSlice';
 const BookingDetail = (props) => {
-  const booking = props.route.params;
-  const { client, specialist, services, date, status, id, timeslot } = booking;
-  console.log('BookingDetail', booking);
+  let booking = props.route.params;
+  const { client, specialists, services, date, status, id, timeslot } = booking;
   const {
     email,
     userInfo: {
@@ -25,14 +29,56 @@ const BookingDetail = (props) => {
   } = client;
   const {
     userInfo: { hours },
-  } = specialist;
-  const time = hours.find((hour) => +hour.id === timeslot);
-  const pServices = typeof services === 'object' ? services : JSON.parse(services);
-  let total = 0;
+  } = specialists[0];
+
+  const dispatch = useDispatch();
+  const { userBookings } = useSelector((state) => state.booking);
+  const [pServices, setPServices] = useState([]);
+  const [subtotal, setSubtotal] = useState(0);
+  const [additional, setAdditional] = useState(0);
+  const [total, setTotal] = useState(0);
+
+  let bookingHour = '';
+
+  if (timeslot) {
+    const time = hours.find((hour) => +hour.id === timeslot);
+    bookingHour = time.hours;
+  } else {
+    bookingHour = moment().format('hh:mm A');
+  }
+
+  useEffect(() => {
+    const tempServices = typeof services === 'object' ? services : JSON.parse(services);
+    setPServices(tempServices);
+  }, []);
+
+  useEffect(() => {
+    if (pServices.length > 0) {
+      let sub = 0;
+      let addition = 0;
+      let tot = 0;
+      for (var value of pServices) {
+        if (value.price) sub += value.price;
+        if (value.additional) addition += value.additional;
+      }
+      tot = sub + addition;
+      setSubtotal(sub);
+      setAdditional(addition);
+      setTotal(tot);
+      booking = { ...booking, services: pServices, subtotal: sub, additional: addition, total: tot };
+      console.log('need to update booking and send notification to to admin', booking);
+      setTimeout(() => {
+        dispatch(updatePrice({ booking }));
+      }, 1000);
+      // console.log('pServices changed', pServices);
+      // console.log('booking', booking);
+    }
+  }, [pServices]);
+
   const { t, i18n } = useTranslation();
   const isRtl = i18n.dir() === 'rtl';
   function tr(key) {
-    return t(`ongoingDetail:${key}`);
+    return t(`homeScreen:${key}`);
   }
 
   const backAction = () => {
@@ -44,6 +90,27 @@ const BookingDetail = (props) => {
 
     return () => BackHandler.removeEventListener('hardwareBackPress', backAction);
   }, []);
+  const handleTextChange = (value, id, field) => {
+    let tempServices = [...pServices];
+    let serviceIndex = tempServices.findIndex((obj) => obj.id === id);
+    let service = { ...tempServices[serviceIndex] };
+    let { price } = service;
+
+    let total = 0;
+    if (value !== '') {
+      if (field === 'additional') {
+        total = price * 100 + +value * 100;
+        service = { ...service, additional: +value, total: total / 100 };
+      } else {
+        service = { ...service, notes: value };
+      }
+      tempServices[serviceIndex] = service;
+    }
+    setPServices(tempServices);
+  };
+  const handleSubmit = () => {
+    console.log('need to update booking and send notification to to admin', userBookings);
+  };
   return (
     <View style={{ flex: 1 }}>
       <MyStatusBar />
@@ -139,38 +206,93 @@ const BookingDetail = (props) => {
                   {tr('time')}
                 </Text>
               </View>
-              <Text style={Fonts.Grey14Medium}>{time.hours}</Text>
+              <Text style={Fonts.Grey14Medium}>{bookingHour}</Text>
             </View>
           </View>
-          <DashedLine dashLength={5} dashColor={Colors.extraLightGrey} style={{ marginTop: Default.fixPadding }} />
-          <View style={{ marginTop: 10 }}>
-            {pServices.map((item) => {
-              total += item.price * 100;
-              return <ItemRow item={item} key={item.id} />;
-            })}
+          <DashedLine
+            dashLength={5}
+            dashColor={Colors.extraLightGrey}
+            style={{ marginTop: Default.fixPadding, marginHorizontal: Default.fixPadding }}
+          />
+          <View style={[Style.contentContainer, { flexDirection: 'column', marginHorizontal: Default.fixPadding }]}>
+            <View style={[Style.tableHeader, { flexDirection: 'row', flex: 1 }]}>
+              <Text style={[Style.tableHeaderText15Medium, { flex: 2, marginLeft: 0 }]}>{tr('servicename')}</Text>
+              <Text style={[Style.tableHeaderText15Medium, { flex: 1, marginLeft: 0 }]}>{tr('price')}</Text>
+              <Text style={[Style.tableHeaderText15Medium, { flex: 1, marginLeft: 0 }]}>{tr('additional')}</Text>
+              <Text style={[Style.tableHeaderText15Medium, { flex: 1, marginLeft: 0, textAlign: 'right' }]}>
+                {tr('total')}
+              </Text>
+            </View>
           </View>
+          {pServices.map((item) => {
+            return <ServiceRow item={item} key={item.id} handleTextChange={handleTextChange} />;
+          })}
+          <View
+            style={[Style.divider, { marginHorizontal: Default.fixPadding, marginVertical: Default.fixPadding * 2 }]}
+          />
           <View
             style={{
-              flexDirection: isRtl ? 'row-reverse' : 'row',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              marginHorizontal: Default.fixPadding * 1.5,
-              marginBottom: Default.fixPadding * 1.5,
+              flexDirection: 'row',
+              paddingHorizontal: Default.fixPadding * 2,
+              paddingTop: Default.fixPadding * 2,
+              paddingBottom: Default.fixPadding * 4,
             }}
           >
-            <Text style={Fonts.Black16Medium}>{tr('totalPay')}</Text>
-            <Text style={Fonts.Primary16Medium}>{formatPrice(total)}</Text>
-          </View>
-          <View
-            style={{
-              flexDirection: isRtl ? 'row-reverse' : 'row',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              marginHorizontal: Default.fixPadding * 1.5,
-              marginBottom: Default.fixPadding * 1.5,
-            }}
-          >
-            <Text>TODO: need to add tips and tax</Text>
+            <View style={[{ flex: 5 }]}></View>
+            <View style={[{ flex: 4, flexDirection: 'column' }]}>
+              <View style={{ flexDirection: 'row' }}>
+                <View style={[{ flex: 5, padding: Default.fixPadding, alignItems: 'flex-end' }]}>
+                  <Text style={[Fonts.Primary16Medium]}>Subtotal:</Text>
+                </View>
+                <View style={[{ flex: 3, paddingVertical: Default.fixPadding }]}>
+                  <Text>{formatPrice(subtotal * 100)}</Text>
+                </View>
+              </View>
+              <View style={{ flexDirection: 'row' }}>
+                <View style={[{ flex: 5, padding: Default.fixPadding, alignItems: 'flex-end' }]}>
+                  <Text style={[Fonts.Primary16Medium]}>Additional:</Text>
+                </View>
+                <View style={[{ flex: 3, paddingVertical: Default.fixPadding }]}>
+                  <Text>{formatPrice(additional * 100)}</Text>
+                </View>
+              </View>
+              <View style={{ flexDirection: 'row' }}>
+                <View style={[{ flex: 5, padding: Default.fixPadding, alignItems: 'flex-end' }]}>
+                  <Text style={[Fonts.Primary16Medium]}>Total:</Text>
+                </View>
+                <View style={[{ flex: 3, paddingVertical: Default.fixPadding }]}>
+                  <Text>{formatPrice(total * 100)}</Text>
+                </View>
+              </View>
+              <View
+                style={[
+                  Style.divider,
+                  { marginHorizontal: Default.fixPadding, marginVertical: Default.fixPadding * 1.5 },
+                ]}
+              />
+              <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+                <TouchableOpacity
+                  activeOpacity={0.8}
+                  onPress={() => {
+                    handleSubmit();
+                  }}
+                  style={[
+                    Style.buttonStyle,
+                    {
+                      backgroundColor: Colors.info,
+                      marginTop: 0,
+                      flexDirection: 'row',
+                      width: 100,
+                    },
+                  ]}
+                >
+                  <AntIcon size={18} name='upload' color={Colors.white} />
+                  <Text style={[{ paddingHorizontal: Default.fixPadding * 0.5 }, Fonts.White14Bold]}>
+                    {tr('submit')}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
           </View>
         </ScrollView>
       </View>
