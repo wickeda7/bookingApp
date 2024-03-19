@@ -7,14 +7,15 @@ import Style from '@theme/style';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import { Avatar } from 'react-native-paper';
-import { STRAPIURL } from '@env';
 import { formatPhoneNumber, formatPrice } from '@utils/helper';
 import moment from 'moment';
 import DashedLine from 'react-native-dashed-line';
 import ServiceRow from '@components/workers/ServiceRow';
 import { useDispatch, useSelector } from 'react-redux';
-import { notifyBooking } from '@redux/actions/bookingAction';
+import { notifyBooking, addInvoice } from '@redux/actions/bookingAction';
 import debounce from 'lodash/debounce';
+import Loader from '@components/loader';
+import Toast from 'react-native-root-toast';
 const BookingDetail = (props) => {
   let booking = props.route.params;
   const { client, specialists, services, date, status, id, timeslot } = booking;
@@ -23,11 +24,11 @@ const BookingDetail = (props) => {
     userInfo: { firstName, lastName, phoneNumber, profileImg },
   } = client;
   const {
-    userInfo: { hours },
+    userInfo: { firstName: SfirstName, lastName: SlastName, hours },
   } = specialists[0];
   const image = profileImg?.url ? profileImg.url : DefaultImage;
   const dispatch = useDispatch();
-  const { userBookings } = useSelector((state) => state.booking);
+  const { userBookings, isLoading, message } = useSelector((state) => state.booking);
   const [pServices, setPServices] = useState([]);
   const [subtotal, setSubtotal] = useState(0);
   const [additional, setAdditional] = useState(0);
@@ -113,11 +114,51 @@ const BookingDetail = (props) => {
     }
     setPServices(tempServices);
   };
+
+  if (message !== '') {
+    Toast.show(tr('invoiceCompleted'), {
+      duration: Toast.durations.LONG,
+      position: Toast.positions.CENTER,
+      shadow: true,
+      animation: true,
+      hideOnPress: true,
+      delay: 0,
+      backgroundColor: Colors.success,
+      onHidden: () => {
+        props.navigation.pop();
+        //dispatch(resetMessage());
+      },
+    });
+  }
+
   const handleSubmit = () => {
-    console.log('need to update booking and send notification to to admin', userBookings);
+    const bookingId = booking.id;
+    const Dbooking = userBookings.find((obj) => obj.id === bookingId);
+    let services = JSON.parse(Dbooking.services);
+    services = services.map((service) => {
+      let { additional, price, bookingId, id, name, notes, total } = service;
+      additional = additional ? additional : 0;
+      notes = notes ? notes : '';
+      total = total ? total : 0;
+      return { additional, price, bookingId, id, name, notes, total };
+    });
+    const data = {
+      client: Dbooking.client.id,
+      specialist: specialists[0].id,
+      type: Dbooking.timeslot === null ? 'walkin' : 'appointment',
+      store: Dbooking.storeID,
+      appointment: bookingId,
+      services,
+      subtotal: Dbooking.subtotal,
+      additional: Dbooking.additional,
+      total: Dbooking.total,
+      createdby: `${SfirstName} ${SlastName}`,
+    };
+    dispatch(addInvoice({ data }));
   };
   return (
     <View style={{ flex: 1 }}>
+      <Loader visible={isLoading} />
       <MyStatusBar />
       <View
         style={{

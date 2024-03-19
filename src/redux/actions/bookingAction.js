@@ -29,3 +29,12 @@ export const notifyBooking = createAsyncThunk('notifyBooking', async (data) => {
     throw error.response.data.error.message;
   }
 });
+export const addInvoice = createAsyncThunk('addInvoice', async ({ data }) => {
+  try {
+    const response = await booking.postInvoice(data);
+    return response;
+  } catch (error) {
+    console.log('error bookingAction postInvoice', error.response.data.error.message);
+    throw error.response.data.error.message;
+  }
+});

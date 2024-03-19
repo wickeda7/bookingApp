@@ -64,8 +64,8 @@ const ServicesTable = ({ services }) => {
       let notes = '';
       const clientId = model[key][0].client.id;
       const specialistId = model[key][0].specialist.id;
-      const type = model[key][0].type;
-      const storeId = model[key][0].storeId;
+      const type = model[key][0].timeslot === null ? 'walkin' : 'appointment';
+      const storeId = model[key][0].storeID;
       const bookingId = model[key][0].bookingId;
       // setSpecialistId(specialistId);
       for (const value of model[key]) {
@@ -80,7 +80,6 @@ const ServicesTable = ({ services }) => {
           id: value.id,
           name: value.name,
           notes: notes,
-          price: value.price,
           total: value.total,
         });
       }
@@ -97,6 +96,7 @@ const ServicesTable = ({ services }) => {
             subtotal,
             additional,
             total,
+            createdby: 'admin',
           },
         })
       );

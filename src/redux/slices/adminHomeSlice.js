@@ -159,11 +159,9 @@ export const adminHomeSlice = createSlice({
       state.staffAvailable = action.payload;
     },
     setWalkin: (state, action) => {
-      console.log('action.payload setWalkin', action.payload);
       state.walkin = [action.payload, ...state.walkin];
     },
     setAppointment: (state, action) => {
-      console.log('action.payload setAppointment', action.payload);
       state.appointment = [action.payload, ...state.appointment];
     },
   },

@@ -1,6 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { addBooking, getUserBooking, notifyBooking } from '../actions/bookingAction';
-
+import { addBooking, getUserBooking, notifyBooking, addInvoice } from '../actions/bookingAction';
+import { t } from 'i18next';
+function tr(key) {
+  return t(`homeScreen:${key}`);
+}
 const initialState = {
   bookingType: null,
   services: [],
@@ -9,6 +12,7 @@ const initialState = {
   bookingTime: null,
   isLoading: false,
   error: false,
+  message: '',
 };
 
 export const bookingSlice = createSlice({
@@ -21,6 +25,12 @@ export const bookingSlice = createSlice({
 
     updateUserBooking: (state, action) => {
       const userId = action.payload.userId;
+      const appointment = action.payload.data.appointment;
+      if (appointment) {
+        const objectIndex = state.userBookings.findIndex((obj) => obj.id === appointment);
+        state.userBookings.splice(objectIndex, 1);
+        return;
+      }
       const { date, id, services, timeslot } = action.payload.data;
 
       const items = services.filter((item) => item.specialistID === userId);
@@ -96,9 +106,7 @@ export const bookingSlice = createSlice({
         state.isLoading = false;
         state.error = true;
       })
-      .addCase(notifyBooking.pending, (state) => {
-        state.isLoading = true;
-      })
+      .addCase(notifyBooking.pending, (state) => {})
       .addCase(notifyBooking.fulfilled, (state, action) => {
         const data = action.payload;
         const { bookingId } = data[0];
@@ -119,9 +127,21 @@ export const bookingSlice = createSlice({
           additional: addition,
           total: tot,
         };
-        state.isLoading = false;
       })
       .addCase(notifyBooking.rejected, (state, action) => {
+        state.isLoading = false;
+      })
+      .addCase(addInvoice.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(addInvoice.fulfilled, (state, action) => {
+        state.message = t('adminHomeScreen:invoiceCreated');
+        state.isLoading = false;
+        const bookingId = action.payload.appointment;
+        const objectIndex = state.userBookings.findIndex((obj) => obj.id === bookingId);
+        state.userBookings.splice(objectIndex, 1);
+      })
+      .addCase(addInvoice.rejected, (state, action) => {
         state.isLoading = false;
         state.error = true;
       });

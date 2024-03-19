@@ -1,7 +1,7 @@
 import axios from 'axios';
 /// always update the STRAPIURL to utils/socket.js too
-import { STRAPIURL } from '@env';
-//const STRAPIURL = 'http://localhost:1337';
+///import { STRAPIURL } from '@env';
+const STRAPIURL = 'http://localhost:1337';
 export const api = {
   getUser: async (email) => {
     const url = `${STRAPIURL}/api/users/${email}`;
