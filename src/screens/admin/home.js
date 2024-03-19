@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import Loader from '@components/loader';
 import moment from 'moment';
 import { getBooking } from '@redux/actions/adminHomeAction';
+import { updateNotification } from '@redux/slices/adminHomeSlice';
 import StaffRow from '@components/admin/StaffRow';
 import Accordion from '@components/admin/Accordion';
 import { DraxProvider } from 'react-native-drax';
@@ -29,18 +30,19 @@ const AdminHome = () => {
   const employee = userData.storeAdmin.employee;
   const today = moment().format('YYYY-MM-DD');
   const storeId = userData.storeAdmin.id;
+
   useEffect(() => {
+    const handlerNewOrder = (data) => {
+      dispatch(updateNotification(data));
+    };
     if (userData.role.id === 4) {
-      console.log('userData.id', userData);
       socket.auth = { userId: userData.id, userInfoId: userData.userInfo.id };
     }
     socket.connect();
     socket.on('connect_error', (err) => {
       socket.off('connect_error');
     });
-    const handlerNewOrder = (data) => {
-      console.log('newOrder socket data', data);
-    };
+
     socket.on('bookingChanged', handlerNewOrder);
 
     dispatch(getBooking({ storeId, today }));

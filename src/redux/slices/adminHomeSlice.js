@@ -46,6 +46,17 @@ export const adminHomeSlice = createSlice({
         delete state.invoice[keys[0]];
       }
     },
+    updateNotification: (state, action) => {
+      const data = action.payload;
+      const { bookingId, timeslot } = data[0];
+      const bookingType = timeslot === null ? 'walkin' : 'appointment';
+      let bookings = state[bookingType];
+      const bookingIndex = bookings.findIndex((obj) => obj.id === bookingId);
+      let booking = { ...bookings[bookingIndex] };
+      booking = { ...booking, alert: true, services: data };
+      bookings[bookingIndex] = booking;
+      state[bookingType] = bookings;
+    },
     updatePrice: (state, action) => {
       let {
         value,
@@ -246,5 +257,6 @@ export const {
   resetMessage,
   addBooking,
   updateAppointment,
+  updateNotification,
 } = adminHomeSlice.actions;
 export default adminHomeSlice.reducer;

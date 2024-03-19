@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View, Modal } from 'react-native';
 
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -22,9 +22,15 @@ const AccordionItem = ({ children, item, expanded, onHeaderPress }) => {
   const [visible, setVisible] = useState(false);
   const [message, setMessage] = useState('');
   const [messageType, setMessageType] = useState('');
+  const [alert, setAlert] = useState(false);
 
-  //console.log('item', item);
-  let { timeslot, createdAt, callBack, client, specialist, services, confirmed } = item;
+  let { timeslot, createdAt, callBack, client, specialist, services, confirmed, alert: itemAlert } = item;
+
+  useEffect(() => {
+    if (!item.alert) return;
+    setAlert(true);
+  }, [item]);
+
   let time = moment(createdAt).format('h:mm A');
   if (timeslot) {
     time = appointmentTime(specialist?.userInfo?.hours, timeslot);
@@ -88,7 +94,7 @@ const AccordionItem = ({ children, item, expanded, onHeaderPress }) => {
               </View>
             </TouchableOpacity>
           ) : null}
-          <Maticons name='bell-ring' size={20} color={'red'} style={{ marginLeft: 10 }} />
+          {alert && <Maticons name='bell-ring' size={20} color={'red'} style={{ marginLeft: 10 }} />}
         </View>
         <View style={{ flex: 0.5, alignItems: 'flex-end' }}>
           <Icon name={expanded ? 'chevron-up' : 'chevron-down'} size={14} color={borderColor} />

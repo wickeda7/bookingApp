@@ -10,6 +10,7 @@ import AntIcon from 'react-native-vector-icons/AntDesign';
 import { formatPrice } from '@utils/helper';
 import { addInvoice, updateBooking } from '@redux/actions/adminHomeAction';
 import Toast from 'react-native-root-toast';
+
 const ServicesTable = ({ services }) => {
   const { t, i18n } = useTranslation();
   const isRtl = i18n.dir() === 'rtl';
