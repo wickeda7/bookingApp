@@ -131,9 +131,11 @@ const BookingDetail = (props) => {
         <TouchableOpacity style={{ marginHorizontal: Default.fixPadding * 1.5 }} onPress={() => props.navigation.pop()}>
           <Ionicons name={isRtl ? 'arrow-forward' : 'arrow-back'} size={30} color={Colors.white} />
         </TouchableOpacity>
-        <Text style={{ ...Fonts.White18Bold, marginVertical: Default.fixPadding }}>
-          {firstName} {lastName}
-        </Text>
+        <View style={{ zIndex: 100 }}>
+          <Text style={{ ...Fonts.White18Bold, marginVertical: Default.fixPadding }}>
+            {firstName} {lastName}
+          </Text>
+        </View>
       </View>
       <View
         style={{
@@ -149,6 +151,7 @@ const BookingDetail = (props) => {
           style={{
             marginTop: -40,
             alignSelf: 'center',
+            zIndex: 10,
           }}
         />
         <Text style={{ ...Fonts.Black16Bold, textAlign: 'center' }}>
@@ -243,8 +246,8 @@ const BookingDetail = (props) => {
               paddingBottom: Default.fixPadding * 4,
             }}
           >
-            <View style={[{ flex: 5 }]}></View>
-            <View style={[{ flex: 4, flexDirection: 'column' }]}>
+            <View style={[{ flex: 4 }]}></View>
+            <View style={[{ flex: 5, flexDirection: 'column' }]}>
               <View style={{ flexDirection: 'row' }}>
                 <View style={[{ flex: 5, padding: Default.fixPadding, alignItems: 'flex-end' }]}>
                   <Text style={[Fonts.Primary16Medium]}>Subtotal:</Text>

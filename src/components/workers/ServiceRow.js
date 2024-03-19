@@ -50,7 +50,7 @@ const ServiceRow = ({ item, handleTextChange }) => {
           { flexDirection: 'row', marginHorizontal: Default.fixPadding, marginTop: 5, marginBottom: 10 },
         ]}
       >
-        <View style={[{ flex: 2, flexDirection: 'row' }]}>
+        <View style={[{ flex: 3, flexDirection: 'row' }]}>
           <TouchableOpacity
             activeOpacity={0.8}
             onPress={() => {
@@ -62,7 +62,7 @@ const ServiceRow = ({ item, handleTextChange }) => {
             <Text style={[Fonts.Grey14Medium, { marginHorizontal: 10 }]}>{tr('notes')}:</Text>
           </TouchableOpacity>
         </View>
-        <View style={[{ flex: 8 }]}>
+        <View style={[{ flex: 7 }]}>
           {open ? (
             <TextInput
               multiline={true}
