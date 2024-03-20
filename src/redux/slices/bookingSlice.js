@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { addBooking, getUserBooking, notifyBooking, addInvoice } from '../actions/bookingAction';
+import { addBooking, getUserBooking, notifyBooking, addInvoice, cancelBooking } from '../actions/bookingAction';
 import { t } from 'i18next';
 function tr(key) {
   return t(`homeScreen:${key}`);
@@ -45,7 +45,7 @@ export const bookingSlice = createSlice({
             date,
             services: items,
             specialistID,
-            specialists: specialist,
+            specialists: [specialist],
             timeslot,
             storeID,
             userID,
@@ -143,6 +143,19 @@ export const bookingSlice = createSlice({
       })
       .addCase(addInvoice.rejected, (state, action) => {
         state.isLoading = false;
+        state.error = true;
+      })
+      .addCase(cancelBooking.pending, (state) => {
+        // state.isLoading = true;
+      })
+      .addCase(cancelBooking.fulfilled, (state, action) => {
+        // state.isLoading = false;
+        const bookingId = action.payload.id;
+        const objectIndex = state.userBookings.findIndex((obj) => obj.id === bookingId);
+        state.userBookings.splice(objectIndex, 1);
+      })
+      .addCase(cancelBooking.rejected, (state, action) => {
+        //state.isLoading = false;
         state.error = true;
       });
   },

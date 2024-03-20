@@ -24,10 +24,11 @@ export const booking = {
       throw error;
     }
   },
-  deleteHistory: async (id) => {
+  deleteHistory: async (bookingId) => {
     try {
-      const response = await api.deleteHistory(id);
-      return response;
+      const response = await api.deleteHistory(bookingId);
+      const { id, timeslot } = response.data;
+      return { id, timeslot };
     } catch (error) {
       throw error;
     }

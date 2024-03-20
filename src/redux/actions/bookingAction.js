@@ -38,3 +38,12 @@ export const addInvoice = createAsyncThunk('addInvoice', async ({ data }) => {
     throw error.response.data.error.message;
   }
 });
+export const cancelBooking = createAsyncThunk('cancelBooking', async ({ id }) => {
+  try {
+    const response = await booking.deleteHistory(id);
+    return response;
+  } catch (error) {
+    console.log('error bookingAction cancelBooking', error.response.data.error.message);
+    throw error.response.data.error.message;
+  }
+});

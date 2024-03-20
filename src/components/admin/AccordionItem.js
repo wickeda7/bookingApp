@@ -22,14 +22,8 @@ const AccordionItem = ({ children, item, expanded, onHeaderPress }) => {
   const [visible, setVisible] = useState(false);
   const [message, setMessage] = useState('');
   const [messageType, setMessageType] = useState('');
-  const [alert, setAlert] = useState(false);
 
-  let { timeslot, createdAt, callBack, client, specialist, services, confirmed, alert: itemAlert } = item;
-
-  useEffect(() => {
-    if (!item.alert) return;
-    setAlert(true);
-  }, [item]);
+  let { timeslot, createdAt, callBack, client, specialist, services, confirmed, alert: itemAlert, id } = item;
 
   let time = moment(createdAt).format('h:mm A');
   if (timeslot) {
@@ -47,6 +41,7 @@ const AccordionItem = ({ children, item, expanded, onHeaderPress }) => {
   const titleContent = (
     <>
       <Text style={[styles.accordTitle, { color: borderColor }]}>
+        {id} {'  '}
         {tr(type)}
         {'  '} {time} {'  '}
         {client?.userInfo?.firstName} {client?.userInfo?.lastName} {'  '}
@@ -94,7 +89,7 @@ const AccordionItem = ({ children, item, expanded, onHeaderPress }) => {
               </View>
             </TouchableOpacity>
           ) : null}
-          {alert && <Maticons name='bell-ring' size={20} color={'red'} style={{ marginLeft: 10 }} />}
+          {itemAlert && <Maticons name='bell-ring' size={20} color={'red'} style={{ marginLeft: 10 }} />}
         </View>
         <View style={{ flex: 0.5, alignItems: 'flex-end' }}>
           <Icon name={expanded ? 'chevron-up' : 'chevron-down'} size={14} color={borderColor} />

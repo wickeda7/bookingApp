@@ -8,7 +8,7 @@ import Toast from 'react-native-root-toast';
 import { useTranslation } from 'react-i18next';
 import { useBookingContext } from '@contexts/BookingContext';
 import Loader from '@components/loader';
-import BookingRow from '@components/bookingRow';
+import BookingRow from '@components/user/bookingRow';
 
 const HistoryScreen = (props) => {
   const { t, i18n } = useTranslation();

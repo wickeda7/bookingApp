@@ -41,7 +41,6 @@ function CustomTabBar({ state, descriptors, navigation }) {
     >
       <Text style={{ ...Fonts.White20Bold }}>{tr('booking')} BS</Text>
       <Text style={{ ...Fonts.White16Medium, marginBottom: Default.fixPadding }}>{tr('upcomingBooking')}</Text>
-      <Text style={{ ...Fonts.White16Medium, marginBottom: Default.fixPadding }}>TODO: reminder alert booking</Text>
 
       <View style={styles.TabBarMainContainer}>
         {state.routes.map((route, index) => {

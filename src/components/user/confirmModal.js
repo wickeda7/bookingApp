@@ -12,14 +12,8 @@ const ConfirmModal = ({ visible, setVisible, item }) => {
     return t(`ongoingScreen:${key}`);
   }
   const onCancel = async () => {
-    dispatch(cancelBooking(item.id));
+    dispatch(cancelBooking({ id: item.id }));
     setVisible(false);
-    // const res = await deleteHistory(cancelBooking.id);
-    // console.log('CANCELED NEED TO NOTIFY STORE!!!!!!', res);
-    // if (res) {
-    //   setCancelId(cancelBooking.id);
-    //   setVisible(false);
-    // }
   };
   return (
     <Modal animationType='fade' transparent={true} visible={visible}>

@@ -99,9 +99,9 @@ const NotificationsHelper = ({ setNotification }) => {
 
   useEffect(() => {
     if (!expoPushToken) return;
-    if (!userData.userInfo) return;
+    if (!userData?.userInfo) return;
     if (userData?.userInfo?.pushToken !== expoPushToken) {
-      updateToken(userData.userInfo.id, expoPushToken);
+      updateToken(userData?.userInfo.id, expoPushToken);
     }
   }, [expoPushToken]);
 

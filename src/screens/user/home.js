@@ -12,7 +12,7 @@ import { useAuthContext } from '@contexts/AuthContext';
 const UserHome = ({ props }) => {
   const { setCounty, setLatitude, setLongitude } = useStoreContext();
   const { userData } = useAuthContext();
-  const name = userData?.userInfo?.firstName ? userData.userInfo.firstName + ' ' + userData.userInfo.lastName : '';
+  const name = userData?.userInfo?.firstName ? userData.userInfo.firstName + ' ' + userData?.userInfo?.lastName : '';
   const { t, i18n } = useTranslation();
 
   const isRtl = i18n.dir() === 'rtl';

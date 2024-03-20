@@ -7,8 +7,6 @@ const BookingContextProvider = ({ children }) => {
   const [selectedDate, setSelectedDate] = useState(null);
   const [specialistBookings, setSpecialistBookings] = useState([]);
   const { userData } = useAuthContext();
-  const [cancelBooking, setCancelBooking] = useState(null);
-  const [cancelId, setCancelId] = useState(null);
 
   const getSpecialistBooking = async (specialists) => {
     const ids = specialists.map((item) => item.id).join('_');
@@ -21,22 +19,11 @@ const BookingContextProvider = ({ children }) => {
     return response;
   };
 
-  const deleteHistory = async (id) => {
-    console.log('deleteHistory', id);
-    const response = await booking.deleteHistory(id);
-    return response;
-  };
-
   const value = {
     selectedDate,
     setSelectedDate,
     getSpecialistBooking,
     specialistBookings,
-    deleteHistory,
-    cancelBooking,
-    setCancelBooking,
-    cancelId,
-    setCancelId,
     getStoreBooking,
   };
   return <BookingContext.Provider value={value}>{children}</BookingContext.Provider>;

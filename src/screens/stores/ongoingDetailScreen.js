@@ -7,11 +7,10 @@ import DashedLine from 'react-native-dashed-line';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useTranslation } from 'react-i18next';
 import MyStatusBar from '@components/myStatusBar';
-import { STRAPIURL } from '@env';
 import moment from 'moment';
 import { formatPhoneNumber, formatPrice } from '@utils/helper';
 import ItemRow from '@components/itemRow';
-import ConfirmModal from '@components/confirmModal';
+import ConfirmModal from '@components/user/confirmModal';
 import { useBookingContext } from '@contexts/BookingContext';
 const OngoingDetailScreen = (props) => {
   const booking = props.route.params;

@@ -3,27 +3,26 @@ import React, { useEffect, useState } from 'react';
 import { Colors, Default, Fonts } from '@constants/style';
 import { useTranslation } from 'react-i18next';
 import { useBookingContext } from '@contexts/BookingContext';
+import { useAuthContext } from '@contexts/AuthContext';
 import Loader from '@components/loader';
-import ConfirmModal from '@components/confirmModal';
+//import ConfirmModal from '@components/user/confirmModal';
 import Feather from 'react-native-vector-icons/Feather';
-import BookingRow from '@components/bookingRow';
+import BookingRow from '@components/user/bookingRow';
+import { useDispatch, useSelector } from 'react-redux';
+import { getUserBooking } from '@redux/actions/bookingAction';
+
 const OngoingScreen = (props) => {
   const { t, i18n } = useTranslation();
   const { navigation, route } = props;
   const isRtl = i18n.dir() === 'rtl';
-  const { getUserBooking, cancelId } = useBookingContext();
-  const [lVisible, setLVisible] = useState(false);
-  const [data, setData] = useState([]);
-  const [visible, setVisible] = useState(false);
+  const { cancelId } = useBookingContext();
+  const { userData } = useAuthContext();
+
+  const dispatch = useDispatch();
+  const { isLoading, userBookings } = useSelector((state) => state.booking);
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
-      const getData = async () => {
-        setLVisible(true);
-        const res = await getUserBooking(false, 'user');
-        setData(res);
-        setLVisible(false);
-      };
-      getData();
+      dispatch(getUserBooking({ id: userData.id, done: false, type: 'user' }));
     });
 
     return unsubscribe;
@@ -77,7 +76,7 @@ const OngoingScreen = (props) => {
             backgroundColor: Colors.white,
           }}
         >
-          <BookingRow item={item} showStatus={true} done={false} props={props} setVisible={setVisible} />
+          <BookingRow item={item} showStatus={true} done={false} props={props} />
         </TouchableOpacity>
       </View>
     );
@@ -85,17 +84,17 @@ const OngoingScreen = (props) => {
 
   return (
     <View style={{ flex: 1 }}>
-      <Loader visible={lVisible} />
+      <Loader visible={isLoading} />
       <FlatList
         numColumns={1}
-        data={data}
+        data={userBookings}
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
         showsVerticalScrollIndicator={false}
         ListEmptyComponent={EmptyListMessage}
       />
 
-      <ConfirmModal visible={visible} setVisible={setVisible} />
+      {/* <ConfirmModal visible={visible} setVisible={setVisible} /> */}
     </View>
   );
 };
