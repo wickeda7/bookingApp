@@ -54,7 +54,7 @@
     "staff": "Staff",
     "servicename": "Service Name",
     "price": "Price",
-    "additional": "Additional",
+    "additional": "Addition",
     "total": "Total",
     "notes": "Notes",
     "addstaff": "Add",
@@ -69,7 +69,9 @@
     "sendMessageReady": "Send message to client that service is ready in 10 minutes.",
     "send": "Send",
     "cancel": "Cancel",
-    "sendMessageConfirmation": "Send message to confirm appointment."
+    "sendMessageConfirmation": "Send message to confirm appointment.",
+    "date": "Date",
+    "time": "Time"
   },
   "reports": {
     "reports": "Reports",

@@ -164,6 +164,16 @@ export const adminHomeSlice = createSlice({
     setAppointment: (state, action) => {
       state.appointment = [action.payload, ...state.appointment];
     },
+    updateNewInvoice: (state, action) => {
+      const { appointment, specialist, type, store } = action.payload;
+      let bookings = state[type];
+      const bookingIndex = bookings.findIndex((obj) => obj.id === appointment);
+      bookings.splice(bookingIndex, 1);
+      const objectIndex = state.staffUnAvailable.findIndex((obj) => obj.id === specialist);
+      const staff = state.staffUnAvailable[objectIndex];
+      state.staffUnAvailable.splice(objectIndex, 1);
+      state.staffAvailable.push(staff);
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -256,5 +266,6 @@ export const {
   addBooking,
   updateAppointment,
   updateNotification,
+  updateNewInvoice,
 } = adminHomeSlice.actions;
 export default adminHomeSlice.reducer;

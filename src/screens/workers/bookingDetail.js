@@ -134,7 +134,7 @@ const BookingDetail = (props) => {
   const handleSubmit = () => {
     const bookingId = booking.id;
     const Dbooking = userBookings.find((obj) => obj.id === bookingId);
-    let services = JSON.parse(Dbooking.services);
+    let services = typeof Dbooking.services === 'string' ? JSON.parse(Dbooking.services) : Dbooking.services;
     services = services.map((service) => {
       let { additional, price, bookingId, id, name, notes, total } = service;
       additional = additional ? additional : 0;
@@ -265,10 +265,10 @@ const BookingDetail = (props) => {
           />
           <View style={[Style.contentContainer, { flexDirection: 'column', marginHorizontal: Default.fixPadding }]}>
             <View style={[Style.tableHeader, { flexDirection: 'row', flex: 1 }]}>
-              <Text style={[Style.tableHeaderText15Medium, { flex: 2, marginLeft: 0 }]}>{tr('servicename')}</Text>
-              <Text style={[Style.tableHeaderText15Medium, { flex: 1, marginLeft: 0 }]}>{tr('price')}</Text>
-              <Text style={[Style.tableHeaderText15Medium, { flex: 1, marginLeft: 0 }]}>{tr('additional')}</Text>
-              <Text style={[Style.tableHeaderText15Medium, { flex: 1, marginLeft: 0, textAlign: 'right' }]}>
+              <Text style={[Style.tableHeaderText14Medium, { flex: 2, marginLeft: 0 }]}>{tr('servicename')}</Text>
+              <Text style={[Style.tableHeaderText14Medium, { flex: 1, marginLeft: 0 }]}>{tr('price')}</Text>
+              <Text style={[Style.tableHeaderText14Medium, { flex: 1, marginLeft: 0 }]}>{tr('additional')}</Text>
+              <Text style={[Style.tableHeaderText14Medium, { flex: 1, marginLeft: 0, textAlign: 'right' }]}>
                 {tr('total')}
               </Text>
             </View>

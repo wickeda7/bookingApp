@@ -46,6 +46,7 @@ export default StyleSheet.create({
   tableHeaderText16: { ...Fonts.Primary16Bold },
   tableHeaderText16Medium: { ...Fonts.Primary16Medium, marginLeft: Default.fixPadding * 1.5 },
   tableHeaderText15Medium: { ...Fonts.Primary15Medium, marginLeft: Default.fixPadding * 1.5 },
+  tableHeaderText14Medium: { ...Fonts.Primary14Medium, marginLeft: Default.fixPadding * 1.5 },
   divider: {
     height: 1,
     backgroundColor: Colors.bord,

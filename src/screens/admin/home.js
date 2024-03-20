@@ -11,7 +11,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import Loader from '@components/loader';
 import moment from 'moment';
 import { getBooking } from '@redux/actions/adminHomeAction';
-import { updateNotification } from '@redux/slices/adminHomeSlice';
+import { updateNotification, updateNewInvoice } from '@redux/slices/adminHomeSlice';
 import StaffRow from '@components/admin/StaffRow';
 import Accordion from '@components/admin/Accordion';
 import { DraxProvider } from 'react-native-drax';
@@ -53,10 +53,13 @@ const AdminHome = () => {
   }, []);
   useEffect(() => {
     if (notification) {
-      //console.log('notification home', notification);
-
-      console.log('notification home notification.request.content.data............', notification.request.content.data);
       const data = notification.request.content.data;
+      console.log('notification home notification.request.content.data............', notification.request.content.data);
+      if (data.appointment) {
+        dispatch(updateNewInvoice(data));
+        return;
+      }
+
       if (data.specialistID) {
         const staffA = staffAvailable.find((obj) => obj.id === data.specialistID);
         const staffU = staffUnAvailable.find((obj) => obj.id === data.specialistID);
