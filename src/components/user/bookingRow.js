@@ -1,17 +1,17 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
-import React from 'react';
-import { STRAPIURL } from '@env';
+import React, { useState } from 'react';
 import moment from 'moment';
 import Octicons from 'react-native-vector-icons/Octicons';
 import { Colors, Default, Fonts } from '@constants/style';
 import { useTranslation } from 'react-i18next';
-import { useBookingContext } from '@contexts/BookingContext';
-const BookingRow = ({ item, showStatus, done, props, setVisible }) => {
+import ConfirmModal from '@components/user/confirmModal';
+const BookingRow = ({ item, showStatus, done, props }) => {
   const { t, i18n } = useTranslation();
   const isRtl = i18n.dir() === 'rtl';
   function tr(key) {
     return t(`ongoingScreen:${key}`);
   }
+  const [visible, setVisible] = useState(false);
   let temp = null;
   let aTime = '';
   if (item.specialist) {
@@ -29,10 +29,10 @@ const BookingRow = ({ item, showStatus, done, props, setVisible }) => {
 
   const date = moment(item.date).format('MMM Do YYYY');
   const status = item.confirmed ? 'Confirmed' : 'Pending';
-  const { setCancelBooking } = useBookingContext();
 
   return (
     <>
+      <ConfirmModal visible={visible} setVisible={setVisible} item={item} />
       <Image source={{ uri: `${item.store.logo.url}` }} style={{ width: 131, height: 143 }} />
       <View
         style={{
@@ -41,7 +41,9 @@ const BookingRow = ({ item, showStatus, done, props, setVisible }) => {
           margin: Default.fixPadding,
         }}
       >
-        <Text style={Fonts.Primary16Medium}>{item.store.name}</Text>
+        <Text style={Fonts.Primary16Medium}>
+          {item.store.name} {item.id}
+        </Text>
         <View
           style={{
             flexDirection: isRtl ? 'row-reverse' : 'row',
@@ -156,7 +158,6 @@ const BookingRow = ({ item, showStatus, done, props, setVisible }) => {
               <TouchableOpacity
                 activeOpacity={0.8}
                 onPress={() => {
-                  setCancelBooking(item);
                   setVisible(true);
                 }}
                 style={{

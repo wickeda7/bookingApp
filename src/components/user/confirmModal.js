@@ -2,22 +2,24 @@ import { StyleSheet, Text, View, Modal, TouchableOpacity } from 'react-native';
 import React from 'react';
 import { Colors, Default, Fonts } from '@constants/style';
 import { useTranslation } from 'react-i18next';
-import { useBookingContext } from '@contexts/BookingContext';
-const ConfirmModal = ({ visible, setVisible }) => {
+import { useDispatch, useSelector } from 'react-redux';
+import { cancelBooking } from '@redux/actions/bookingAction';
+const ConfirmModal = ({ visible, setVisible, item }) => {
   const { t, i18n } = useTranslation();
-  const { cancelBooking, deleteHistory, setCancelId } = useBookingContext();
-
+  const dispatch = useDispatch();
   const isRtl = i18n.dir() === 'rtl';
   function tr(key) {
     return t(`ongoingScreen:${key}`);
   }
   const onCancel = async () => {
-    const res = await deleteHistory(cancelBooking.id);
-    console.log('CANCELED NEED TO NOTIFY STORE!!!!!!', res);
-    if (res) {
-      setCancelId(cancelBooking.id);
-      setVisible(false);
-    }
+    dispatch(cancelBooking(item.id));
+    setVisible(false);
+    // const res = await deleteHistory(cancelBooking.id);
+    // console.log('CANCELED NEED TO NOTIFY STORE!!!!!!', res);
+    // if (res) {
+    //   setCancelId(cancelBooking.id);
+    //   setVisible(false);
+    // }
   };
   return (
     <Modal animationType='fade' transparent={true} visible={visible}>
