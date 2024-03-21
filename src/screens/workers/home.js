@@ -33,10 +33,11 @@ const WorkerHome = ({ props }) => {
   }, []);
   useEffect(() => {
     if (notification) {
-      // console.log('notification home notification.request.content.data  userBookings............', userBookings);
-      // console.log('notification home notification.request.content.data............', notification.request.content.data);
+      console.log('notification home notification.request.content.data  userBookings............', userBookings);
+      console.log('notification home notification.request.content.data............', notification.request.content.data);
+      const data = notification.request.content.data;
 
-      dispatch(updateUserBooking({ data: notification.request.content.data, userId: userData.id }));
+      dispatch(updateUserBooking({ data: data, userId: userData.id }));
     }
   }, [notification]);
   return (

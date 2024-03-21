@@ -1,5 +1,5 @@
 import { io } from 'socket.io-client';
-///import { STRAPIURL } from '@env';
+//import { STRAPIURL } from '@env';
 const STRAPIURL = 'http://localhost:1337';
 const socket = io(STRAPIURL, { autoConnect: false });
 

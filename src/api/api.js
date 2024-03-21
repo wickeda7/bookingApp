@@ -2,6 +2,7 @@ import axios from 'axios';
 /// always update the STRAPIURL to utils/socket.js too
 ///import { STRAPIURL } from '@env';
 const STRAPIURL = 'http://localhost:1337';
+import moment from 'moment';
 export const api = {
   getUser: async (email) => {
     const url = `${STRAPIURL}/api/users/${email}`;
@@ -32,6 +33,7 @@ export const api = {
       //const url = `${STRAPIURL}/api/stores?[filters][county][$eq]=Los Angeles County&[filters][type][$eq]=nail&[populate][0]=logo`;
       const url = `${STRAPIURL}/api/stores/getStores/${county}/${type}`;
       const response = await axios.get(url);
+      console.log('response.data', response.data);
       return response.data;
     } catch (error) {
       throw error;
@@ -256,7 +258,7 @@ export const api = {
   getBooking: async (storeId, date) => {
     try {
       // const url = `${STRAPIURL}/api/appointments?filters[storeId][$eq]=${storeId}&filters[done][$eq]=false&filters[date][$eq]=${date}&filters[timeslot][$notNull]&populate[0]=client&populate[1]=client.userInfo&populate[2]=specialist&populate[3]=specialist.userInfo`;
-      const url = `${STRAPIURL}/api/appointments?filters[storeId][$eq]=${storeId}&filters[done][$eq]=false&filters[date][$eq]=${date}&populate[0]=client&populate[1]=client.userInfo&populate[2]=specialists&populate[3]=specialists.userInfo&sort[0]=id:DESC`;
+      const url = `${STRAPIURL}/api/appointments?filters[storeId][$eq]=${storeId}&filters[done][$eq]=false&filters[canceled][$eq]=false&filters[date][$eq]=${date}&populate[0]=client&populate[1]=client.userInfo&populate[2]=specialists&populate[3]=specialists.userInfo&sort[0]=id:DESC`;
       const response = await axios.get(url);
       return response.data;
     } catch (error) {
@@ -266,8 +268,16 @@ export const api = {
   postInvoice: async (data) => {
     try {
       const url = `${STRAPIURL}/api/invoices`;
-      const response = await axios.post(url, { data });
-      return data;
+      const today = moment().format('YYYY-MM-DD');
+
+      const filterURL = `${STRAPIURL}/api/invoices?filters[appointment][id][$eq]=${data.appointment}&filters[specialist][id][$eq]=${data.specialist}&filters[createAt][$eq]=${today}`;
+      const res = await axios.get(filterURL);
+      if (res.data.data.length > 0) {
+        return data;
+      } else {
+        const response = await axios.post(url, { data });
+        return data;
+      }
     } catch (error) {
       console.log('error postInvoice API', error);
       throw error;

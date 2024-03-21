@@ -13,6 +13,7 @@ export const addBooking = createAsyncThunk('addBooking', async ({ data }) => {
 export const getUserBooking = createAsyncThunk('getUserBooking', async (data) => {
   try {
     const { id, done, type } = data;
+
     const response = await booking.getUserBooking(id, done, type);
     return response.data;
   } catch (error) {

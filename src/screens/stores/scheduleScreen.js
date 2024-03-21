@@ -16,6 +16,7 @@ const ScheduleScreen = (props) => {
   const { navigation } = props;
   const { t, i18n } = useTranslation();
   const { specialistBookings, selectedDate, getStoreBooking } = useBookingContext();
+
   const { bookingTime, specialist } = useSelector((state) => state.booking);
   const dispatch = useDispatch();
   const { selectedStore } = useStoreContext();
@@ -53,7 +54,8 @@ const ScheduleScreen = (props) => {
   }, [selectedDate]);
 
   const getBookingTime = async (date) => {
-    const bookingHours = Object.keys(specialist).length === 0 ? storeTimeSlot : specialist.userInfo.hours;
+    const specialistObj = Object.keys(specialist);
+    const bookingHours = specialistObj.length === 0 ? storeTimeSlot : specialist.userInfo.hours;
     const bookingDates = bookings.length > 0 ? bookings : await getStoreBooking(selectedStore.id, userData.id);
     const bookedTimeSlot = bookingDates.reduce((acc, booking) => {
       if (booking.date === date) {
@@ -70,10 +72,13 @@ const ScheduleScreen = (props) => {
   const getBookings = async () => {
     if (Object.keys(specialist).length > 0) {
       const specialistId = specialist.id;
-      const { appointmentsSpecialist } = specialistBookings.find((booking) => booking.id === specialistId);
-      setBookings(appointmentsSpecialist);
+      const { appointmentsSpecialists } = specialistBookings.find((booking) => booking.id === specialistId);
+      setBookings(appointmentsSpecialists);
     } else {
+      console.log('selectedStore.id', selectedStore.id);
+      console.log('userData.id', userData.id);
       const storeBooking = await getStoreBooking(selectedStore.id, userData.id);
+      console.log('storeBooking', storeBooking);
       setBookings(storeBooking);
     }
   };

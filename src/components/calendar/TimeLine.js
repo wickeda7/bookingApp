@@ -7,6 +7,8 @@ import { ExpandableCalendar, TimelineList, CalendarProvider, CalendarUtils, Time
 import { Colors, Default, Fonts, calendarTheme } from '@constants/style';
 import { parseEvents } from '@utils/helper';
 import EventView from './EventView';
+import { useDispatch, useSelector } from 'react-redux';
+
 const INITIAL_TIME = { hour: 9, minutes: 0 };
 const today = new Date();
 const getDate = (offset = 0) => CalendarUtils.getCalendarDateString(new Date().setDate(today.getDate() - offset));
@@ -15,6 +17,7 @@ const TimeLine = (props) => {
   const { data, navigation } = props;
   const [marked, setMarked] = useState({});
   const [event, setEvent] = useState([]);
+  const { isLoading, userBookings } = useSelector((state) => state.booking);
   useEffect(() => {
     const marked = groupBy(data, (event) => CalendarUtils.getCalendarDateString(event.date));
     for (let item of Object.keys(marked)) {
@@ -24,12 +27,13 @@ const TimeLine = (props) => {
     const events = parseEvents(data);
     if (events.length === 0) return;
     setEvent({
-      currentDate: getDate(),
+      currentDate: getDate(1),
       events: events,
       eventsByDate: groupBy(events, (event) => CalendarUtils.getCalendarDateString(event.start)),
     });
   }, [data]);
   const onEventPress = (event) => {
+    // console.log('onEventPress: ', userBookings);
     const item = data.find((item) => item.id === event.id);
     navigation.push('StoresStack', { screen: 'bookingDetail', params: item });
   };

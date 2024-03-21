@@ -26,6 +26,17 @@ export const bookingSlice = createSlice({
     updateUserBooking: (state, action) => {
       const userId = action.payload.userId;
       const appointment = action.payload.data.appointment;
+      const type = action.payload.data?.type;
+      //console.log('updateUserBooking action.payload.data............', action.payload.data);
+
+      if (type === 'cancel') {
+        const bookingId = action.payload.data.bookingId;
+        const objectIndex = state.userBookings.findIndex((obj) => obj.id === bookingId);
+        let booking = { ...state.userBookings[objectIndex] };
+        booking.canceled = true;
+        state.userBookings[objectIndex] = booking;
+        return;
+      }
       if (appointment) {
         const objectIndex = state.userBookings.findIndex((obj) => obj.id === appointment);
         state.userBookings.splice(objectIndex, 1);

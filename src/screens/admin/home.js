@@ -55,26 +55,28 @@ const AdminHome = () => {
     if (notification) {
       const data = notification.request.content.data;
       console.log('notification home notification.request.content.data............', notification.request.content.data);
+      if (data.type === 'newBooking') {
+        if (data.specialistID) {
+          const staffA = staffAvailable.find((obj) => obj.id === data.specialistID);
+          const staffU = staffUnAvailable.find((obj) => obj.id === data.specialistID);
+          if (staffA) {
+            data.specialist = staffA;
+          }
+          if (staffU) {
+            data.specialist = staffU;
+          }
+        }
+        setNotificationNumber(notificationNumber + 1);
+        if (data.timeslot) {
+          dispatch(setAppointment(data));
+        } else {
+          dispatch(setWalkin(data));
+        }
+        return;
+      }
       if (data.appointment) {
         dispatch(updateNewInvoice(data));
         return;
-      }
-
-      if (data.specialistID) {
-        const staffA = staffAvailable.find((obj) => obj.id === data.specialistID);
-        const staffU = staffUnAvailable.find((obj) => obj.id === data.specialistID);
-        if (staffA) {
-          data.specialist = staffA;
-        }
-        if (staffU) {
-          data.specialist = staffU;
-        }
-      }
-      setNotificationNumber(notificationNumber + 1);
-      if (data.timeslot) {
-        dispatch(setAppointment(data));
-      } else {
-        dispatch(setWalkin(data));
       }
     }
   }, [notification]);

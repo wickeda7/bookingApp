@@ -77,7 +77,7 @@ const ConfirmationScreen = (props) => {
         date: date.dateString ? date.dateString : date.toString(),
         store: selectedStore.id,
         client: userData.id,
-        specialist: specialist.id,
+        specialists: specialist.id,
         userID: userData.id,
         specialistID: specialist.id,
         storeID: selectedStore.id,
