@@ -4,13 +4,16 @@ import { Colors, Default, Fonts } from '@constants/style';
 import Octicons from 'react-native-vector-icons/Octicons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useTranslation } from 'react-i18next';
-import { useStoreContext } from '@contexts/StoreContext';
-import { STRAPIURL } from '@env';
-import { use } from 'i18next';
+import { useDispatch, useSelector } from 'react-redux';
+import { setFavorite } from '@redux/slices/storesSlice';
+import { useAuthContext } from '@contexts/AuthContext';
+import Loader from '@components/loader';
 const DetailScreen = (props) => {
   const { t, i18n } = useTranslation();
   const isRtl = i18n.dir() === 'rtl';
-  const { selectedStore, onFavorite, getStoreRelation } = useStoreContext();
+  const { selectedStore, isLoading } = useSelector((state) => state.stores);
+  const dispatch = useDispatch();
+  const { userData } = useAuthContext();
   const [isVisible, setVisible] = useState(false);
   let topImage = null;
   if (selectedStore?.images) {
@@ -30,7 +33,6 @@ const DetailScreen = (props) => {
   useEffect(() => {
     if (!selectedStore) return;
     setVisible(selectedStore.selected); /// favorite
-    getStoreRelation();
   }, [selectedStore]);
 
   useEffect(() => {
@@ -40,11 +42,13 @@ const DetailScreen = (props) => {
   }, []);
 
   const handleFavorite = () => {
-    onFavorite(selectedStore);
+    dispatch(setFavorite({ storeId: selectedStore.id, userId: userData.id }));
+
     setVisible((preState) => !preState);
   };
   return (
     <View style={{ marginTop: StatusBar.currentHeight }}>
+      <Loader visible={isLoading} />
       {topImage ? (
         <Image source={{ uri: topImage }} style={{ width: '100%', height: 200 }} />
       ) : (

@@ -33,7 +33,6 @@ export const api = {
       //const url = `${STRAPIURL}/api/stores?[filters][county][$eq]=Los Angeles County&[filters][type][$eq]=nail&[populate][0]=logo`;
       const url = `${STRAPIURL}/api/stores/getStores/${county}/${type}`;
       const response = await axios.get(url);
-      console.log('response.data', response.data);
       return response.data;
     } catch (error) {
       throw error;
@@ -43,8 +42,16 @@ export const api = {
     try {
       // const url = `${STRAPIURL}/api/stores/${id}?fields[0]=name&=name&populate[0]=services&populate[1]=services.items&populate[2]=services.sub_services&populate[3]=services.sub_services.items&populate[4]=images&populate[5]=employee&populate[6]=employee.userInfo&populate[7]=employee.userInfo.profileImg&populate[8]=employee.userInfo.images`;
       const response = await axios.get(`${STRAPIURL}/api/stores/populate/${id}`);
-
       return response.data.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  getSpecialistBooking: async (ids) => {
+    try {
+      const url = `${STRAPIURL}/api/appointments/specialists/${ids}`;
+      const response = await axios.get(url);
+      return response.data;
     } catch (error) {
       throw error;
     }
@@ -83,15 +90,7 @@ export const api = {
       throw error;
     }
   },
-  getSpecialistBooking: async (ids) => {
-    try {
-      const url = `${STRAPIURL}/api/appointments/specialists/${ids}`;
-      const response = await axios.get(url);
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
-  },
+
   postBooking: async (data) => {
     const url = `${STRAPIURL}/api/appointments`;
     const headers = {

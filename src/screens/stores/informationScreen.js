@@ -16,7 +16,6 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import MapView, { Marker } from 'react-native-maps';
 import { useTranslation } from 'react-i18next';
 import { ourSpecialistsData, PhotoData } from '@api/tempData';
-import { STRAPIURL } from '@env';
 import { formatPhoneNumber } from '@utils/helper';
 const InformationScreen = (props) => {
   const { t, i18n } = useTranslation();

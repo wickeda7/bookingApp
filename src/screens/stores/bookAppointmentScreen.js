@@ -4,8 +4,7 @@ import { Colors, Default, Fonts, DefaultImage } from '@constants/style';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useTranslation } from 'react-i18next';
 import MyStatusBar from '@components/myStatusBar';
-import { useStoreContext } from '@contexts/StoreContext';
-import { useBookingContext } from '@contexts/BookingContext';
+//import { useBookingContext } from '@contexts/BookingContext';
 import { useSelector, useDispatch } from 'react-redux';
 import { setSpecialist } from '@redux/slices/bookingSlice';
 
@@ -17,12 +16,11 @@ const BookAppointmentScreen = (props) => {
   const { t, i18n } = useTranslation();
 
   const isRtl = i18n.dir() === 'rtl';
-  const {
-    selectedStore: { employee },
-  } = useStoreContext();
 
-  const { getSpecialistBooking } = useBookingContext();
+  //const { getSpecialistBooking } = useBookingContext();
   const { bookingType, specialist } = useSelector((state) => state.booking);
+  const { selectedStore } = useSelector((state) => state.stores);
+  const employee = selectedStore?.employee ? selectedStore.employee : [];
   const dispatch = useDispatch();
 
   const options = [...employee, ...options1];
@@ -36,13 +34,13 @@ const BookAppointmentScreen = (props) => {
     props.navigation.goBack();
     return true;
   };
-  const getBookAppointment = async () => {
-    setVisible(true);
-    const res = await getSpecialistBooking(employee);
-    if (res) setVisible(false);
-  };
+  // const getBookAppointment = async () => {
+  //   setVisible(true);
+  //   const res = await getSpecialistBooking(employee);
+  //   if (res) setVisible(false);
+  // };
   useEffect(() => {
-    getBookAppointment();
+    // getBookAppointment();
     BackHandler.addEventListener('hardwareBackPress', backAction);
 
     return () => BackHandler.removeEventListener('hardwareBackPress', backAction);

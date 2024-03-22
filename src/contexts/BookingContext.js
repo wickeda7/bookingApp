@@ -9,6 +9,7 @@ const BookingContextProvider = ({ children }) => {
   const { userData } = useAuthContext();
 
   const getSpecialistBooking = async (specialists) => {
+    ////////////
     const ids = specialists.map((item) => item.id).join('_');
     const response = await booking.getSpecialistBooking(ids);
     setSpecialistBookings(response.data);

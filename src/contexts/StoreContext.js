@@ -5,43 +5,28 @@ import { useAuthContext } from '@contexts/AuthContext';
 const StoreContext = createContext({});
 
 const StoreContextProvider = ({ children }) => {
-  const [selectedStore, setSelectedStore] = useState(null);
-  const [stores, setStores] = useState(null);
   const { userData, updateUserFavorite } = useAuthContext();
   const [reviews, setReviews] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [county, setCounty] = useState(null);
-  const [latitude, setLatitude] = useState(null);
-  const [longitude, setLongitude] = useState(null);
+
+  const [county, setCounty] = useState(null); ////////////
+  const [latitude, setLatitude] = useState(null); ////////////
+  const [longitude, setLongitude] = useState(null); ////////////
+  const [selectedStore, setSelectedStore] = useState(null); ///////////
+  const [stores, setStores] = useState(null); ///////////
   const getStores = async () => {
+    ///////////
     setLoading(true);
     // const county = 'Los Angeles County';
     const type = 'nail';
+    console.log('userData', userData);
     const response = await storeApi.getData(userData?.favorites, county, type);
     setStores(response);
     setLoading(false);
   };
 
-  const updatedSelectedStore = (res) => {
-    const updatedStore = { ...selectedStore, ...res };
-    setSelectedStore(updatedStore);
-    const newItem = stores.map((val) => {
-      if (val.id === updatedStore.id) {
-        const newVal = { ...val, ...updatedStore };
-
-        return newVal;
-      } else {
-        return val;
-      }
-    });
-    setStores(newItem);
-  };
-  const getStoreRelation = async (id) => {
-    if (selectedStore.services) return;
-    const response = await storeApi.getStoreById(selectedStore.id);
-    updatedSelectedStore(response);
-  };
   const onFavorite = (item) => {
+    ///////////
     if (!stores) {
       users.updateFavorite(userData.id, item);
       return item;
@@ -59,7 +44,32 @@ const StoreContextProvider = ({ children }) => {
     updateUserFavorite();
     return newItem;
   };
+
+  const getStoreRelation = async (id) => {
+    //////////
+    if (selectedStore.services) return;
+    const response = await storeApi.getStoreById(selectedStore.id);
+    updatedSelectedStore(response);
+  };
+
+  const updatedSelectedStore = (res) => {
+    //////////
+    const updatedStore = { ...selectedStore, ...res };
+    setSelectedStore(updatedStore);
+    const newItem = stores.map((val) => {
+      if (val.id === updatedStore.id) {
+        const newVal = { ...val, ...updatedStore };
+
+        return newVal;
+      } else {
+        return val;
+      }
+    });
+    setStores(newItem);
+  };
+
   const getReviews = async (id) => {
+    /////
     if (!selectedStore) return;
     setLoading(true);
     const response = await storeApi.getReviews(selectedStore.id);

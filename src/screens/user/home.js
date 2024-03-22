@@ -3,15 +3,17 @@ import React, { useEffect } from 'react';
 import { Colors, Default, Fonts } from '@constants/style';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useTranslation } from 'react-i18next';
-import { useStoreContext } from '@contexts/StoreContext';
 import * as Location from 'expo-location';
 import Device from 'react-native-device-info';
 import ComingSoon from '@components/ComingSoon';
 import NotificationsHelper from '@utils/notifications';
 import { useAuthContext } from '@contexts/AuthContext';
+import { useDispatch } from 'react-redux';
+import { setCounty, setLatitude, setLongitude } from '@redux/slices/storesSlice';
+
 const UserHome = ({ props }) => {
-  const { setCounty, setLatitude, setLongitude } = useStoreContext();
   const { userData } = useAuthContext();
+  const dispatch = useDispatch();
   const name = userData?.userInfo?.firstName ? userData.userInfo.firstName + ' ' + userData?.userInfo?.lastName : '';
   const { t, i18n } = useTranslation();
 
@@ -31,15 +33,15 @@ const UserHome = ({ props }) => {
       const { coords } = await Location.getCurrentPositionAsync({});
       if (coords) {
         const { latitude, longitude } = coords;
-        setLongitude(longitude);
-        setLatitude(latitude);
+        dispatch(setLatitude(latitude));
+        dispatch(setLongitude(longitude));
         Location.reverseGeocodeAsync({
           latitude,
           longitude,
         })
           .then((res) => {
             let county = res[0].subregion;
-            setCounty(county);
+            dispatch(setCounty(county));
           })
           .catch((e) => console.log(e));
       }

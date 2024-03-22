@@ -1,13 +1,15 @@
-import { Image, Text, View, SafeAreaView, ScrollView, TouchableOpacity, StatusBar, BackHandler } from 'react-native';
+import { Text, View, ScrollView, TouchableOpacity, BackHandler } from 'react-native';
 import React, { useEffect } from 'react';
 import { Colors, Default, Fonts } from '@constants/style';
 import { useTranslation } from 'react-i18next';
 import { useStoreContext } from '@contexts/StoreContext';
 import Loader from '@components/loader';
 import ReviewContent from '@components/reviewContent';
+import { useDispatch, useSelector } from 'react-redux';
 const ReviewScreen = (props) => {
   const { t, i18n } = useTranslation();
-  const { getReviews, reviews, loading } = useStoreContext();
+  const { reviews, loading, selectedStore } = useSelector((state) => state.stores);
+  const dispatch = useDispatch();
   const isRtl = i18n.dir() === 'rtl';
 
   function tr(key) {
@@ -19,15 +21,16 @@ const ReviewScreen = (props) => {
     return true;
   };
   useEffect(() => {
-    if (!reviews) getReviews();
+    // if (!reviews) dispatch(getReviews({ storeId: selectedStore.id }));
 
     BackHandler.addEventListener('hardwareBackPress', backAction);
 
     return () => BackHandler.removeEventListener('hardwareBackPress', backAction);
   }, []);
-  if (loading) return <Loader visible={true} />;
+  return null;
   return (
     <View style={{ flex: 1 }}>
+      <Loader visible={loading} />
       <ScrollView showsVerticalScrollIndicator={false}>
         {reviews &&
           reviews.map((review, index) => {

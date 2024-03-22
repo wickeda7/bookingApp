@@ -5,29 +5,35 @@ import Octicons from 'react-native-vector-icons/Octicons';
 import { Colors, Default, Fonts } from '@constants/style';
 import { useTranslation } from 'react-i18next';
 import MyStatusBar from '@components/myStatusBar';
-import { useStoreContext } from '@contexts/StoreContext';
 import Loader from '@components/loader';
+import { useDispatch, useSelector } from 'react-redux';
+import { getStores, getStoreRelation } from '@redux/actions/storesAction';
+import { useAuthContext } from '@contexts/AuthContext';
+import { setFavorite } from '@redux/slices/storesSlice';
 const CategoriesScreen = ({ navigation, route }) => {
   const { i18n } = useTranslation();
-
   const isRtl = i18n.dir() === 'rtl';
-
   const title = route.params.title;
-  const { setSelectedStore, stores, onFavorite, getStores, loading } = useStoreContext();
+
+  const { county, isLoading, stores } = useSelector((state) => state.stores);
+  const { userData, updateUserFavorite } = useAuthContext();
+  const dispatch = useDispatch();
+
   const backAction = () => {
     navigation.pop();
     return true;
   };
 
   useEffect(() => {
-    if (!stores) getStores();
+    const type = 'nail';
+    dispatch(getStores({ favorites: userData?.favorites, county, type }));
     BackHandler.addEventListener('hardwareBackPress', backAction);
 
     return () => BackHandler.removeEventListener('hardwareBackPress', backAction);
   }, []);
 
   const handleSelectedStore = (store) => {
-    setSelectedStore(store);
+    dispatch(getStoreRelation({ storeId: store.id }));
     navigation.navigate('TopTabDetails', { screen: 'serviceScreen' });
     //navigation.push('TopTabDetails', { screen: 'serviceScreen' });
   };
@@ -85,7 +91,12 @@ const CategoriesScreen = ({ navigation, route }) => {
               <Text style={{ ...Fonts.Grey14Regular }}>{item.location}</Text>
             </View>
           </View>
-          <TouchableOpacity onPress={() => onFavorite(item)}>
+          <TouchableOpacity
+            onPress={() => {
+              dispatch(setFavorite({ storeId: item.id, userId: userData.id }));
+              updateUserFavorite();
+            }}
+          >
             <Ionicons
               color={Colors.primary}
               size={25}
@@ -100,10 +111,10 @@ const CategoriesScreen = ({ navigation, route }) => {
       </View>
     );
   };
-  if (loading) return <Loader visible={true} />;
   return (
     <View style={{ flex: 1, backgroundColor: Colors.white }}>
       <MyStatusBar />
+      <Loader visible={isLoading} />
       <View
         style={{
           flexDirection: isRtl ? 'row-reverse' : 'row',
