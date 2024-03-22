@@ -21,7 +21,6 @@ const NearByScreen = (props) => {
   const isRtl = i18n.dir() === 'rtl';
 
   const { county, isLoading, stores, latitude, longitude } = useSelector((state) => state.stores);
-  console.log('stores', county, isLoading, stores, latitude, longitude);
   const { userData } = useAuthContext();
   const dispatch = useDispatch();
 

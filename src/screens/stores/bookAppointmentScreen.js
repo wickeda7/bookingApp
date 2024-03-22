@@ -4,27 +4,23 @@ import { Colors, Default, Fonts, DefaultImage } from '@constants/style';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useTranslation } from 'react-i18next';
 import MyStatusBar from '@components/myStatusBar';
-//import { useBookingContext } from '@contexts/BookingContext';
 import { useSelector, useDispatch } from 'react-redux';
 import { setSpecialist } from '@redux/slices/bookingSlice';
 
 import { Avatar } from 'react-native-paper';
 import { options1 } from '@api/tempData';
-import Loader from '@components/loader';
 
 const BookAppointmentScreen = (props) => {
   const { t, i18n } = useTranslation();
 
   const isRtl = i18n.dir() === 'rtl';
 
-  //const { getSpecialistBooking } = useBookingContext();
   const { bookingType, specialist } = useSelector((state) => state.booking);
   const { selectedStore } = useSelector((state) => state.stores);
   const employee = selectedStore?.employee ? selectedStore.employee : [];
   const dispatch = useDispatch();
 
   const options = [...employee, ...options1];
-  const [visible, setVisible] = useState(false);
 
   function tr(key) {
     return t(`bookAppointmentScreen:${key}`);
@@ -34,13 +30,8 @@ const BookAppointmentScreen = (props) => {
     props.navigation.goBack();
     return true;
   };
-  // const getBookAppointment = async () => {
-  //   setVisible(true);
-  //   const res = await getSpecialistBooking(employee);
-  //   if (res) setVisible(false);
-  // };
+
   useEffect(() => {
-    // getBookAppointment();
     BackHandler.addEventListener('hardwareBackPress', backAction);
 
     return () => BackHandler.removeEventListener('hardwareBackPress', backAction);
@@ -123,7 +114,6 @@ const BookAppointmentScreen = (props) => {
           backgroundColor: Colors.primary,
         }}
       >
-        <Loader visible={visible} />
         <TouchableOpacity style={{ marginHorizontal: Default.fixPadding * 1.5 }} onPress={() => props.navigation.pop()}>
           <Ionicons name={isRtl ? 'arrow-forward' : 'arrow-back'} size={30} color={Colors.white} />
         </TouchableOpacity>

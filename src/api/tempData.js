@@ -203,27 +203,27 @@ export const PhotoData = [
 ];
 
 export const options1 = [
-  {
-    id: '1112',
-    image: require('@assets/images/img2.png'),
-    firstName: 'Darlene ',
-    lastName: 'Robertson',
-    other: 'Waxing',
-  },
-  {
-    id: '1113',
-    image: require('@assets/images/img3.png'),
-    firstName: 'Esther',
-    lastName: 'Howard',
-    other: 'Nail art',
-  },
-  {
-    id: '1114',
-    image: require('@assets/images/img4.png'),
-    firstName: 'Guy',
-    lastName: 'Hawkins',
-    other: 'spa specialist',
-  },
+  // {
+  //   id: '1112',
+  //   image: require('@assets/images/img2.png'),
+  //   firstName: 'Darlene ',
+  //   lastName: 'Robertson',
+  //   other: 'Waxing',
+  // },
+  // {
+  //   id: '1113',
+  //   image: require('@assets/images/img3.png'),
+  //   firstName: 'Esther',
+  //   lastName: 'Howard',
+  //   other: 'Nail art',
+  // },
+  // {
+  //   id: '1114',
+  //   image: require('@assets/images/img4.png'),
+  //   firstName: 'Guy',
+  //   lastName: 'Hawkins',
+  //   other: 'spa specialist',
+  // },
   {
     id: '1115',
     image: require('@assets/images/img5.png'),
