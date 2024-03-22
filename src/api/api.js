@@ -234,10 +234,11 @@ export const api = {
       throw error;
     }
   },
-  getStoreBooking: async (storeId, userId) => {
+  getStoreBooking: async (storeId) => {
     try {
       //http://localhost:1337/api/appointments?filters[userID][$eq]=51&filters[storeId][$eq]=1&filters[done][$eq]=false&filters[specialistId][$eq]=null
-      const url = `${STRAPIURL}/api/appointments?filters[userID][$eq]=${userId}&filters[storeId][$eq]=${storeId}&filters[done][$eq]=false&filters[specialistId][$eq]=null`;
+      const url = `${STRAPIURL}/api/appointments?filters[storeId][$eq]=${storeId}&filters[done][$eq]=false&filters[specialistID][$null]=true&cancel[$eq]=false`;
+      // const url = `${STRAPIURL}/api/appointments?filters[storeId][$eq]=${storeId}&filters[id][$eq]=94`;
       const response = await axios.get(url);
       return response.data.data;
     } catch (error) {

@@ -1,5 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { stores } from '@api/stores';
+import { booking } from '@api/booking';
 
 export const getStores = createAsyncThunk('getStores', async ({ favorites, county, type }) => {
   try {
@@ -21,11 +22,19 @@ export const getStoreRelation = createAsyncThunk('getStoreRelation', async ({ st
 });
 export const getReviews = createAsyncThunk('getReviews', async ({ storeId }) => {
   try {
-    console.log('storeId', storeId);
     const response = await stores.getReviews(storeId);
     return response;
   } catch (error) {
     console.log('error storesAction getStoreRelation', error.response.data.error.message);
+    throw error.response.data.error.message;
+  }
+});
+export const getStoreBooking = createAsyncThunk('getStoreBooking', async ({ storeId }) => {
+  try {
+    const response = await booking.getStoreBooking(storeId);
+    return response;
+  } catch (error) {
+    console.log('error storesAction getStoreBooking', error.response.data.error.message);
     throw error.response.data.error.message;
   }
 });

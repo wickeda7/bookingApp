@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import MyStatusBar from '@components/myStatusBar';
 import { useSelector, useDispatch } from 'react-redux';
 import { setSpecialist } from '@redux/slices/bookingSlice';
-
+import { getStoreBooking } from '@redux/actions/storesAction';
 import { Avatar } from 'react-native-paper';
 import { options1 } from '@api/tempData';
 
@@ -129,8 +129,12 @@ const BookAppointmentScreen = (props) => {
 
       <TouchableOpacity
         onPress={() => {
-          if (bookingType === 'walkIn') props.navigation.navigate('confirmationScreen');
-          else if (bookingType === 'appointment') props.navigation.navigate('scheduleScreen');
+          if (bookingType === 'walkIn') {
+            props.navigation.navigate('confirmationScreen');
+          } else if (bookingType === 'appointment') {
+            dispatch(getStoreBooking({ storeId: selectedStore.id }));
+            props.navigation.navigate('scheduleScreen');
+          }
         }}
         style={{
           alignItems: 'center',

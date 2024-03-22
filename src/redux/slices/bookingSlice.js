@@ -7,7 +7,7 @@ function tr(key) {
 const initialState = {
   bookingType: null,
   services: [],
-  specialist: {},
+  specialist: null,
   userBookings: [],
   bookingTime: null,
   isLoading: false,
@@ -88,7 +88,7 @@ export const bookingSlice = createSlice({
     resetState: (state) => {
       state.bookingType = null;
       state.services = [];
-      state.specialist = {};
+      state.specialist = null;
       state.bookingTime = null;
     },
   },

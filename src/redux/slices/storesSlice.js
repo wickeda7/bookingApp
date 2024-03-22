@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { getStores, getStoreRelation, getReviews } from '../actions/storesAction';
+import { getStores, getStoreRelation, getReviews, getStoreBooking } from '../actions/storesAction';
 import { users } from '@api/users';
 const initialState = {
   stores: [],
@@ -7,6 +7,7 @@ const initialState = {
   latitude: null,
   longitude: null,
   selectedStore: null,
+  storeBooking: null,
   reviews: null,
   isLoading: false,
 };
@@ -67,6 +68,18 @@ export const storesSlice = createSlice({
         state.status = action.error.message;
         state.isLoading = false;
       })
+      .addCase(getStoreBooking.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getStoreBooking.fulfilled, (state, action) => {
+        state.storeBooking = action.payload;
+        state.isLoading = false;
+      })
+      .addCase(getStoreBooking.rejected, (state, action) => {
+        state.status = action.error.message;
+        state.isLoading = false;
+      })
+
       .addCase(getReviews.pending, (state) => {
         state.isLoading = true;
       })

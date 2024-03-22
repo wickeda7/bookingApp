@@ -16,7 +16,6 @@ import { useAuthContext } from '@contexts/AuthContext';
 import { useSelector, useDispatch } from 'react-redux';
 import { addBooking } from '@redux/actions/bookingAction';
 
-import { useStoreContext } from '@contexts/StoreContext';
 import { formatPhoneNumber, formatPrice } from '@utils/helper';
 import ItemRow from '@components/itemRow';
 import Loader from '@components/loader';
@@ -28,7 +27,7 @@ const ConfirmationScreen = (props) => {
   const { selectedDate } = useBookingContext();
   const { bookingTime, error, specialist, services, isLoading, bookingType } = useSelector((state) => state.booking);
   const dispatch = useDispatch();
-  const { selectedStore } = useStoreContext();
+  const { selectedStore } = useSelector((state) => state.stores);
   const { userData } = useAuthContext();
   const [callBack, setCallBack] = useState(false);
   const [date, setDate] = useState(null);
@@ -42,7 +41,7 @@ const ConfirmationScreen = (props) => {
       setDate(selectedDate);
     }
   }, []);
-  if (Object.keys(specialist).length > 0) {
+  if (specialist) {
     const {
       userInfo: { firstName, lastName, hours, specialty },
     } = specialist;
@@ -70,6 +69,7 @@ const ConfirmationScreen = (props) => {
   const [text, onChangeText] = useState();
 
   const onConfirm = async () => {
+    const specialistId = specialist ? specialist.id : null;
     const data = {
       data: {
         timeslot: bookingTime,
@@ -77,9 +77,9 @@ const ConfirmationScreen = (props) => {
         date: date.dateString ? date.dateString : date.toString(),
         store: selectedStore.id,
         client: userData.id,
-        specialists: specialist.id,
+        specialists: specialistId,
         userID: userData.id,
-        specialistID: specialist.id,
+        specialistID: specialistId,
         storeID: selectedStore.id,
         callBack: callBack,
       },
@@ -327,7 +327,7 @@ const ConfirmationScreen = (props) => {
         >
           <Text style={Fonts.Black16Medium}>{tr('specialist')}</Text>
         </View>
-        {Object.keys(specialist).length > 0 ? (
+        {specialist ? (
           <>
             <Text
               style={{

@@ -33,9 +33,9 @@ export const booking = {
       throw error;
     }
   },
-  getStoreBooking: async (storeId, userId) => {
+  getStoreBooking: async (storeId) => {
     try {
-      const response = await api.getStoreBooking(storeId, userId);
+      const response = await api.getStoreBooking(storeId);
       const res = response.reduce((acc, item) => {
         const { id, attributes } = item;
 
