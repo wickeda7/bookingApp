@@ -6,8 +6,10 @@ import Octicons from 'react-native-vector-icons/Octicons';
 import { Colors, Default, Fonts } from '@constants/style';
 //import { markers } from '@components/mapData';
 import { useTranslation } from 'react-i18next';
-import { useStoreContext } from '@contexts/StoreContext';
 import MyStatusBar from '@components/myStatusBar';
+import { getStores, getStoreRelation } from '@redux/actions/storesAction';
+import { useDispatch, useSelector } from 'react-redux';
+import { useAuthContext } from '@contexts/AuthContext';
 import Loader from '@components/loader';
 const { width } = Dimensions.get('window');
 const CARD_HEIGHT = 120;
@@ -18,7 +20,10 @@ const NearByScreen = (props) => {
 
   const isRtl = i18n.dir() === 'rtl';
 
-  const { setSelectedStore, stores, getStores, latitude, longitude, loading } = useStoreContext();
+  const { county, isLoading, stores, latitude, longitude } = useSelector((state) => state.stores);
+  console.log('stores', county, isLoading, stores, latitude, longitude);
+  const { userData } = useAuthContext();
+  const dispatch = useDispatch();
 
   function tr(key) {
     return t(`nearByScreen:${key}`);
@@ -29,7 +34,8 @@ const NearByScreen = (props) => {
   const [interpolations, setInterpolations] = useState(null);
 
   useEffect(() => {
-    if (!stores) getStores();
+    const type = 'nail';
+    dispatch(getStores({ favorites: userData?.favorites, county, type }));
   }, []);
 
   useEffect(() => {
@@ -102,13 +108,13 @@ const NearByScreen = (props) => {
     _scrollView.current.scrollTo({ x: x, y: 0, animated: true });
   };
   const handleSelectedStore = (store) => {
-    setSelectedStore(store);
+    dispatch(getStoreRelation({ storeId: store.id }));
     props.navigation.navigate('TopTabDetails', { screen: 'nearby' });
   };
   const _map = useRef(null);
   const _scrollView = useRef(null);
   if (!interpolations) return <Loader visible={true} />;
-  if (loading) return <Loader visible={true} />;
+  if (isLoading) return <Loader visible={true} />;
   return (
     <View style={{ flex: 1 }}>
       <MyStatusBar />

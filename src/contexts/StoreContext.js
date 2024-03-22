@@ -9,21 +9,9 @@ const StoreContextProvider = ({ children }) => {
   const [reviews, setReviews] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const [county, setCounty] = useState(null); ////////////
   const [latitude, setLatitude] = useState(null); ////////////
   const [longitude, setLongitude] = useState(null); ////////////
-  const [selectedStore, setSelectedStore] = useState(null); ///////////
   const [stores, setStores] = useState(null); ///////////
-  const getStores = async () => {
-    ///////////
-    setLoading(true);
-    // const county = 'Los Angeles County';
-    const type = 'nail';
-    console.log('userData', userData);
-    const response = await storeApi.getData(userData?.favorites, county, type);
-    setStores(response);
-    setLoading(false);
-  };
 
   const onFavorite = (item) => {
     ///////////
@@ -55,7 +43,6 @@ const StoreContextProvider = ({ children }) => {
   const updatedSelectedStore = (res) => {
     //////////
     const updatedStore = { ...selectedStore, ...res };
-    setSelectedStore(updatedStore);
     const newItem = stores.map((val) => {
       if (val.id === updatedStore.id) {
         const newVal = { ...val, ...updatedStore };
@@ -78,17 +65,13 @@ const StoreContextProvider = ({ children }) => {
     setLoading(false);
   };
   const value = {
-    selectedStore,
-    setSelectedStore,
     stores,
     setStores,
     onFavorite,
-    getStores,
     getStoreRelation,
     getReviews,
     reviews,
     loading,
-    setCounty,
     latitude,
     setLatitude,
     longitude,
