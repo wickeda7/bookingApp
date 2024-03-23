@@ -33,7 +33,7 @@ const OngoingScreen = (props) => {
   useEffect(() => {
     if (notification) {
       const data = notification.request.content.data;
-      dispatch(updateUserBooking(data));
+      dispatch(updateUserBooking({ data }));
     }
   }, [notification]);
 

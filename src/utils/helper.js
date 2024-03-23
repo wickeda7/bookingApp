@@ -98,6 +98,7 @@ export const parseEvents = (data) => {
         color: '#8ecae6',
         timeslot: item.timeslot,
         canceled: item.canceled,
+        confirmed: item.confirmed,
       });
     } else {
       const start = moment().format('YYYY-MM-DD HH:mm');
