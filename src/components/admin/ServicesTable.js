@@ -11,7 +11,7 @@ import { formatPrice } from '@utils/helper';
 import { addInvoice, updateBooking } from '@redux/actions/adminHomeAction';
 import Toast from 'react-native-root-toast';
 
-const ServicesTable = ({ services }) => {
+const ServicesTable = ({ services, canceled }) => {
   const { t, i18n } = useTranslation();
   const isRtl = i18n.dir() === 'rtl';
   function tr(key) {
@@ -48,6 +48,7 @@ const ServicesTable = ({ services }) => {
     dispatch(updateStaff(staff));
   };
   const handleSubmit = () => {
+    if (canceled) return;
     const model = {};
     services.reduce((acc, person) => {
       const specialist = person.specialist.id;
@@ -103,9 +104,11 @@ const ServicesTable = ({ services }) => {
     }
   };
   const handleDelete = () => {
+    if (canceled) return;
     console.log('delete');
   };
   const handleTextChange = (text, item, field) => {
+    if (canceled) return;
     const value = field === 'additional' ? text : text.nativeEvent.text;
     dispatch(updatePrice({ value, item, field }));
   };
@@ -119,7 +122,7 @@ const ServicesTable = ({ services }) => {
   return (
     <>
       <View style={[Style.divider, { marginHorizontal: Default.fixPadding }]} />
-      <View style={[Style.contentContainer, { flexDirection: 'column' }]}>
+      <View style={[Style.contentContainer, { flexDirection: 'column', opacity: canceled ? 0.3 : 1 }]}>
         <View style={[Style.tableHeader, { flexDirection: 'row', flex: 1 }]}>
           <Text style={[Style.tableHeaderText15Medium, { flex: 2, marginLeft: 0 }]}>{tr('staff')}</Text>
           <Text style={[Style.tableHeaderText15Medium, { flex: 4, marginLeft: 0 }]}>{tr('servicename')}</Text>
@@ -136,6 +139,7 @@ const ServicesTable = ({ services }) => {
             setService={setService}
             handleTextChange={handleTextChange}
             setStaff={setStaff}
+            canceled={canceled}
           />
         ))}
       </ScrollView>
@@ -145,6 +149,7 @@ const ServicesTable = ({ services }) => {
           paddingHorizontal: Default.fixPadding * 2,
           paddingTop: Default.fixPadding * 2,
           paddingBottom: Default.fixPadding * 4,
+          opacity: canceled ? 0.3 : 1,
         }}
       >
         <View style={[{ flex: 5 }]}></View>

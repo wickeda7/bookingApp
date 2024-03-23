@@ -19,6 +19,16 @@ export const adminHomeSlice = createSlice({
   initialState,
   reducers: {
     updateAppointment: (state, action) => {
+      const type = action.payload?.type;
+      if (type === 'cancel') {
+        const bookingId = action.payload.bookingId;
+        const timeslot = action.payload.timeslot;
+        const bookingType = timeslot === null ? 'walkin' : 'appointment';
+        const bookingIndex = state[bookingType].findIndex((obj) => obj.id === bookingId);
+        state[bookingType][bookingIndex] = { ...state[bookingType][bookingIndex], canceled: true };
+        return;
+      }
+
       const { id, confirmed } = action.payload;
       const appointment = state.appointment.map((obj) => {
         if (obj.id === id) {

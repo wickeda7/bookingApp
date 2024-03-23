@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View, Modal } from 'react-native';
-
+import Style from '@theme/style';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import Maticons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -23,7 +23,7 @@ const AccordionItem = ({ children, item, expanded, onHeaderPress }) => {
   const [message, setMessage] = useState('');
   const [messageType, setMessageType] = useState('');
 
-  let { timeslot, createdAt, callBack, client, specialist, services, confirmed, alert: itemAlert, id } = item;
+  let { timeslot, createdAt, callBack, client, specialist, services, confirmed, canceled, alert: itemAlert, id } = item;
 
   let time = moment(createdAt).format('h:mm A');
   if (timeslot) {
@@ -61,41 +61,49 @@ const AccordionItem = ({ children, item, expanded, onHeaderPress }) => {
       </Modal>
       <TouchableOpacity style={[styles.accordHeader]} onPress={onHeaderPress}>
         <View style={{ flex: 15 }}>{titleContent}</View>
-        <View style={{ flex: 2, flexDirection: 'row' }}>
-          {callBack && (
-            <TouchableOpacity
-              onPress={() => {
-                setVisible(true);
-                setMessage(tr('sendMessageReady'));
-                setMessageType('client');
-              }}
-            >
-              <View>
-                <Micons name='textsms' size={30} color={borderColor} />
-              </View>
-            </TouchableOpacity>
-          )}
+        <View style={{ flex: canceled ? 3 : 2, flexDirection: 'row' }}>
+          {canceled ? (
+            <View style={[Style.canceledContainer, { padding: 9 }]}>
+              <Text style={[Style.canceledText]}>Canceled</Text>
+            </View>
+          ) : (
+            <>
+              {callBack && (
+                <TouchableOpacity
+                  onPress={() => {
+                    setVisible(true);
+                    setMessage(tr('sendMessageReady'));
+                    setMessageType('client');
+                  }}
+                >
+                  <View>
+                    <Micons name='textsms' size={30} color={borderColor} />
+                  </View>
+                </TouchableOpacity>
+              )}
 
-          {type === 'appointment' && !confirmed ? (
-            <TouchableOpacity
-              onPress={() => {
-                setVisible(true);
-                setMessage(tr('sendMessageConfirmation'));
-                setMessageType('service');
-              }}
-            >
-              <View>
-                <Micons name='textsms' size={30} color={borderColor} />
-              </View>
-            </TouchableOpacity>
-          ) : null}
-          {itemAlert && <Maticons name='bell-ring' size={20} color={'red'} style={{ marginLeft: 10 }} />}
+              {type === 'appointment' && !confirmed ? (
+                <TouchableOpacity
+                  onPress={() => {
+                    setVisible(true);
+                    setMessage(tr('sendMessageConfirmation'));
+                    setMessageType('service');
+                  }}
+                >
+                  <View>
+                    <Micons name='textsms' size={30} color={borderColor} />
+                  </View>
+                </TouchableOpacity>
+              ) : null}
+              {itemAlert && <Maticons name='bell-ring' size={20} color={'red'} style={{ marginLeft: 10 }} />}
+            </>
+          )}
         </View>
         <View style={{ flex: 0.5, alignItems: 'flex-end' }}>
           <Icon name={expanded ? 'chevron-up' : 'chevron-down'} size={14} color={borderColor} />
         </View>
       </TouchableOpacity>
-      {expanded && <ServicesTable services={services} />}
+      {expanded && <ServicesTable services={services} canceled={canceled} />}
     </View>
   );
 };

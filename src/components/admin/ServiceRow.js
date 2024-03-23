@@ -8,7 +8,7 @@ import AntIcon from 'react-native-vector-icons/AntDesign';
 import { DraxView, DraxViewDragStatus, DraxSnapbackTargetPreset } from 'react-native-drax';
 import NumericInput from '@wwdrew/react-native-numeric-textinput';
 
-const ServiceRow = ({ item, setService, setStaff, handleTextChange }) => {
+const ServiceRow = ({ item, setService, setStaff, handleTextChange, canceled }) => {
   const { t, i18n } = useTranslation();
   const isRtl = i18n.dir() === 'rtl';
   function tr(key) {
@@ -31,11 +31,7 @@ const ServiceRow = ({ item, setService, setStaff, handleTextChange }) => {
       onReceiveDragDrop={(event) => {
         const userId = event.dragged.payload.id;
         const receivedId = event.receiver.payload.specialist?.id ? event.receiver.payload.specialist.id : undefined;
-        console.log(
-          'need to update sevice to db with specialist per service and notify specialis. this is update to her booking schedule update to db incase her device is not on',
-          event
-        );
-        if (receivedId === undefined || userId === receivedId) {
+        if (receivedId === undefined || (userId === receivedId && !canceled)) {
           setService(event.receiver.payload, 'service', event.dragged.payload);
           setStaff(event.dragged.payload);
         }
@@ -49,7 +45,12 @@ const ServiceRow = ({ item, setService, setStaff, handleTextChange }) => {
       //   console.log('onReceiveDragOver while a drag is over this view', event);
       // }}
     >
-      <View style={[Style.mainContainer, { flexDirection: 'row', marginHorizontal: Default.fixPadding * 1.5 }]}>
+      <View
+        style={[
+          Style.mainContainer,
+          { flexDirection: 'row', marginHorizontal: Default.fixPadding * 1.5, opacity: canceled ? 0.3 : 1 },
+        ]}
+      >
         <View style={[{ flex: 2, paddingLeft: 10, flexDirection: 'row' }]}>
           <AntIcon size={15} name='menu-unfold' color={color} />
           <Text style={[{ marginHorizontal: Default.fixPadding, color: color, fontSize: 14 }]}>
@@ -80,7 +81,12 @@ const ServiceRow = ({ item, setService, setStaff, handleTextChange }) => {
       <View
         style={[
           Style.mainContainer,
-          { flexDirection: 'row', marginHorizontal: Default.fixPadding * 1.5, marginTop: Default.fixPadding },
+          {
+            flexDirection: 'row',
+            marginHorizontal: Default.fixPadding * 1.5,
+            marginTop: Default.fixPadding,
+            opacity: canceled ? 0.3 : 1,
+          },
         ]}
       >
         <View style={[{ flex: 1, paddingLeft: 10 }]}>
@@ -88,7 +94,7 @@ const ServiceRow = ({ item, setService, setStaff, handleTextChange }) => {
             <TouchableOpacity
               activeOpacity={0.8}
               onPress={() => {
-                console.log('need to update sevice to db with specialist per service and notify specialis');
+                if (canceled) return;
                 setService(item, 'remove');
               }}
               style={[
