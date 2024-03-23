@@ -102,6 +102,15 @@ export default StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  canceledContainer: {
+    backgroundColor: Colors.primary,
+    padding: 5,
+    borderRadius: 8,
+  },
+  canceledText: {
+    color: Colors.white,
+    fontWeight: 'bold',
+  },
   borderGreen: {
     borderColor: 'green',
     borderWidth: 1,

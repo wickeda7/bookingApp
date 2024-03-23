@@ -27,7 +27,6 @@ export const bookingSlice = createSlice({
       const userId = action.payload.userId;
       const appointment = action.payload.data.appointment;
       const type = action.payload.data?.type;
-      //console.log('updateUserBooking action.payload.data............', action.payload.data);
 
       if (type === 'cancel') {
         const bookingId = action.payload.data.bookingId;

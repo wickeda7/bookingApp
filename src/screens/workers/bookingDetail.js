@@ -17,8 +17,14 @@ import debounce from 'lodash/debounce';
 import Loader from '@components/loader';
 import Toast from 'react-native-root-toast';
 const BookingDetail = (props) => {
-  let booking = props.route.params;
-  const { client, specialists, services, date, status, id, timeslot } = booking;
+  let bookingId = props.route.params.bookingId;
+  const { userBookings, isLoading, message } = useSelector((state) => state.booking);
+  let booking = userBookings.find((obj) => obj.id === bookingId);
+  const { client, specialists, services, date, id, timeslot, canceled } = booking;
+  let enableSubmit = false;
+  if (services[0].status === 'working' && !canceled) {
+    enableSubmit = true;
+  }
   const {
     email,
     userInfo: { firstName, lastName, phoneNumber, profileImg },
@@ -28,7 +34,7 @@ const BookingDetail = (props) => {
   } = specialists[0];
   const image = profileImg?.url ? profileImg.url : DefaultImage;
   const dispatch = useDispatch();
-  const { userBookings, isLoading, message } = useSelector((state) => state.booking);
+
   const [pServices, setPServices] = useState([]);
   const [subtotal, setSubtotal] = useState(0);
   const [additional, setAdditional] = useState(0);
@@ -231,7 +237,7 @@ const BookingDetail = (props) => {
                   {tr('date')}
                 </Text>
               </View>
-              <Text style={Fonts.Grey14Medium}>{moment(date).format('MMM Do YYYY')}</Text>
+              <Text style={Fonts.Grey14Medium}>{moment(date).format('M-DD-YYYY')}</Text>
             </View>
             <View
               style={{
@@ -255,7 +261,13 @@ const BookingDetail = (props) => {
                   {tr('time')}
                 </Text>
               </View>
-              <Text style={Fonts.Grey14Medium}>{bookingHour}</Text>
+              {canceled ? (
+                <View style={Style.canceledContainer}>
+                  <Text style={[Style.canceledText]}>Canceled</Text>
+                </View>
+              ) : (
+                <Text style={Fonts.Grey14Medium}>{bookingHour}</Text>
+              )}
             </View>
           </View>
           <DashedLine
@@ -320,26 +332,28 @@ const BookingDetail = (props) => {
                 ]}
               />
               <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-                <TouchableOpacity
-                  activeOpacity={0.8}
-                  onPress={() => {
-                    handleSubmit();
-                  }}
-                  style={[
-                    Style.buttonStyle,
-                    {
-                      backgroundColor: Colors.info,
-                      marginTop: 0,
-                      flexDirection: 'row',
-                      width: 100,
-                    },
-                  ]}
-                >
-                  <AntIcon size={18} name='upload' color={Colors.white} />
-                  <Text style={[{ paddingHorizontal: Default.fixPadding * 0.5 }, Fonts.White14Bold]}>
-                    {tr('submit')}
-                  </Text>
-                </TouchableOpacity>
+                {enableSubmit && (
+                  <TouchableOpacity
+                    activeOpacity={0.8}
+                    onPress={() => {
+                      handleSubmit();
+                    }}
+                    style={[
+                      Style.buttonStyle,
+                      {
+                        backgroundColor: Colors.info,
+                        marginTop: 0,
+                        flexDirection: 'row',
+                        width: 100,
+                      },
+                    ]}
+                  >
+                    <AntIcon size={18} name='upload' color={Colors.white} />
+                    <Text style={[{ paddingHorizontal: Default.fixPadding * 0.5 }, Fonts.White14Bold]}>
+                      {tr('submit')}
+                    </Text>
+                  </TouchableOpacity>
+                )}
               </View>
             </View>
           </View>

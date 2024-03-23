@@ -97,6 +97,7 @@ export const parseEvents = (data) => {
         summary: services[0].name,
         color: '#8ecae6',
         timeslot: item.timeslot,
+        canceled: item.canceled,
       });
     } else {
       const start = moment().format('YYYY-MM-DD HH:mm');
@@ -110,6 +111,7 @@ export const parseEvents = (data) => {
         summary: services[0].name,
         color: '#bbd686',
         timeslot: item.timeslot,
+        canceled: item.canceled,
       });
     }
 

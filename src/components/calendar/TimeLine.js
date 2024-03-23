@@ -33,9 +33,7 @@ const TimeLine = (props) => {
     });
   }, [data]);
   const onEventPress = (event) => {
-    // console.log('onEventPress: ', userBookings);
-    const item = data.find((item) => item.id === event.id);
-    navigation.push('StoresStack', { screen: 'bookingDetail', params: item });
+    navigation.push('StoresStack', { screen: 'bookingDetail', params: { bookingId: event.id } });
   };
 
   const onDateChanged = (date, source) => {
@@ -135,7 +133,7 @@ const TimeLine = (props) => {
         showNowIndicator
         // scrollToNow
         scrollToFirst
-        initialTime={INITIAL_TIME}
+        initialTime={{ hour: 9, minutes: 0 }}
         keyExtractor={(item) => item.id}
         renderItem={renderItem}
       />
