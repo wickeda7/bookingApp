@@ -29,11 +29,10 @@ const BookingRow = ({ item, showStatus, done, props }) => {
 
   const date = moment(item.date).format('MMM Do YYYY');
   const status = item.confirmed ? 'Confirmed' : 'Pending';
-
   return (
     <>
       <ConfirmModal visible={visible} setVisible={setVisible} item={item} />
-      <Image source={{ uri: `${item.store.logo.url}` }} style={{ width: 131, height: 143 }} />
+      <Image source={{ uri: `${item.store.logo.url}` }} style={{ width: 101, height: 113 }} />
       <View
         style={{
           alignItems: isRtl ? 'flex-end' : 'flex-start',
@@ -73,29 +72,32 @@ const BookingRow = ({ item, showStatus, done, props }) => {
             flexDirection: isRtl ? 'row-reverse' : 'row',
             alignItems: 'center',
             marginVertical: Default.fixPadding * 0.5,
+            position: 'relative',
           }}
         >
           <Text
             style={{
-              ...Fonts.Black14Medium,
+              ...Fonts.Black14Regular,
               marginBottom: Default.fixPadding * 0.5,
             }}
           >
             {date} {aTime}
           </Text>
           {showStatus && (
-            <Text
-              style={[
-                styles.status,
-                {
-                  borderColor: item.confirmed ? Colors.success : Colors.pending,
-                  backgroundColor: item.confirmed ? Colors.successBg : Colors.pendingBg,
-                  color: item.confirmed ? Colors.success : Colors.pending,
-                },
-              ]}
-            >
-              {status}
-            </Text>
+            <View style={{ position: 'absolute', right: -55, top: -35 }}>
+              <Text
+                style={[
+                  styles.status,
+                  {
+                    borderColor: item.confirmed ? Colors.success : Colors.pending,
+                    backgroundColor: item.confirmed ? Colors.successBg : Colors.pendingBg,
+                    color: item.confirmed ? Colors.success : Colors.pending,
+                  },
+                ]}
+              >
+                {status}
+              </Text>
+            </View>
           )}
         </View>
         <View
