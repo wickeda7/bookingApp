@@ -13,7 +13,8 @@ import NotificationsHelper from '@utils/notifications';
 import Loader from '@components/loader';
 import { useDispatch, useSelector } from 'react-redux';
 import { getUserBooking } from '@redux/actions/bookingAction';
-import { updateUserBooking } from '@redux/slices/bookingSlice';
+import { updateUserBooking, resetMessage } from '@redux/slices/bookingSlice';
+import Toast from 'react-native-root-toast';
 const WorkerHome = ({ props }) => {
   const { userData } = useAuthContext();
   const { t, i18n } = useTranslation();
@@ -26,8 +27,22 @@ const WorkerHome = ({ props }) => {
   const isTablet = Device.isTablet();
   const name = userData?.userInfo?.firstName ? userData.userInfo.firstName + ' ' + userData.userInfo.lastName : '';
   const dispatch = useDispatch();
-  const { isLoading, userBookings } = useSelector((state) => state.booking);
+  const { isLoading, userBookings, message } = useSelector((state) => state.booking);
   const [notification, setNotification] = useState(null);
+  if (message !== '') {
+    Toast.show(tr('invoiceCompleted'), {
+      duration: Toast.durations.LONG,
+      position: Toast.positions.CENTER,
+      shadow: true,
+      animation: true,
+      hideOnPress: true,
+      delay: 0,
+      backgroundColor: Colors.success,
+      onHidden: () => {
+        dispatch(resetMessage());
+      },
+    });
+  }
   useEffect(() => {
     dispatch(getUserBooking({ id: userData.id, done: false, type: 'specialist' }));
   }, []);

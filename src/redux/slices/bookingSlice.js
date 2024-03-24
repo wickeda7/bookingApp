@@ -22,7 +22,9 @@ export const bookingSlice = createSlice({
     setBookingType: (state, action) => {
       state.bookingType = action.payload;
     },
-
+    resetMessage: (state) => {
+      state.message = '';
+    },
     updateUserBooking: (state, action) => {
       const userId = action.payload?.userId;
       const appointment = action.payload.data?.appointment;
@@ -177,7 +179,14 @@ export const bookingSlice = createSlice({
       });
   },
 });
-export const { setBookingType, setServices, setSpecialist, setBookingTime, resetState, updateUserBooking } =
-  bookingSlice.actions;
+export const {
+  setBookingType,
+  setServices,
+  setSpecialist,
+  setBookingTime,
+  resetState,
+  updateUserBooking,
+  resetMessage,
+} = bookingSlice.actions;
 
 export default bookingSlice.reducer;

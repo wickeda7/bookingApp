@@ -15,10 +15,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { notifyBooking, addInvoice } from '@redux/actions/bookingAction';
 import debounce from 'lodash/debounce';
 import Loader from '@components/loader';
-import Toast from 'react-native-root-toast';
 const BookingDetail = (props) => {
   let bookingId = props.route.params.bookingId;
-  const { userBookings, isLoading, message } = useSelector((state) => state.booking);
+  const { userBookings, isLoading } = useSelector((state) => state.booking);
+
   let booking = userBookings.find((obj) => obj.id === bookingId);
   const { client, specialists, services, date, id, timeslot, canceled } = booking;
   let enableSubmit = false;
@@ -121,22 +121,6 @@ const BookingDetail = (props) => {
     setPServices(tempServices);
   };
 
-  if (message !== '') {
-    Toast.show(tr('invoiceCompleted'), {
-      duration: Toast.durations.LONG,
-      position: Toast.positions.CENTER,
-      shadow: true,
-      animation: true,
-      hideOnPress: true,
-      delay: 0,
-      backgroundColor: Colors.success,
-      onHidden: () => {
-        props.navigation.pop();
-        //dispatch(resetMessage());
-      },
-    });
-  }
-
   const handleSubmit = () => {
     const bookingId = booking.id;
     const Dbooking = userBookings.find((obj) => obj.id === bookingId);
@@ -160,6 +144,7 @@ const BookingDetail = (props) => {
       total: Dbooking.total,
       createdby: `${SfirstName} ${SlastName}`,
     };
+    props.navigation.pop();
     dispatch(addInvoice({ data }));
   };
   return (

@@ -4,14 +4,14 @@ import groupBy from 'lodash/groupBy';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
 import { ExpandableCalendar, TimelineList, CalendarProvider, CalendarUtils, Timeline } from 'react-native-calendars';
-import { Colors, Default, Fonts, calendarTheme } from '@constants/style';
+import { calendarTheme } from '@constants/style';
 import { parseEvents } from '@utils/helper';
 import EventView from './EventView';
 import { useDispatch, useSelector } from 'react-redux';
+import moment from 'moment';
 
 const INITIAL_TIME = { hour: 9, minutes: 0 };
 const today = new Date();
-const getDate = (offset = 0) => CalendarUtils.getCalendarDateString(new Date().setDate(today.getDate() - offset));
 
 const TimeLine = (props) => {
   const { data, navigation } = props;
@@ -27,7 +27,7 @@ const TimeLine = (props) => {
     const events = parseEvents(data);
     if (events.length === 0) return;
     setEvent({
-      currentDate: getDate(1),
+      currentDate: moment(today).format('YYYY-MM-DD'),
       events: events,
       eventsByDate: groupBy(events, (event) => CalendarUtils.getCalendarDateString(event.start)),
     });
