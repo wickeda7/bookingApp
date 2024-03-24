@@ -159,7 +159,10 @@ export const booking = {
     try {
       const response = await api.getBookingById(bookingId);
       const { id, attributes } = response.data;
-      return { ...attributes, id };
+      let { id: clientId, attributes: clientAtt } = attributes.client.data;
+      let { id: clientUserInfoId, attributes: clientUserInfoAtt } = clientAtt.userInfo.data;
+      const client = { ...clientAtt, id: clientId, userInfo: { ...clientUserInfoAtt, id: clientUserInfoId } };
+      return { ...attributes, id, client };
     } catch (error) {
       console.log('error booking getBookingById', error.response.data.error.message);
       throw error;

@@ -165,7 +165,6 @@ export const bookingSlice = createSlice({
         const type = action.payload.type;
         const userId = action.payload.userId;
         let { date, id, services, timeslot } = action.payload.data;
-        console.log('typeof services', typeof services);
         services = typeof services === 'string' ? JSON.parse(services) : services;
         if (type === 'remove') {
           const items = services.filter((item) => item.specialistID === userId);
@@ -192,6 +191,8 @@ export const bookingSlice = createSlice({
           } else {
             state.userBookings.splice(index, 1);
           }
+        } else {
+          state.userBookings.push(action.payload.data);
         }
 
         state.isLoading = false;
