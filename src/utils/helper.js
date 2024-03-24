@@ -76,15 +76,23 @@ export const imageUrlToBase64 = async (url) => {
     }
   });
 };
-export const parseEvents = (data) => {
+export const parseEvents = (data, userId) => {
   if (data.length === 0) return [];
   let EVENT_COLOR = '#e6add8'; //bbd686 8ecae6
   const today = new Date();
   return data.reduce((acc, item) => {
     const date = item.date;
+    let walkinServices = [];
     if (item.specialists.length === 0) return acc;
-    const services = typeof item.services === 'object' ? item.services : JSON.parse(item.services);
+    let services = typeof item.services === 'object' ? item.services : JSON.parse(item.services);
+
+    if (item.timeslot === null) {
+      walkinServices = services.filter((service) => service.specialistID === userId);
+      if (walkinServices.length === 0) return acc;
+    }
+
     if (item.timeslot) {
+      const more = services.length > 1 ? ', .....' : '';
       const time = item.specialists[0].userInfo.hours.find((hour) => +hour.id === item.timeslot);
       const temp = time.hours.split(' - ');
       const startTime = temp[0];
@@ -94,13 +102,14 @@ export const parseEvents = (data) => {
         title: `${item.client.userInfo.firstName} ${item.client.userInfo.lastName}`,
         start: moment(`${date} ${startTime}`, 'YYYY-MM-DD h:m A').format('YYYY-MM-DD HH:mm'),
         end: moment(`${date} ${endTime}`, 'YYYY-MM-DD h:m A').format('YYYY-MM-DD HH:mm'),
-        summary: services[0].name,
+        summary: `${services[0].name}${more}`,
         color: '#8ecae6',
         timeslot: item.timeslot,
         canceled: item.canceled,
         confirmed: item.confirmed,
       });
     } else {
+      const more = walkinServices.length > 1 ? ', .....' : '';
       const start = moment().format('YYYY-MM-DD HH:mm');
       const end = moment().add(60, 'minutes').format('YYYY-MM-DD HH:mm');
 
@@ -109,7 +118,7 @@ export const parseEvents = (data) => {
         title: `${item.client.userInfo.firstName} ${item.client.userInfo.lastName}`,
         start: start,
         end: end,
-        summary: services[0].name,
+        summary: `${walkinServices[0].name}${more}`,
         color: '#bbd686',
         timeslot: item.timeslot,
         canceled: item.canceled,

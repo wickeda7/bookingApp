@@ -48,3 +48,12 @@ export const cancelBooking = createAsyncThunk('cancelBooking', async ({ id }) =>
     throw error.response.data.error.message;
   }
 });
+export const getBookingById = createAsyncThunk('getBookingById', async ({ id, type, userId }) => {
+  try {
+    const response = await booking.getBookingById(id);
+    return { data: response, type, userId };
+  } catch (error) {
+    console.log('error bookingAction getBookingById', error.response.data.error.message);
+    throw error.response.data.error.message;
+  }
+});

@@ -1,5 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { addBooking, getUserBooking, notifyBooking, addInvoice, cancelBooking } from '../actions/bookingAction';
+import {
+  addBooking,
+  getUserBooking,
+  notifyBooking,
+  addInvoice,
+  cancelBooking,
+  getBookingById,
+} from '../actions/bookingAction';
 import { t } from 'i18next';
 function tr(key) {
   return t(`homeScreen:${key}`);
@@ -49,32 +56,6 @@ export const bookingSlice = createSlice({
         const objectIndex = state.userBookings.findIndex((obj) => obj.id === appointment);
         state.userBookings.splice(objectIndex, 1);
         return;
-      }
-      const { date, id, services, timeslot } = action.payload.data;
-
-      const items = services.filter((item) => item.specialistID === userId);
-      const index = state.userBookings.findIndex((item) => item.id === id);
-      if (items.length > 0) {
-        if (index === -1) {
-          const { callBack, client, date, specialistID, specialist, storeID, timeslot, userID } = items[0];
-          const data = {
-            id,
-            callBack,
-            client,
-            date,
-            services: items,
-            specialistID,
-            specialists: [specialist],
-            timeslot,
-            storeID,
-            userID,
-          };
-          state.userBookings.push(data);
-        } else {
-          state.userBookings[index].services = items;
-        }
-      } else {
-        state.userBookings.splice(index, 1);
       }
     },
     setServices: (state, action) => {
@@ -175,7 +156,49 @@ export const bookingSlice = createSlice({
       })
       .addCase(cancelBooking.rejected, (state, action) => {
         //state.isLoading = false;
-        state.error = true;
+        // state.error = true;
+      })
+      .addCase(getBookingById.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getBookingById.fulfilled, (state, action) => {
+        const type = action.payload.type;
+        const userId = action.payload.userId;
+        let { date, id, services, timeslot } = action.payload.data;
+        console.log('typeof services', typeof services);
+        services = typeof services === 'string' ? JSON.parse(services) : services;
+        if (type === 'remove') {
+          const items = services.filter((item) => item.specialistID === userId);
+          const index = state.userBookings.findIndex((item) => item.id === id);
+          if (items.length > 0) {
+            if (index === -1) {
+              const { callBack, client, date, specialistID, specialist, storeID, timeslot, userID } = items[0];
+              const data = {
+                id,
+                callBack,
+                client,
+                date,
+                services: items,
+                specialistID,
+                specialists: [specialist],
+                timeslot,
+                storeID,
+                userID,
+              };
+              state.userBookings.push(data);
+            } else {
+              state.userBookings[index].services = items;
+            }
+          } else {
+            state.userBookings.splice(index, 1);
+          }
+        }
+
+        state.isLoading = false;
+      })
+      .addCase(getBookingById.rejected, (state, action) => {
+        state.isLoading = false;
+        //state.error = true;
       });
   },
 });

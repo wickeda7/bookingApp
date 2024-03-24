@@ -155,4 +155,14 @@ export const booking = {
       throw error;
     }
   },
+  getBookingById: async (bookingId) => {
+    try {
+      const response = await api.getBookingById(bookingId);
+      const { id, attributes } = response.data;
+      return { ...attributes, id };
+    } catch (error) {
+      console.log('error booking getBookingById', error.response.data.error.message);
+      throw error;
+    }
+  },
 };

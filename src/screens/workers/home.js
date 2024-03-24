@@ -12,7 +12,7 @@ import ComingSoon from '@components/ComingSoon';
 import NotificationsHelper from '@utils/notifications';
 import Loader from '@components/loader';
 import { useDispatch, useSelector } from 'react-redux';
-import { getUserBooking } from '@redux/actions/bookingAction';
+import { getUserBooking, getBookingById } from '@redux/actions/bookingAction';
 import { updateUserBooking, resetMessage } from '@redux/slices/bookingSlice';
 import Toast from 'react-native-root-toast';
 const WorkerHome = ({ props }) => {
@@ -44,15 +44,21 @@ const WorkerHome = ({ props }) => {
     });
   }
   useEffect(() => {
+    console.log('userBookings useEffect............', userBookings);
     dispatch(getUserBooking({ id: userData.id, done: false, type: 'specialist' }));
   }, []);
   useEffect(() => {
     if (notification) {
-      console.log('notification home notification.request.content.data  userBookings............', userBookings);
+      // console.log('notification home notification.request.content.data  userBookings............', userBookings);
       console.log('notification home notification.request.content.data............', notification.request.content.data);
       const data = notification.request.content.data;
-
-      dispatch(updateUserBooking({ data: data, userId: userData.id }));
+      if (data?.type === 'remove' || data?.type === 'service') {
+        console.log('bookingId,data.type,userData.id............', data.bookingId, data.type, userData.id);
+        dispatch(getBookingById({ id: data.bookingId, type: data.type, userId: userData.id }));
+      } else {
+        return;
+        dispatch(updateUserBooking({ data: data, userId: userData.id }));
+      }
     }
   }, [notification]);
   return (
@@ -118,6 +124,21 @@ const WorkerHome = ({ props }) => {
           )}
         </>
       )}
+      {/* {userBookings.length === 0 ? (
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <Feather name='calendar' color={Colors.primary} size={50} />
+          <Text
+            style={{
+              ...Fonts.Primary16Bold,
+              marginVertical: Default.fixPadding,
+            }}
+          >
+            {tr('noBooking')}
+          </Text>
+        </View>
+      ) : (
+        <TimeLine data={userBookings} navigation={navigation} />
+      )} */}
     </>
   );
 };

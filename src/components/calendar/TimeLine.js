@@ -7,7 +7,7 @@ import { ExpandableCalendar, TimelineList, CalendarProvider, CalendarUtils, Time
 import { calendarTheme } from '@constants/style';
 import { parseEvents } from '@utils/helper';
 import EventView from './EventView';
-import { useDispatch, useSelector } from 'react-redux';
+import { useAuthContext } from '@contexts/AuthContext';
 import moment from 'moment';
 
 const INITIAL_TIME = { hour: 9, minutes: 0 };
@@ -17,14 +17,14 @@ const TimeLine = (props) => {
   const { data, navigation } = props;
   const [marked, setMarked] = useState({});
   const [event, setEvent] = useState([]);
-  const { isLoading, userBookings } = useSelector((state) => state.booking);
+  const { userData } = useAuthContext();
   useEffect(() => {
     const marked = groupBy(data, (event) => CalendarUtils.getCalendarDateString(event.date));
     for (let item of Object.keys(marked)) {
       marked[item] = { marked: true };
     }
     setMarked(marked);
-    const events = parseEvents(data);
+    const events = parseEvents(data, userData.id);
     if (events.length === 0) return;
     setEvent({
       currentDate: moment(today).format('YYYY-MM-DD'),
