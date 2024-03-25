@@ -1,6 +1,6 @@
 import axios from 'axios';
 /// always update the STRAPIURL to utils/socket.js too
-///import { STRAPIURL } from '@env';
+//import { STRAPIURL } from '@env';
 const STRAPIURL = 'http://localhost:1337';
 import moment from 'moment';
 export const api = {
@@ -90,7 +90,13 @@ export const api = {
       throw error;
     }
   },
-
+  getBookingById: async (id) => {
+    try {
+      const url = `${STRAPIURL}/api/appointments/${id}?populate[0]=client&populate[1]=client.userInfo&populate[2]=specialists&populate[3]=specialists.userInfo`;
+      const response = await axios.get(url);
+      return response.data;
+    } catch (error) {}
+  },
   postBooking: async (data) => {
     const url = `${STRAPIURL}/api/appointments`;
     const headers = {
