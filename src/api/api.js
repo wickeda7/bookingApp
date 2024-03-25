@@ -1,7 +1,7 @@
 import axios from 'axios';
 /// always update the STRAPIURL to utils/socket.js too
-//import { STRAPIURL } from '@env';
-const STRAPIURL = 'http://localhost:1337';
+import { STRAPIURL } from '@env';
+//const STRAPIURL = 'http://localhost:1337';
 import moment from 'moment';
 export const api = {
   getUser: async (email) => {
@@ -95,7 +95,10 @@ export const api = {
       const url = `${STRAPIURL}/api/appointments/${id}?populate[0]=client&populate[1]=client.userInfo&populate[2]=specialists&populate[3]=specialists.userInfo`;
       const response = await axios.get(url);
       return response.data;
-    } catch (error) {}
+    } catch (error) {
+      console.log('error getBookingById', error);
+      throw error;
+    }
   },
   postBooking: async (data) => {
     const url = `${STRAPIURL}/api/appointments`;
@@ -114,6 +117,16 @@ export const api = {
   getUserBooking: async (id, done = false, type) => {
     try {
       const url = `${STRAPIURL}/api/appointments/user/${id}/${done}/${type}`;
+      const response = await axios.get(url);
+      return response.data;
+    } catch (error) {
+      console.log('error getUserBooking', error);
+      throw error;
+    }
+  },
+  getStaffBooking: async (id, done = false) => {
+    try {
+      const url = `${STRAPIURL}/api/appointments?[filters][canceled][$eq]=false&[filters][done][$eq]=${done}&populate[0]=specialists&filters[specialists][id][$eq]=${id}&populate[1]=specialists.userInfo&populate[2]=client&populate[3]=client.userInfo&populate[4]=client.userInfo.profileImg&populate[5]=store`;
       const response = await axios.get(url);
       return response.data;
     } catch (error) {
