@@ -117,6 +117,7 @@ const TimeLine = (props) => {
   const renderItem = (timelineProps, info) => {
     return <Timeline {...timelineProps} renderEvent={(item) => <EventView item={item} />} />;
   };
+
   if (event.length === 0) return null;
   return (
     <CalendarProvider

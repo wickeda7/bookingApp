@@ -2,6 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import {
   addBooking,
   getUserBooking,
+  getStaffBooking,
   notifyBooking,
   addInvoice,
   cancelBooking,
@@ -169,6 +170,7 @@ export const bookingSlice = createSlice({
         if (type === 'remove') {
           const items = services.filter((item) => item.specialistID === userId);
           const index = state.userBookings.findIndex((item) => item.id === id);
+
           if (items.length > 0) {
             if (index === -1) {
               const { callBack, client, date, specialistID, specialist, storeID, timeslot, userID } = items[0];
@@ -200,6 +202,17 @@ export const bookingSlice = createSlice({
       .addCase(getBookingById.rejected, (state, action) => {
         state.isLoading = false;
         //state.error = true;
+      })
+      .addCase(getStaffBooking.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getStaffBooking.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.userBookings = action.payload;
+      })
+      .addCase(getStaffBooking.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = true;
       });
   },
 });

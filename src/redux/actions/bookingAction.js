@@ -21,6 +21,16 @@ export const getUserBooking = createAsyncThunk('getUserBooking', async (data) =>
     throw error.response.data.error.message;
   }
 });
+export const getStaffBooking = createAsyncThunk('getStaffBooking', async (data) => {
+  try {
+    const { id, done } = data;
+    const response = await booking.getStaffBooking(id, done);
+    return response;
+  } catch (error) {
+    console.log('error bookingAction getStaffBooking', error.response.data.error.message);
+    throw error.response.data.error.message;
+  }
+});
 export const notifyBooking = createAsyncThunk('notifyBooking', async (data) => {
   try {
     const response = await booking.notifyBooking(data);
@@ -50,7 +60,7 @@ export const cancelBooking = createAsyncThunk('cancelBooking', async ({ id }) =>
 });
 export const getBookingById = createAsyncThunk('getBookingById', async ({ id, type, userId }) => {
   try {
-    const response = await booking.getBookingById(id);
+    const response = await booking.getBookingById(id, userId);
     return { data: response, type, userId };
   } catch (error) {
     console.log('error bookingAction getBookingById', error.response.data.error.message);

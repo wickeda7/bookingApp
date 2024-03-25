@@ -12,7 +12,7 @@ import ComingSoon from '@components/ComingSoon';
 import NotificationsHelper from '@utils/notifications';
 import Loader from '@components/loader';
 import { useDispatch, useSelector } from 'react-redux';
-import { getUserBooking, getBookingById } from '@redux/actions/bookingAction';
+import { getUserBooking, getBookingById, getStaffBooking } from '@redux/actions/bookingAction';
 import { updateUserBooking, resetMessage } from '@redux/slices/bookingSlice';
 import Toast from 'react-native-root-toast';
 const WorkerHome = ({ props }) => {
@@ -44,7 +44,8 @@ const WorkerHome = ({ props }) => {
     });
   }
   useEffect(() => {
-    dispatch(getUserBooking({ id: userData.id, done: false, type: 'specialist' }));
+    // dispatch(getUserBooking({ id: userData.id, done: false, type: 'specialist' }));
+    dispatch(getStaffBooking({ id: userData.id, done: false }));
   }, []);
   useEffect(() => {
     if (notification) {

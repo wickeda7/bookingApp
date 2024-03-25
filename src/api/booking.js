@@ -1,4 +1,5 @@
 import { api } from '@api/api';
+import { parseStrapiBooking } from '@utils/helper';
 export const booking = {
   post: async (data) => {
     try {
@@ -20,6 +21,19 @@ export const booking = {
     try {
       const response = await api.getUserBooking(id, done, type);
       return response;
+    } catch (error) {
+      throw error;
+    }
+  },
+  getStaffBooking: async (id, done) => {
+    try {
+      const response = await api.getStaffBooking(id, done);
+      const res = response.data.reduce((acc, item) => {
+        const data = parseStrapiBooking(item, id);
+
+        return [...acc, data];
+      }, []);
+      return res;
     } catch (error) {
       throw error;
     }
@@ -155,14 +169,12 @@ export const booking = {
       throw error;
     }
   },
-  getBookingById: async (bookingId) => {
+  getBookingById: async (bookingId, userId) => {
     try {
       const response = await api.getBookingById(bookingId);
-      const { id, attributes } = response.data;
-      let { id: clientId, attributes: clientAtt } = attributes.client.data;
-      let { id: clientUserInfoId, attributes: clientUserInfoAtt } = clientAtt.userInfo.data;
-      const client = { ...clientAtt, id: clientId, userInfo: { ...clientUserInfoAtt, id: clientUserInfoId } };
-      return { ...attributes, id, client };
+      const data = parseStrapiBooking(response.data, userId);
+
+      return data;
     } catch (error) {
       console.log('error booking getBookingById', error.response.data.error.message);
       throw error;

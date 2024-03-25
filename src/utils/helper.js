@@ -148,4 +148,35 @@ export const appointmentTime = (hours, timeslot) => {
   time = hour[0];
   return time;
 };
-export default { formatPhoneNumber, parseReduceData, formatPrice, imageUrlToBase64, parseEvents, tableRows };
+export const parseStrapiBooking = (data, userId) => {
+  const { id, attributes } = data;
+  let { id: clientId, attributes: clientAtt } = attributes.client.data;
+  let { id: clientUserInfoId, attributes: clientUserInfoAtt } = clientAtt.userInfo.data;
+  const client = { ...clientAtt, id: clientId, userInfo: { ...clientUserInfoAtt, id: clientUserInfoId } };
+  let temp = attributes.specialists.data.filter((item) => item.id === userId);
+  let specialistArr = [];
+  if (temp.length > 0) {
+    let { id: specialistId, attributes: specialistAtt } = temp[0];
+    let { id: specialistUserInfoId, attributes: specialistUserInfoAtt } = specialistAtt.userInfo.data;
+    const specialist = {
+      ...specialistAtt,
+      id: specialistId,
+      userInfo: { ...specialistUserInfoAtt, id: specialistUserInfoId },
+    };
+    specialistArr.push(specialist);
+  }
+  let services = typeof attributes.services === 'string' ? JSON.parse(attributes.services) : attributes.services;
+  if (attributes.timeslot === null) {
+    services = services.filter((item) => item.specialistID === userId);
+  }
+  return { ...attributes, id, client, specialists: specialistArr, services };
+};
+export default {
+  formatPhoneNumber,
+  parseReduceData,
+  formatPrice,
+  imageUrlToBase64,
+  parseEvents,
+  tableRows,
+  parseStrapiBooking,
+};
