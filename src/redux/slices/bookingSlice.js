@@ -167,10 +167,9 @@ export const bookingSlice = createSlice({
         const userId = action.payload.userId;
         let { date, id, services, timeslot } = action.payload.data;
         services = typeof services === 'string' ? JSON.parse(services) : services;
+        const index = state.userBookings.findIndex((item) => item.id === id);
         if (type === 'remove') {
           const items = services.filter((item) => item.specialistID === userId);
-          const index = state.userBookings.findIndex((item) => item.id === id);
-
           if (items.length > 0) {
             if (index === -1) {
               const { callBack, client, date, specialistID, specialist, storeID, timeslot, userID } = items[0];
@@ -194,7 +193,11 @@ export const bookingSlice = createSlice({
             state.userBookings.splice(index, 1);
           }
         } else {
-          state.userBookings.push(action.payload.data);
+          if (index !== -1) {
+            state.userBookings[index] = action.payload.data;
+          } else {
+            state.userBookings.push(action.payload.data);
+          }
         }
 
         state.isLoading = false;
