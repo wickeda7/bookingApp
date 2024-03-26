@@ -26,112 +26,136 @@ const ServiceRow = ({ item, setService, setStaff, handleTextChange, canceled }) 
   const notes = item.notes ? item.notes : `Status: ${tr(item.status)}`;
   //console.log('item', item);
   return (
-    <DraxView
-      receiverPayload={item}
-      onReceiveDragDrop={(event) => {
-        const userId = event.dragged.payload.id;
-        const receivedId = event.receiver.payload.specialist?.id ? event.receiver.payload.specialist.id : undefined;
-        if (receivedId === undefined || (userId === receivedId && !canceled)) {
-          setService(event.receiver.payload, 'service', event.dragged.payload);
-          setStaff(event.dragged.payload);
-        }
-        DraxViewDragStatus.Inactive;
-        return DraxSnapbackTargetPreset.None;
-      }}
-      // onReceiveDragEnter={(event) => {
-      //   console.log('onReceiveDragEnter when a drag enters this view', event);
-      // }}
-      // onReceiveDragOver={(event) => {
-      //   console.log('onReceiveDragOver while a drag is over this view', event);
-      // }}
-    >
-      <View
-        style={[
-          Style.mainContainer,
-          { flexDirection: 'row', marginHorizontal: Default.fixPadding * 1.5, opacity: canceled ? 0.3 : 1 },
-        ]}
-      >
-        <View style={[{ flex: 2, paddingLeft: 10, flexDirection: 'row' }]}>
-          <AntIcon size={15} name='menu-unfold' color={color} />
-          <Text style={[{ marginHorizontal: Default.fixPadding, color: color, fontSize: 14 }]}>
-            {firstName} {lastName} {id}
-          </Text>
-        </View>
-        <View style={[{ flex: 4 }]}>
-          <Text style={{ fontSize: 14 }}>{item.name}</Text>
-        </View>
-        <View style={[{ flex: 1 }]}>
-          <Text style={{ fontSize: 14 }}>{formatPrice(price * 100)}</Text>
-        </View>
-        <View style={[{ flex: 1 }]}>
-          <NumericInput
-            type='decimal'
-            decimalPlaces={2}
-            value={additional}
-            onUpdate={(value) => handleTextChange(value, item, 'additional')}
-            style={[Style.inputStyle, { width: '80%', height: 25, marginVertical: 0, padding: 4 }]}
-            selectionColor={Colors.primary}
-            editable={editable}
-          />
-        </View>
-        <View style={[{ flex: 1 }]}>
-          <Text style={{ fontSize: 14 }}>{formatPrice(total * 100)}</Text>
-        </View>
-      </View>
-      <View
-        style={[
-          Style.mainContainer,
-          {
-            flexDirection: 'row',
-            marginHorizontal: Default.fixPadding * 1.5,
-            marginTop: Default.fixPadding,
-            opacity: canceled ? 0.3 : 1,
-          },
-        ]}
-      >
-        <View style={[{ flex: 1, paddingLeft: 10 }]}>
-          {specialist && (
-            <TouchableOpacity
-              activeOpacity={0.8}
-              onPress={() => {
-                if (canceled) return;
-                setService(item, 'remove');
-              }}
-              style={[
-                Style.buttonStyle,
-                {
-                  backgroundColor: Colors.red,
-                  marginTop: 0,
-                  flexDirection: 'row',
-                  width: 100,
-                },
-              ]}
-            >
-              <AntIcon size={18} name='deleteuser' color={Colors.white} />
-              <Text style={[{ paddingHorizontal: Default.fixPadding * 0.5 }, Fonts.White14Bold]}>
-                {tr('removestaff')}
-              </Text>
-            </TouchableOpacity>
-          )}
-        </View>
-        <View style={[{ flex: 2, flexDirection: 'row' }]}>
-          <Text style={{ fontSize: 14, marginTop: 5, marginRight: 5 }}>{tr('notes')}: </Text>
-          <TextInput
-            multiline={true}
-            numberOfLines={5}
-            selectionColor={Colors.primary}
-            style={[Style.inputStyle, { width: '90%', height: 50 }]}
-            placeholder={notes}
-            onEndEditing={(text) => handleTextChange(text, item, 'notes')}
-            editable={editable}
-            //value={notes}
-          />
-        </View>
-      </View>
-      <View
-        style={[Style.divider, { marginHorizontal: Default.fixPadding, marginVertical: Default.fixPadding * 1.5 }]}
+    <>
+      <DraxView
+        receiverPayload={item}
+        renderContent={({ viewState }) => {
+          const receivingDrag = viewState?.receivingDrag;
+          const incomingText = receivingDrag?.payload?.text;
+          // console.log('viewState', viewState);
+          // console.log('receivingDrag?.payload', receivingDrag?.payload);
+          return (
+            <>
+              <View
+                style={[
+                  Style.mainContainer,
+                  { flexDirection: 'row', marginHorizontal: Default.fixPadding * 1.5, opacity: canceled ? 0.3 : 1 },
+                ]}
+              >
+                <View style={[{ flex: 2, paddingLeft: 10, flexDirection: 'row' }]}>
+                  <AntIcon size={15} name='menu-unfold' color={color} />
+                  <Text style={[{ marginHorizontal: Default.fixPadding, color: color, fontSize: 14 }]}>
+                    {firstName} {lastName} {id}
+                  </Text>
+                </View>
+                <View style={[{ flex: 4 }]}>
+                  <Text style={{ fontSize: 14 }}>{item.name}</Text>
+                </View>
+                <View style={[{ flex: 1 }]}>
+                  <Text style={{ fontSize: 14 }}>{formatPrice(price * 100)}</Text>
+                </View>
+                <View style={[{ flex: 1 }]}>
+                  <NumericInput
+                    type='decimal'
+                    decimalPlaces={2}
+                    value={additional}
+                    onUpdate={(value) => handleTextChange(value, item, 'additional')}
+                    style={[Style.inputStyle, { width: '80%', height: 25, marginVertical: 0, padding: 4 }]}
+                    selectionColor={Colors.primary}
+                    editable={editable}
+                  />
+                </View>
+                <View style={[{ flex: 1 }]}>
+                  <Text style={{ fontSize: 14 }}>{formatPrice(total * 100)}</Text>
+                </View>
+                <View style={[{ flex: 1 }]}>
+                  <NumericInput
+                    type='decimal'
+                    decimalPlaces={2}
+                    value={additional}
+                    onUpdate={(value) => handleTextChange(value, item, 'additional')}
+                    style={[Style.inputStyle, { width: '80%', height: 25, marginVertical: 0, padding: 4 }]}
+                    selectionColor={Colors.primary}
+                    editable={editable}
+                  />
+                </View>
+                <View style={[{ flex: 1 }]}>
+                  <Text style={{ fontSize: 14 }}>{formatPrice(total * 100)}</Text>
+                </View>
+              </View>
+              <View
+                style={[
+                  Style.mainContainer,
+                  {
+                    flexDirection: 'row',
+                    marginHorizontal: Default.fixPadding * 1.5,
+                    marginTop: Default.fixPadding,
+                    opacity: canceled ? 0.3 : 1,
+                  },
+                ]}
+              >
+                <View style={[{ flex: 1, paddingLeft: 10 }]}>
+                  {specialist && (
+                    <TouchableOpacity
+                      activeOpacity={0.8}
+                      onPress={() => {
+                        if (canceled) return;
+                        setService(item, 'remove');
+                      }}
+                      style={[
+                        Style.buttonStyle,
+                        {
+                          backgroundColor: Colors.red,
+                          marginTop: 0,
+                          flexDirection: 'row',
+                          width: 100,
+                        },
+                      ]}
+                    >
+                      <AntIcon size={18} name='deleteuser' color={Colors.white} />
+                      <Text style={[{ paddingHorizontal: Default.fixPadding * 0.5 }, Fonts.White14Bold]}>
+                        {tr('removestaff')}
+                      </Text>
+                    </TouchableOpacity>
+                  )}
+                </View>
+                <View style={[{ flex: 2, flexDirection: 'row' }]}>
+                  <Text style={{ fontSize: 14, marginTop: 5, marginRight: 5 }}>{tr('notes')}: </Text>
+                  <TextInput
+                    multiline={true}
+                    numberOfLines={5}
+                    selectionColor={Colors.primary}
+                    style={[Style.inputStyle, { width: '90%', height: 50 }]}
+                    placeholder={notes}
+                    onEndEditing={(text) => handleTextChange(text, item, 'notes')}
+                    editable={editable}
+                    //value={notes}
+                  />
+                </View>
+              </View>
+              <View
+                style={[
+                  Style.divider,
+                  { marginHorizontal: Default.fixPadding, marginVertical: Default.fixPadding * 1.5 },
+                ]}
+              />
+            </>
+          );
+        }}
+        onReceiveDragDrop={(event) => {
+          const userId = event.dragged.payload.id;
+          const receivedId = event.receiver.payload.specialist?.id ? event.receiver.payload.specialist.id : undefined;
+          // console.log('receivedId', event.receiver.payload);
+          // console.log('userId', userId);
+          if (receivedId === undefined || (userId === receivedId && !canceled)) {
+            setService(event.receiver.payload, 'service', event.dragged.payload);
+            setStaff(event.dragged.payload);
+          }
+          DraxViewDragStatus.Inactive;
+          return DraxSnapbackTargetPreset.None;
+        }}
       />
-    </DraxView>
+    </>
   );
 };
 

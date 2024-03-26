@@ -9,7 +9,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import { formatPrice } from '@utils/helper';
 import { addInvoice, updateBooking } from '@redux/actions/adminHomeAction';
-import Toast from 'react-native-root-toast';
 
 const ServicesTable = ({ services, canceled }) => {
   const { t, i18n } = useTranslation();
@@ -22,27 +21,11 @@ const ServicesTable = ({ services, canceled }) => {
   let subtotal = 0;
   let additional = 0;
   let total = 0;
-  const { message } = useSelector((state) => state.adminHome);
   const dispatch = useDispatch();
 
   const setService = (service, type, staff) => {
     dispatch(updateBooking({ type, service, staff }));
   };
-
-  if (message !== '') {
-    Toast.show(tr('invoiceCompleted'), {
-      duration: Toast.durations.LONG,
-      position: Toast.positions.CENTER,
-      shadow: true,
-      animation: true,
-      hideOnPress: true,
-      delay: 0,
-      backgroundColor: Colors.success,
-      onHidden: () => {
-        dispatch(resetMessage());
-      },
-    });
-  }
 
   const setStaff = (staff) => {
     dispatch(updateStaff(staff));

@@ -8,6 +8,7 @@ import Micons from 'react-native-vector-icons/MaterialIcons';
 import { Colors, Default, Fonts } from '@constants/style';
 import { useTranslation } from 'react-i18next';
 import ServicesTable from './ServicesTable';
+import ServicesTableContainer from './ServicesTableContainer';
 import moment from 'moment';
 import { appointmentTime } from '@utils/helper';
 
@@ -103,7 +104,8 @@ const AccordionItem = ({ children, item, expanded, onHeaderPress }) => {
           <Icon name={expanded ? 'chevron-up' : 'chevron-down'} size={14} color={borderColor} />
         </View>
       </TouchableOpacity>
-      {expanded && <ServicesTable services={services} canceled={canceled} />}
+      {/* {expanded && <ServicesTable services={services} canceled={canceled} />} */}
+      {expanded && <ServicesTableContainer services={services} canceled={canceled} />}
     </View>
   );
 };
