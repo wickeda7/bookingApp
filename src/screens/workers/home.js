@@ -53,10 +53,8 @@ const WorkerHome = ({ props }) => {
       console.log('notification home notification.request.content.data............', notification.request.content.data);
       const data = notification.request.content.data;
       if (data?.type === 'remove' || data?.type === 'service') {
-        console.log('bookingId,data.type,userData.id............', data.bookingId, data.type, userData.id);
         dispatch(getBookingById({ id: data.bookingId, type: data.type, userId: userData.id }));
       } else {
-        return;
         dispatch(updateUserBooking({ data: data, userId: userData.id }));
       }
     }

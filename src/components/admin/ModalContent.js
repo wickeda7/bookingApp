@@ -26,7 +26,7 @@ const ModalContent = ({ message, setVisible, messageType, item }) => {
       message: `Hello ${userInfo.firstName} your service will be ready in 10 minutes. Thank you for your patience.`,
       pushToken: userInfo.pushToken,
       phone: userInfo.phoneNumber,
-      sendText: false,
+      sendText: true,
     };
     const response = await booking.message(data);
     if (response) {
@@ -36,29 +36,17 @@ const ModalContent = ({ message, setVisible, messageType, item }) => {
   };
   const sendConfirmation = async () => {
     setDisabled(true);
-    const {
-      client: { userInfo: clientInfo },
-      specialist: { userInfo: specialistInfo },
-      date,
-      timeslot,
-      id,
-      storeID,
-    } = item;
+
     const data = {
       subject: 'Appointment Confirmation',
-      client: clientInfo,
-      specialist: specialistInfo,
-      date: moment(date).format('M-DD-YYYY'),
-      timeslot,
-      bookingId: id,
-      storeID,
-      sendText: false, /// change to true when ready to send text
+      bookingId: item.id,
+      sendText: true, /// change to true when ready to send text
     };
 
     const response = await booking.message(data);
     if (response) {
       setDisabled(false);
-      dispatch(updateAppointment({ id, confirmed: true }));
+      dispatch(updateAppointment({ id: item.id, confirmed: true }));
       setVisible(false);
     }
   };

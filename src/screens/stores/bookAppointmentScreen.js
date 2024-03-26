@@ -132,7 +132,7 @@ const BookAppointmentScreen = (props) => {
           if (bookingType === 'walkIn') {
             props.navigation.navigate('confirmationScreen');
           } else if (bookingType === 'appointment') {
-            dispatch(getStoreBooking({ storeId: selectedStore.id }));
+            dispatch(getStoreBooking({ storeId: selectedStore.id })); /// get store booking just in case no staff selected for appointment
             props.navigation.navigate('scheduleScreen');
           }
         }}
