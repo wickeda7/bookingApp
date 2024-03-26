@@ -54,6 +54,8 @@ const WorkerHome = ({ props }) => {
       const data = notification.request.content.data;
       if (data?.type === 'remove' || data?.type === 'service') {
         dispatch(getBookingById({ id: data.bookingId, type: data.type, userId: userData.id }));
+      } else if (data?.type === 'newBooking') {
+        dispatch(getBookingById({ id: data.id, type: data.type, userId: data.specialistID }));
       } else {
         dispatch(updateUserBooking({ data: data, userId: userData.id }));
       }

@@ -21,10 +21,7 @@ const BookingDetail = (props) => {
 
   let booking = userBookings.find((obj) => obj.id === bookingId);
   const { client, specialists, services, date, id, timeslot, canceled } = booking;
-  let enableSubmit = false;
-  if (services[0].status === 'working' && !canceled) {
-    enableSubmit = true;
-  }
+
   const {
     email,
     userInfo: { firstName, lastName, phoneNumber, profileImg },
@@ -39,6 +36,7 @@ const BookingDetail = (props) => {
   const [subtotal, setSubtotal] = useState(0);
   const [additional, setAdditional] = useState(0);
   const [total, setTotal] = useState(0);
+  const [enableSubmit, setEnableSubmit] = useState(false);
   const ref = useRef();
   let bookingHour = '';
 
@@ -68,6 +66,10 @@ const BookingDetail = (props) => {
       setAdditional(addition);
       setTotal(tot);
       booking = { ...booking, services: pServices, subtotal: sub, additional: addition, total: tot };
+
+      if (pServices[0].status === 'working' && !canceled) {
+        setEnableSubmit(true);
+      }
     }
   }, [pServices]);
 
