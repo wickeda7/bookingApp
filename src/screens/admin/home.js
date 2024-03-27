@@ -79,6 +79,7 @@ const AdminHome = () => {
         return;
       }
       if (data.appointment) {
+        // after invoice created
         dispatch(updateNewInvoice(data));
         return;
       }

@@ -110,20 +110,27 @@ export const bookingSlice = createSlice({
       .addCase(notifyBooking.pending, (state) => {})
       .addCase(notifyBooking.fulfilled, (state, action) => {
         const data = action.payload;
-        const { bookingId } = data[0];
+
+        const { bookingId } = data;
+
         const bookingIndex = state.userBookings.findIndex((obj) => obj.id === bookingId);
         let booking = { ...state.userBookings[bookingIndex] };
+        let services = typeof booking.services === 'string' ? JSON.parse(booking.services) : booking.services;
+        services = services.map((service) => {
+          if (service.id === data.id) {
+            return { ...service, ...data };
+          }
+          return service;
+        });
         let sub = 0;
         let addition = 0;
         let tot = 0;
-        for (var value of data) {
-          if (value.price) sub += value.price;
-          if (value.additional) addition += value.additional;
-        }
+        if (data.price) sub += data.price;
+        if (data.additional) addition += data.additional;
         tot = sub + addition;
         state.userBookings[bookingIndex] = {
           ...booking,
-          services: JSON.stringify(data),
+          services: JSON.stringify(services),
           subtotal: sub,
           additional: addition,
           total: tot,

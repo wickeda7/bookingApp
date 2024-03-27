@@ -21,18 +21,19 @@ const BookingDetail = (props) => {
 
   let booking = userBookings.find((obj) => obj.id === bookingId);
   const { client, specialists, services, date, id, timeslot, canceled } = booking;
-
   const {
     email,
     userInfo: { firstName, lastName, phoneNumber, profileImg },
   } = client;
   const {
+    id: specialistId,
     userInfo: { firstName: SfirstName, lastName: SlastName, hours },
   } = specialists[0];
   const image = profileImg?.url ? profileImg.url : DefaultImage;
   const dispatch = useDispatch();
 
   const [pServices, setPServices] = useState([]);
+  const [updatedService, setUpdatedService] = useState(null);
   const [subtotal, setSubtotal] = useState(0);
   const [additional, setAdditional] = useState(0);
   const [total, setTotal] = useState(0);
@@ -74,7 +75,7 @@ const BookingDetail = (props) => {
   }, [pServices]);
 
   const onChange = () => {
-    dispatch(notifyBooking(pServices));
+    dispatch(notifyBooking(updatedService));
   };
   useEffect(() => {
     ref.current = onChange;
@@ -105,6 +106,7 @@ const BookingDetail = (props) => {
   }, []);
   const handleTextChange = (value, id, field) => {
     debouncedCallback();
+
     let tempServices = [...pServices];
     let serviceIndex = tempServices.findIndex((obj) => obj.id === id);
     let service = { ...tempServices[serviceIndex] };
@@ -119,6 +121,7 @@ const BookingDetail = (props) => {
         service = { ...service, notes: value };
       }
       tempServices[serviceIndex] = service;
+      setUpdatedService(service);
     }
     setPServices(tempServices);
   };

@@ -123,4 +123,12 @@ export default StyleSheet.create({
     borderColor: 'black',
     borderWidth: 1,
   },
+  borderRed: {
+    borderColor: 'red',
+    borderWidth: 1,
+  },
+  borderInfo: {
+    borderColor: Colors.info,
+    borderWidth: 1,
+  },
 });

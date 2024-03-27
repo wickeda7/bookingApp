@@ -58,12 +58,19 @@ export const adminHomeSlice = createSlice({
     },
     updateNotification: (state, action) => {
       const data = action.payload;
-      const { bookingId, timeslot } = data[0];
+      const { bookingId, timeslot, specialist, id } = data;
       const bookingType = timeslot === null ? 'walkin' : 'appointment';
       let bookings = state[bookingType];
       const bookingIndex = bookings.findIndex((obj) => obj.id === bookingId);
       let booking = { ...bookings[bookingIndex] };
-      booking = { ...booking, alert: true, services: data };
+      let services = booking.services.map((obj) => {
+        if (obj.id === id) {
+          return { ...obj, ...data };
+        }
+        return obj;
+      });
+
+      booking = { ...booking, alert: true, services };
       bookings[bookingIndex] = booking;
       state[bookingType] = bookings;
     },
@@ -178,7 +185,15 @@ export const adminHomeSlice = createSlice({
       const { appointment, specialist, type, store } = action.payload;
       let bookings = state[type];
       const bookingIndex = bookings.findIndex((obj) => obj.id === appointment);
-      bookings.splice(bookingIndex, 1);
+      let booking = { ...bookings[bookingIndex] };
+      const specialistNum = booking.services.filter((obj) => obj.specialistID !== specialist);
+      if (specialistNum.length === 0) {
+        bookings.splice(bookingIndex, 1);
+      } else {
+        booking = { ...booking, services: specialistNum };
+        bookings[bookingIndex] = booking;
+        state[type] = bookings;
+      }
       const objectIndex = state.staffUnAvailable.findIndex((obj) => obj.id === specialist);
       const staff = state.staffUnAvailable[objectIndex];
       state.staffUnAvailable.splice(objectIndex, 1);

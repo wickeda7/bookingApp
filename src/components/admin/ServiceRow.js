@@ -68,20 +68,6 @@ const ServiceRow = ({ item, setService, setStaff, handleTextChange, canceled }) 
                 <View style={[{ flex: 1 }]}>
                   <Text style={{ fontSize: 14 }}>{formatPrice(total * 100)}</Text>
                 </View>
-                <View style={[{ flex: 1 }]}>
-                  <NumericInput
-                    type='decimal'
-                    decimalPlaces={2}
-                    value={additional}
-                    onUpdate={(value) => handleTextChange(value, item, 'additional')}
-                    style={[Style.inputStyle, { width: '80%', height: 25, marginVertical: 0, padding: 4 }]}
-                    selectionColor={Colors.primary}
-                    editable={editable}
-                  />
-                </View>
-                <View style={[{ flex: 1 }]}>
-                  <Text style={{ fontSize: 14 }}>{formatPrice(total * 100)}</Text>
-                </View>
               </View>
               <View
                 style={[
@@ -94,32 +80,61 @@ const ServiceRow = ({ item, setService, setStaff, handleTextChange, canceled }) 
                   },
                 ]}
               >
-                <View style={[{ flex: 1, paddingLeft: 10 }]}>
+                <View style={[{ flex: 3, paddingLeft: 10, flexDirection: 'row' }]}>
                   {specialist && (
-                    <TouchableOpacity
-                      activeOpacity={0.8}
-                      onPress={() => {
-                        if (canceled) return;
-                        setService(item, 'remove');
-                      }}
-                      style={[
-                        Style.buttonStyle,
-                        {
-                          backgroundColor: Colors.red,
-                          marginTop: 0,
-                          flexDirection: 'row',
-                          width: 100,
-                        },
-                      ]}
-                    >
-                      <AntIcon size={18} name='deleteuser' color={Colors.white} />
-                      <Text style={[{ paddingHorizontal: Default.fixPadding * 0.5 }, Fonts.White14Bold]}>
-                        {tr('removestaff')}
-                      </Text>
-                    </TouchableOpacity>
+                    <>
+                      <TouchableOpacity
+                        activeOpacity={0.8}
+                        onPress={() => {
+                          if (canceled) return;
+                          setService(item, 'remove');
+                        }}
+                        style={[
+                          Style.buttonStyle,
+                          Style.borderRed,
+                          {
+                            paddingVertical: 2,
+                            marginTop: 0,
+                            flexDirection: 'row',
+                            width: 100,
+                            height: 30,
+                            marginRight: 20,
+                          },
+                        ]}
+                      >
+                        <AntIcon size={18} name='deleteuser' color={Colors.red} />
+                        <Text style={[{ paddingHorizontal: Default.fixPadding * 0.5, color: Colors.red }]}>
+                          {tr('removestaff')}
+                        </Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        activeOpacity={0.8}
+                        onPress={() => {
+                          if (canceled) return;
+                          setService(item, 'add');
+                        }}
+                        style={[
+                          Style.buttonStyle,
+                          Style.borderInfo,
+                          {
+                            paddingVertical: 2,
+                            marginTop: 0,
+                            flexDirection: 'row',
+                            width: 80,
+                            height: 30,
+                            marginRight: 10,
+                          },
+                        ]}
+                      >
+                        <AntIcon size={18} name='adduser' color={Colors.info} />
+                        <Text style={[{ paddingHorizontal: Default.fixPadding * 0.5, color: Colors.info }]}>
+                          {tr('add')}
+                        </Text>
+                      </TouchableOpacity>
+                    </>
                   )}
                 </View>
-                <View style={[{ flex: 2, flexDirection: 'row' }]}>
+                <View style={[{ flex: 4, flexDirection: 'row' }]}>
                   <Text style={{ fontSize: 14, marginTop: 5, marginRight: 5 }}>{tr('notes')}: </Text>
                   <TextInput
                     multiline={true}
