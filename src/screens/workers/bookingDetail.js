@@ -149,6 +149,7 @@ const BookingDetail = (props) => {
       total: Dbooking.total,
       createdby: `${SfirstName} ${SlastName}`,
     };
+
     props.navigation.pop();
     dispatch(addInvoice({ data }));
   };

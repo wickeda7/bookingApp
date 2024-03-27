@@ -58,7 +58,7 @@ const ServicesTable = ({ services, canceled }) => {
         if (value.notes !== undefined) notes = value.notes;
 
         services.push({
-          additional: additional,
+          additional: value.additional !== undefined ? value.additional !== undefined : 0,
           price: value.price,
           bookingId: value.bookingId,
           id: value.id,
@@ -68,6 +68,7 @@ const ServicesTable = ({ services, canceled }) => {
         });
       }
       total = subtotal + additional;
+
       dispatch(
         addInvoice({
           data: {

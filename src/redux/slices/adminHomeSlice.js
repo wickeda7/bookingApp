@@ -43,10 +43,18 @@ export const adminHomeSlice = createSlice({
       const invoice = state.invoice[keys[0]];
       state.message = '';
       if (invoice) {
-        const bookingIndex = state[invoice.type].findIndex((obj) => obj.id === invoice.appointment);
-        if (bookingIndex !== -1) {
-          state[invoice.type].splice(bookingIndex, 1);
+        let bookings = state[invoice.type];
+        const bookingIndex = bookings.findIndex((obj) => obj.id === invoice.appointment);
+        let booking = { ...bookings[bookingIndex] };
+        const specialistNum = booking.services.filter((obj) => obj.specialistID !== invoice.specialist);
+        if (specialistNum.length === 0) {
+          bookings.splice(bookingIndex, 1);
+        } else {
+          booking = { ...booking, services: specialistNum };
+          bookings[bookingIndex] = booking;
+          state[invoice.type] = bookings;
         }
+
         const objectIndex = state.staffUnAvailable.findIndex((obj) => obj.id === invoice.specialist);
         if (objectIndex !== -1) {
           const staff = state.staffUnAvailable[objectIndex];
