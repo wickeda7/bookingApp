@@ -68,7 +68,6 @@ const ServicesTable = ({ services, canceled }) => {
         });
       }
       total = subtotal + additional;
-
       dispatch(
         addInvoice({
           data: {

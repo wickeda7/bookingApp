@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native';
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Default, Fonts, Colors } from '@constants/style';
 import Style from '@theme/style';
 import { formatPrice } from '@utils/helper';
@@ -7,6 +7,10 @@ import { useTranslation } from 'react-i18next';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import { DraxView, DraxViewDragStatus, DraxSnapbackTargetPreset } from 'react-native-drax';
 import NumericInput from '@wwdrew/react-native-numeric-textinput';
+import { updatePrice } from '@redux/slices/adminHomeSlice';
+import { addSplitService } from '@redux/actions/adminHomeAction';
+import { useDispatch } from 'react-redux';
+import debounce from 'lodash/debounce';
 
 const ServiceRow = ({ item, setService, setStaff, handleTextChange, canceled }) => {
   const { t, i18n } = useTranslation();
@@ -14,6 +18,11 @@ const ServiceRow = ({ item, setService, setStaff, handleTextChange, canceled }) 
   function tr(key) {
     return t(`homeScreen:${key}`);
   }
+  const [add, setAdd] = useState(false);
+  const [addedItem, setAddedItem] = useState(null);
+  const [value, setValue] = useState('');
+  const ref = useRef();
+
   const specialist = item.specialist;
   const color = specialist ? specialist.userInfo.displayColor : '#000';
   const firstName = specialist ? specialist.userInfo.firstName : '';
@@ -24,7 +33,50 @@ const ServiceRow = ({ item, setService, setStaff, handleTextChange, canceled }) 
   const total = item.total ? item.total : price;
   const editable = item.status === 'pending' ? false : true;
   const notes = item.notes ? item.notes : `Status: ${tr(item.status)}`;
-  //console.log('item', item);
+  const dispatch = useDispatch();
+
+  const handleAddRow = () => {
+    let temp = { ...item };
+    delete temp.specialist;
+    delete temp.specialistID;
+    temp.id = item.id * Default.fixPadding;
+    temp.status = 'pending';
+    temp.name = `${item.name} - Split`;
+    temp.price = 0;
+    temp.total = 0;
+    setAddedItem(temp);
+    setAdd(!add);
+  };
+  const onChange = () => {
+    dispatch(updatePrice({ value, item, field: 'price' }));
+  };
+  useEffect(() => {
+    ref.current = onChange;
+  }, [onChange]);
+
+  const debouncedCallback = useMemo(() => {
+    const func = () => {
+      ref.current?.();
+    };
+
+    return debounce(func, 1000);
+  }, []);
+
+  const handlePriceChange = (value) => {
+    debouncedCallback();
+    let temp = { ...addedItem };
+    temp.price = value;
+    temp.total = value;
+    setAddedItem(temp);
+    let newPrice = price * 100 - value * 100;
+    setValue(newPrice / 100);
+  };
+  const handleCancel = () => {
+    const newPrice = price * 100 + addedItem.price * 100;
+    dispatch(updatePrice({ value: newPrice / 100, item, field: 'price' }));
+    setAdd(!add);
+    setAddedItem(null);
+  };
   return (
     <>
       <DraxView
@@ -69,6 +121,41 @@ const ServiceRow = ({ item, setService, setStaff, handleTextChange, canceled }) 
                   <Text style={{ fontSize: 14 }}>{formatPrice(total * 100)}</Text>
                 </View>
               </View>
+              {add && (
+                <View
+                  style={[
+                    Style.mainContainer,
+                    {
+                      flexDirection: 'row',
+                      marginHorizontal: Default.fixPadding * 1.5,
+                      marginTop: Default.fixPadding,
+                      opacity: canceled ? 0.3 : 1,
+                      backgroundColor: '#ffffad',
+                      paddingVertical: 8,
+                    },
+                  ]}
+                >
+                  <View style={[{ flex: 2, paddingLeft: 10, flexDirection: 'row' }]}></View>
+                  <View style={[{ flex: 4 }]}>
+                    <Text style={{ fontSize: 14 }}>{addedItem.name}</Text>
+                  </View>
+                  <View style={[{ flex: 1 }]}>
+                    <NumericInput
+                      type='decimal'
+                      decimalPlaces={2}
+                      value={addedItem.price}
+                      onUpdate={(value) => handlePriceChange(value)}
+                      style={[Style.inputStyle, { width: '80%', height: 25, marginVertical: 0, padding: 4 }]}
+                      selectionColor={Colors.primary}
+                      editable={editable}
+                    />
+                  </View>
+                  <View style={[{ flex: 1 }]}></View>
+                  <View style={[{ flex: 1 }]}>
+                    <Text style={{ fontSize: 14 }}>{formatPrice(addedItem.total * 100)}</Text>
+                  </View>
+                </View>
+              )}
               <View
                 style={[
                   Style.mainContainer,
@@ -83,54 +170,111 @@ const ServiceRow = ({ item, setService, setStaff, handleTextChange, canceled }) 
                 <View style={[{ flex: 3, paddingLeft: 10, flexDirection: 'row' }]}>
                   {specialist && (
                     <>
-                      <TouchableOpacity
-                        activeOpacity={0.8}
-                        onPress={() => {
-                          if (canceled) return;
-                          setService(item, 'remove');
-                        }}
-                        style={[
-                          Style.buttonStyle,
-                          Style.borderRed,
-                          {
-                            paddingVertical: 2,
-                            marginTop: 0,
-                            flexDirection: 'row',
-                            width: 100,
-                            height: 30,
-                            marginRight: 20,
-                          },
-                        ]}
-                      >
-                        <AntIcon size={18} name='deleteuser' color={Colors.red} />
-                        <Text style={[{ paddingHorizontal: Default.fixPadding * 0.5, color: Colors.red }]}>
-                          {tr('removestaff')}
-                        </Text>
-                      </TouchableOpacity>
-                      <TouchableOpacity
-                        activeOpacity={0.8}
-                        onPress={() => {
-                          if (canceled) return;
-                          setService(item, 'add');
-                        }}
-                        style={[
-                          Style.buttonStyle,
-                          Style.borderInfo,
-                          {
-                            paddingVertical: 2,
-                            marginTop: 0,
-                            flexDirection: 'row',
-                            width: 80,
-                            height: 30,
-                            marginRight: 10,
-                          },
-                        ]}
-                      >
-                        <AntIcon size={18} name='adduser' color={Colors.info} />
-                        <Text style={[{ paddingHorizontal: Default.fixPadding * 0.5, color: Colors.info }]}>
-                          {tr('add')}
-                        </Text>
-                      </TouchableOpacity>
+                      {add ? (
+                        <>
+                          <TouchableOpacity
+                            activeOpacity={0.8}
+                            onPress={() => {
+                              if (canceled) return;
+                              setAdd(!add);
+                              setAddedItem(null);
+                              dispatch(addSplitService({ service: addedItem, type: 'splitService' }));
+                            }}
+                            style={[
+                              Style.buttonStyle,
+                              Style.borderGreen,
+                              {
+                                paddingVertical: 2,
+                                marginTop: 0,
+                                flexDirection: 'row',
+                                width: 100,
+                                height: 30,
+                                marginRight: 20,
+                              },
+                            ]}
+                          >
+                            <AntIcon size={18} name='check' color='green' />
+                            <Text style={[{ paddingHorizontal: Default.fixPadding * 0.5, color: 'green' }]}>
+                              Confirm
+                            </Text>
+                          </TouchableOpacity>
+                          <TouchableOpacity
+                            activeOpacity={0.8}
+                            onPress={() => {
+                              if (canceled) return;
+                              handleCancel();
+                            }}
+                            style={[
+                              Style.buttonStyle,
+                              Style.borderRed,
+                              {
+                                paddingVertical: 2,
+                                marginTop: 0,
+                                flexDirection: 'row',
+                                width: 80,
+                                height: 30,
+                                marginRight: 10,
+                              },
+                            ]}
+                          >
+                            <AntIcon size={18} name='close' color={Colors.red} />
+                            <Text style={[{ paddingHorizontal: Default.fixPadding * 0.5, color: Colors.red }]}>
+                              Cancel
+                            </Text>
+                          </TouchableOpacity>
+                        </>
+                      ) : (
+                        <>
+                          <TouchableOpacity
+                            activeOpacity={0.8}
+                            onPress={() => {
+                              if (canceled) return;
+                              setService(item, 'remove');
+                            }}
+                            style={[
+                              Style.buttonStyle,
+                              Style.borderRed,
+                              {
+                                paddingVertical: 2,
+                                marginTop: 0,
+                                flexDirection: 'row',
+                                width: 100,
+                                height: 30,
+                                marginRight: 20,
+                              },
+                            ]}
+                          >
+                            <AntIcon size={18} name='deleteuser' color={Colors.red} />
+                            <Text style={[{ paddingHorizontal: Default.fixPadding * 0.5, color: Colors.red }]}>
+                              {tr('removestaff')}
+                            </Text>
+                          </TouchableOpacity>
+                          <TouchableOpacity
+                            activeOpacity={0.8}
+                            onPress={() => {
+                              if (canceled) return;
+                              handleAddRow();
+                            }}
+                            style={[
+                              Style.buttonStyle,
+                              Style.borderInfo,
+                              {
+                                paddingVertical: 2,
+                                marginTop: 0,
+                                flexDirection: 'row',
+                                width: 80,
+                                height: 30,
+                                marginRight: 10,
+                              },
+                            ]}
+                          >
+                            <AntIcon size={18} name='adduser' color={Colors.info} />
+                            <Text style={[{ paddingHorizontal: Default.fixPadding * 0.5, color: Colors.info }]}>
+                              {tr('add')}
+                            </Text>
+                          </TouchableOpacity>
+                        </>
+                      )}
                     </>
                   )}
                 </View>
@@ -160,8 +304,8 @@ const ServiceRow = ({ item, setService, setStaff, handleTextChange, canceled }) 
         onReceiveDragDrop={(event) => {
           const userId = event.dragged.payload.id;
           const receivedId = event.receiver.payload.specialist?.id ? event.receiver.payload.specialist.id : undefined;
-          // console.log('receivedId', event.receiver.payload);
-          // console.log('userId', userId);
+          console.log('receivedId', event.receiver.payload);
+          console.log('userId', userId);
           if (receivedId === undefined || (userId === receivedId && !canceled)) {
             setService(event.receiver.payload, 'service', event.dragged.payload);
             setStaff(event.dragged.payload);

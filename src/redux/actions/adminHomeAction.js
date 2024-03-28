@@ -28,3 +28,12 @@ export const updateBooking = createAsyncThunk('updateBooking', async ({ service,
     throw error.response.data.error.message;
   }
 });
+export const addSplitService = createAsyncThunk('addSplitService', async (data) => {
+  try {
+    const response = await booking.updateBooking(data);
+    return response;
+  } catch (error) {
+    console.log('error adminHomeAction addSplitService', error.response.data.error.message);
+    throw error.response.data.error.message;
+  }
+});

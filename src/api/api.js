@@ -1,7 +1,7 @@
 import axios from 'axios';
 /// always update the STRAPIURL to utils/socket.js too
-import { STRAPIURL } from '@env';
-//const STRAPIURL = 'http://localhost:1337';
+//import { STRAPIURL } from '@env';
+const STRAPIURL = 'http://localhost:1337';
 import moment from 'moment';
 export const api = {
   getUser: async (email) => {
@@ -321,6 +321,8 @@ export const api = {
           id: service.id,
           specialist: service.specialist,
         };
+      } else if (type === 'splitService') {
+        tempSer = service;
       } else {
         tempSer = {
           id: service.id,
