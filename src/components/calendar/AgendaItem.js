@@ -1,16 +1,21 @@
 import isEmpty from 'lodash/isEmpty';
 import React, { useCallback } from 'react';
 import { StyleSheet, Alert, View, Text, TouchableOpacity, Button } from 'react-native';
-
+import moment from 'moment';
+import { formatPrice } from '@utils/helper';
 const AgendaItem = (props) => {
   const { item } = props;
-
+  const { createdAt, total, services } = item;
+  const more = services.length > 1 ? ', more...' : '';
   const buttonPressed = useCallback(() => {
     Alert.alert('Show me more');
   }, []);
 
   const itemPressed = useCallback(() => {
-    Alert.alert(item.title);
+    props.navigation.navigate('ReportsStack', {
+      screen: 'InvoiceDetail',
+      params: { data: item },
+    });
   }, []);
 
   if (isEmpty(item)) {
@@ -25,13 +30,13 @@ const AgendaItem = (props) => {
     <TouchableOpacity onPress={itemPressed} style={styles.item}>
       {/* <TouchableOpacity onPress={itemPressed} style={styles.item} testID={testIDs.agenda.ITEM}></TouchableOpacity> */}
       <View>
-        <Text style={styles.itemHourText}>{item.hour}</Text>
-        <Text style={styles.itemDurationText}>{item.duration}</Text>
+        <Text style={styles.itemHourText}>{moment(createdAt).format(' h:mm A')}</Text>
+        <Text style={styles.itemDurationText}>Total: {formatPrice(total * 100)}</Text>
       </View>
-      <Text style={styles.itemTitleText}>{item.title}</Text>
-      <View style={styles.itemButtonContainer}>
+      <Text style={styles.itemTitleText}>{`${services[0].name}${more}`}</Text>
+      {/* <View style={styles.itemButtonContainer}>
         <Button color={'grey'} title={'Info'} onPress={buttonPressed} />
-      </View>
+      </View> */}
     </TouchableOpacity>
   );
 };
@@ -57,9 +62,9 @@ const styles = StyleSheet.create({
   },
   itemTitleText: {
     color: 'black',
-    marginLeft: 16,
+    marginLeft: 0,
     fontWeight: 'bold',
-    fontSize: 16,
+    fontSize: 14,
   },
   itemButtonContainer: {
     flex: 1,

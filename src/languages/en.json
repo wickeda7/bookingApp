@@ -130,7 +130,13 @@
   "incomeScreen": {
     "income": "Income Report By Each Day",
     "incomeRange": "By Date Range",
-    "incomeRangeDesc": "Select start to end dates to view results"
+    "incomeRangeDesc": "Select start to end dates to view results",
+    "date": "Date",
+    "time": "Time",
+    "servicename": "Service Name",
+    "price": "Price",
+    "additional": "Addition",
+    "total": "Total"
   },
   "serviceScreen": {
     "other": "Other",

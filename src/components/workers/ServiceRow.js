@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import NumericInput from '@wwdrew/react-native-numeric-textinput';
 
-const ServiceRow = ({ item, handleTextChange }) => {
+const ServiceRow = ({ item, handleTextChange, show }) => {
   const { t, i18n } = useTranslation();
   const isRtl = i18n.dir() === 'rtl';
   function tr(key) {
@@ -29,14 +29,18 @@ const ServiceRow = ({ item, handleTextChange }) => {
           <Text style={Fonts.Grey14Medium}>{formatPrice(price * 100)}</Text>
         </View>
         <View style={[{ flex: 1 }]}>
-          <NumericInput
-            type='decimal'
-            decimalPlaces={2}
-            value={additional}
-            onUpdate={(value) => handleTextChange(value, item.id, 'additional')}
-            style={[Style.inputStyle, { width: '100%', height: 25, marginVertical: 0, padding: 4 }]}
-            selectionColor={Colors.primary}
-          />
+          {show ? (
+            <Text style={Fonts.Grey14Medium}>{formatPrice(additional * 100)}</Text>
+          ) : (
+            <NumericInput
+              type='decimal'
+              decimalPlaces={2}
+              value={additional}
+              onUpdate={(value) => handleTextChange(value, item.id, 'additional')}
+              style={[Style.inputStyle, { width: '100%', height: 25, marginVertical: 0, padding: 4 }]}
+              selectionColor={Colors.primary}
+            />
+          )}
         </View>
         <View style={[{ flex: 1 }]}>
           <Text style={[Fonts.Grey14Medium, { textAlign: 'right', marginRight: Default.fixPadding }]}>
@@ -51,16 +55,20 @@ const ServiceRow = ({ item, handleTextChange }) => {
         ]}
       >
         <View style={[{ flex: 3, flexDirection: 'row' }]}>
-          <TouchableOpacity
-            activeOpacity={0.8}
-            onPress={() => {
-              setOpen(!open);
-            }}
-            style={[{ marginLeft: 10, flexDirection: 'row', alignItems: 'center' }]}
-          >
-            <AntIcon size={18} name={open ? 'minuscircle' : 'pluscircle'} color={Colors.grey} />
+          {show ? (
             <Text style={[Fonts.Grey14Medium, { marginHorizontal: 10 }]}>{tr('notes')}:</Text>
-          </TouchableOpacity>
+          ) : (
+            <TouchableOpacity
+              activeOpacity={0.8}
+              onPress={() => {
+                setOpen(!open);
+              }}
+              style={[{ marginLeft: 10, flexDirection: 'row', alignItems: 'center' }]}
+            >
+              <AntIcon size={18} name={open ? 'minuscircle' : 'pluscircle'} color={Colors.grey} />
+              <Text style={[Fonts.Grey14Medium, { marginHorizontal: 10 }]}>{tr('notes')}:</Text>
+            </TouchableOpacity>
+          )}
         </View>
         <View style={[{ flex: 7 }]}>
           {open ? (

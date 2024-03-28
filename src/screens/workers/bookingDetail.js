@@ -21,6 +21,7 @@ const BookingDetail = (props) => {
 
   let booking = userBookings.find((obj) => obj.id === bookingId);
   const { client, specialists, services, date, id, timeslot, canceled } = booking;
+
   const {
     email,
     userInfo: { firstName, lastName, phoneNumber, profileImg },
@@ -29,7 +30,7 @@ const BookingDetail = (props) => {
     id: specialistId,
     userInfo: { firstName: SfirstName, lastName: SlastName, hours },
   } = specialists[0];
-  const image = profileImg?.url ? profileImg.url : DefaultImage;
+  const image = profileImg?.data?.attributes?.url ? profileImg.data.attributes.url : '';
   const dispatch = useDispatch();
 
   const [pServices, setPServices] = useState([]);
@@ -169,11 +170,6 @@ const BookingDetail = (props) => {
         <TouchableOpacity style={{ marginHorizontal: Default.fixPadding * 1.5 }} onPress={() => props.navigation.pop()}>
           <Ionicons name={isRtl ? 'arrow-forward' : 'arrow-back'} size={30} color={Colors.white} />
         </TouchableOpacity>
-        <View style={{ zIndex: 100 }}>
-          <Text style={{ ...Fonts.White18Bold, marginVertical: Default.fixPadding }}>
-            {firstName} {lastName}
-          </Text>
-        </View>
       </View>
       <View
         style={{
@@ -181,18 +177,22 @@ const BookingDetail = (props) => {
           backgroundColor: Colors.white,
         }}
       >
-        <Avatar.Image
-          size={128}
-          source={{
-            uri: image,
-          }}
-          style={{
-            marginTop: -40,
-            alignSelf: 'center',
-            zIndex: 10,
-          }}
-        />
-        <Text style={{ ...Fonts.Black16Bold, textAlign: 'center' }}>
+        {image !== '' && (
+          <>
+            <Avatar.Image
+              size={80}
+              source={{
+                uri: image,
+              }}
+              style={{
+                marginTop: -40,
+                alignSelf: 'center',
+                zIndex: 10,
+              }}
+            />
+          </>
+        )}
+        <Text style={{ ...Fonts.Grey14Medium, textAlign: 'center' }}>
           {firstName} {lastName}
         </Text>
         <Text style={{ ...Fonts.Grey14Medium, textAlign: 'center' }}>{email}</Text>

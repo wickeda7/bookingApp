@@ -1,6 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { stores } from '@api/stores';
 import { users } from '@api/users';
+import { staff } from '@api/staff';
 
 export const getStoreById = createAsyncThunk('getStoreById', async (id) => {
   try {
@@ -56,6 +57,15 @@ export const createAccessCode = createAsyncThunk('createAccessCode', async ({ da
       return { data: data, method: method };
     }
     return { data: res, method: method };
+  } catch (error) {
+    console.log('error staffAction createAccessCode', error);
+    throw error;
+  }
+});
+export const getWeeklyInvoice = createAsyncThunk('getWeeklyInvoice', async ({ from, to, userId, storeId }) => {
+  try {
+    const res = await staff.getWeeklyInvoice({ from, to, userId, storeId });
+    return res;
   } catch (error) {
     console.log('error staffAction createAccessCode', error);
     throw error;

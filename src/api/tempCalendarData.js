@@ -1,9 +1,41 @@
 import isEmpty from 'lodash/isEmpty';
+import moment from 'moment';
 const today = new Date().toISOString().split('T')[0];
 const fastDate = getPastDate(3);
 const futureDates = getFutureDates(12);
 const dates = [fastDate, today].concat(futureDates);
 
+// console.log('today: ', today);
+// console.log('fastDate: ', fastDate);
+// console.log('futureDates: ', futureDates);
+// console.log('dates: ', dates);
+function getMonday(d) {
+  d = new Date(d);
+  var day = d.getDay(),
+    diff = d.getDate() - day + (day == 0 ? -6 : 1); // adjust when day is sunday
+  return new Date(d.setDate(diff));
+}
+const getWeekRange = () => {
+  const d = getMonday(new Date());
+  const nextmonday = moment(d).add(7, 'days').toDate();
+  // console.log('d: ', d.toISOString().split('T')[0]);
+  // console.log('nextmonday: ', nextmonday.toISOString().split('T')[0]);
+  // const array = [];
+  // for (let index = 1; index <= 7; index++) {
+  //
+  //   if (index > 8) {
+  //     // set dates on the next month
+  //     const newMonth = new Date(d).getMonth() + 1;
+  //     d = new Date(d).setMonth(newMonth);
+  //   }
+  //   const date = new Date(d + 864e5 * index); // 864e5 == 86400000 == 24*60*60*1000
+  //   const dateString = date.toISOString().split('T')[0];
+  //   array.push(dateString);
+  // }
+  // return array;
+};
+getWeekRange();
+//console.log('getWeekRange: ', getWeekRange());
 function getFutureDates(numberOfDays) {
   const array = [];
   for (let index = 1; index <= numberOfDays; index++) {

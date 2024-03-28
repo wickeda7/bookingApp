@@ -6,11 +6,15 @@ import {
   uploadImage,
   unverifiedStaff,
   createAccessCode,
+  getWeeklyInvoice,
 } from '../actions/staffAction';
 
 const initialState = {
   staffData: [],
   newStaff: [],
+  weeklyInvoice: [],
+  weeklyTips: 0,
+  weeklyTotal: 0,
   totalNewStaff: 0,
   isLoading: false,
   status: null,
@@ -187,6 +191,18 @@ export const staffSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(unverifiedStaff.rejected, (state, action) => {
+        state.isLoading = false;
+      })
+      .addCase(getWeeklyInvoice.fulfilled, (state, action) => {
+        state.weeklyTips = action.payload.tips;
+        state.weeklyTotal = action.payload.total;
+        state.weeklyInvoice = action.payload.agendaItems;
+        state.isLoading = false;
+      })
+      .addCase(getWeeklyInvoice.pending, (state, action) => {
+        state.isLoading = true;
+      })
+      .addCase(getWeeklyInvoice.rejected, (state, action) => {
         state.isLoading = false;
       });
   },

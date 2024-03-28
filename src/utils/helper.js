@@ -171,6 +171,12 @@ export const parseStrapiBooking = (data, userId) => {
   }
   return { ...attributes, id, client, specialists: specialistArr, services };
 };
+export const getMonday = () => {
+  const d = new Date();
+  var day = d.getDay(),
+    diff = d.getDate() - day + (day == 0 ? -6 : 1); // adjust when day is sunday
+  return new Date(d.setDate(diff));
+};
 export default {
   formatPhoneNumber,
   parseReduceData,
@@ -179,4 +185,5 @@ export default {
   parseEvents,
   tableRows,
   parseStrapiBooking,
+  getMonday,
 };

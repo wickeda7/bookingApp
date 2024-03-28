@@ -1,12 +1,39 @@
 import { StyleSheet, Text, View } from 'react-native';
-import React, { useCallback, useRef } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import { calendarTheme } from '@constants/style';
 import { ExpandableCalendar, AgendaList, CalendarProvider } from 'react-native-calendars';
-
-import { agendaItems, getMarkedDates } from '@api/tempCalendarData';
+import { useAuthContext } from '@contexts/AuthContext';
 import AgendaItem from '@components/calendar/AgendaItem';
-const ITEMS = agendaItems;
+import { getMonday } from '@utils/helper';
+import moment from 'moment';
+import { useDispatch, useSelector } from 'react-redux';
+import { getWeeklyInvoice } from '@redux/actions/staffAction';
+import Loader from '@components/loader';
 const DayCalendar = () => {
+  const { userData } = useAuthContext();
+  const dispatch = useDispatch();
+  const { weeklyInvoice, isLoading } = useSelector((state) => state.staff);
+  const monday = getMonday().toISOString().split('T')[0];
+  const nextMonday = moment(monday).add(7, 'days').toDate().toISOString().split('T')[0];
+  const userId = userData?.id;
+  const storeId = userData?.storeEmployee?.id;
+  useEffect(() => {
+    dispatch(getWeeklyInvoice({ from: monday, to: nextMonday, userId, storeId }));
+  }, []);
+
+  const getMarkedDates = () => {
+    if (weeklyInvoice.length === 0) return {};
+    const marked = {};
+    weeklyInvoice.forEach((item) => {
+      // NOTE: only mark dates with data
+      if (item.data && item.data.length > 0) {
+        marked[item.title] = { marked: true };
+      } else {
+        marked[item.title] = { disabled: true };
+      }
+    });
+    return marked;
+  };
   const marked = useRef(getMarkedDates());
   const onDateChanged = (date, source) => {
     console.log('TimelineCalendarScreen onDateChanged: ', date, source);
@@ -14,39 +41,16 @@ const DayCalendar = () => {
   const renderItem = useCallback(({ item }) => {
     return <AgendaItem item={item} />;
   }, []);
+
   return (
-    <CalendarProvider
-      date={ITEMS[1]?.title}
-      onDateChanged={onDateChanged}
-      // onMonthChange={onMonthChange}
-      showTodayButton
-      // disabledOpacity={0.6}
-    >
-      <ExpandableCalendar
-        //testID={testIDs.expandableCalendar.CONTAINER}
-        // horizontal={false}
-        // hideArrows
-        // disablePan
-        // hideKnob
-        // initialPosition={ExpandableCalendar.positions.OPEN}
-        // calendarStyle={styles.calendar}
-        // headerStyle={styles.header} // for horizontal only
-        // disableWeekScroll
-        // disableAllTouchEventsForDisabledDays
-        firstDay={1}
-        markedDates={marked.current}
-        // animateScroll
-        // closeOnDayPress={false}
-        theme={calendarTheme}
-      />
-      <AgendaList
-        sections={ITEMS}
-        renderItem={renderItem}
-        // scrollToNextEvent
-        sectionStyle={styles.section}
-        // dayFormat={'yyyy-MM-d'}
-      />
-    </CalendarProvider>
+    <>
+      <Loader visible={isLoading} />
+
+      <CalendarProvider date={weeklyInvoice[0]?.title} onDateChanged={onDateChanged} showTodayButton>
+        <ExpandableCalendar firstDay={1} markedDates={marked.current} theme={calendarTheme} />
+        <AgendaList sections={weeklyInvoice} renderItem={renderItem} sectionStyle={styles.section} />
+      </CalendarProvider>
+    </>
   );
 };
 

@@ -1,7 +1,7 @@
 import axios from 'axios';
 /// always update the STRAPIURL to utils/socket.js too
-//import { STRAPIURL } from '@env';
-const STRAPIURL = 'http://localhost:1337';
+import { STRAPIURL } from '@env';
+//const STRAPIURL = 'http://localhost:1337';
 import moment from 'moment';
 export const api = {
   getUser: async (email) => {
@@ -345,6 +345,15 @@ export const api = {
       return response.data;
     } catch (error) {
       console.log('error notifyBooking API', error);
+      throw error;
+    }
+  },
+  getWeeklyInvoice: async ({ from, to, userId, storeId }) => {
+    try {
+      const url = `${STRAPIURL}/api/invoices?filters[$and][0][createdAt][$gte]=${from}&filters[$and][1][createdAt][$lt]=${to}&filters[store][id][$eq]=${storeId}&filters[specialist][id][$eq]=${userId}&populate[0]=client&populate[1]=client.userInfo&populate[2]=client.userInfo.profileImg&sort[0]=createdAt:DESC`;
+      const response = await axios.get(url);
+      return response.data.data;
+    } catch (error) {
       throw error;
     }
   },

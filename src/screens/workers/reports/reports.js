@@ -29,7 +29,7 @@ const Reports = (props) => {
             marginHorizontal: Default.fixPadding,
           }}
         >
-          <Text style={Fonts.White18Bold}>{tr('reports')}</Text>
+          <Text style={Fonts.White16Bold}>{tr('reports')}</Text>
         </View>
       </View>
       <ScrollView showsVerticalScrollIndicator={false} style={{ margin: 15 }}>
@@ -37,10 +37,7 @@ const Reports = (props) => {
           style={{ flexDirection: 'row', alignItems: 'center' }}
           onPress={() =>
             props.navigation.navigate('ReportsStack', {
-              screen: 'Income',
-              params: {
-                type: 'day',
-              },
+              screen: 'Weekly',
             })
           }
         >
@@ -58,7 +55,7 @@ const Reports = (props) => {
             <FontAwesome6 name='file-invoice-dollar' size={35} color={'#57cc99'} />
           </View>
           <View style={{ marginLeft: 12, flex: 1 }}>
-            <Text style={[{ fontSize: 16, color: Colors.black }]}>{tr('income')}</Text>
+            <Text style={[{ fontSize: 14, color: Colors.black }]}>{tr('income')}</Text>
             <Text style={[{ fontSize: 12, color: Colors.disable }]}>{tr('incomeDesc')}</Text>
           </View>
           <Icon name='chevron-forward' size={24} color={Colors.black} />
@@ -89,7 +86,7 @@ const Reports = (props) => {
             <FontAwesome6 name='filter-circle-dollar' size={30} color={'#008000'} />
           </View>
           <View style={{ marginLeft: 12, flex: 1 }}>
-            <Text style={[{ fontSize: 16, color: Colors.black }]}>{tr('incomeRange')}</Text>
+            <Text style={[{ fontSize: 14, color: Colors.black }]}>{tr('incomeRange')}</Text>
             <Text style={[{ fontSize: 12, color: Colors.disable }]}>{tr('incomeRangeDesc')}</Text>
           </View>
           <Icon name='chevron-forward' size={24} color={Colors.black} />
@@ -120,7 +117,7 @@ const Reports = (props) => {
             <MaterialCommunityIcons name='note' size={37} color={'#2d00f7'} />
           </View>
           <View style={{ marginLeft: 12, flex: 1 }}>
-            <Text style={[{ fontSize: 16, color: Colors.black }]}>{tr('invoice')}</Text>
+            <Text style={[{ fontSize: 14, color: Colors.black }]}>{tr('invoice')}</Text>
             <Text style={[{ fontSize: 12, color: Colors.disable }]}>{tr('invoiceDesc')}</Text>
           </View>
           <Icon name='chevron-forward' size={24} color={Colors.black} />
