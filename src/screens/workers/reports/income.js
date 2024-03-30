@@ -22,7 +22,9 @@ const Income = (props) => {
   //const { calendar, setCalendar, graphView, setGraphView } = useWorkersContext();
   const [selectedDate, setSelectedDate] = useState();
   const [calendar, setCalendar] = useState(true);
+  const [calendarView, setCalendarView] = useState(true);
   const [graphView, setGraphView] = useState(false);
+  console.log('calendar', calendar);
   const refRBSheet = useRef();
   useEffect(() => {
     if (!refRBSheet.current) return;
@@ -73,14 +75,20 @@ const Income = (props) => {
                   flex: 1,
                   alignItems: 'center',
                   justifyContent: 'center',
-                  backgroundColor: calendar ? Colors.white : Colors.primary,
+                  backgroundColor: calendarView ? Colors.white : Colors.primary,
                   marginRight: Default.fixPadding,
                   borderRadius: 8,
                   padding: 2,
                 }}
               >
-                <TouchableOpacity onPress={() => setCalendar((prev) => !prev)}>
-                  <Ionicons name={'calendar-outline'} size={22} color={calendar ? Colors.primary : Colors.white} />
+                <TouchableOpacity
+                  onPress={() => {
+                    setCalendarView((prev) => !prev);
+                    setCalendar((prev) => !prev);
+                    setGraphView((prev) => !prev);
+                  }}
+                >
+                  <Ionicons name={'calendar-outline'} size={22} color={calendarView ? Colors.primary : Colors.white} />
                 </TouchableOpacity>
               </View>
               <View
@@ -94,7 +102,12 @@ const Income = (props) => {
                   padding: 2,
                 }}
               >
-                <TouchableOpacity onPress={() => setGraphView((prev) => !prev)}>
+                <TouchableOpacity
+                  onPress={() => {
+                    setCalendarView((prev) => !prev);
+                    setGraphView((prev) => !prev);
+                  }}
+                >
                   <Octicons name='graph' size={20} color={graphView ? Colors.primary : Colors.white} />
                 </TouchableOpacity>
               </View>
