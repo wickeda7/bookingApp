@@ -24,7 +24,6 @@ const Income = (props) => {
   const [calendar, setCalendar] = useState(true);
   const [calendarView, setCalendarView] = useState(true);
   const [graphView, setGraphView] = useState(false);
-  console.log('calendar', calendar);
   const refRBSheet = useRef();
   useEffect(() => {
     if (!refRBSheet.current) return;

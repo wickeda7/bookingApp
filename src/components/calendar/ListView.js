@@ -14,31 +14,34 @@ const ListView = ({ selectedDate, navigation }) => {
 
   const userId = userData?.id;
   const storeId = userData?.storeEmployee?.id;
-
   const from = selectedDate?.from ? `From ${moment(selectedDate.from).format('M/D/YY')}` : '';
   const to = selectedDate?.to ? ` to ${moment(selectedDate.to).format('M/D/YY')}` : '';
   useEffect(() => {
     if (selectedDate?.from && selectedDate?.to) {
-      //console.log('fetch data', selectedDate.from, selectedDate.to, userId, storeId);
       dispatch(getInvoiceByDate({ from: selectedDate.from, to: selectedDate.to, userId, storeId }));
     }
   }, [selectedDate]);
   return (
     <>
       <Loader visible={isLoading} />
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          marginHorizontal: Default.fixPadding,
-          margin: Default.fixPadding,
-        }}
-      >
-        <Text style={[Fonts.Black14Medium]}>
-          {from} {to}
-        </Text>
-      </View>
-      <View style={[Fonts.Divider, { backgroundColor: Colors.bord }]}></View>
+      {selectedDate && (
+        <>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              marginHorizontal: Default.fixPadding,
+              margin: Default.fixPadding,
+            }}
+          >
+            <Text style={[Fonts.Black14Medium]}>
+              {from} {to}
+            </Text>
+          </View>
+          <View style={[Fonts.Divider, { backgroundColor: Colors.bord }]}></View>
+        </>
+      )}
+
       <ScrollView showsVerticalScrollIndicator={false} style={{ paddingVertical: Default.fixPadding }}>
         <Accordion data={invoiceByDate} type={'staff'} navigation={navigation} />
       </ScrollView>
