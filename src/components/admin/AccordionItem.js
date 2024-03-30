@@ -7,7 +7,6 @@ import Maticons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Micons from 'react-native-vector-icons/MaterialIcons';
 import { Colors, Default, Fonts } from '@constants/style';
 import { useTranslation } from 'react-i18next';
-import ServicesTable from './ServicesTable';
 import ServicesTableContainer from './ServicesTableContainer';
 import moment from 'moment';
 import { appointmentTime } from '@utils/helper';

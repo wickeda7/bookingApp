@@ -348,7 +348,7 @@ export const api = {
       throw error;
     }
   },
-  getWeeklyInvoice: async ({ from, to, userId, storeId }) => {
+  getInvoiceByDate: async ({ from, to, userId, storeId }) => {
     try {
       const url = `${STRAPIURL}/api/invoices?filters[$and][0][createdAt][$gte]=${from}&filters[$and][1][createdAt][$lt]=${to}&filters[store][id][$eq]=${storeId}&filters[specialist][id][$eq]=${userId}&populate[0]=client&populate[1]=client.userInfo&populate[2]=client.userInfo.profileImg&sort[0]=createdAt:DESC`;
       const response = await axios.get(url);

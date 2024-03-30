@@ -62,12 +62,12 @@ export const createAccessCode = createAsyncThunk('createAccessCode', async ({ da
     throw error;
   }
 });
-export const getWeeklyInvoice = createAsyncThunk('getWeeklyInvoice', async ({ from, to, userId, storeId }) => {
+export const getInvoiceByDate = createAsyncThunk('getInvoiceByDate', async ({ from, to, userId, storeId }) => {
   try {
-    const res = await staff.getWeeklyInvoice({ from, to, userId, storeId });
+    const res = await staff.getInvoiceByDate({ from, to, userId, storeId });
     return res;
   } catch (error) {
-    console.log('error staffAction createAccessCode', error);
+    console.log('error staffAction getInvoiceByDate', error);
     throw error;
   }
 });

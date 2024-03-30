@@ -66,9 +66,6 @@ const Reports = (props) => {
           onPress={() =>
             props.navigation.navigate('ReportsStack', {
               screen: 'Income',
-              params: {
-                type: 'range',
-              },
             })
           }
         >

@@ -1,6 +1,7 @@
 import { createIconSetFromFontello } from 'react-native-vector-icons';
 import moment from 'moment';
 import tableMap from '@constants/map';
+import { Colors, Default, Fonts } from '@constants/style';
 import { t } from 'i18next';
 export const formatPhoneNumber = (value) => {
   //https://aprilescobar.medium.com/phone-number-formatting-made-easy-1b887872ab2f
@@ -103,7 +104,7 @@ export const parseEvents = (data, userId) => {
         start: moment(`${date} ${startTime}`, 'YYYY-MM-DD h:m A').format('YYYY-MM-DD HH:mm'),
         end: moment(`${date} ${endTime}`, 'YYYY-MM-DD h:m A').format('YYYY-MM-DD HH:mm'),
         summary: `${services[0].name}${more}`,
-        color: '#8ecae6',
+        color: Colors.info,
         timeslot: item.timeslot,
         canceled: item.canceled,
         confirmed: item.confirmed,
@@ -119,7 +120,7 @@ export const parseEvents = (data, userId) => {
         start: start,
         end: end,
         summary: `${walkinServices[0].name}${more}`,
-        color: '#bbd686',
+        color: Colors.success,
         timeslot: item.timeslot,
         canceled: item.canceled,
       });

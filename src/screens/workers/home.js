@@ -103,7 +103,7 @@ const WorkerHome = ({ props }) => {
           </TouchableOpacity>
         </View>
       </View>
-      {/* {isTablet ? (
+      {isTablet ? (
         <ComingSoon />
       ) : (
         <>
@@ -123,8 +123,8 @@ const WorkerHome = ({ props }) => {
             <TimeLine data={userBookings} navigation={navigation} />
           )}
         </>
-      )} */}
-      {userBookings.length === 0 ? (
+      )}
+      {/* {userBookings.length === 0 ? (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <Feather name='calendar' color={Colors.primary} size={50} />
           <Text
@@ -138,7 +138,7 @@ const WorkerHome = ({ props }) => {
         </View>
       ) : (
         <TimeLine data={userBookings} navigation={navigation} />
-      )}
+      )} */}
     </>
   );
 };

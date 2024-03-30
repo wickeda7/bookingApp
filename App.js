@@ -8,7 +8,6 @@ import DrawerNavigator from '@navigation/DrawerNavigator';
 import AuthContextProvider from '@contexts/AuthContext';
 import StoreContextProvider from '@contexts/StoreContext';
 import BookingContextProvider from '@contexts/BookingContext';
-import WorkersContextProvider from '@contexts/WorkersContext';
 import AdminContextProvider from '@contexts/AdminContext';
 
 import i18n from '@languages/index';
@@ -68,9 +67,7 @@ const MainNavigation = () => {
       <AuthContextProvider>
         <StoreContextProvider>
           <BookingContextProvider>
-            <WorkersContextProvider>
-              <AdminContextProvider>{isTablet ? <DrawerNavigator /> : <TabNavigator />}</AdminContextProvider>
-            </WorkersContextProvider>
+            <AdminContextProvider>{isTablet ? <DrawerNavigator /> : <TabNavigator />}</AdminContextProvider>
           </BookingContextProvider>
         </StoreContextProvider>
       </AuthContextProvider>

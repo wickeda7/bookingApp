@@ -13,7 +13,7 @@ import moment from 'moment';
 import { getBooking } from '@redux/actions/adminHomeAction';
 import { updateNotification, updateNewInvoice, updateAppointment } from '@redux/slices/adminHomeSlice';
 import StaffRow from '@components/admin/StaffRow';
-import Accordion from '@components/admin/Accordion';
+import Accordion from '@components/Accordion';
 import { DraxProvider } from 'react-native-drax';
 import socket from '@utils/socket';
 const AdminHome = () => {
@@ -149,8 +149,8 @@ const AdminHome = () => {
         </View>
         <View style={[styles.borderLeft, { flex: 4 }]}>
           <ScrollView contentInsetAdjustmentBehavior='automatic' style={styles.container}>
-            <Accordion data={walkin} />
-            <Accordion data={appointment} />
+            <Accordion data={walkin} type={'admin'} />
+            <Accordion data={appointment} type={'admin'} />
           </ScrollView>
         </View>
       </View>

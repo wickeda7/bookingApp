@@ -9,7 +9,6 @@ import TimeLine from '@components/calendar/TimeLine';
 import { useBookingContext } from '@contexts/BookingContext';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import RangeCalendar from '@components/calendar/rangeCalendar';
-import { useWorkersContext } from '@contexts/WorkersContext';
 import moment from 'moment';
 const Invoices = (props) => {
   const { t, i18n } = useTranslation();
@@ -24,7 +23,7 @@ const Invoices = (props) => {
   const refRBSheet = useRef();
   const [data, setData] = useState([]);
   const { getUserBooking } = useBookingContext();
-  const { selectedDate } = useWorkersContext();
+  const [selectedDate, setSelectedDate] = useState();
   const from = selectedDate?.from ? `From ${moment(selectedDate.from).format('M/D/YY')}` : '';
   const to = selectedDate?.to ? ` to ${moment(selectedDate.to).format('M/D/YY')}` : '';
   useEffect(() => {
@@ -145,7 +144,7 @@ const Invoices = (props) => {
               },
             }}
           >
-            <RangeCalendar />
+            <RangeCalendar setSelectedDate={setSelectedDate} r />
           </RBSheet>
         </>
       ) : (

@@ -1,9 +1,9 @@
 import { api } from '@api/api';
 import moment from 'moment';
 export const staff = {
-  getWeeklyInvoice: async ({ from, to, userId, storeId }) => {
+  getInvoiceByDate: async ({ from, to, userId, storeId }) => {
     try {
-      const response = await api.getWeeklyInvoice({ from, to, userId, storeId });
+      const response = await api.getInvoiceByDate({ from, to, userId, storeId });
       const invoices = {};
       let tips = 0;
       let total = 0;
@@ -30,12 +30,12 @@ export const staff = {
         });
         agendaItems.push({ title: key, data, total, tips });
       }
-      //console.log('getWeeklyInvoice', agendaItems);
-      //   console.log('getWeeklyInvoice tips', tips);
-      //   console.log('getWeeklyInvoice total', total);
+      //   console.log('getInvoiceByDate', agendaItems);
+      //   console.log('getInvoiceByDate tips', tips);
+      //   console.log('getInvoiceByDate total', total);
       return { agendaItems, tips, total };
     } catch (error) {
-      console.log('error staff getWeeklyInvoice', error.response.data.error.message);
+      console.log('error staff getInvoiceByDate', error.response.data.error.message);
       throw error;
     }
   },

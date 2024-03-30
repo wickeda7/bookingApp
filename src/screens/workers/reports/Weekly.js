@@ -12,7 +12,7 @@ import AgendaItem from '@components/calendar/AgendaItem';
 import { getMonday, formatPrice } from '@utils/helper';
 import moment from 'moment';
 import { useDispatch, useSelector } from 'react-redux';
-import { getWeeklyInvoice } from '@redux/actions/staffAction';
+import { getInvoiceByDate } from '@redux/actions/staffAction';
 import Loader from '@components/loader';
 const Weekly = (props) => {
   const { t, i18n } = useTranslation();
@@ -22,17 +22,17 @@ const Weekly = (props) => {
   }
   const { userData } = useAuthContext();
   const dispatch = useDispatch();
-  const { weeklyInvoice, weeklyTips, weeklyTotal, isLoading } = useSelector((state) => state.staff);
+  const { invoiceByDate, weeklyTips, weeklyTotal, isLoading } = useSelector((state) => state.staff);
   const monday = getMonday().toISOString().split('T')[0];
   const nextMonday = moment(monday).add(7, 'days').toDate().toISOString().split('T')[0];
   const userId = userData?.id;
   const storeId = userData?.storeEmployee?.id;
   useEffect(() => {
-    dispatch(getWeeklyInvoice({ from: monday, to: nextMonday, userId, storeId }));
+    dispatch(getInvoiceByDate({ from: monday, to: nextMonday, userId, storeId }));
   }, []);
   const getMarkedDates = () => {
     const marked = {};
-    weeklyInvoice.forEach((item) => {
+    invoiceByDate.forEach((item) => {
       // NOTE: only mark dates with data
       if (item.data && item.data.length > 0) {
         marked[item.title] = { marked: true };
@@ -52,7 +52,7 @@ const Weekly = (props) => {
   }, []);
   const sectionHeader = useCallback(
     (item) => {
-      const temp = weeklyInvoice.find((x) => x.title === item);
+      const temp = invoiceByDate.find((x) => x.title === item);
       const tips = temp?.tips;
       const total = temp?.total;
       return (
@@ -72,9 +72,9 @@ const Weekly = (props) => {
         </View>
       );
     },
-    [weeklyInvoice]
+    [invoiceByDate]
   );
-  if (weeklyInvoice.length === 0) {
+  if (invoiceByDate.length === 0) {
     return <Loader visible={true} />;
   }
   return (
@@ -99,7 +99,7 @@ const Weekly = (props) => {
       <CalendarProvider date={monday} onDateChanged={onDateChanged} showTodayButton>
         <ExpandableCalendar firstDay={1} markedDates={marked.current} theme={calendarTheme} />
         <AgendaList
-          sections={weeklyInvoice}
+          sections={invoiceByDate}
           renderItem={renderItem}
           sectionStyle={styles.section}
           renderSectionHeader={sectionHeader}
