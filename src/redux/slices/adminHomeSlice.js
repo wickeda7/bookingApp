@@ -285,12 +285,10 @@ export const adminHomeSlice = createSlice({
       .addCase(uploadStoreImage.fulfilled, (state, action) => {
         const { imageType, newImage } = action.payload;
         if (imageType === 'logo') {
-          console.log('uploadStoreImage.fulfilled', newImage.url);
           state.storeSettings.logo = newImage;
         } else {
           state.storeSettings.images.unshift(newImage);
         }
-        console.log('uploadStoreImage.fulfilled', action.payload);
         state.status = 'fulfilled';
         state.isLoading = false;
       })
