@@ -44,4 +44,13 @@ export const stores = {
       throw error;
     }
   },
+  getSettings: async (storeId) => {
+    try {
+      const response = await api.getStoreSettings(storeId);
+      return response;
+    } catch (error) {
+      console.log('error getSettings', error);
+      throw error;
+    }
+  },
 };

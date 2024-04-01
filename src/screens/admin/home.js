@@ -103,7 +103,7 @@ const AdminHome = () => {
           }}
         >
           <View style={{ flex: 9, justifyContent: 'center' }}>
-            <Text style={Fonts.White20Bold}>{userData.storeAdmin.name}</Text>
+            <Text style={Fonts.White18Bold}>{userData.storeAdmin.name}</Text>
           </View>
           <View
             style={{
@@ -116,7 +116,7 @@ const AdminHome = () => {
               onPress={() => setNotificationNumber(0)}
               style={{ position: 'absolute', top: 5, right: 10 }}
             >
-              <Ionicons name='notifications-outline' size={45} color={Colors.white} />
+              <Ionicons name='notifications-outline' size={30} color={Colors.white} />
               {notificationNumber > 0 && (
                 <View
                   style={{

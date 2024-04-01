@@ -1,0 +1,491 @@
+import {
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import CheckBox from '@react-native-community/checkbox';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import { Dropdown } from 'react-native-element-dropdown';
+import { Colors, Fonts, Default } from '@constants/style';
+import Style from '@theme/style';
+import MyStatusBar from '@components/myStatusBar';
+import { useTranslation } from 'react-i18next';
+import { useAuthContext } from '@contexts/AuthContext';
+import { useAdminContext } from '@contexts/AdminContext';
+import Loader from '@components/loader';
+import { useDispatch, useSelector } from 'react-redux';
+import { getSettings } from '@redux/actions/adminHomeAction';
+import StoreImages from '@components/admin/StoreImages';
+import { formatPhoneNumber } from '@utils/helper';
+import { STATES, totalDeduct, tipDeduct, storeHours } from '@constants/settings';
+import DatePicker from 'react-native-date-picker';
+import moment from 'moment';
+const Settings = (props) => {
+  const { t, i18n } = useTranslation();
+  const isRtl = i18n.dir() === 'rtl';
+  function tr(key) {
+    return t(`settings:${key}`);
+  }
+  const { navigation, route } = props;
+  const { userData } = useAuthContext();
+  const { visible, setVisible, setImageType, setSelectedImage } = useAdminContext();
+  const storeId = userData.storeAdmin.id;
+  const dispatch = useDispatch();
+  const { isLoading, storeSettings } = useSelector((state) => state.adminHome);
+  const [storeInfo, setStoreInfo] = useState({});
+  const [formattedNumber, setFormattedNumber] = useState();
+  const [hoursArr, setHoursArr] = useState([]);
+  const [open, setOpen] = useState(false);
+  const [date, setDate] = useState(new Date());
+  const [newHour, setNewHour] = useState(null);
+  const [error, setError] = useState(false);
+
+  useEffect(() => {
+    dispatch(getSettings({ storeId }));
+  }, []);
+  useEffect(() => {
+    if (Object.keys(storeSettings).length === 0) return;
+    const hours = storeSettings?.hours ? storeSettings.hours : storeHours;
+    setHoursArr(hours);
+    setStoreInfo(storeSettings);
+    setFormattedNumber(formatPhoneNumber(storeSettings.phone));
+  }, [storeSettings]);
+
+  const handleSetHours = (close) => {
+    const selectedDays = hoursArr.filter((item) => item.selected);
+    if (selectedDays.length === 0) {
+      setError(true);
+      return;
+    }
+    if (close) {
+      const newHours = hoursArr.map((item) => {
+        if (item.selected) {
+          return { ...item, hours: 'Closed', selected: false };
+        }
+        return item;
+      });
+      setHoursArr(newHours);
+      storeSettings.hours = newHours;
+      return;
+    }
+    setOpen(true);
+  };
+  const handleDateChange = (date) => {
+    setDate(date);
+    const hour = moment(date).format('h:mm A');
+    let time = '';
+    if (newHour) {
+      time = newHour + ' - ' + hour;
+      setNewHour(null);
+    } else {
+      time = hour + ' - ???';
+      setNewHour(hour);
+    }
+    const newHours = hoursArr.map((item) => {
+      if (item.selected) {
+        return { ...item, hours: time, selected: newHour ? false : true };
+      }
+      return item;
+    });
+    setHoursArr(newHours);
+    storeSettings.hours = newHours;
+  };
+
+  const handleOnchange = (text, input) => {
+    setStoreInfo((prevState) => ({ ...prevState, [input]: text }));
+  };
+  const onPhoneChange = (number) => {
+    const formattedNumber = formatPhoneNumber(number);
+    setFormattedNumber(formattedNumber);
+    setStoreInfo((prevState) => ({ ...prevState, phone: number }));
+  };
+  const toggleClose = (type) => {
+    setVisible(!visible);
+    setImageType(type);
+  };
+  const renderItem = (item) => {
+    return (
+      <View style={[styles.item, { zIndex: 2 }]}>
+        <Text style={styles.textItem}>{item.label}</Text>
+      </View>
+    );
+  };
+
+  const handleStoreHours = (item) => {
+    let hours = [...hoursArr];
+    hours = hours.map((hour) => {
+      if (hour.day === item.day) {
+        return { ...hour, selected: !hour.selected };
+      }
+      return hour;
+    });
+    setHoursArr(hours);
+  };
+
+  const RenderHours = ({ item, handleStoreHours, setError }) => {
+    const [toggleCheckBox, setToggleCheckBox] = useState(item?.selected ? true : false);
+    const handleCheckBox = () => {
+      setToggleCheckBox(!toggleCheckBox);
+      handleStoreHours(item);
+      setError(false);
+    };
+    return (
+      <View style={[{ flex: 1 }]}>
+        <View style={[{ flexDirection: 'row' }]}>
+          <CheckBox
+            value={toggleCheckBox}
+            onValueChange={handleCheckBox}
+            style={{ transform: [{ scaleX: 0.8 }, { scaleY: 0.8 }] }}
+          />
+          <Text style={{ fontWeight: '600', paddingTop: 5, fontSize: 13 }}>{item.day}</Text>
+        </View>
+        <Text style={{ fontSize: 12 }}>{item.hours}</Text>
+      </View>
+    );
+  };
+  return (
+    <KeyboardAvoidingView style={Style.mainContainer} behavior={Platform.OS === 'ios' ? 'padding' : null}>
+      <Loader visible={isLoading} />
+      <MyStatusBar />
+      <View style={[Style.primaryNav, { flexDirection: isRtl ? 'row-reverse' : 'row' }]}>
+        <TouchableOpacity onPress={() => navigation.navigate('Home')} style={Style.navBackButton}>
+          <Ionicons name={isRtl ? 'arrow-forward' : 'arrow-back'} size={20} color={Colors.white} />
+        </TouchableOpacity>
+        <Text style={Fonts.White16Bold}>{tr('settings')}</Text>
+      </View>
+      <ScrollView nestedScrollEnabled={true} style={{ width: '100%' }}>
+        <View style={[Style.contentContainer, { flexDirection: isRtl ? 'row-reverse' : 'row' }]}>
+          <View
+            style={[
+              {
+                flex: 0.5,
+                flexDirection: 'column',
+                position: 'relative',
+              },
+            ]}
+          >
+            <Text style={Fonts.Black14Medium}>{tr('logo')}</Text>
+            <StoreImages type={'logo'} data={storeSettings} />
+            <TouchableOpacity
+              style={{
+                position: 'absolute',
+                alignItems: 'center',
+                justifyContent: 'center',
+                height: 35,
+                width: 35,
+                top: 15,
+                left: 135,
+                borderRadius: 20,
+                backgroundColor: Colors.primary,
+              }}
+              onPress={() => {
+                setSelectedImage(storeSettings.logo);
+                toggleClose('logo');
+              }}
+            >
+              <Ionicons style={{ color: Colors.white }} name='camera-outline' size={20} />
+            </TouchableOpacity>
+          </View>
+          <View
+            style={[
+              {
+                flex: 1,
+                flexDirection: 'column',
+              },
+            ]}
+          >
+            <Text style={Fonts.Black14Medium}>{tr('businessName')}</Text>
+            <TextInput
+              style={Style.inputStyle}
+              onChangeText={(text) => handleOnchange(text, 'name')}
+              selectionColor={Colors.primary}
+              value={storeInfo.name}
+            />
+          </View>
+          <View
+            style={{
+              flex: 1,
+              flexDirection: 'column',
+            }}
+          >
+            <Text style={Fonts.Black14Medium}>{tr('phone')}</Text>
+            <TextInput
+              style={Style.inputStyle}
+              onChangeText={(text) => onPhoneChange(text, 'phone')}
+              selectionColor={Colors.primary}
+              value={formattedNumber}
+              keyboardType='phone-pad'
+            />
+          </View>
+          <View
+            style={{
+              flex: 1,
+              flexDirection: 'column',
+            }}
+          >
+            <Text style={Fonts.Black14Medium}>{tr('email')}</Text>
+            <TextInput
+              style={Style.inputStyle}
+              onChangeText={(text) => handleOnchange(text, 'email')}
+              selectionColor={Colors.primary}
+              value={storeInfo.email}
+              keyboardType='email-address'
+            />
+          </View>
+        </View>
+        <View
+          style={[
+            Style.divider,
+            { marginVertical: Default.fixPadding * 0.5, marginHorizontal: Default.fixPadding * 1.5 },
+          ]}
+        ></View>
+        <View style={[Style.contentContainer, { flexDirection: isRtl ? 'row-reverse' : 'row' }]}>
+          <View
+            style={[
+              {
+                flex: 4,
+                flexDirection: 'column',
+              },
+            ]}
+          >
+            <Text style={Fonts.Black14Medium}>{tr('address')}</Text>
+            <TextInput
+              style={Style.inputStyle}
+              onChangeText={(text) => handleOnchange(text, 'address')}
+              selectionColor={Colors.primary}
+              value={storeInfo.address}
+            />
+          </View>
+          <View
+            style={[
+              {
+                flex: 3,
+                flexDirection: 'column',
+              },
+            ]}
+          >
+            <Text style={Fonts.Black14Medium}>{tr('city')}</Text>
+            <TextInput
+              style={Style.inputStyle}
+              onChangeText={(text) => handleOnchange(text, 'city')}
+              selectionColor={Colors.primary}
+              value={storeInfo.city}
+            />
+          </View>
+          <View
+            style={[
+              {
+                flex: 1,
+                flexDirection: 'column',
+              },
+            ]}
+          >
+            <Text style={Fonts.Black14Medium}>{tr('state')}</Text>
+            <Dropdown
+              style={[Style.inputStyle]}
+              placeholderStyle={styles.placeholderStyle}
+              selectedTextStyle={styles.selectedTextStyle}
+              inputSearchStyle={styles.inputSearchStyle}
+              data={STATES}
+              maxHeight={300}
+              labelField='label'
+              valueField='value'
+              placeholder='States'
+              value={storeInfo.state}
+              onChange={(item) => {
+                handleOnchange(item.value, 'state');
+              }}
+              renderItem={renderItem}
+            />
+          </View>
+          <View
+            style={[
+              {
+                flex: 1,
+                flexDirection: 'column',
+              },
+            ]}
+          >
+            <Text style={Fonts.Black14Medium}>{tr('zip')}</Text>
+            <TextInput
+              style={Style.inputStyle}
+              onChangeText={(text) => handleOnchange(text, 'zip')}
+              selectionColor={Colors.primary}
+              value={storeInfo.zip}
+            />
+          </View>
+        </View>
+        <View
+          style={[
+            Style.divider,
+            { marginVertical: Default.fixPadding * 0.5, marginHorizontal: Default.fixPadding * 1.5 },
+          ]}
+        ></View>
+        <View style={[Style.contentContainer, { flexDirection: isRtl ? 'row-reverse' : 'row' }]}>
+          <View
+            style={[
+              {
+                flex: 1,
+                flexDirection: 'column',
+              },
+            ]}
+          >
+            <Text style={Fonts.Black14Medium}>{tr('Commission')}</Text>
+            <Dropdown
+              style={[Style.inputStyle]}
+              placeholderStyle={styles.placeholderStyle}
+              selectedTextStyle={styles.selectedTextStyle}
+              inputSearchStyle={styles.inputSearchStyle}
+              data={totalDeduct}
+              maxHeight={300}
+              labelField='label'
+              valueField='value'
+              placeholder='Select'
+              value={storeInfo.totalDeduct}
+              onChange={(item) => {
+                handleOnchange(item.value, 'totalDeduct');
+              }}
+              renderItem={renderItem}
+            />
+          </View>
+          <View
+            style={[
+              {
+                flex: 1,
+                flexDirection: 'column',
+              },
+            ]}
+          >
+            <Text style={Fonts.Black14Medium}>{tr('tipDeduction')}</Text>
+            <Dropdown
+              style={[Style.inputStyle]}
+              placeholderStyle={styles.placeholderStyle}
+              selectedTextStyle={styles.selectedTextStyle}
+              inputSearchStyle={styles.inputSearchStyle}
+              data={tipDeduct}
+              maxHeight={300}
+              labelField='label'
+              valueField='value'
+              placeholder='Select'
+              value={storeInfo.tipDeduct}
+              onChange={(item) => {
+                handleOnchange(item.value, 'tipDeduct');
+              }}
+              renderItem={renderItem}
+            />
+          </View>
+          <View
+            style={[
+              {
+                flex: 8,
+                flexDirection: 'column',
+              },
+            ]}
+          >
+            <View style={[{ flexDirection: 'row' }]}>
+              <Text style={Fonts.Black14Medium}>{tr('storeHours')}</Text>
+              <TouchableOpacity
+                onPress={() => handleSetHours()}
+                style={[
+                  Style.buttonStyle,
+                  Style.borderInfo,
+                  {
+                    paddingVertical: 0,
+                    marginTop: 0,
+                    flexDirection: 'row',
+                    width: 100,
+                    height: 20,
+                    marginHorizontal: 10,
+                  },
+                ]}
+              >
+                <Ionicons name={'time-outline'} size={15} color={Colors.info} />
+                <Text style={[{ paddingHorizontal: Default.fixPadding * 0.5, color: Colors.info }]}>
+                  {tr('setHours')}
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => handleSetHours('close')}
+                style={[
+                  Style.buttonStyle,
+                  Style.borderRed,
+                  {
+                    paddingVertical: 0,
+                    marginTop: 0,
+                    flexDirection: 'row',
+                    width: 110,
+                    height: 20,
+                    marginHorizontal: 10,
+                  },
+                ]}
+              >
+                <Ionicons name={'time-outline'} size={15} color={Colors.red} />
+                <Text style={[{ paddingHorizontal: Default.fixPadding * 0.5, color: Colors.red }]}>
+                  {tr('dayClosed')}
+                </Text>
+              </TouchableOpacity>
+              {error && <Text style={{ color: Colors.red }}>{tr('hoursError')}</Text>}
+            </View>
+
+            <View style={[Style.inputStyle, { flexDirection: 'row', paddingTop: 5, height: 60 }]}>
+              {hoursArr.map((item, index) => {
+                return <RenderHours item={item} key={index} handleStoreHours={handleStoreHours} setError={setError} />;
+              })}
+            </View>
+          </View>
+        </View>
+        <DatePicker
+          modal
+          open={open}
+          date={date}
+          mode='time'
+          onDateChange={(date) => {
+            handleDateChange(date);
+          }}
+          onConfirm={(date) => {
+            setOpen(false);
+            handleDateChange(date);
+          }}
+          onCancel={() => {
+            setOpen(false);
+          }}
+        />
+      </ScrollView>
+    </KeyboardAvoidingView>
+  );
+};
+
+export default Settings;
+
+const styles = StyleSheet.create({
+  dropdown: {
+    height: 24,
+    backgroundColor: 'transparent',
+
+    borderBottomWidth: 1,
+  },
+  borderNormal: {
+    borderColor: '#ccc',
+  },
+  borderError: {
+    borderColor: 'red',
+  },
+  selectedTextStyle: { fontSize: 14 },
+  item: {
+    paddingHorizontal: 17,
+    paddingVertical: 8,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  textItem: {
+    flex: 1,
+    fontSize: 14,
+  },
+});

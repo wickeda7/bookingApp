@@ -1,7 +1,7 @@
 import axios from 'axios';
 /// always update the STRAPIURL to utils/socket.js too
-import { STRAPIURL } from '@env';
-//const STRAPIURL = 'http://localhost:1337';
+//import { STRAPIURL } from '@env';
+const STRAPIURL = 'http://localhost:1337';
 import moment from 'moment';
 export const api = {
   getUser: async (email) => {
@@ -165,7 +165,7 @@ export const api = {
     }
   },
   uploadProfileImage: async (id, file, type) => {
-    const field = type ? type : 'profileImg';
+    let field = type ? type : 'profileImg';
     try {
       const url = `${STRAPIURL}/api/upload`;
       const formData = new FormData();
@@ -177,7 +177,11 @@ export const api = {
         type: 'image/jpeg',
         uri: file,
       });
-      formData.append('ref', 'api::user-info.user-info');
+      if (type === 'logo') {
+        formData.append('ref', 'api::store.store');
+      } else {
+        formData.append('ref', 'api::user-info.user-info');
+      }
       formData.append('refId', id);
       formData.append('field', field);
       const headers = {
@@ -353,6 +357,15 @@ export const api = {
       const url = `${STRAPIURL}/api/invoices?filters[$and][0][createdAt][$gte]=${from}&filters[$and][1][createdAt][$lt]=${to}&filters[store][id][$eq]=${storeId}&filters[specialist][id][$eq]=${userId}&populate[0]=client&populate[1]=client.userInfo&populate[2]=client.userInfo.profileImg&sort[0]=createdAt:DESC`;
       const response = await axios.get(url);
       return response.data.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  getStoreSettings: async (storeId) => {
+    try {
+      const url = `${STRAPIURL}/api/stores/settings/${storeId}`;
+      const response = await axios.get(url);
+      return response.data;
     } catch (error) {
       throw error;
     }

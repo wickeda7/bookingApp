@@ -72,7 +72,7 @@ const HoursList = ({ data, setUserInfo }) => {
   };
   return (
     <View style={{ marginTop: Default.fixPadding, flexDirection: 'row' }}>
-      <View style={{ flex: 0.7 }}>
+      <View style={{ flex: 1, width: 250 }}>
         {hours && (
           <DraggableFlatList
             data={hours}

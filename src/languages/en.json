@@ -74,6 +74,24 @@
     "date": "Date",
     "time": "Time"
   },
+  "settings": {
+    "settings": "Settings",
+    "logo": "Logo",
+    "businessName": "Business Name",
+    "phone": "Phone",
+    "email": "Email",
+    "address": "Address",
+    "city": "City",
+    "state": "State",
+    "zip": "Zip",
+    "commission": "Commission",
+    "tipDeduction": "Tip Deduction",
+    "storeHours": "Store Hours",
+    "setHours": "Set Hours",
+    "save": "Save",
+    "hoursError": "Please select week days",
+    "dayClosed": "Day Closed"
+  },
   "reports": {
     "reports": "Reports",
     "income": "Income Report By Each Day",
@@ -110,6 +128,7 @@
     "save": "Save",
     "imageInfo": "Press image to delete",
     "changeProfile": "Change profile Photo",
+    "changeLogo": "Change Logo",
     "camera": "Camera",
     "gallery": "Gallery",
     "remove": "Remove image",

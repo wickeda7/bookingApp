@@ -1,5 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { booking } from '@api/booking';
+import { stores } from '@api/stores';
+import { users } from '@api/users';
 
 export const getBooking = createAsyncThunk('getBooking', async ({ storeId, today }) => {
   try {
@@ -34,6 +36,25 @@ export const addSplitService = createAsyncThunk('addSplitService', async (data) 
     return response;
   } catch (error) {
     console.log('error adminHomeAction addSplitService', error.response.data.error.message);
+    throw error.response.data.error.message;
+  }
+});
+export const getSettings = createAsyncThunk('getSettings', async ({ storeId }) => {
+  try {
+    const response = await stores.getSettings(storeId);
+    return response;
+  } catch (error) {
+    console.log('error adminHomeAction getSettings', error.response.data.error.message);
+    throw error.response.data.error.message;
+  }
+});
+export const uploadStoreImage = createAsyncThunk('uploadStoreImage', async ({ id, file, imageType }) => {
+  try {
+    const res = await users.uploadProfileImage(id, file, imageType);
+    const newImage = { id: res[0].id, url: res[0].url };
+    return { imageType, newImage };
+  } catch (error) {
+    console.log('error adminHomeAction uploadStoreImage', error.response.data.error.message);
     throw error.response.data.error.message;
   }
 });

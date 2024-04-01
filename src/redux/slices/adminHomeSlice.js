@@ -1,5 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { getBooking, addInvoice, updateBooking, addSplitService } from '../actions/adminHomeAction';
+import {
+  getBooking,
+  addInvoice,
+  updateBooking,
+  addSplitService,
+  getSettings,
+  uploadStoreImage,
+} from '../actions/adminHomeAction';
 import { t } from 'i18next';
 const initialState = {
   staffAvailable: [],
@@ -9,6 +16,8 @@ const initialState = {
   isLoading: false,
   message: '',
   invoice: {},
+  storeSettings: {},
+  status: null,
 };
 function tr(key) {
   return t(`homeScreen:${key}`);
@@ -160,6 +169,9 @@ export const adminHomeSlice = createSlice({
       state.staffUnAvailable.splice(objectIndex, 1);
       state.staffAvailable.push(staff);
     },
+    updateStoreSettings: (state, action) => {
+      state.storeSettings = action.payload.data;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -254,6 +266,37 @@ export const adminHomeSlice = createSlice({
       .addCase(addSplitService.rejected, (state, action) => {
         state.isLoading = false;
         state.error = true;
+      })
+      .addCase(getSettings.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getSettings.fulfilled, (state, action) => {
+        state.storeSettings = action.payload.data;
+        state.isLoading = false;
+      })
+      .addCase(getSettings.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = true;
+      })
+      .addCase(uploadStoreImage.pending, (state) => {
+        state.status = 'pending';
+        state.isLoading = true;
+      })
+      .addCase(uploadStoreImage.fulfilled, (state, action) => {
+        const { imageType, newImage } = action.payload;
+        if (imageType === 'logo') {
+          console.log('uploadStoreImage.fulfilled', newImage.url);
+          state.storeSettings.logo = newImage;
+        } else {
+          state.storeSettings.images.unshift(newImage);
+        }
+        console.log('uploadStoreImage.fulfilled', action.payload);
+        state.status = 'fulfilled';
+        state.isLoading = false;
+      })
+      .addCase(uploadStoreImage.rejected, (state, action) => {
+        state.status = 'error';
+        state.isLoading = false;
       });
   },
 });
@@ -269,5 +312,6 @@ export const {
   updateAppointment,
   updateNotification,
   updateNewInvoice,
+  updateStoreSettings,
 } = adminHomeSlice.actions;
 export default adminHomeSlice.reducer;

@@ -12,68 +12,51 @@ import Loader from '@components/loader';
 import Toast from 'react-native-root-toast';
 import { updateStaffState } from '@redux/slices/staffSlice';
 import { useDispatch, useSelector } from 'react-redux';
-import { uploadImage } from '@redux/actions/staffAction';
+import { uploadStoreImage } from '@redux/actions/adminHomeAction';
+import { updateStoreSettings } from '@redux/slices/adminHomeSlice';
 import { useEffect } from 'react';
-const StaffImage = ({ type, setUserInfo, userInfo, staff }) => {
+const StaffImage = ({ type, data }) => {
   const { t, i18n } = useTranslation();
   const isRtl = i18n.dir() === 'rtl';
   function tr(key) {
     return t(`staff:${key}`);
   }
   const { visible, setVisible, imageType, setImageType, selectedImage, setSelectedImage } = useAdminContext();
-  const [isLoading, setIsLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const dispatch = useDispatch();
-  const { status, staffData } = useSelector((state) => state.staff);
+  const { status, storeSettings, isLoading } = useSelector((state) => state.adminHome);
 
   useEffect(() => {
     if (!status) return;
     if (status === 'fulfilled') {
-      setIsLoading(false);
       setVisible(false);
-      if (!staff) {
-        return;
-      }
-      const selectedStaff = staffData.find((i) => i.id === staff.id);
-      setUserInfo(selectedStaff.userInfo);
-    } else if (status === 'error') {
-      setIsLoading(false);
-    } else {
-      setIsLoading(true);
     }
   }, [status]);
 
-  let profileImg = userInfo?.profileImg;
-  let images = userInfo?.images;
-  const id = userInfo.id;
+  let logo = data?.logo?.url;
+  let images = data?.images;
+  const id = data.id;
   let image = '';
-  if (type === 'profileImg') {
-    image = profileImg?.url ? profileImg.url : DefaultImage;
+  if (type === 'logo') {
+    image = logo ? logo : '';
   }
   const toggleClose = () => {
     setVisible(!visible);
   };
-  const uploadProfileImage = async (file) => {
-    const userId = staff?.id ? staff.id : null;
-    dispatch(uploadImage({ id, file, imageType, userId }));
+  const uploadLogo = async (file) => {
+    dispatch(uploadStoreImage({ id, file, imageType }));
   };
 
   const toastRemoveImage = async () => {
-    const prevUserInfo = userInfo;
-    let newUserInfo = {};
-    setIsLoading(true);
+    let newStoreSettings = {};
     const response = await users.deleteImage(selectedImage.id);
-    if (imageType === 'profileImg') {
-      newUserInfo = { ...prevUserInfo, profileImg: null };
+    if (imageType === 'logo') {
+      newStoreSettings = { ...storeSettings, logo: null };
     } else {
       const newImages = images.filter((item) => item.id !== selectedImage.id);
-      newUserInfo = { ...prevUserInfo, images: newImages };
+      newStoreSettings = { ...storeSettings, images: newImages };
     }
-    const newStaff = { ...staff, userInfo: { ...staff.userInfo, ...newUserInfo } };
-    dispatch(updateStaffState({ data: newStaff, method: 'put' }));
-    //updateStaffState(newStaff, 'put');
-    setUserInfo(newUserInfo);
-    setIsLoading(false);
+    dispatch(updateStoreSettings({ data: newStoreSettings }));
     Toast.show(tr('removeImage'), {
       duration: Toast.durations.SHORT,
       position: Toast.positions.BOTTOM,
@@ -94,7 +77,7 @@ const StaffImage = ({ type, setUserInfo, userInfo, staff }) => {
 
     if (!result.canceled) {
       const uri = Platform.OS === 'ios' ? result.assets[0].uri.replace('file://', '') : result.assets[0].uri;
-      await uploadProfileImage(uri);
+      await uploadLogo(uri);
     }
   };
   const openCamera = async () => {
@@ -109,7 +92,7 @@ const StaffImage = ({ type, setUserInfo, userInfo, staff }) => {
 
     if (!result.canceled) {
       const uri = Platform.OS === 'ios' ? result.assets[0].uri.replace('file://', '') : result.assets[0].uri;
-      await uploadProfileImage(uri);
+      await uploadLogo(uri);
     }
   };
   const renderItemPhoto = ({ item, index }) => {
@@ -138,21 +121,9 @@ const StaffImage = ({ type, setUserInfo, userInfo, staff }) => {
   };
 
   return (
-    <View style={{ marginTop: Default.fixPadding * 3, flexDirection: 'row' }}>
-      {/* <Text style={{ ...Fonts.Black18Bold, marginHorizontal: Default.fixPadding * 2 }}>
-        {isLoading ? 'loading' : 'waiting'} status {status}
-      </Text> */}
-      {type === 'profileImg' ? (
-        <Avatar.Image
-          size={128}
-          source={{
-            uri: `${image}`,
-          }}
-          style={{
-            marginVertical: Default.fixPadding * 2,
-            alignSelf: 'center',
-          }}
-        />
+    <View style={{ marginTop: Default.fixPadding, flexDirection: 'row' }}>
+      {type === 'logo' ? (
+        <>{image !== '' && <Image source={{ uri: `${image}` }} style={{ width: 120, height: 120 }} />}</>
       ) : (
         <FlatList
           horizontal={true}
@@ -172,7 +143,7 @@ const StaffImage = ({ type, setUserInfo, userInfo, staff }) => {
               marginHorizontal: Default.fixPadding * 2,
             }}
           >
-            {imageType === 'profileImg' ? tr('changeProfile') : tr('addmage')}
+            {imageType === 'logo' ? tr('changeLogo') : tr('addmage')}
           </Text>
           <TouchableOpacity
             activeOpacity={0.8}
@@ -218,7 +189,7 @@ const StaffImage = ({ type, setUserInfo, userInfo, staff }) => {
               {tr('gallery')}
             </Text>
           </TouchableOpacity>
-          {imageType === 'profileImg' && (
+          {imageType === 'logo' && (
             <TouchableOpacity
               activeOpacity={0.8}
               onPress={toastRemoveImage}

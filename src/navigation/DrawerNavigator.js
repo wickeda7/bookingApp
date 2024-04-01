@@ -2,6 +2,7 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import HomeScreen from '@screens/bottomTab/homeScreen';
 import ProfileScreen from '@screens/bottomTab/profileScreen';
 import Staff from '@screens/admin/Staff';
+import Settings from '@screens/admin/Settings';
 import SplashScreen from '@screens/splashScreen';
 import OnboardingScreen from '@screens/auth/onboardingScreen';
 import LoginScreen from '@screens/auth/loginScreen';
@@ -95,6 +96,40 @@ const DrawerNavigator = () => {
           },
           drawerActiveBackgroundColor: Colors.primary,
           drawerInactiveBackgroundColor: Colors.white,
+          drawerIcon: ({ focused }) => {
+            return (
+              <Icons6
+                name={'user-gear'}
+                size={15}
+                color={focused ? Colors.white : Colors.primary}
+                style={{ position: 'absolute', left: 15 }}
+              />
+            );
+          },
+        }}
+      />
+      <Drawer.Screen
+        name='Settings'
+        component={Settings}
+        options={{
+          headerShown: false,
+          drawerItemStyle: { borderRadius: 5, marginHorizontal: 2 },
+          drawerLabel: ({ focused }) => {
+            return <Text style={[focused ? Fonts.White16Bold : Fonts.Primary16Bold]}>Settings</Text>;
+          },
+          drawerActiveBackgroundColor: Colors.primary,
+          drawerInactiveBackgroundColor: Colors.white,
+
+          drawerIcon: ({ focused }) => {
+            return (
+              <Icons6
+                name={'gear'}
+                size={15}
+                color={focused ? Colors.white : Colors.primary}
+                style={{ position: 'absolute', left: 15 }}
+              />
+            );
+          },
         }}
       />
       <Drawer.Screen

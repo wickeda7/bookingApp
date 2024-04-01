@@ -105,9 +105,9 @@ const UnverifiedStaff = (props) => {
             dispatch(resetSeletedRow('unverified'));
           }}
         >
-          <Ionicons name={isRtl ? 'arrow-forward' : 'arrow-back'} size={25} color={Colors.white} />
+          <Ionicons name={isRtl ? 'arrow-forward' : 'arrow-back'} size={20} color={Colors.white} />
         </TouchableOpacity>
-        <Text style={Fonts.White20Bold}>{tr('unverifiedStaff')}</Text>
+        <Text style={Fonts.White16Bold}>{tr('unverifiedStaff')}</Text>
         <View style={{ flex: 1, alignItems: 'flex-end' }}>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <View

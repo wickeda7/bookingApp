@@ -91,9 +91,9 @@ const Staff = (props) => {
             dispatch(resetSeletedRow('staff'));
           }}
         >
-          <Ionicons name={isRtl ? 'arrow-forward' : 'arrow-back'} size={25} color={Colors.white} />
+          <Ionicons name={isRtl ? 'arrow-forward' : 'arrow-back'} size={20} color={Colors.white} />
         </TouchableOpacity>
-        <Text style={Fonts.White20Bold}>{tr('staff')}</Text>
+        <Text style={Fonts.White16Bold}>{tr('staff')}</Text>
         <View style={{ flex: 1, alignItems: 'flex-end' }}>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <View
@@ -116,7 +116,7 @@ const Staff = (props) => {
                   dispatch(resetSeletedRow('staff'));
                 }}
               >
-                <Icons6 name={'user-gear'} size={22} color={Colors.white} />
+                <Icons6 name={'user-gear'} size={20} color={Colors.white} />
               </TouchableOpacity>
             </View>
             <View style={[Style.navRightButton, { backgroundColor: Colors.primary }]}>
@@ -125,12 +125,12 @@ const Staff = (props) => {
                   setVisible((prev) => !prev);
                 }}
               >
-                <Icons6 name={'user-plus'} size={22} color={Colors.white} />
+                <Icons6 name={'user-plus'} size={20} color={Colors.white} />
               </TouchableOpacity>
             </View>
             <View style={[Style.navRightButton, { backgroundColor: Colors.primary }]}>
               <TouchableOpacity onPress={() => handleDelete()} disabled={isLoading}>
-                <Icons6 name={'user-xmark'} size={22} color={isLoading ? Colors.lightPrimary : Colors.white} />
+                <Icons6 name={'user-xmark'} size={20} color={isLoading ? Colors.lightPrimary : Colors.white} />
               </TouchableOpacity>
             </View>
             <View style={[Style.navRightButton, { backgroundColor: Colors.primary, position: 'relative' }]}>
@@ -141,7 +141,7 @@ const Staff = (props) => {
                 }}
                 disabled={isLoading}
               >
-                <Icons6 name={'user-check'} size={22} color={isLoading ? Colors.lightPrimary : Colors.white} />
+                <Icons6 name={'user-check'} size={20} color={isLoading ? Colors.lightPrimary : Colors.white} />
               </TouchableOpacity>
               {totalNewStaff > 0 && (
                 <View style={[Style.tick]}>
