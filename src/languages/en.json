@@ -99,7 +99,8 @@
     "price": "Price",
     "enable": "Enable",
     "option": "Option",
-    "description": "Description"
+    "description": "Description",
+    "submit": "Submit"
   },
   "reports": {
     "reports": "Reports",

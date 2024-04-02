@@ -33,20 +33,19 @@ const Settings = (props) => {
   }
   const { navigation, route } = props;
   const { userData } = useAuthContext();
-  const { visible, setVisible, setImageType, setSelectedImage } = useAdminContext();
+  const { visible, setVisible, setImageType, setSelectedImage, storeInfo, setStoreInfo, setStoreServices } =
+    useAdminContext();
   const storeId = userData.storeAdmin.id;
   const dispatch = useDispatch();
   const { isLoading, storeSettings } = useSelector((state) => state.adminHome);
-  const [storeInfo, setStoreInfo] = useState({});
   const [formattedNumber, setFormattedNumber] = useState();
-  const [pScroll, setPScroll] = useState(true);
 
   useEffect(() => {
     dispatch(getSettings({ storeId }));
   }, []);
   useEffect(() => {
     if (Object.keys(storeSettings).length === 0) return;
-
+    setStoreServices(storeSettings.services || []);
     setStoreInfo(storeSettings);
     setFormattedNumber(formatPhoneNumber(storeSettings.phone));
   }, [storeSettings]);
@@ -310,7 +309,7 @@ const Settings = (props) => {
               },
             ]}
           >
-            <StoreHours storeInfo={storeInfo} setStoreInfo={setStoreInfo} />
+            <StoreHours />
           </View>
         </View>
         <View
@@ -320,7 +319,7 @@ const Settings = (props) => {
           ]}
         ></View>
         <View style={[Style.contentContainer, { flexDirection: isRtl ? 'row-reverse' : 'row' }]}>
-          <StoreServices storeInfo={storeInfo} setStoreInfo={setStoreInfo} />
+          <StoreServices />
 
           <View
             style={[

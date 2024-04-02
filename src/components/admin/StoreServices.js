@@ -5,21 +5,18 @@ import { Colors, Fonts, Default } from '@constants/style';
 import Style from '@theme/style';
 import { useTranslation } from 'react-i18next';
 import Accordion from '@components/Accordion';
-import { updateService } from '@redux/actions/adminHomeAction';
-import { useDispatch } from 'react-redux';
-
-const StoreServices = ({ setStoreInfo, storeInfo }) => {
+import { useAdminContext } from '@contexts/AdminContext';
+const StoreServices = () => {
   const { t, i18n } = useTranslation();
   const isRtl = i18n.dir() === 'rtl';
   function tr(key) {
     return t(`settings:${key}`);
   }
-  console.log('storeSettings!!!!!!!', storeInfo);
+  const { storeInfo, storeServices, setStoreServices } = useAdminContext();
+  console.log('storeSettings!!!!!!!', storeInfo, storeServices);
 
   const handleServiceCategory = () => {
-    let services = storeInfo.services ? storeInfo.services : [];
-    services = [...services, { name: '', id: 'new', store: storeInfo.id }];
-    setStoreInfo({ ...storeInfo, services });
+    setStoreServices([{ name: '', id: 'new', store: storeInfo.id }, ...storeServices]);
   };
   if (!storeInfo) return null;
   return (
@@ -55,7 +52,7 @@ const StoreServices = ({ setStoreInfo, storeInfo }) => {
         </TouchableOpacity>
       </View>
       <ScrollView nestedScrollEnabled={true} style={styles.container}>
-        {storeInfo.services && <Accordion data={storeInfo.services} type={'service'} />}
+        {storeServices && <Accordion data={storeServices} type={'service'} />}
       </ScrollView>
     </View>
   );

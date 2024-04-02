@@ -34,6 +34,7 @@ export const Colors = {
   bord: '#E4E4E4',
   bg1: '#F5F5F5',
   info: '#0d47a1',
+  orange: '#ff8c00',
 };
 export const StaffColors = [
   '#cdb4db',

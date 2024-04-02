@@ -7,26 +7,38 @@ import { useTranslation } from 'react-i18next';
 import StoreServiceItem from './StoreServiceItem';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import Accordion from '@components/Accordion';
-const AccordionStoreBody = ({ data, catId, sub }) => {
+import { useAdminContext } from '@contexts/AdminContext';
+const AccordionStoreBody = ({ catId, serviceId }) => {
   const { t, i18n } = useTranslation();
   const isRtl = i18n.dir() === 'rtl';
   function tr(key) {
     return t(`settings:${key}`);
   }
-  const [itemData, setItemData] = useState(data?.items ? data.items : []);
-  const [subservices, setSubservices] = useState(data?.sub_services ? data.sub_services : []);
+  const { storeServices, setStoreServices } = useAdminContext();
+  let service = {};
+  if (serviceId) {
+    const sub = storeServices.find((item) => item.id === serviceId);
+    service = sub.sub_services.find((item) => item.id === catId);
+  } else {
+    service = storeServices.find((item) => item.id === catId);
+  }
+  const [itemData, setItemData] = useState(service?.items ? service.items : []);
+  const [subservices, setSubservices] = useState(service?.sub_services ? service.sub_services : []);
   useEffect(() => {
-    if (!data?.sub_services || data?.sub_services?.length === 0) return;
-    setSubservices(data.sub_services);
-  }, [data]);
+    if (!service?.sub_services) return;
+    setSubservices(service.sub_services);
+  }, [service]);
 
   const handleServiceCategory = () => {
-    setSubservices([...subservices, { name: '', id: 'new', service: catId }]);
+    let subs = [...subservices];
+    subs = [{ name: '', id: 'new', service: catId }, ...subs];
+    service = { ...service, sub_services: subs };
+    setStoreServices(storeServices.map((item) => (item.id === catId ? service : item)));
   };
   return (
     <>
       <View style={[Style.divider, { marginVertical: Default.fixPadding }]} />
-      {!sub && (
+      {!serviceId && (
         <>
           <View style={{ flexDirection: 'row' }}>
             <TouchableOpacity

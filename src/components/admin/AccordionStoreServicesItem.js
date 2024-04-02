@@ -8,15 +8,22 @@ import { formatPrice } from '@utils/helper';
 import AccordionStoreBody from './AccordionStoreBody';
 import { updateService } from '@redux/actions/adminHomeAction';
 import { useDispatch } from 'react-redux';
+import { useAdminContext } from '@contexts/AdminContext';
 const AccordionStoreServicesItem = ({ children, item, expanded, onHeaderPress }) => {
   const { t, i18n } = useTranslation();
   function tr(key) {
     return t(`homeScreen:${key}`);
   }
-  const [catEdit, setCatEdit] = useState(item.id === 'new');
-  const [name, setName] = useState(item.name);
+  const { storeServices, setStoreServices } = useAdminContext();
+  const [catEdit, setCatEdit] = useState(false);
+  const [name, setName] = useState('');
   const dispatch = useDispatch();
   const preName = item.name;
+
+  useEffect(() => {
+    setCatEdit(item.id === 'new');
+    setName(item.name);
+  }, [item]);
 
   useEffect(() => {
     if (expanded) {
@@ -26,7 +33,7 @@ const AccordionStoreServicesItem = ({ children, item, expanded, onHeaderPress })
 
   useEffect(() => {
     if (catEdit) return;
-    if (preName !== name) {
+    if (preName !== name && name !== '' && name !== ' ') {
       const data = { name, store: item.store };
       dispatch(updateService({ ids: { serviceId: item.id }, data, type: 'service' }));
     }
@@ -35,6 +42,10 @@ const AccordionStoreServicesItem = ({ children, item, expanded, onHeaderPress })
   const handleCatEdit = () => {
     setCatEdit(!catEdit);
   };
+  const handleRemoveCat = () => {
+    let services = storeServices.filter((sub) => sub.id !== item.id);
+    setStoreServices(services);
+  };
   return (
     <View style={[styles.section]}>
       <TouchableOpacity style={[styles.accordHeader]} onPress={onHeaderPress}>
@@ -42,7 +53,7 @@ const AccordionStoreServicesItem = ({ children, item, expanded, onHeaderPress })
           {catEdit ? (
             <>
               <TextInput
-                style={[Style.inputStyle, { height: 25, padding: 5, marginRight: 0, width: '90%' }]}
+                style={[Style.inputStyle, { height: 25, padding: 5, marginRight: 0, width: '85%' }]}
                 onChangeText={(text) => setName(text)}
                 selectionColor={Colors.primary}
                 value={name}
@@ -65,6 +76,26 @@ const AccordionStoreServicesItem = ({ children, item, expanded, onHeaderPress })
               >
                 <Icon name={'check-square-o'} size={14} color={Colors.success} />
               </TouchableOpacity>
+              {item.id === 'new' && (
+                <TouchableOpacity
+                  style={[
+                    Style.buttonStyle,
+                    Style.borderRed,
+                    {
+                      paddingVertical: 0,
+                      marginTop: 0,
+                      flexDirection: 'row',
+                      width: 22,
+                      height: 22,
+                      marginHorizontal: 5,
+                      borderRadius: 5,
+                    },
+                  ]}
+                  onPress={handleRemoveCat}
+                >
+                  <Icon name={'remove'} size={14} color={Colors.red} />
+                </TouchableOpacity>
+              )}
             </>
           ) : (
             <>
@@ -73,7 +104,7 @@ const AccordionStoreServicesItem = ({ children, item, expanded, onHeaderPress })
                 <TouchableOpacity
                   style={[
                     Style.buttonStyle,
-                    Style.borderRed,
+                    Style.borderOrange,
                     {
                       paddingVertical: 0,
                       marginTop: 0,
@@ -86,7 +117,7 @@ const AccordionStoreServicesItem = ({ children, item, expanded, onHeaderPress })
                   ]}
                   onPress={handleCatEdit}
                 >
-                  <Icon name={'edit'} size={14} color={Colors.red} />
+                  <Icon name={'edit'} size={14} color={Colors.orange} />
                 </TouchableOpacity>
               )}
             </>
@@ -96,7 +127,7 @@ const AccordionStoreServicesItem = ({ children, item, expanded, onHeaderPress })
           <Icon name={expanded ? 'chevron-up' : 'chevron-down'} size={14} color={Colors.primary} />
         </View>
       </TouchableOpacity>
-      {expanded && <AccordionStoreBody data={item} catId={item.id} />}
+      {expanded && <AccordionStoreBody catId={item.id} />}
     </View>
   );
 };

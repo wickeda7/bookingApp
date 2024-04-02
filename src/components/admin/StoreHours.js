@@ -8,14 +8,15 @@ import { useTranslation } from 'react-i18next';
 import DatePicker from 'react-native-date-picker';
 import moment from 'moment';
 import { storeHours } from '@constants/settings';
-
-const StoreHours = ({ setStoreInfo, storeInfo }) => {
+import { useAdminContext } from '@contexts/AdminContext';
+const StoreHours = () => {
   const { t, i18n } = useTranslation();
   const isRtl = i18n.dir() === 'rtl';
   function tr(key) {
     return t(`settings:${key}`);
   }
 
+  const { storeInfo, setStoreInfo } = useAdminContext();
   const [open, setOpen] = useState(false);
   const [error, setError] = useState(false);
   const [hoursArr, setHoursArr] = useState([]);

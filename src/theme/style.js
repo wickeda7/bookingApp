@@ -124,7 +124,7 @@ export default StyleSheet.create({
     borderWidth: 1,
   },
   borderRed: {
-    borderColor: 'red',
+    borderColor: Colors.red,
     borderWidth: 1,
   },
   borderInfo: {
@@ -133,6 +133,10 @@ export default StyleSheet.create({
   },
   borderlightPrimary: {
     borderColor: Colors.lightPrimary,
+    borderWidth: 1,
+  },
+  borderOrange: {
+    borderColor: Colors.orange,
     borderWidth: 1,
   },
 });

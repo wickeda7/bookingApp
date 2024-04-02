@@ -8,18 +8,23 @@ import { formatPrice } from '@utils/helper';
 import AccordionStoreBody from './AccordionStoreBody';
 import { updateService } from '@redux/actions/adminHomeAction';
 import { useDispatch } from 'react-redux';
+import { useAdminContext } from '@contexts/AdminContext';
 
 const AccordionStoreSubServicesItem = ({ children, item, expanded, onHeaderPress, serviceId }) => {
   const { t, i18n } = useTranslation();
   function tr(key) {
     return t(`homeScreen:${key}`);
   }
-  //console.log('AccordionStoreSubServicesItem item????????????????????', item, serviceId);
-  const [catEdit, setCatEdit] = useState(item.id === 'new');
-  const [name, setName] = useState(item.name);
+  const { storeServices, setStoreServices } = useAdminContext();
+  const [catEdit, setCatEdit] = useState(false);
+  const [name, setName] = useState('');
   const dispatch = useDispatch();
   const preName = item.name;
 
+  useEffect(() => {
+    setCatEdit(item.id === 'new');
+    setName(item.name);
+  }, [item]);
   useEffect(() => {
     if (expanded) {
       setCatEdit(false);
@@ -27,8 +32,7 @@ const AccordionStoreSubServicesItem = ({ children, item, expanded, onHeaderPress
   }, [expanded]);
   useEffect(() => {
     if (catEdit) return;
-    if (preName !== name) {
-      //console.log('AccordionStoreSubServicesItem name', name, preName, item);
+    if (preName !== name && name !== '' && name !== ' ') {
       const catId = item.service ? item.service : serviceId;
       const data = { name, service: item.service };
       dispatch(updateService({ ids: { serviceId: catId, subServiceId: item.id }, data, type: 'subService' }));
@@ -38,6 +42,13 @@ const AccordionStoreSubServicesItem = ({ children, item, expanded, onHeaderPress
   const handleCatEdit = () => {
     setCatEdit(!catEdit);
   };
+  const handleRemoveCat = () => {
+    let service = storeServices.find((ser) => ser.id === item.service);
+    let subs = [...service.sub_services];
+    subs = subs.filter((sub) => sub.id !== item.id);
+    service = { ...service, sub_services: subs };
+    setStoreServices(storeServices.map((i) => (i.id === item.service ? service : i)));
+  };
   return (
     <View style={[styles.section]}>
       <TouchableOpacity style={[styles.accordHeader]} onPress={onHeaderPress}>
@@ -45,7 +56,7 @@ const AccordionStoreSubServicesItem = ({ children, item, expanded, onHeaderPress
           {catEdit ? (
             <>
               <TextInput
-                style={[Style.inputStyle, { height: 25, padding: 5, marginRight: 0, width: '90%' }]}
+                style={[Style.inputStyle, { height: 25, padding: 5, marginRight: 0, width: '85%' }]}
                 onChangeText={(text) => setName(text)}
                 selectionColor={Colors.primary}
                 value={name}
@@ -68,6 +79,26 @@ const AccordionStoreSubServicesItem = ({ children, item, expanded, onHeaderPress
               >
                 <Icon name={'check-square-o'} size={14} color={Colors.success} />
               </TouchableOpacity>
+              {item.id === 'new' && (
+                <TouchableOpacity
+                  style={[
+                    Style.buttonStyle,
+                    Style.borderRed,
+                    {
+                      paddingVertical: 0,
+                      marginTop: 0,
+                      flexDirection: 'row',
+                      width: 22,
+                      height: 22,
+                      marginHorizontal: 5,
+                      borderRadius: 5,
+                    },
+                  ]}
+                  onPress={handleRemoveCat}
+                >
+                  <Icon name={'remove'} size={14} color={Colors.red} />
+                </TouchableOpacity>
+              )}
             </>
           ) : (
             <>
@@ -76,7 +107,7 @@ const AccordionStoreSubServicesItem = ({ children, item, expanded, onHeaderPress
                 <TouchableOpacity
                   style={[
                     Style.buttonStyle,
-                    Style.borderRed,
+                    Style.borderOrange,
                     {
                       paddingVertical: 0,
                       marginTop: 0,
@@ -89,7 +120,7 @@ const AccordionStoreSubServicesItem = ({ children, item, expanded, onHeaderPress
                   ]}
                   onPress={handleCatEdit}
                 >
-                  <Icon name={'edit'} size={14} color={Colors.red} />
+                  <Icon name={'edit'} size={14} color={Colors.orange} />
                 </TouchableOpacity>
               )}
             </>
@@ -99,7 +130,7 @@ const AccordionStoreSubServicesItem = ({ children, item, expanded, onHeaderPress
           <Icon name={expanded ? 'chevron-up' : 'chevron-down'} size={14} color={Colors.info} />
         </View>
       </TouchableOpacity>
-      {expanded && <AccordionStoreBody data={item} catId={item.id} sub={true} />}
+      {expanded && <AccordionStoreBody data={item} catId={item.id} serviceId={serviceId} />}
     </View>
   );
 };
