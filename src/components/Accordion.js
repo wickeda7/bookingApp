@@ -11,7 +11,7 @@ const Components = {
   service: AccordionStoreServicesItem,
   subService: AccordionStoreSubServicesItem,
 };
-function Accordion({ data, type, navigation }) {
+function Accordion({ data, type, navigation, serviceId }) {
   const [expandedIndex, setExpandedIndex] = useState(null);
   const AccordionItem = Components[type];
   function handleHeaderPress(index) {
@@ -28,6 +28,7 @@ function Accordion({ data, type, navigation }) {
           expanded={expandedIndex === index}
           onHeaderPress={() => handleHeaderPress(index)}
           navigation={navigation}
+          serviceId={serviceId}
         >
           {item.content}
         </AccordionItem>

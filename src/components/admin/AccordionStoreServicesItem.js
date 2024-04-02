@@ -6,23 +6,32 @@ import Style from '@theme/style';
 import { useTranslation } from 'react-i18next';
 import { formatPrice } from '@utils/helper';
 import AccordionStoreBody from './AccordionStoreBody';
+import { updateService } from '@redux/actions/adminHomeAction';
+import { useDispatch } from 'react-redux';
 const AccordionStoreServicesItem = ({ children, item, expanded, onHeaderPress }) => {
   const { t, i18n } = useTranslation();
   function tr(key) {
     return t(`homeScreen:${key}`);
   }
-  console.log('AccordionStoreServicesItem item', item);
-  const [catEdit, setCatEdit] = useState(false);
+  const [catEdit, setCatEdit] = useState(item.id === 'new');
   const [name, setName] = useState(item.name);
+  const dispatch = useDispatch();
+  const preName = item.name;
 
   useEffect(() => {
     if (expanded) {
       setCatEdit(false);
     }
   }, [expanded]);
+
   useEffect(() => {
-    console.log('catEdit', catEdit);
+    if (catEdit) return;
+    if (preName !== name) {
+      const data = { name, store: item.store };
+      dispatch(updateService({ ids: { serviceId: item.id }, data, type: 'service' }));
+    }
   }, [catEdit]);
+
   const handleCatEdit = () => {
     setCatEdit(!catEdit);
   };

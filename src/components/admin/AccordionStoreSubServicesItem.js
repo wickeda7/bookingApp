@@ -6,14 +6,19 @@ import Style from '@theme/style';
 import { useTranslation } from 'react-i18next';
 import { formatPrice } from '@utils/helper';
 import AccordionStoreBody from './AccordionStoreBody';
-const AccordionStoreSubServicesItem = ({ children, item, expanded, onHeaderPress }) => {
+import { updateService } from '@redux/actions/adminHomeAction';
+import { useDispatch } from 'react-redux';
+
+const AccordionStoreSubServicesItem = ({ children, item, expanded, onHeaderPress, serviceId }) => {
   const { t, i18n } = useTranslation();
   function tr(key) {
     return t(`homeScreen:${key}`);
   }
-  console.log('AccordionStoreSubServicesItem item', item);
-  const [catEdit, setCatEdit] = useState(false);
+  //console.log('AccordionStoreSubServicesItem item????????????????????', item, serviceId);
+  const [catEdit, setCatEdit] = useState(item.id === 'new');
   const [name, setName] = useState(item.name);
+  const dispatch = useDispatch();
+  const preName = item.name;
 
   useEffect(() => {
     if (expanded) {
@@ -21,8 +26,15 @@ const AccordionStoreSubServicesItem = ({ children, item, expanded, onHeaderPress
     }
   }, [expanded]);
   useEffect(() => {
-    console.log('catEdit', catEdit);
+    if (catEdit) return;
+    if (preName !== name) {
+      //console.log('AccordionStoreSubServicesItem name', name, preName, item);
+      const catId = item.service ? item.service : serviceId;
+      const data = { name, service: item.service };
+      dispatch(updateService({ ids: { serviceId: catId, subServiceId: item.id }, data, type: 'subService' }));
+    }
   }, [catEdit]);
+
   const handleCatEdit = () => {
     setCatEdit(!catEdit);
   };

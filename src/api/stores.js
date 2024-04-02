@@ -53,4 +53,13 @@ export const stores = {
       throw error;
     }
   },
+  updateService: async (ids, data, type) => {
+    try {
+      const response = await api.updateService(ids, data, type);
+      return response;
+    } catch (error) {
+      console.log('error updateService', error);
+      throw error;
+    }
+  },
 };

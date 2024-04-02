@@ -370,4 +370,31 @@ export const api = {
       throw error;
     }
   },
+  updateService: async (ids, data, type) => {
+    let url = '';
+    let id = '';
+    if (type === 'service') {
+      url = `${STRAPIURL}/api/services`;
+      id = ids.serviceId;
+    } else if (type === 'subService') {
+      url = `${STRAPIURL}/api/sub-services`;
+      id = ids.subServiceId;
+    } else {
+      url = `${STRAPIURL}/api/items`;
+      id = ids.itemId;
+    }
+
+    try {
+      if (id !== 'new') {
+        const response = await axios.put(`${url}/${id}`, { data });
+        return response.data;
+      } else {
+        const response = await axios.post(`${url}`, { data });
+        return response.data;
+      }
+    } catch (error) {
+      console.log('error updateService API', error);
+      throw error;
+    }
+  },
 };

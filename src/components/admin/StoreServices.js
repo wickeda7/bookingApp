@@ -5,6 +5,8 @@ import { Colors, Fonts, Default } from '@constants/style';
 import Style from '@theme/style';
 import { useTranslation } from 'react-i18next';
 import Accordion from '@components/Accordion';
+import { updateService } from '@redux/actions/adminHomeAction';
+import { useDispatch } from 'react-redux';
 
 const StoreServices = ({ setStoreInfo, storeInfo }) => {
   const { t, i18n } = useTranslation();
@@ -12,9 +14,13 @@ const StoreServices = ({ setStoreInfo, storeInfo }) => {
   function tr(key) {
     return t(`settings:${key}`);
   }
-  console.log('storeSettings', storeInfo);
+  console.log('storeSettings!!!!!!!', storeInfo);
 
-  const handleServiceCategory = () => {};
+  const handleServiceCategory = () => {
+    let services = storeInfo.services ? storeInfo.services : [];
+    services = [...services, { name: '', id: 'new', store: storeInfo.id }];
+    setStoreInfo({ ...storeInfo, services });
+  };
   if (!storeInfo) return null;
   return (
     <View

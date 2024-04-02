@@ -1,5 +1,5 @@
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { Colors, Default, Fonts } from '@constants/style';
 import Style from '@theme/style';
@@ -13,11 +13,16 @@ const AccordionStoreBody = ({ data, catId, sub }) => {
   function tr(key) {
     return t(`settings:${key}`);
   }
-  const items = data.items;
-  const sub_services = data?.sub_services ? data.sub_services : [];
-  console.log('AccordionStoreBody catId', catId);
-  console.log('AccordionStoreBody items', items);
-  console.log('AccordionStoreBody sub_services', sub_services);
+  const [itemData, setItemData] = useState(data?.items ? data.items : []);
+  const [subservices, setSubservices] = useState(data?.sub_services ? data.sub_services : []);
+  useEffect(() => {
+    if (!data?.sub_services || data?.sub_services?.length === 0) return;
+    setSubservices(data.sub_services);
+  }, [data]);
+
+  const handleServiceCategory = () => {
+    setSubservices([...subservices, { name: '', id: 'new', service: catId }]);
+  };
   return (
     <>
       <View style={[Style.divider, { marginVertical: Default.fixPadding }]} />
@@ -68,12 +73,12 @@ const AccordionStoreBody = ({ data, catId, sub }) => {
         </>
       )}
 
-      {sub_services.length > 0 && (
+      {subservices.length > 0 && (
         <View style={{ marginTop: Default.fixPadding }}>
-          <Accordion data={sub_services} type={'subService'} />
+          <Accordion data={subservices} type={'subService'} serviceId={catId} />
         </View>
       )}
-      {items.length > 0 && (
+      {itemData.length > 0 && (
         <>
           <View style={[{ flexDirection: 'column' }]}>
             <View style={[Style.tableHeader, { flexDirection: 'row', flex: 1 }]}>
@@ -84,7 +89,7 @@ const AccordionStoreBody = ({ data, catId, sub }) => {
             </View>
           </View>
           <ScrollView showsVerticalScrollIndicator={false}>
-            {items.map((item, index) => (
+            {itemData.map((item, index) => (
               <StoreServiceItem key={index} item={item} catId={catId} />
             ))}
           </ScrollView>

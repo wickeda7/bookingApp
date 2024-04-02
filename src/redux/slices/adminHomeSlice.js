@@ -6,6 +6,7 @@ import {
   addSplitService,
   getSettings,
   uploadStoreImage,
+  updateService,
 } from '../actions/adminHomeAction';
 import { t } from 'i18next';
 const initialState = {
@@ -294,6 +295,51 @@ export const adminHomeSlice = createSlice({
       })
       .addCase(uploadStoreImage.rejected, (state, action) => {
         state.status = 'error';
+        state.isLoading = false;
+      })
+      .addCase(updateService.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(updateService.fulfilled, (state, action) => {
+        const { ids, data, type } = action.payload;
+        let services = state.storeSettings.services;
+        const serviceIndex = services.findIndex((obj) => obj.id === ids.serviceId);
+        let service = serviceIndex !== -1 ? services[serviceIndex] : null;
+
+        console.log('updateService.fulfilled data...............', data);
+        console.log('updateService.fulfilled ids...............', ids);
+        console.log('updateService.fulfilled type...............', type);
+        if (type === 'service') {
+          if (!service) {
+            services.push(data);
+          } else {
+            service = { ...service, ...data };
+            services[serviceIndex] = service;
+          }
+        } else if (type === 'subService') {
+          if (service) {
+            let subService = null;
+            let subServiceIndex = null;
+            let subServices = [];
+            if (service.sub_services) {
+              subServices = service.sub_services;
+              subServiceIndex = subServices.findIndex((obj) => obj.id === ids.subServiceId);
+              subService = subServiceIndex !== -1 ? subServices[subServiceIndex] : null;
+            }
+            if (!subService) {
+              subServices.push(data);
+              service = { ...service, sub_services: subServices };
+            } else {
+              subService = { ...subService, ...data };
+              subServices[subServiceIndex] = subService;
+            }
+            services[serviceIndex] = service;
+          }
+        }
+        state.storeSettings.services = services;
+        state.isLoading = false;
+      })
+      .addCase(updateService.rejected, (state, action) => {
         state.isLoading = false;
       });
   },

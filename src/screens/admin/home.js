@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, TouchableOpacity, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, ScrollView, LogBox } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { Colors, Default, Fonts } from '@constants/style';
 import Style from '@theme/style';
@@ -22,6 +22,8 @@ const AdminHome = () => {
   function tr(key) {
     return t(`homeScreen:${key}`);
   }
+  LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
+  LogBox.ignoreAllLogs(); //Ignore all log notifications
   const [notification, setNotification] = useState(null);
   const [notificationNumber, setNotificationNumber] = useState(0);
   const { userData } = useAuthContext();
