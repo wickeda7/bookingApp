@@ -373,6 +373,11 @@ export const Fonts = {
     fontSize: 14,
     fontFamily: 'Bold',
   },
+  Info14Medium: {
+    color: Colors.info,
+    fontSize: 14,
+    fontFamily: 'Medium',
+  },
 };
 
 export const Default = {

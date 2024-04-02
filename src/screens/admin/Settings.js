@@ -24,6 +24,7 @@ import StoreImages from '@components/admin/StoreImages';
 import { formatPhoneNumber } from '@utils/helper';
 import { STATES, totalDeduct, tipDeduct } from '@constants/settings';
 import StoreHours from '@components/admin/StoreHours';
+import StoreServices from '@components/admin/StoreServices';
 const Settings = (props) => {
   const { t, i18n } = useTranslation();
   const isRtl = i18n.dir() === 'rtl';
@@ -38,12 +39,14 @@ const Settings = (props) => {
   const { isLoading, storeSettings } = useSelector((state) => state.adminHome);
   const [storeInfo, setStoreInfo] = useState({});
   const [formattedNumber, setFormattedNumber] = useState();
+  const [pScroll, setPScroll] = useState(true);
 
   useEffect(() => {
     dispatch(getSettings({ storeId }));
   }, []);
   useEffect(() => {
     if (Object.keys(storeSettings).length === 0) return;
+
     setStoreInfo(storeSettings);
     setFormattedNumber(formatPhoneNumber(storeSettings.phone));
   }, [storeSettings]);
@@ -78,7 +81,7 @@ const Settings = (props) => {
         </TouchableOpacity>
         <Text style={Fonts.White16Bold}>{tr('settings')}</Text>
       </View>
-      <ScrollView nestedScrollEnabled={true} style={{ width: '100%' }}>
+      <ScrollView style={{ width: '100%' }}>
         <View style={[Style.contentContainer, { flexDirection: isRtl ? 'row-reverse' : 'row' }]}>
           <View
             style={[
@@ -255,7 +258,7 @@ const Settings = (props) => {
               },
             ]}
           >
-            <Text style={Fonts.Black14Medium}>{tr('Commission')}</Text>
+            <Text style={Fonts.Black14Medium}>{tr('commission')}</Text>
             <Dropdown
               style={[Style.inputStyle]}
               placeholderStyle={styles.placeholderStyle}
@@ -316,7 +319,20 @@ const Settings = (props) => {
             { marginVertical: Default.fixPadding * 0.5, marginHorizontal: Default.fixPadding * 1.5 },
           ]}
         ></View>
-        <View style={[Style.contentContainer, { flexDirection: isRtl ? 'row-reverse' : 'row' }]}></View>
+        <View style={[Style.contentContainer, { flexDirection: isRtl ? 'row-reverse' : 'row' }]}>
+          <StoreServices storeInfo={storeInfo} setStoreInfo={setStoreInfo} />
+
+          <View
+            style={[
+              {
+                flex: 1,
+                flexDirection: 'column',
+              },
+            ]}
+          >
+            <Text style={Fonts.Black14Medium}>{tr('Commission')}</Text>
+          </View>
+        </View>
       </ScrollView>
     </KeyboardAvoidingView>
   );

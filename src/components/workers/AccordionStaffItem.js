@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View, Modal } from 'react-native';
-import Style from '@theme/style';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-import Maticons from 'react-native-vector-icons/MaterialCommunityIcons';
-import Micons from 'react-native-vector-icons/MaterialIcons';
 import { Colors, Default, Fonts } from '@constants/style';
 import { useTranslation } from 'react-i18next';
 import moment from 'moment';

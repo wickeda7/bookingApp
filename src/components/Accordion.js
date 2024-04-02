@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
 import AccordionItem from '@components/admin/AccordionItem';
 import AccordionStaffItem from '@components/workers/AccordionStaffItem';
+import AccordionStoreServicesItem from '@components/admin/AccordionStoreServicesItem';
+import AccordionStoreSubServicesItem from '@components/admin/AccordionStoreSubServicesItem';
 import { LayoutAnimation } from 'react-native';
 
 const Components = {
   admin: AccordionItem,
   staff: AccordionStaffItem,
+  service: AccordionStoreServicesItem,
+  subService: AccordionStoreSubServicesItem,
 };
 function Accordion({ data, type, navigation }) {
   const [expandedIndex, setExpandedIndex] = useState(null);

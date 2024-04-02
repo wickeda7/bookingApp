@@ -112,7 +112,7 @@ export default StyleSheet.create({
     fontWeight: 'bold',
   },
   borderGreen: {
-    borderColor: 'green',
+    borderColor: Colors.success,
     borderWidth: 1,
   },
   borderBlue: {
@@ -129,6 +129,10 @@ export default StyleSheet.create({
   },
   borderInfo: {
     borderColor: Colors.info,
+    borderWidth: 1,
+  },
+  borderlightPrimary: {
+    borderColor: Colors.lightPrimary,
     borderWidth: 1,
   },
 });

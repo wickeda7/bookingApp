@@ -90,7 +90,16 @@
     "setHours": "Set Hours",
     "save": "Save",
     "hoursError": "Please select week days",
-    "dayClosed": "Day Closed"
+    "dayClosed": "Day Closed",
+    "service": "Services",
+    "addServiceCat": "Add Service Category",
+    "addService": "Add Service",
+    "addServiceSubCat": "Service Sub Category",
+    "name": "Name",
+    "price": "Price",
+    "enable": "Enable",
+    "option": "Option",
+    "description": "Description"
   },
   "reports": {
     "reports": "Reports",
