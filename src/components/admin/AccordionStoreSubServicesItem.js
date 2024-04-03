@@ -15,7 +15,7 @@ const AccordionStoreSubServicesItem = ({ children, item, expanded, onHeaderPress
   function tr(key) {
     return t(`homeScreen:${key}`);
   }
-  const { storeServices, setStoreServices } = useAdminContext();
+  const { storeServices, setStoreServices, setSubCategoryId } = useAdminContext();
   const [catEdit, setCatEdit] = useState(false);
   const [name, setName] = useState('');
   const dispatch = useDispatch();
@@ -43,15 +43,36 @@ const AccordionStoreSubServicesItem = ({ children, item, expanded, onHeaderPress
     setCatEdit(!catEdit);
   };
   const handleRemoveCat = () => {
-    let service = storeServices.find((ser) => ser.id === item.service);
-    let subs = [...service.sub_services];
-    subs = subs.filter((sub) => sub.id !== item.id);
-    service = { ...service, sub_services: subs };
-    setStoreServices(storeServices.map((i) => (i.id === item.service ? service : i)));
+    let services = [...storeServices];
+    const catId = item.service ? item.service : serviceId;
+    const id = item.id;
+    if (id !== 'new') {
+      dispatch(
+        updateService({ ids: { serviceId: catId, subServiceId: id }, data: { delete: true }, type: 'subService' })
+      );
+    } else {
+      let service = services.find((ser) => ser.id === catId);
+      let subs = [...service.sub_services];
+      subs = subs.filter((sub) => sub.id !== id);
+      service = { ...service, sub_services: subs };
+      setStoreServices(storeServices.map((i) => (i.id === catId ? service : i)));
+    }
   };
   return (
     <View style={[styles.section]}>
-      <TouchableOpacity style={[styles.accordHeader]} onPress={onHeaderPress}>
+      <TouchableOpacity
+        style={[styles.accordHeader]}
+        onPress={() => {
+          onHeaderPress();
+          if (expanded) {
+            setSubCategoryId(null);
+          } else {
+            if (item.id !== 'new') {
+              setSubCategoryId(item.id);
+            }
+          }
+        }}
+      >
         <View style={[{ flex: 4, flexDirection: 'row', alignItems: 'center' }]}>
           {catEdit ? (
             <>
@@ -79,26 +100,25 @@ const AccordionStoreSubServicesItem = ({ children, item, expanded, onHeaderPress
               >
                 <Icon name={'check-square-o'} size={14} color={Colors.success} />
               </TouchableOpacity>
-              {item.id === 'new' && (
-                <TouchableOpacity
-                  style={[
-                    Style.buttonStyle,
-                    Style.borderRed,
-                    {
-                      paddingVertical: 0,
-                      marginTop: 0,
-                      flexDirection: 'row',
-                      width: 22,
-                      height: 22,
-                      marginHorizontal: 5,
-                      borderRadius: 5,
-                    },
-                  ]}
-                  onPress={handleRemoveCat}
-                >
-                  <Icon name={'remove'} size={14} color={Colors.red} />
-                </TouchableOpacity>
-              )}
+
+              <TouchableOpacity
+                style={[
+                  Style.buttonStyle,
+                  Style.borderRed,
+                  {
+                    paddingVertical: 0,
+                    marginTop: 0,
+                    flexDirection: 'row',
+                    width: 22,
+                    height: 22,
+                    marginHorizontal: 5,
+                    borderRadius: 5,
+                  },
+                ]}
+                onPress={handleRemoveCat}
+              >
+                <Icon name={'remove'} size={14} color={Colors.red} />
+              </TouchableOpacity>
             </>
           ) : (
             <>

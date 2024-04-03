@@ -67,8 +67,8 @@ export const updateService = createAsyncThunk('updateService', async ({ ids, dat
     } else if (type === 'subService') {
       prevIds.subServiceId = prevIds.subServiceId === 'new' ? res.data.id : prevIds.subServiceId;
     }
-    console.log('updateService res', res.data.id, prevIds);
-
+    console.log('updateService res', res, res.data.id, prevIds);
+    if (data.delete) return { ids: prevIds, data: { ...data, id: res.data.id }, type };
     return { ids: prevIds, data: { ...res.data.attributes, id: res.data.id }, type };
   } catch (error) {
     console.log('error adminHomeAction uploadStoreImage', error.response.data.error.message);

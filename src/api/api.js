@@ -373,6 +373,7 @@ export const api = {
   updateService: async (ids, data, type) => {
     let url = '';
     let id = '';
+
     if (type === 'service') {
       url = `${STRAPIURL}/api/services`;
       id = ids.serviceId;
@@ -385,6 +386,14 @@ export const api = {
     }
 
     try {
+      if (data.delete) {
+        console.log('ids', ids);
+        console.log('data', data);
+        console.log('type', type);
+
+        const response = await axios.delete(`${url}/${id}`);
+        return response.data;
+      }
       if (id !== 'new') {
         const response = await axios.put(`${url}/${id}`, { data });
         return response.data;

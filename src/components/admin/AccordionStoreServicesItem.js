@@ -14,7 +14,7 @@ const AccordionStoreServicesItem = ({ children, item, expanded, onHeaderPress })
   function tr(key) {
     return t(`homeScreen:${key}`);
   }
-  const { storeServices, setStoreServices } = useAdminContext();
+  const { storeServices, setStoreServices, setCategoryId } = useAdminContext();
   const [catEdit, setCatEdit] = useState(false);
   const [name, setName] = useState('');
   const dispatch = useDispatch();
@@ -43,12 +43,34 @@ const AccordionStoreServicesItem = ({ children, item, expanded, onHeaderPress })
     setCatEdit(!catEdit);
   };
   const handleRemoveCat = () => {
-    let services = storeServices.filter((sub) => sub.id !== item.id);
-    setStoreServices(services);
+    let services = [...storeServices];
+    const index = services.findIndex((ser) => ser.id === item.id);
+    if (index > -1) {
+      if (item.id !== 'new') {
+        dispatch(updateService({ ids: { serviceId: item.id }, data: { delete: true }, type: 'service' }));
+      } else {
+        services.splice(index, 1);
+        setStoreServices(services);
+      }
+    }
+
+    //
   };
   return (
     <View style={[styles.section]}>
-      <TouchableOpacity style={[styles.accordHeader]} onPress={onHeaderPress}>
+      <TouchableOpacity
+        style={[styles.accordHeader]}
+        onPress={() => {
+          onHeaderPress();
+          if (expanded) {
+            setCategoryId(null);
+          } else {
+            if (item.id !== 'new') {
+              setCategoryId(item.id);
+            }
+          }
+        }}
+      >
         <View style={[{ flex: 4, flexDirection: 'row', alignItems: 'center' }]}>
           {catEdit ? (
             <>
@@ -76,26 +98,24 @@ const AccordionStoreServicesItem = ({ children, item, expanded, onHeaderPress })
               >
                 <Icon name={'check-square-o'} size={14} color={Colors.success} />
               </TouchableOpacity>
-              {item.id === 'new' && (
-                <TouchableOpacity
-                  style={[
-                    Style.buttonStyle,
-                    Style.borderRed,
-                    {
-                      paddingVertical: 0,
-                      marginTop: 0,
-                      flexDirection: 'row',
-                      width: 22,
-                      height: 22,
-                      marginHorizontal: 5,
-                      borderRadius: 5,
-                    },
-                  ]}
-                  onPress={handleRemoveCat}
-                >
-                  <Icon name={'remove'} size={14} color={Colors.red} />
-                </TouchableOpacity>
-              )}
+              <TouchableOpacity
+                style={[
+                  Style.buttonStyle,
+                  Style.borderRed,
+                  {
+                    paddingVertical: 0,
+                    marginTop: 0,
+                    flexDirection: 'row',
+                    width: 22,
+                    height: 22,
+                    marginHorizontal: 5,
+                    borderRadius: 5,
+                  },
+                ]}
+                onPress={handleRemoveCat}
+              >
+                <Icon name={'remove'} size={14} color={Colors.red} />
+              </TouchableOpacity>
             </>
           ) : (
             <>

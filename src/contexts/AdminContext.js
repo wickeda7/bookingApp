@@ -7,6 +7,8 @@ const AdminContextProvider = ({ children }) => {
   const [selectedImage, setSelectedImage] = useState(null);
  const [storeInfo, setStoreInfo] = useState({});
  const [storeServices, setStoreServices] = useState([]);
+ const [categoryId, setCategoryId] = useState(null);
+ const [subCategoryId, setSubCategoryId] = useState(null);
   const value = {
     visible,
     setVisible,
@@ -17,7 +19,11 @@ const AdminContextProvider = ({ children }) => {
     storeInfo,
     setStoreInfo,
     storeServices,
-    setStoreServices
+    setStoreServices,
+    categoryId,
+    setCategoryId,
+    subCategoryId,
+    setSubCategoryId
   };
 
   return <AdminContext.Provider value={value}>{children}</AdminContext.Provider>;

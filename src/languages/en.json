@@ -98,9 +98,10 @@
     "name": "Name",
     "price": "Price",
     "enable": "Enable",
-    "option": "Option",
+    "option": "Price Option",
     "description": "Description",
-    "submit": "Submit"
+    "submit": "Submit",
+    "delete": "Delete"
   },
   "reports": {
     "reports": "Reports",

@@ -306,9 +306,25 @@ export const adminHomeSlice = createSlice({
         const serviceIndex = services.findIndex((obj) => obj.id === ids.serviceId);
         let service = serviceIndex !== -1 ? services[serviceIndex] : null;
 
-        console.log('updateService.fulfilled data...............', data);
-        console.log('updateService.fulfilled ids...............', ids);
-        console.log('updateService.fulfilled type...............', type);
+        // console.log('updateService.fulfilled ids...............', ids);
+        // console.log('updateService.fulfilled type...............', type);
+        if (data.delete) {
+          //console.log('updateService.fulfilled data...............', data);
+          if (type === 'service') {
+            services.splice(serviceIndex, 1);
+          } else if (type === 'subService') {
+            if (service) {
+              let subServices = service.sub_services;
+              const subServiceIndex = subServices.findIndex((obj) => obj.id === ids.subServiceId);
+              subServices.splice(subServiceIndex, 1);
+              service = { ...service, sub_services: subServices };
+              services[serviceIndex] = service;
+            }
+          }
+          state.storeSettings.services = services;
+          state.isLoading = false;
+          return;
+        }
         if (type === 'service') {
           if (!service) {
             services.push(data);
@@ -321,6 +337,7 @@ export const adminHomeSlice = createSlice({
             let subService = null;
             let subServiceIndex = null;
             let subServices = [];
+
             if (service.sub_services) {
               subServices = service.sub_services;
               subServiceIndex = subServices.findIndex((obj) => obj.id === ids.subServiceId);
