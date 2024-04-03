@@ -63,13 +63,12 @@ export const updateService = createAsyncThunk('updateService', async ({ ids, dat
     let prevIds = ids;
     const prevId = data.id;
     const res = await stores.updateService(ids, data, type);
-    console.log('updateService res', res, data, prevIds);
     if (type === 'service') {
-      prevIds.serviceId = prevIds.serviceId === 'new' ? res.data.id : prevIds.serviceId;
+      prevIds.serviceId = res.data.id;
     } else if (type === 'subService') {
-      prevIds.subServiceId = prevIds.subServiceId === 'new' ? res.data.id : prevIds.subServiceId;
-    } else if (type === 'items' && !data.delete) {
-      return { ids: prevIds, data: { ...res.data.attributes, id: res.data.id }, prevId: prevId, type };
+      prevIds.subServiceId = res.data.id;
+    } else if (type === 'items') {
+      prevIds.itemId = res.data.id;
     }
     if (data.delete) return { ids: prevIds, data: { ...data, id: res.data.id }, type };
     return { ids: prevIds, data: { ...res.data.attributes, id: res.data.id }, type };

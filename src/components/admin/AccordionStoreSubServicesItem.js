@@ -15,14 +15,14 @@ const AccordionStoreSubServicesItem = ({ children, item, expanded, onHeaderPress
   function tr(key) {
     return t(`homeScreen:${key}`);
   }
-  const { storeServices, setStoreServices, setSubCategoryId } = useAdminContext();
+  const { storeServices, setStoreServices, categoryId, subCategoryId, setSubCategoryId } = useAdminContext();
   const [catEdit, setCatEdit] = useState(false);
   const [name, setName] = useState('');
   const dispatch = useDispatch();
   const preName = item.name;
 
   useEffect(() => {
-    setCatEdit(item.id === 'new');
+    setCatEdit(item.service !== undefined);
     setName(item.name);
   }, [item]);
   useEffect(() => {
@@ -33,9 +33,9 @@ const AccordionStoreSubServicesItem = ({ children, item, expanded, onHeaderPress
   useEffect(() => {
     if (catEdit) return;
     if (preName !== name && name !== '' && name !== ' ') {
-      const catId = item.service ? item.service : serviceId;
       const data = { name, service: item.service };
-      dispatch(updateService({ ids: { serviceId: catId, subServiceId: item.id }, data, type: 'subService' }));
+      const subServiceId = item.service === undefined ? item.id : 'new';
+      dispatch(updateService({ ids: { serviceId: categoryId, subServiceId: subServiceId }, data, type: 'subService' }));
     }
   }, [catEdit]);
 

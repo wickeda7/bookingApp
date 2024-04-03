@@ -28,7 +28,6 @@ const StoreServiceItem = ({ item, catId }) => {
   }, [item]);
 
   const onChange = () => {
-    console.log('onChange storeServices', data, categoryId, subCategoryId, storeServices);
     let services = [...storeServices];
     let categoryIndex = services.findIndex((item) => item.id === categoryId);
     let category = { ...services[categoryIndex] };
@@ -69,7 +68,6 @@ const StoreServiceItem = ({ item, catId }) => {
   }, []);
 
   const handleCheckBox = (value) => {
-    console.log('handleCheckBox');
     debouncedCallback();
     setToggleCheckBox(value);
 
@@ -86,7 +84,6 @@ const StoreServiceItem = ({ item, catId }) => {
     const index = services.findIndex((ser) => ser.id === categoryId);
     if (index > -1) {
       if (!item.service && !item.sub_service) {
-        console.log('remove1111', item.service);
         dispatch(
           updateService({
             ids: { serviceId: categoryId, subServiceId: subCategoryId, itemId: data.id },
@@ -114,13 +111,12 @@ const StoreServiceItem = ({ item, catId }) => {
         setStoreServices(services);
       }
     }
-    console.log('remove', item, catId, categoryId, subCategoryId);
   };
   const handleSave = () => {
-    console.log('handleSave', data, catId, categoryId, subCategoryId);
+    let itemId = data.service === undefined && data.sub_service === undefined ? data.id : 'new';
     dispatch(
       updateService({
-        ids: { serviceId: categoryId, subServiceId: subCategoryId, itemId: data.id },
+        ids: { serviceId: categoryId, subServiceId: subCategoryId, itemId },
         data: data,
         type: 'items',
       })

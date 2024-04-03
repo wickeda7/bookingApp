@@ -6,12 +6,10 @@ import { Colors, Default, Fonts } from '@constants/style';
 import Style from '@theme/style';
 import { useTranslation } from 'react-i18next';
 import StoreServiceItem from './StoreServiceItem';
-import AntIcon from 'react-native-vector-icons/AntDesign';
 import Accordion from '@components/Accordion';
 import { useAdminContext } from '@contexts/AdminContext';
 import { updateService } from '@redux/actions/adminHomeAction';
 import { useDispatch } from 'react-redux';
-
 const AccordionStoreBody = ({ catId, serviceId }) => {
   const { t, i18n } = useTranslation();
   const isRtl = i18n.dir() === 'rtl';
@@ -20,7 +18,6 @@ const AccordionStoreBody = ({ catId, serviceId }) => {
   }
   const { storeServices, setStoreServices, categoryId, subCategoryId } = useAdminContext();
   const dispatch = useDispatch();
-  console.log('storeServices!!!!!', storeServices);
   let service = {};
   if (serviceId) {
     const sub = storeServices.find((item) => item.id === serviceId);
@@ -39,13 +36,14 @@ const AccordionStoreBody = ({ catId, serviceId }) => {
   }, [service]);
 
   const handleServiceCategory = () => {
+    const uid = uuid.v4();
     let subs = [...subservices];
-    subs = [{ name: '', id: 'new', service: catId }, ...subs];
+    subs = [{ name: '', id: uid, service: catId }, ...subs];
     service = { ...service, sub_services: subs };
     setStoreServices(storeServices.map((item) => (item.id === catId ? service : item)));
   };
+
   const handleAddService = () => {
-    console.log('add service', categoryId, subCategoryId);
     const uid = uuid.v4();
 
     let services = [...storeServices];
@@ -53,23 +51,19 @@ const AccordionStoreBody = ({ catId, serviceId }) => {
     let category = { ...services[categoryIndex] };
     let subCategory = [];
     let itemsArr = [];
-    console.log('add category', category);
     const newService = { description: '', name: '', price: 0, priceOption: '', enable: true, id: uid };
 
     if (subCategoryId) {
       newService.sub_service = subCategoryId;
       let catSubSerives = [...category.sub_services];
-      console.log('add catSubSerives', catSubSerives);
       let subCategoryIndex = catSubSerives.findIndex((item) => item.id === subCategoryId);
       subCategory = { ...catSubSerives[subCategoryIndex] };
 
-      itemsArr = [...subCategory.items];
+      itemsArr = subCategory.items || [];
       itemsArr = [newService, ...itemsArr];
       subCategory = { ...subCategory, items: itemsArr };
       catSubSerives[subCategoryIndex] = subCategory;
       category.sub_services = catSubSerives;
-      console.log('category', category);
-      console.log('add category.sub_services[subCategoryIndex]', catSubSerives);
       services[categoryIndex] = category;
       //setStoreServices(services);
     } else {
@@ -80,30 +74,8 @@ const AccordionStoreBody = ({ catId, serviceId }) => {
       services[categoryIndex] = category;
     }
     setStoreServices(services);
-    console.log('add categoryId', categoryId, catId);
-    console.log('add subCategoryId', subCategoryId, serviceId);
-    console.log('add service', categoryId, subCategoryId, newService, storeServices, services);
   };
 
-  const handleSubmit = () => {
-    let services = [...storeServices];
-    let categoryIndex = services.findIndex((item) => item.id === categoryId);
-    let category = { ...services[categoryIndex] };
-    let itemsArr = [];
-    if (subCategoryId) {
-    } else {
-      itemsArr = category.items;
-      console.log('handleSubmit', itemsArr);
-      dispatch(
-        updateService({ ids: { serviceId: categoryId, subServiceId: subCategoryId }, data: itemsArr, type: 'items' })
-      );
-      // itemsArr = itemsArr.map((i) => (i.id === data.id ? data : i));
-      // category = { ...category, items: itemsArr };
-      // services = services.map((i) => (i.id === categoryId ? category : i));
-      // setStoreServices(services);
-    }
-    console.log('handleSubmit', storeServices, categoryId, subCategoryId);
-  };
   return (
     <>
       <View style={[Style.divider, { marginVertical: Default.fixPadding }]} />

@@ -14,7 +14,6 @@ const StoreServices = () => {
     return t(`settings:${key}`);
   }
   const { storeInfo, storeServices, setStoreServices } = useAdminContext();
-  console.log('storeSettings!!!!!!!', storeInfo, storeServices);
 
   const handleServiceCategory = () => {
     const uid = uuid.v4();

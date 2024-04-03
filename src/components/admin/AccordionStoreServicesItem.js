@@ -21,7 +21,6 @@ const AccordionStoreServicesItem = ({ children, item, expanded, onHeaderPress })
   const preName = item.name;
 
   useEffect(() => {
-    console.log('item', item);
     setCatEdit(item.store !== undefined);
     setName(item.name);
   }, [item]);
@@ -36,8 +35,9 @@ const AccordionStoreServicesItem = ({ children, item, expanded, onHeaderPress })
     if (catEdit) return;
     if (preName !== name && name !== '' && name !== ' ') {
       const data = { name, store: item.store };
-      console.log('updateService', data);
-      dispatch(updateService({ ids: { serviceId: item.id }, data, type: 'service' }));
+      const serviceId = item.store === undefined ? item.id : 'new';
+
+      dispatch(updateService({ ids: { serviceId }, data, type: 'service' }));
     }
   }, [catEdit]);
 

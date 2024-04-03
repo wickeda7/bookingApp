@@ -303,10 +303,10 @@ export const adminHomeSlice = createSlice({
       })
       .addCase(updateService.fulfilled, (state, action) => {
         const { ids, data, type } = action.payload;
+
         let services = state.storeSettings.services;
         const serviceIndex = services.findIndex((obj) => obj.id === ids.serviceId);
         let service = serviceIndex !== -1 ? services[serviceIndex] : null;
-        console.log('updateService.fulfilled action.payload...............', action.payload);
         if (data.delete) {
           if (type === 'service') {
             services.splice(serviceIndex, 1);
@@ -335,7 +335,6 @@ export const adminHomeSlice = createSlice({
               subService = { ...subService, items };
               service.sub_services[subIndex] = subService;
               services[serviceIndex] = service;
-              console.log('updateService.fulfilled action.payload Delete...............', action.payload);
             }
           }
           state.storeSettings.services = services;
@@ -371,10 +370,9 @@ export const adminHomeSlice = createSlice({
           }
         } else if (type === 'items') {
           if (service) {
-            const catId = ids.serviceId;
             const subId = ids.subServiceId;
             if (!subId) {
-              let items = service.items;
+              let items = service.items || [];
               const itemIndex = items.findIndex((obj) => obj.id === data.id);
               if (itemIndex === -1) {
                 items.unshift(data);
@@ -386,7 +384,7 @@ export const adminHomeSlice = createSlice({
             } else {
               let subIndex = service.sub_services.findIndex((item) => item.id === subId);
               let subService = { ...service.sub_services[subIndex] };
-              let itemsArr = subService.items;
+              let itemsArr = subService.items || [];
               const itemIndex = itemsArr.findIndex((i) => i.id === data.id);
               if (itemIndex === -1) {
                 itemsArr.unshift(data);
