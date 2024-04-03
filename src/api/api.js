@@ -1,7 +1,7 @@
 import axios from 'axios';
 /// always update the STRAPIURL to utils/socket.js too
-//import { STRAPIURL } from '@env';
-const STRAPIURL = 'http://localhost:1337';
+import { STRAPIURL } from '@env';
+//const STRAPIURL = 'http://localhost:1337';
 import moment from 'moment';
 export const api = {
   getUser: async (email) => {
@@ -387,12 +387,33 @@ export const api = {
 
     try {
       if (data.delete) {
-        console.log('ids', ids);
-        console.log('data', data);
-        console.log('type', type);
-
+        // console.log('ids', ids);
+        // console.log('data', data);
+        // console.log('type', type);
+        // console.log('url', url);
+        // console.log('id', id);
+        // return;
         const response = await axios.delete(`${url}/${id}`);
         return response.data;
+      }
+      if (type === 'items') {
+        if (data.service || data.sub_service) {
+          delete data.id;
+          const response = await axios.post(`${url}`, { data });
+          return response.data;
+        } else {
+          delete data.id;
+          console.log('data', data);
+          console.log('ids', ids);
+          console.log('url', url);
+          console.log('id', id);
+          const response = await axios.put(`${url}/${id}`, { data });
+          console.log('id', id);
+          return response.data;
+        }
+        // const response = await axios.post(`${url}`, { data });
+
+        return;
       }
       if (id !== 'new') {
         const response = await axios.put(`${url}/${id}`, { data });

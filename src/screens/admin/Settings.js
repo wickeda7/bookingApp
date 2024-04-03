@@ -318,7 +318,9 @@ const Settings = (props) => {
             { marginVertical: Default.fixPadding * 0.5, marginHorizontal: Default.fixPadding * 1.5 },
           ]}
         ></View>
-        <View style={[Style.contentContainer, { flexDirection: isRtl ? 'row-reverse' : 'row' }]}>
+        <View
+          style={[Style.contentContainer, { flexDirection: isRtl ? 'row-reverse' : 'row', alignItems: 'flex-start' }]}
+        >
           <StoreServices />
 
           <View

@@ -21,7 +21,8 @@ const AccordionStoreServicesItem = ({ children, item, expanded, onHeaderPress })
   const preName = item.name;
 
   useEffect(() => {
-    setCatEdit(item.id === 'new');
+    console.log('item', item);
+    setCatEdit(item.store !== undefined);
     setName(item.name);
   }, [item]);
 
@@ -35,6 +36,7 @@ const AccordionStoreServicesItem = ({ children, item, expanded, onHeaderPress })
     if (catEdit) return;
     if (preName !== name && name !== '' && name !== ' ') {
       const data = { name, store: item.store };
+      console.log('updateService', data);
       dispatch(updateService({ ids: { serviceId: item.id }, data, type: 'service' }));
     }
   }, [catEdit]);
@@ -46,11 +48,11 @@ const AccordionStoreServicesItem = ({ children, item, expanded, onHeaderPress })
     let services = [...storeServices];
     const index = services.findIndex((ser) => ser.id === item.id);
     if (index > -1) {
-      if (item.id !== 'new') {
-        dispatch(updateService({ ids: { serviceId: item.id }, data: { delete: true }, type: 'service' }));
-      } else {
+      if (item.store) {
         services.splice(index, 1);
         setStoreServices(services);
+      } else {
+        dispatch(updateService({ ids: { serviceId: item.id }, data: { delete: true }, type: 'service' }));
       }
     }
 

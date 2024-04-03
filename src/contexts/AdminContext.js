@@ -5,10 +5,10 @@ const AdminContextProvider = ({ children }) => {
   const [visible, setVisible] = useState(false);
   const [imageType, setImageType] = useState('');
   const [selectedImage, setSelectedImage] = useState(null);
- const [storeInfo, setStoreInfo] = useState({});
- const [storeServices, setStoreServices] = useState([]);
- const [categoryId, setCategoryId] = useState(null);
- const [subCategoryId, setSubCategoryId] = useState(null);
+  const [storeInfo, setStoreInfo] = useState({});
+  const [storeServices, setStoreServices] = useState([]);
+  const [categoryId, setCategoryId] = useState(null);
+  const [subCategoryId, setSubCategoryId] = useState(null);
   const value = {
     visible,
     setVisible,
@@ -23,7 +23,7 @@ const AdminContextProvider = ({ children }) => {
     categoryId,
     setCategoryId,
     subCategoryId,
-    setSubCategoryId
+    setSubCategoryId,
   };
 
   return <AdminContext.Provider value={value}>{children}</AdminContext.Provider>;

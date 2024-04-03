@@ -18,6 +18,7 @@ const initialState = {
   message: '',
   invoice: {},
   storeSettings: {},
+
   status: null,
 };
 function tr(key) {
@@ -305,11 +306,8 @@ export const adminHomeSlice = createSlice({
         let services = state.storeSettings.services;
         const serviceIndex = services.findIndex((obj) => obj.id === ids.serviceId);
         let service = serviceIndex !== -1 ? services[serviceIndex] : null;
-
-        // console.log('updateService.fulfilled ids...............', ids);
-        // console.log('updateService.fulfilled type...............', type);
+        console.log('updateService.fulfilled action.payload...............', action.payload);
         if (data.delete) {
-          //console.log('updateService.fulfilled data...............', data);
           if (type === 'service') {
             services.splice(serviceIndex, 1);
           } else if (type === 'subService') {
@@ -319,6 +317,25 @@ export const adminHomeSlice = createSlice({
               subServices.splice(subServiceIndex, 1);
               service = { ...service, sub_services: subServices };
               services[serviceIndex] = service;
+            }
+          } else if (type === 'items') {
+            const catId = ids.serviceId;
+            const subId = ids.subServiceId;
+            if (!subId) {
+              let items = service.items;
+              const itemIndex = items.findIndex((obj) => obj.id === ids.itemId);
+              items.splice(itemIndex, 1);
+              service = { ...service, items };
+              services[serviceIndex] = service;
+            } else {
+              let subIndex = service.sub_services.findIndex((sub) => sub.id === subId);
+              let subService = { ...service.sub_services[subIndex] };
+              let items = [...subService.items];
+              items = items.filter((i) => i.id !== data.id);
+              subService = { ...subService, items };
+              service.sub_services[subIndex] = subService;
+              services[serviceIndex] = service;
+              console.log('updateService.fulfilled action.payload Delete...............', action.payload);
             }
           }
           state.storeSettings.services = services;
@@ -351,6 +368,36 @@ export const adminHomeSlice = createSlice({
               subServices[subServiceIndex] = subService;
             }
             services[serviceIndex] = service;
+          }
+        } else if (type === 'items') {
+          if (service) {
+            const catId = ids.serviceId;
+            const subId = ids.subServiceId;
+            if (!subId) {
+              let items = service.items;
+              const itemIndex = items.findIndex((obj) => obj.id === data.id);
+              if (itemIndex === -1) {
+                items.unshift(data);
+              } else {
+                items[itemIndex] = data;
+              }
+              service = { ...service, items };
+              services[serviceIndex] = service;
+            } else {
+              let subIndex = service.sub_services.findIndex((item) => item.id === subId);
+              let subService = { ...service.sub_services[subIndex] };
+              let itemsArr = subService.items;
+              const itemIndex = itemsArr.findIndex((i) => i.id === data.id);
+              if (itemIndex === -1) {
+                itemsArr.unshift(data);
+              } else {
+                itemsArr[itemIndex] = data;
+              }
+              //itemsArr = itemsArr.map((i) => (i.id === data.id ? data : i));
+              subService = { ...subService, items: itemsArr };
+              service.sub_services[subIndex] = subService;
+              services[serviceIndex] = service;
+            }
           }
         }
         state.storeSettings.services = services;

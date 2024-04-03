@@ -1,5 +1,6 @@
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
+import uuid from 'react-native-uuid';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { Colors, Default, Fonts } from '@constants/style';
 import Style from '@theme/style';
@@ -8,6 +9,9 @@ import StoreServiceItem from './StoreServiceItem';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import Accordion from '@components/Accordion';
 import { useAdminContext } from '@contexts/AdminContext';
+import { updateService } from '@redux/actions/adminHomeAction';
+import { useDispatch } from 'react-redux';
+
 const AccordionStoreBody = ({ catId, serviceId }) => {
   const { t, i18n } = useTranslation();
   const isRtl = i18n.dir() === 'rtl';
@@ -15,6 +19,7 @@ const AccordionStoreBody = ({ catId, serviceId }) => {
     return t(`settings:${key}`);
   }
   const { storeServices, setStoreServices, categoryId, subCategoryId } = useAdminContext();
+  const dispatch = useDispatch();
   console.log('storeServices!!!!!', storeServices);
   let service = {};
   if (serviceId) {
@@ -26,6 +31,7 @@ const AccordionStoreBody = ({ catId, serviceId }) => {
 
   const [itemData, setItemData] = useState(service?.items ? service.items : []);
   const [subservices, setSubservices] = useState(service?.sub_services ? service.sub_services : []);
+
   useEffect(() => {
     setItemData(service?.items ? service.items : []);
     if (!service?.sub_services) return;
@@ -39,13 +45,17 @@ const AccordionStoreBody = ({ catId, serviceId }) => {
     setStoreServices(storeServices.map((item) => (item.id === catId ? service : item)));
   };
   const handleAddService = () => {
+    console.log('add service', categoryId, subCategoryId);
+    const uid = uuid.v4();
+
     let services = [...storeServices];
     let categoryIndex = services.findIndex((item) => item.id === categoryId);
     let category = { ...services[categoryIndex] };
     let subCategory = [];
+    let itemsArr = [];
     console.log('add category', category);
-    const newService = { description: '', name: 'NEW', price: 0, priceOption: '', enable: true, id: 'new' };
-    console.log('add subCategoryId', subCategoryId);
+    const newService = { description: '', name: '', price: 0, priceOption: '', enable: true, id: uid };
+
     if (subCategoryId) {
       newService.sub_service = subCategoryId;
       let catSubSerives = [...category.sub_services];
@@ -53,21 +63,46 @@ const AccordionStoreBody = ({ catId, serviceId }) => {
       let subCategoryIndex = catSubSerives.findIndex((item) => item.id === subCategoryId);
       subCategory = { ...catSubSerives[subCategoryIndex] };
 
-      let subs = [...subCategory.items];
-      subs = [newService, ...subs];
-      subCategory = { ...subCategory, items: subs };
+      itemsArr = [...subCategory.items];
+      itemsArr = [newService, ...itemsArr];
+      subCategory = { ...subCategory, items: itemsArr };
       catSubSerives[subCategoryIndex] = subCategory;
       category.sub_services = catSubSerives;
       console.log('category', category);
       console.log('add category.sub_services[subCategoryIndex]', catSubSerives);
       services[categoryIndex] = category;
-      setStoreServices(services);
+      //setStoreServices(services);
     } else {
       newService.service = categoryId;
+      itemsArr = category?.items ? category.items : [];
+      itemsArr = [newService, ...itemsArr];
+      category = { ...category, items: itemsArr };
+      services[categoryIndex] = category;
     }
+    setStoreServices(services);
     console.log('add categoryId', categoryId, catId);
     console.log('add subCategoryId', subCategoryId, serviceId);
     console.log('add service', categoryId, subCategoryId, newService, storeServices, services);
+  };
+
+  const handleSubmit = () => {
+    let services = [...storeServices];
+    let categoryIndex = services.findIndex((item) => item.id === categoryId);
+    let category = { ...services[categoryIndex] };
+    let itemsArr = [];
+    if (subCategoryId) {
+    } else {
+      itemsArr = category.items;
+      console.log('handleSubmit', itemsArr);
+      dispatch(
+        updateService({ ids: { serviceId: categoryId, subServiceId: subCategoryId }, data: itemsArr, type: 'items' })
+      );
+      // itemsArr = itemsArr.map((i) => (i.id === data.id ? data : i));
+      // category = { ...category, items: itemsArr };
+      // services = services.map((i) => (i.id === categoryId ? category : i));
+      // setStoreServices(services);
+    }
+    console.log('handleSubmit', storeServices, categoryId, subCategoryId);
   };
   return (
     <>
@@ -130,8 +165,8 @@ const AccordionStoreBody = ({ catId, serviceId }) => {
             <View style={[Style.tableHeader, { flexDirection: 'row', flex: 1 }]}>
               <Text style={[Style.tableHeaderText14Medium, { flex: 4, marginLeft: 0 }]}>{tr('name')}</Text>
               <Text style={[Style.tableHeaderText14Medium, { flex: 1, marginLeft: 0 }]}>{tr('price')}</Text>
-              <Text style={[Style.tableHeaderText14Medium, { flex: 0.5, marginLeft: 0 }]}>{tr('delete')}</Text>
-              <Text style={[Style.tableHeaderText14Medium, { flex: 0.5, marginLeft: 0 }]}> {tr('Enable')}</Text>
+              <Text style={[Style.tableHeaderText14Medium, { flex: 0.5, marginLeft: 0 }]}>{tr('save')}</Text>
+              <Text style={[Style.tableHeaderText14Medium, { flex: 0.5, marginLeft: 0 }]}> {tr('delete')}</Text>
             </View>
           </View>
           <ScrollView showsVerticalScrollIndicator={false}>
@@ -139,26 +174,6 @@ const AccordionStoreBody = ({ catId, serviceId }) => {
               <StoreServiceItem key={index} item={item} catId={catId} />
             ))}
           </ScrollView>
-          <View style={[{ flexDirection: 'row', justifyContent: 'flex-end', marginVertical: 15 }]}>
-            <TouchableOpacity
-              activeOpacity={0.8}
-              onPress={() => {
-                handleSubmit();
-              }}
-              style={[
-                Style.buttonStyle,
-                {
-                  backgroundColor: Colors.info,
-                  marginTop: 0,
-                  flexDirection: 'row',
-                  width: 100,
-                },
-              ]}
-            >
-              <AntIcon size={18} name='upload' color={Colors.white} />
-              <Text style={[{ paddingHorizontal: Default.fixPadding * 0.5 }, Fonts.White14Bold]}>{tr('submit')}</Text>
-            </TouchableOpacity>
-          </View>
         </>
       )}
     </>

@@ -6,6 +6,7 @@ import Style from '@theme/style';
 import { useTranslation } from 'react-i18next';
 import Accordion from '@components/Accordion';
 import { useAdminContext } from '@contexts/AdminContext';
+import uuid from 'react-native-uuid';
 const StoreServices = () => {
   const { t, i18n } = useTranslation();
   const isRtl = i18n.dir() === 'rtl';
@@ -16,7 +17,8 @@ const StoreServices = () => {
   console.log('storeSettings!!!!!!!', storeInfo, storeServices);
 
   const handleServiceCategory = () => {
-    setStoreServices([{ name: '', id: 'new', store: storeInfo.id }, ...storeServices]);
+    const uid = uuid.v4();
+    setStoreServices([{ name: '', id: uid, store: storeInfo.id }, ...storeServices]);
   };
   if (!storeInfo) return null;
   return (
