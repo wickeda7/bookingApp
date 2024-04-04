@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 import * as ImagePicker from 'expo-image-picker';
 import { Colors, Default, Fonts, DefaultImage } from '@constants/style';
 import { useTranslation } from 'react-i18next';
-import { Avatar } from 'react-native-paper';
 import { useAdminContext } from '@contexts/AdminContext';
 import { BottomSheet } from 'react-native-btr';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -37,7 +36,7 @@ const StaffImage = ({ type, data }) => {
   let images = data?.images;
   const id = data.id;
   let image = '';
-  if (type === 'logo') {
+  if (type === 'storeLogo') {
     image = logo ? logo : '';
   }
   const toggleClose = () => {
@@ -50,7 +49,7 @@ const StaffImage = ({ type, data }) => {
   const toastRemoveImage = async () => {
     let newStoreSettings = {};
     const response = await users.deleteImage(selectedImage.id);
-    if (imageType === 'logo') {
+    if (imageType === 'storeLogo') {
       newStoreSettings = { ...storeSettings, logo: null };
     } else {
       const newImages = images.filter((item) => item.id !== selectedImage.id);
@@ -111,7 +110,7 @@ const StaffImage = ({ type, data }) => {
           onPress={() => {
             setSelectedImage(item);
             setShowModal(true);
-            setImageType('images');
+            // setImageType('images');
           }}
         >
           <Image source={{ uri: `${item.url}` }} style={{ width: 110, height: 101 }} />
@@ -122,7 +121,7 @@ const StaffImage = ({ type, data }) => {
 
   return (
     <View style={{ marginTop: Default.fixPadding, flexDirection: 'row' }}>
-      {type === 'logo' ? (
+      {type === 'storeLogo' ? (
         <>{image !== '' && <Image source={{ uri: `${image}` }} style={{ width: 120, height: 120 }} />}</>
       ) : (
         <FlatList
@@ -143,7 +142,7 @@ const StaffImage = ({ type, data }) => {
               marginHorizontal: Default.fixPadding * 2,
             }}
           >
-            {imageType === 'logo' ? tr('changeLogo') : tr('addmage')}
+            {imageType === 'storeLogo' ? tr('changeLogo') : tr('addmage')}
           </Text>
           <TouchableOpacity
             activeOpacity={0.8}
@@ -189,7 +188,7 @@ const StaffImage = ({ type, data }) => {
               {tr('gallery')}
             </Text>
           </TouchableOpacity>
-          {imageType === 'logo' && (
+          {imageType === 'storeLogo' && (
             <TouchableOpacity
               activeOpacity={0.8}
               onPress={toastRemoveImage}

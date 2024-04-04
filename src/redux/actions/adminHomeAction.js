@@ -91,3 +91,13 @@ export const updateEmployee = createAsyncThunk('updateEmployee', async ({ userId
     throw error;
   }
 });
+export const updateStoreInfo = createAsyncThunk('updateStoreInfo', async ({ storeId, data }) => {
+  try {
+    const res = await stores.updateStoreInfo(storeId, data);
+    const { id, attributes } = res.data;
+    return { ...attributes, id };
+  } catch (error) {
+    console.log('error staffAction updateStoreInfo', error);
+    throw error;
+  }
+});

@@ -19,7 +19,7 @@ import { useAuthContext } from '@contexts/AuthContext';
 import { useAdminContext } from '@contexts/AdminContext';
 import Loader from '@components/loader';
 import { useDispatch, useSelector } from 'react-redux';
-import { getSettings } from '@redux/actions/adminHomeAction';
+import { getSettings, updateStoreInfo } from '@redux/actions/adminHomeAction';
 import StoreImages from '@components/admin/StoreImages';
 import { formatPhoneNumber } from '@utils/helper';
 import { STATES, totalDeduct, tipDeduct } from '@constants/settings';
@@ -40,7 +40,6 @@ const Settings = (props) => {
   const dispatch = useDispatch();
   const { isLoading, storeSettings } = useSelector((state) => state.adminHome);
   const [formattedNumber, setFormattedNumber] = useState();
-  console.log('storeSettings', storeSettings);
 
   useEffect(() => {
     dispatch(getSettings({ storeId }));
@@ -63,6 +62,16 @@ const Settings = (props) => {
   const toggleClose = (type) => {
     setVisible(!visible);
     setImageType(type);
+  };
+
+  const handleSave = () => {
+    let { about, address, city, email, name, phone, state, zip, totalDeduct, tipDeduct, hours } = storeInfo;
+    hours = hours.map((item) => {
+      delete item.selected;
+      return item;
+    });
+    const data = { about, address, city, email, name, phone, state, zip, totalDeduct, tipDeduct, hours };
+    dispatch(updateStoreInfo({ storeId, data }));
   };
   const renderItem = (item) => {
     return (
@@ -94,7 +103,7 @@ const Settings = (props) => {
             ]}
           >
             <Text style={Fonts.Black14Medium}>{tr('logo')}</Text>
-            <StoreImages type={'logo'} data={storeSettings} />
+            <StoreImages type={'storeLogo'} data={storeSettings} />
             <TouchableOpacity
               style={{
                 position: 'absolute',
@@ -109,7 +118,7 @@ const Settings = (props) => {
               }}
               onPress={() => {
                 setSelectedImage(storeSettings.logo);
-                toggleClose('logo');
+                toggleClose('storeLogo');
               }}
             >
               <Ionicons style={{ color: Colors.white }} name='camera-outline' size={20} />
@@ -325,6 +334,102 @@ const Settings = (props) => {
         >
           <StoreServices />
           <SettingsEmplyee />
+        </View>
+        <View
+          style={[
+            Style.divider,
+            { marginVertical: Default.fixPadding * 0.5, marginHorizontal: Default.fixPadding * 1.5 },
+          ]}
+        ></View>
+        <View
+          style={[Style.contentContainer, { flexDirection: isRtl ? 'row-reverse' : 'row', alignItems: 'flex-start' }]}
+        >
+          <View
+            style={[
+              {
+                flex: 1.3,
+                flexDirection: 'column',
+                position: 'relative',
+
+                padding: 10,
+              },
+            ]}
+          >
+            <Text style={Fonts.Black14Medium}>{tr('images')}</Text>
+            <View style={{ marginTop: 15 }}>
+              <StoreImages type={'storeImages'} data={storeSettings} />
+            </View>
+
+            <TouchableOpacity
+              style={{
+                position: 'absolute',
+                alignItems: 'center',
+                justifyContent: 'center',
+                height: 35,
+                width: 35,
+                top: -5,
+                left: 60,
+                borderRadius: 20,
+                backgroundColor: Colors.primary,
+              }}
+              onPress={() => {
+                toggleClose('storeImages');
+              }}
+            >
+              <Ionicons style={{ color: Colors.white }} name='camera-outline' size={20} />
+            </TouchableOpacity>
+          </View>
+          <View
+            style={[
+              {
+                flex: 1,
+                flexDirection: 'column',
+
+                padding: 10,
+              },
+            ]}
+          >
+            <Text style={Fonts.Black14Medium}>{tr('about')}</Text>
+            <TextInput
+              style={[Style.inputStyle, { minHeight: 150 }]}
+              numberOfLines={10}
+              multiline={true}
+              onChangeText={(text) => handleOnchange(text, 'about')}
+              selectionColor={Colors.primary}
+              value={storeInfo.about}
+            />
+          </View>
+        </View>
+        <View
+          style={[
+            Style.divider,
+            { marginVertical: Default.fixPadding * 2.5, marginHorizontal: Default.fixPadding * 1.5 },
+          ]}
+        ></View>
+        <View
+          style={[
+            Style.contentContainer,
+            {
+              flexDirection: isRtl ? 'row-reverse' : 'row',
+              alignItems: 'flex-start',
+              justifyContent: 'flex-end',
+              paddingVertical: 30,
+            },
+          ]}
+        >
+          <TouchableOpacity
+            onPress={() => handleSave()}
+            style={[
+              Style.buttonStyle,
+              {
+                backgroundColor: Colors.primary,
+                width: 110,
+                marginRight: 30,
+              },
+            ]}
+          >
+            <Text style={Fonts.White18Bold}>{tr('save')}</Text>
+          </TouchableOpacity>
         </View>
       </ScrollView>
     </KeyboardAvoidingView>

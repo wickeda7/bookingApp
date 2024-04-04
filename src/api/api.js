@@ -165,7 +165,21 @@ export const api = {
     }
   },
   uploadProfileImage: async (id, file, type) => {
-    let field = type ? type : 'profileImg';
+    let field = '';
+    switch (type) {
+      case 'storeLogo':
+        field = 'logo';
+        break;
+      case 'storeImages':
+        field = 'images';
+        break;
+      case 'profileImg':
+        field = 'profileImg';
+        break;
+      default:
+        field = 'images';
+        break;
+    }
     try {
       const url = `${STRAPIURL}/api/upload`;
       const formData = new FormData();
@@ -177,7 +191,7 @@ export const api = {
         type: 'image/jpeg',
         uri: file,
       });
-      if (type === 'logo') {
+      if (type === 'storeLogo' || type === 'storeImages') {
         formData.append('ref', 'api::store.store');
       } else {
         formData.append('ref', 'api::user-info.user-info');
@@ -400,6 +414,16 @@ export const api = {
       }
     } catch (error) {
       console.log('error updateService API', error);
+      throw error;
+    }
+  },
+  updateStoreInfo: async (id, data) => {
+    const url = `${STRAPIURL}/api/stores`;
+    try {
+      const response = await axios.put(`${url}/${id}`, { data });
+      return response.data;
+    } catch (error) {
+      console.log('error updateStoreInfo API', error);
       throw error;
     }
   },

@@ -105,7 +105,9 @@
     "employee": "Employees",
     "salary": "Salary",
     "tips": "Tips",
-    "staff": "Staff"
+    "staff": "Staff",
+    "images": "Images",
+    "about": "About"
   },
   "reports": {
     "reports": "Reports",

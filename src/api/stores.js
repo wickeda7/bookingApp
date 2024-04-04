@@ -62,4 +62,13 @@ export const stores = {
       throw error;
     }
   },
+  updateStoreInfo: async (id, data) => {
+    try {
+      const response = await api.updateStoreInfo(id, data);
+      return response;
+    } catch (error) {
+      console.log('error updateStoreInfo', error);
+      throw error;
+    }
+  },
 };

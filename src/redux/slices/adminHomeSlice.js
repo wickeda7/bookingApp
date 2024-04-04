@@ -8,6 +8,7 @@ import {
   uploadStoreImage,
   updateService,
   updateEmployee,
+  updateStoreInfo,
 } from '../actions/adminHomeAction';
 import { t } from 'i18next';
 const initialState = {
@@ -287,7 +288,7 @@ export const adminHomeSlice = createSlice({
       })
       .addCase(uploadStoreImage.fulfilled, (state, action) => {
         const { imageType, newImage } = action.payload;
-        if (imageType === 'logo') {
+        if (imageType === 'storeLogo') {
           state.storeSettings.logo = newImage;
         } else {
           state.storeSettings.images.unshift(newImage);
@@ -423,6 +424,19 @@ export const adminHomeSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(updateEmployee.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = true;
+      })
+      .addCase(updateStoreInfo.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(updateStoreInfo.fulfilled, (state, action) => {
+        let storeSettings = { ...state.storeSettings };
+        storeSettings = { ...storeSettings, ...action.payload };
+        state.storeSettings = storeSettings;
+        state.isLoading = false;
+      })
+      .addCase(updateStoreInfo.rejected, (state, action) => {
         state.isLoading = false;
         state.error = true;
       });
