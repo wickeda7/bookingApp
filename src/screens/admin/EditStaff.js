@@ -25,6 +25,9 @@ import { useAuthContext } from '@contexts/AuthContext';
 import Loader from '@components/loader';
 import { useSelector, useDispatch } from 'react-redux';
 import { updateUser, updateEmail } from '@redux/actions/staffAction';
+import { Dropdown } from 'react-native-element-dropdown';
+import NumericInput from '@wwdrew/react-native-numeric-textinput';
+import { totalDeduct, tipDeduct } from '@constants/settings';
 
 const EditStaff = (props) => {
   const { navigation, route } = props;
@@ -62,7 +65,6 @@ const EditStaff = (props) => {
 
     setImageErr(false);
   }, [ranNum]);
-
   const parseReduceData = (id) => {
     const temp = staffData.find((item) => item.id === id);
     setUser(temp);
@@ -94,7 +96,6 @@ const EditStaff = (props) => {
 
     const id = userInfo.id;
     const data = { ...userInfo };
-    console.log('data', data.phoneNumber);
     if (data.phoneNumber !== null && data.phoneNumber !== '') {
       data.phoneNumber = data.phoneNumber.replace(/[^\d\+]/g, '');
     }
@@ -118,6 +119,15 @@ const EditStaff = (props) => {
     setUser(null);
     props.navigation.navigate('Staff');
   };
+
+  const renderItem = (item) => {
+    return (
+      <View style={[styles.item, { zIndex: 2 }]}>
+        <Text style={styles.textItem}>{item.label}</Text>
+      </View>
+    );
+  };
+
   if (!userInfo) return <Loader visible={true} />;
   return (
     <KeyboardAvoidingView style={Style.mainContainer} behavior={Platform.OS === 'ios' ? 'padding' : null}>
@@ -202,6 +212,70 @@ const EditStaff = (props) => {
           ]}
         ></View>
         <View style={[Style.contentContainer, { flexDirection: isRtl ? 'row-reverse' : 'row' }]}>
+          <View
+            style={{
+              flex: 1,
+              flexDirection: 'column',
+            }}
+          >
+            <Text style={Fonts.Black14Medium}>{tr('commission')}</Text>
+            <Dropdown
+              style={[Style.inputStyle, styles.dropdown]}
+              placeholderStyle={styles.placeholderStyle}
+              selectedTextStyle={styles.selectedTextStyle}
+              inputSearchStyle={styles.inputSearchStyle}
+              data={totalDeduct}
+              maxHeight={300}
+              labelField='label'
+              valueField='value'
+              placeholder='Select'
+              value={userInfo.totalDeduct}
+              onChange={(item) => {
+                handleOnchange(item.value, 'totalDeduct');
+              }}
+              renderItem={renderItem}
+            />
+          </View>
+          <View
+            style={{
+              flex: 1,
+              flexDirection: 'column',
+            }}
+          >
+            <Text style={Fonts.Black14Medium}>{tr('salary')}</Text>
+            <NumericInput
+              type='decimal'
+              decimalPlaces={2}
+              value={userInfo.perDay}
+              onUpdate={(value) => handleOnchange(value, 'perDay')}
+              style={[Style.inputStyle]}
+              selectionColor={Colors.primary}
+            />
+          </View>
+          <View
+            style={{
+              flex: 1,
+              flexDirection: 'column',
+            }}
+          >
+            <Text style={Fonts.Black14Medium}>{tr('tipDeduction')}</Text>
+            <Dropdown
+              style={[Style.inputStyle, styles.dropdown]}
+              placeholderStyle={styles.placeholderStyle}
+              selectedTextStyle={styles.selectedTextStyle}
+              inputSearchStyle={styles.inputSearchStyle}
+              data={tipDeduct}
+              maxHeight={300}
+              labelField='label'
+              valueField='value'
+              placeholder='Select'
+              value={userInfo.tipDeduct}
+              onChange={(item) => {
+                handleOnchange(item.value, 'tipDeduct');
+              }}
+              renderItem={renderItem}
+            />
+          </View>
           <View
             style={{
               flex: 1,
@@ -498,4 +572,28 @@ const EditStaff = (props) => {
 
 export default EditStaff;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  dropdown: {
+    backgroundColor: 'transparent',
+    width: '90%',
+    //borderBottomWidth: 1,
+  },
+  borderNormal: {
+    borderColor: '#ccc',
+  },
+  borderError: {
+    borderColor: 'red',
+  },
+  selectedTextStyle: { fontSize: 14 },
+  item: {
+    paddingHorizontal: 17,
+    paddingVertical: 8,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  textItem: {
+    flex: 1,
+    fontSize: 14,
+  },
+});

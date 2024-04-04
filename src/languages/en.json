@@ -159,7 +159,10 @@
     "inputError": "Phone number is required and Access code is required. Please click generate access code.",
     "unverifiedStaff": "Unverified Staff",
     "resend": "Resend",
-    "updatedAt": "Updated Date"
+    "updatedAt": "Updated Date",
+    "salary": "Salary",
+    "commission": "Commission",
+    "tipDeduction": "Tip Deduction"
   },
   "incomeScreen": {
     "income": "Income Report By Each Day",
