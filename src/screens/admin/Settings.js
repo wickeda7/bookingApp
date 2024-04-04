@@ -11,6 +11,7 @@ import {
 import React, { useEffect, useState } from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { Dropdown } from 'react-native-element-dropdown';
+import CheckBox from '@react-native-community/checkbox';
 import { Colors, Fonts, Default } from '@constants/style';
 import Style from '@theme/style';
 import MyStatusBar from '@components/myStatusBar';
@@ -22,7 +23,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getSettings, updateStoreInfo } from '@redux/actions/adminHomeAction';
 import StoreImages from '@components/admin/StoreImages';
 import { formatPhoneNumber } from '@utils/helper';
-import { STATES, totalDeduct, tipDeduct } from '@constants/settings';
+import { STATES, totalDeduct, tipDeduct, weekDays } from '@constants/settings';
 import StoreHours from '@components/admin/StoreHours';
 import StoreServices from '@components/admin/StoreServices';
 import SettingsEmplyee from '@components/admin/SettingsEmplyee';
@@ -32,6 +33,7 @@ const Settings = (props) => {
   function tr(key) {
     return t(`settings:${key}`);
   }
+  const payperiods = { 1: false, 2: false, 4: false };
   const { navigation, route } = props;
   const { userData } = useAuthContext();
   const { visible, setVisible, setImageType, setSelectedImage, storeInfo, setStoreInfo, setStoreServices } =
@@ -40,6 +42,7 @@ const Settings = (props) => {
   const dispatch = useDispatch();
   const { isLoading, storeSettings } = useSelector((state) => state.adminHome);
   const [formattedNumber, setFormattedNumber] = useState();
+  const [toggleCheckBox, setToggleCheckBox] = useState(payperiods);
 
   useEffect(() => {
     dispatch(getSettings({ storeId }));
@@ -49,7 +52,39 @@ const Settings = (props) => {
     setStoreServices(storeSettings.services || []);
     setStoreInfo(storeSettings);
     setFormattedNumber(formatPhoneNumber(storeSettings.phone));
+    const payperiod = storeSettings.payperiod;
+    if (payperiod) {
+      const toggle = Object.keys(toggleCheckBox).reduce((acc, key) => {
+        if (key === payperiod) {
+          acc[key] = true;
+        } else {
+          acc[key] = false;
+        }
+        return acc;
+      }, {});
+      setToggleCheckBox(toggle);
+    }
   }, [storeSettings]);
+
+  const handleCheckBox = (week) => {
+    const toggle = Object.keys(toggleCheckBox).reduce((acc, key) => {
+      if (key === week) {
+        acc[key] = !toggleCheckBox[key];
+      } else {
+        acc[key] = false;
+      }
+      return acc;
+    }, {});
+    setToggleCheckBox(toggle);
+    let payperiod = null;
+    for (const [key, value] of Object.entries(toggle)) {
+      if (value) {
+        payperiod = key;
+        console.log(`${key}: ${value}`);
+      }
+    }
+    setStoreInfo((prevState) => ({ ...prevState, payperiod }));
+  };
 
   const handleOnchange = (text, input) => {
     setStoreInfo((prevState) => ({ ...prevState, [input]: text }));
@@ -65,12 +100,42 @@ const Settings = (props) => {
   };
 
   const handleSave = () => {
-    let { about, address, city, email, name, phone, state, zip, totalDeduct, tipDeduct, hours } = storeInfo;
+    let {
+      about,
+      address,
+      city,
+      email,
+      name,
+      phone,
+      state,
+      zip,
+      totalDeduct,
+      tipDeduct,
+      hours,
+      payperiod,
+      payperiod_date,
+    } = storeInfo;
     hours = hours.map((item) => {
       delete item.selected;
       return item;
     });
-    const data = { about, address, city, email, name, phone, state, zip, totalDeduct, tipDeduct, hours };
+    const data = {
+      about,
+      address,
+      city,
+      email,
+      name,
+      phone,
+      state,
+      zip,
+      totalDeduct,
+      tipDeduct,
+      hours,
+      payperiod,
+      payperiod_date,
+    };
+    console.log('data', data);
+
     dispatch(updateStoreInfo({ storeId, data }));
   };
   const renderItem = (item) => {
@@ -263,8 +328,8 @@ const Settings = (props) => {
           <View
             style={[
               {
-                flex: 1,
                 flexDirection: 'column',
+                width: 150,
               },
             ]}
           >
@@ -289,8 +354,8 @@ const Settings = (props) => {
           <View
             style={[
               {
-                flex: 1,
                 flexDirection: 'column',
+                width: 150,
               },
             ]}
           >
@@ -312,6 +377,67 @@ const Settings = (props) => {
               renderItem={renderItem}
             />
           </View>
+          <View
+            style={[
+              {
+                flexDirection: 'column',
+                width: 520,
+              },
+            ]}
+          >
+            <Text style={Fonts.Black14Medium}>{tr('payperiod')}</Text>
+            <View style={{ flexDirection: 'row', marginTop: 7 }}>
+              <CheckBox
+                value={toggleCheckBox[1]}
+                onValueChange={() => {
+                  handleCheckBox('1');
+                }}
+                style={{ transform: [{ scaleX: 0.8 }, { scaleY: 0.8 }] }}
+              />
+              <Text style={{ paddingTop: 5, fontSize: 13, marginRight: 10 }}>Every Week</Text>
+              <CheckBox
+                value={toggleCheckBox[2]}
+                onValueChange={() => {
+                  handleCheckBox('2');
+                }}
+                style={{ transform: [{ scaleX: 0.8 }, { scaleY: 0.8 }] }}
+              />
+              <Text style={{ paddingTop: 5, fontSize: 13, marginRight: 10 }}>Every 2 Weeks</Text>
+              <CheckBox
+                value={toggleCheckBox[4]}
+                onValueChange={() => {
+                  handleCheckBox('4');
+                }}
+                style={{ transform: [{ scaleX: 0.8 }, { scaleY: 0.8 }] }}
+              />
+              <Text style={{ paddingTop: 5, fontSize: 13, marginRight: 10 }}>Every 4 Weeks</Text>
+              <Text style={{ paddingTop: 5, fontSize: 13, marginRight: 10 }}>On</Text>
+              <Dropdown
+                style={[Style.inputStyle, { width: 120 }]}
+                placeholderStyle={styles.placeholderStyle}
+                selectedTextStyle={styles.selectedTextStyle}
+                inputSearchStyle={styles.inputSearchStyle}
+                data={weekDays}
+                maxHeight={300}
+                labelField='label'
+                valueField='value'
+                placeholder='Select'
+                value={storeInfo.payperiod_date}
+                onChange={(item) => {
+                  handleOnchange(item.value, 'payperiod_date');
+                }}
+                renderItem={renderItem}
+              />
+            </View>
+          </View>
+        </View>
+        <View
+          style={[
+            Style.divider,
+            { marginVertical: Default.fixPadding * 0.5, marginHorizontal: Default.fixPadding * 1.5 },
+          ]}
+        ></View>
+        <View style={[Style.contentContainer, { flexDirection: isRtl ? 'row-reverse' : 'row' }]}>
           <View
             style={[
               {

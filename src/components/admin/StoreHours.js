@@ -143,7 +143,7 @@ const StoreHours = () => {
         </TouchableOpacity>
         {error && <Text style={{ color: Colors.red }}>{tr('hoursError')}</Text>}
       </View>
-      <View style={[Style.inputStyle, { flexDirection: 'row', paddingTop: 5, height: 60 }]}>
+      <View style={[Style.inputStyle, { flexDirection: 'row', paddingTop: 5, height: 60, width: '80%' }]}>
         {hoursArr.map((item, index) => {
           return <RenderHours item={item} key={index} handleStoreHours={handleStoreHours} setError={setError} />;
         })}
