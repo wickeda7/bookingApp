@@ -101,7 +101,11 @@
     "option": "Price Option",
     "description": "Description",
     "submit": "Submit",
-    "delete": "Delete"
+    "delete": "Delete",
+    "employee": "Employees",
+    "salary": "Salary",
+    "tips": "Tips",
+    "staff": "Staff"
   },
   "reports": {
     "reports": "Reports",

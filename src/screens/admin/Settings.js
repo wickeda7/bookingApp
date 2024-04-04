@@ -25,6 +25,7 @@ import { formatPhoneNumber } from '@utils/helper';
 import { STATES, totalDeduct, tipDeduct } from '@constants/settings';
 import StoreHours from '@components/admin/StoreHours';
 import StoreServices from '@components/admin/StoreServices';
+import SettingsEmplyee from '@components/admin/SettingsEmplyee';
 const Settings = (props) => {
   const { t, i18n } = useTranslation();
   const isRtl = i18n.dir() === 'rtl';
@@ -39,6 +40,7 @@ const Settings = (props) => {
   const dispatch = useDispatch();
   const { isLoading, storeSettings } = useSelector((state) => state.adminHome);
   const [formattedNumber, setFormattedNumber] = useState();
+  console.log('storeSettings', storeSettings);
 
   useEffect(() => {
     dispatch(getSettings({ storeId }));
@@ -322,17 +324,7 @@ const Settings = (props) => {
           style={[Style.contentContainer, { flexDirection: isRtl ? 'row-reverse' : 'row', alignItems: 'flex-start' }]}
         >
           <StoreServices />
-
-          <View
-            style={[
-              {
-                flex: 1,
-                flexDirection: 'column',
-              },
-            ]}
-          >
-            <Text style={Fonts.Black14Medium}>{tr('Commission')}</Text>
-          </View>
+          <SettingsEmplyee />
         </View>
       </ScrollView>
     </KeyboardAvoidingView>

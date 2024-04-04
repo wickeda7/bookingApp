@@ -77,3 +77,17 @@ export const updateService = createAsyncThunk('updateService', async ({ ids, dat
     throw error.response.data.error.message;
   }
 });
+export const updateEmployee = createAsyncThunk('updateEmployee', async ({ userId, id, data }) => {
+  try {
+    if (id === 'remove') {
+      const res = await users.updateEmail(userId, data);
+    } else {
+      const res = await users.updateUser(id, data);
+    }
+
+    return { userId, data, id };
+  } catch (error) {
+    console.log('error staffAction updateEmployee', error);
+    throw error;
+  }
+});

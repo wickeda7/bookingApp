@@ -7,6 +7,7 @@ import {
   getSettings,
   uploadStoreImage,
   updateService,
+  updateEmployee,
 } from '../actions/adminHomeAction';
 import { t } from 'i18next';
 const initialState = {
@@ -403,6 +404,27 @@ export const adminHomeSlice = createSlice({
       })
       .addCase(updateService.rejected, (state, action) => {
         state.isLoading = false;
+      })
+      .addCase(updateEmployee.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(updateEmployee.fulfilled, (state, action) => {
+        const { userId, data, id } = action.payload;
+        let employees = state.storeSettings.employee;
+        const index = employees.findIndex((obj) => obj.id === userId);
+        if (id === 'remove') {
+          employees.splice(index, 1);
+        } else {
+          let employee = { ...employees[index] };
+          employee = { ...employee, userInfo: { ...employee.userInfo, ...action.payload.data } };
+          employees[index] = employee;
+        }
+        state.storeSettings.employee = employees;
+        state.isLoading = false;
+      })
+      .addCase(updateEmployee.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = true;
       });
   },
 });
