@@ -27,6 +27,7 @@ import { STATES, totalDeduct, tipDeduct, weekDays } from '@constants/settings';
 import StoreHours from '@components/admin/StoreHours';
 import StoreServices from '@components/admin/StoreServices';
 import SettingsEmplyee from '@components/admin/SettingsEmplyee';
+import UnAuthorized from '@components/UnAuthorized';
 const Settings = (props) => {
   const { t, i18n } = useTranslation();
   const isRtl = i18n.dir() === 'rtl';
@@ -138,6 +139,7 @@ const Settings = (props) => {
 
     dispatch(updateStoreInfo({ storeId, data }));
   };
+  if (userData?.role?.id !== 4) return <UnAuthorized />;
   const renderItem = (item) => {
     return (
       <View style={[styles.item, { zIndex: 2 }]}>

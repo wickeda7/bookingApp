@@ -369,7 +369,9 @@ export const api = {
   getInvoiceByDate: async ({ from, to, userId, storeId }) => {
     try {
       const url = `${STRAPIURL}/api/invoices?filters[$and][0][createdAt][$gte]=${from}&filters[$and][1][createdAt][$lt]=${to}&filters[store][id][$eq]=${storeId}&filters[specialist][id][$eq]=${userId}&populate[0]=client&populate[1]=client.userInfo&populate[2]=client.userInfo.profileImg&sort[0]=createdAt:DESC`;
+      //console.log('url', url);
       const response = await axios.get(url);
+      // console.log('response', response.data);
       return response.data.data;
     } catch (error) {
       throw error;
@@ -424,6 +426,15 @@ export const api = {
       return response.data;
     } catch (error) {
       console.log('error updateStoreInfo API', error);
+      throw error;
+    }
+  },
+  getPayrollData: async (storeId, startDate, endDate) => {
+    try {
+      const url = `${STRAPIURL}/api/invoices/payroll/${storeId}/${startDate}/${endDate}`;
+      const response = await axios.get(url);
+      return response.data;
+    } catch (error) {
       throw error;
     }
   },

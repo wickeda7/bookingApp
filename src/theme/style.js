@@ -34,6 +34,13 @@ export default StyleSheet.create({
     padding: Default.fixPadding,
     backgroundColor: Colors.lightPrimary,
   },
+  smTableHeader: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: Default.fixPadding,
+    padding: Default.fixPadding *0.5,
+    backgroundColor: Colors.lightPrimary,
+  },
   tableRow: {
     flexDirection: 'row',
     alignItems: 'center',

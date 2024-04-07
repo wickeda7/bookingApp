@@ -178,6 +178,71 @@ export const getMonday = () => {
     diff = d.getDate() - day + (day == 0 ? -6 : 1); // adjust when day is sunday
   return new Date(d.setDate(diff));
 };
+export const getDateOfMonth = (weekDay, payperiod) => {
+  //payperiod 1 = weekly, 2 = every 2 weeks, 4 = monthly
+  const days = [];
+  const d = new Date();
+  const month = d.getMonth();
+  const year = d.getFullYear();
+  const date = new Date(year, month, 1);
+  while (date.getMonth() === month) {
+    if (date.getDay() === weekDay) {
+      days.push(new Date(date).toISOString().split('T')[0]);
+    }
+    date.setDate(date.getDate() + 1);
+  }
+  if (+payperiod === 1) {
+    const temp = days.filter((day) => {
+      return day >= d.toISOString().split('T')[0];
+    });
+    return temp[0];
+  } else if (+payperiod === 2) {
+    const pay2 = [days[1], days[days.length - 1]];
+    const temp = pay2.filter((day) => {
+      return day >= d.toISOString().split('T')[0];
+    });
+    return temp[0];
+  } else {
+    return days[days.length - 1];
+  }
+};
+export const getPayDate = () => {
+  const d = new Date();
+  var day = d.getDay() || 7;
+  if (day !== 1) d.setHours(-24 * (day - 1));
+  return d;
+};
+export const parseAccordionData = (data) => {
+  const items = [];
+  console.log('check PayrollStaffDetail.js this does not return exact order of data');
+  for (const [key, value] of Object.entries(data)) {
+    let temp = [];
+    let total = 0;
+    let tips = 0;
+    value.map((item) => {
+      total += item.total * 100;
+      tips += item.additional * 100;
+      temp.push(item);
+    });
+    items.push({ title: key, data: temp, total, tips });
+  }
+  return items;
+};
+export const parseAccordionData2 = (data) => {
+  const items = [];
+  for (const item of data) {
+    let temp = [];
+    let total = 0;
+    let tips = 0;
+    item.data.map((item) => {
+      total += item.total * 100;
+      tips += item.additional * 100;
+      temp.push(item);
+    });
+    items.push({ title: item.date, data: temp, total, tips });
+  }
+  return items;
+};
 export default {
   formatPhoneNumber,
   parseReduceData,
@@ -186,5 +251,7 @@ export default {
   parseEvents,
   tableRows,
   parseStrapiBooking,
+  getPayDate,
   getMonday,
+  parseAccordionData2,
 };

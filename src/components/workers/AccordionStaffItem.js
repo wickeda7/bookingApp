@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import moment from 'moment';
 import { formatPrice } from '@utils/helper';
 import AccordionBody from './AccordionBody';
+import PayrollAccordionBody from '../admin/PayrollAccordionBody';
 
 const AccordionStaffItem = ({ children, item, expanded, onHeaderPress, navigation }) => {
   const { t, i18n } = useTranslation();
@@ -29,7 +30,15 @@ const AccordionStaffItem = ({ children, item, expanded, onHeaderPress, navigatio
           <Icon name={expanded ? 'chevron-up' : 'chevron-down'} size={14} color={Colors.primary} />
         </View>
       </TouchableOpacity>
-      {expanded && <AccordionBody data={item.data} navigation={navigation} />}
+      {expanded && (
+        <>
+          {navigation ? (
+            <AccordionBody data={item.data} navigation={navigation} />
+          ) : (
+            <PayrollAccordionBody item={item} />
+          )}
+        </>
+      )}
     </View>
   );
 };

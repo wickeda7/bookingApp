@@ -36,6 +36,22 @@ export const Colors = {
   info: '#0d47a1',
   orange: '#ff8c00',
 };
+export const graphColors = [
+  '#8b76ff',
+  '#7762ff',
+  '#634eff',
+  '#4f3aff',
+  '#3b26f6',
+  '#3b26eb',
+  '#2712d7',
+  '#1300c3',
+  '#1300c3',
+  '#0000af',
+  '#00009b',
+  '#000087',
+  '#000073',
+  '#00005f',
+];
 export const StaffColors = [
   '#cdb4db',
   '#ffc8dd',
@@ -252,7 +268,11 @@ export const Fonts = {
     color: Colors.black,
     fontSize: 14,
   },
-
+  Black14Bold: {
+    color: Colors.black,
+    fontSize: 14,
+    fontFamily: 'Bold',
+  },
   White16Bold: {
     color: Colors.white,
     fontSize: 16,

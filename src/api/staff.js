@@ -1,4 +1,5 @@
 import { api } from '@api/api';
+import { parseAccordionData } from '@utils/helper';
 import moment from 'moment';
 export const staff = {
   getInvoiceByDate: async ({ from, to, userId, storeId }) => {
@@ -18,21 +19,8 @@ export const staff = {
         acc[date] = group;
         return acc;
       }, invoices);
-      let agendaItems = [];
-      for (const [key, value] of Object.entries(invoices)) {
-        let data = [];
-        let total = 0;
-        let tips = 0;
-        value.map((item) => {
-          total += item.total * 100;
-          tips += item.additional * 100;
-          data.push(item);
-        });
-        agendaItems.push({ title: key, data, total, tips });
-      }
-      //   console.log('getInvoiceByDate', agendaItems);
-      //   console.log('getInvoiceByDate tips', tips);
-      //   console.log('getInvoiceByDate total', total);
+      const agendaItems = parseAccordionData(invoices);
+
       return { agendaItems, tips, total };
     } catch (error) {
       console.log('error staff getInvoiceByDate', error.response.data.error.message);

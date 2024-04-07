@@ -3,16 +3,18 @@ import React from 'react';
 import Style from '@theme/style';
 import { DefaultImage } from '@constants/style';
 import { useTranslation } from 'react-i18next';
-const Header = ({ data, type }) => {
+const Header = ({ data, type, styleHeader, styleText }) => {
   const { t, i18n } = useTranslation();
   const isRtl = i18n.dir() === 'rtl';
   function tr(key) {
     return t(`${type}:${key}`);
   }
+  const header = styleHeader ? styleHeader :'tableHeader';
+  const textSize = styleText ? styleText : 'tableHeaderText15Medium'
   return (
-    <View style={[Style.tableHeader, { flexDirection: 'row' }]}>
+    <View style={[Style[header], { flexDirection: 'row' }]}>
       {data.map((item, index) => (
-        <Text key={index} style={[Style.tableHeaderText15Medium, { flex: item.size }]}>
+        <Text key={index} style={[Style[textSize], { flex: item.size }]}>
           {tr(item.name)}
         </Text>
       ))}

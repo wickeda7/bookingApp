@@ -62,11 +62,13 @@ export const STATES = [
 
 // 60,000 x (60/100) = 36,000, 60,000 x (40/100) = 24,000 example of 60/40
 export const totalDeduct = [
+  { label: 'NONE', value: '' },
   { label: '60/40', value: '60/40' },
   { label: '50/50', value: '50/50' },
   { label: '55/45', value: '55/45' },
 ];
 export const tipDeduct = [
+  { label: 'NONE', value: '' },
   { label: '5%', value: '5' },
   { label: '10%', value: '10' },
   { label: '15%', value: '15' },
@@ -91,3 +93,13 @@ export const weekDays = [
   { label: 'Saturday', value: 'Saturday' },
   { label: 'Sunday', value: 'Sunday' },
 ];
+
+export const weekDaysObj = {
+  Sunday: 0,
+  Monday: 1,
+  Tuesday: 2,
+  Wednesday: 3,
+  Thursday: 4,
+  Friday: 5,
+  Saturday: 6,
+};

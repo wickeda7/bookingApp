@@ -110,6 +110,26 @@
     "about": "About",
     "payperiod": "Pay Period"
   },
+  "payroll": {
+    "payroll": "Payroll",
+    "name": "Name",
+    "start": "Start Period",
+    "end": "End Period",
+    "commission": "Commission",
+    "total": "Total",
+    "payrollSummary": "Payroll Summary",
+    "quarterly": "Quarterly",
+    "secondQuarter": "Second Quarter",
+    "thirdQuarter": "Third Quarter",
+    "fourthQuarter": "Fourth Quarter",
+    "monthly": "Monthly",
+    "time": "Time",
+    "service": "Service ",
+    "price": "Price",
+    "additional": "Additional",
+    "hideGraph": "Hide Graph",
+    "showGraph": "Show Graph"
+  },
   "reports": {
     "reports": "Reports",
     "income": "Income Report By Each Day",
