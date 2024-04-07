@@ -234,12 +234,14 @@ export const parseAccordionData2 = (data) => {
     let temp = [];
     let total = 0;
     let tips = 0;
+    let subtotal = 0;
     item.data.map((item) => {
       total += item.total * 100;
       tips += item.additional * 100;
+      subtotal += item.subtotal * 100;
       temp.push(item);
     });
-    items.push({ title: item.date, data: temp, total, tips });
+    items.push({ title: item.date, data: temp, total, tips, subtotal });
   }
   return items;
 };

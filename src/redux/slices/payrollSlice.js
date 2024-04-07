@@ -5,6 +5,7 @@ const initialState = {
   payrollData: [],
   selectedEmployee: null,
   isLoading: false,
+  employeePayroll: [],
 };
 
 export const payrollSlice = createSlice({
@@ -13,6 +14,9 @@ export const payrollSlice = createSlice({
   reducers: {
     setSelectedEmployee: (state, action) => {
       state.selectedEmployee = action.payload;
+    },
+    setEmployeePayroll: (state, action) => {
+      state.employeePayroll = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -29,5 +33,5 @@ export const payrollSlice = createSlice({
       });
   },
 });
-export const { setSelectedEmployee } = payrollSlice.actions;
+export const { setSelectedEmployee, setEmployeePayroll } = payrollSlice.actions;
 export default payrollSlice.reducer;

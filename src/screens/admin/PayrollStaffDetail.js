@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View } from 'react-native';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BarChart } from 'react-native-gifted-charts';
 import { useTranslation } from 'react-i18next';
 import { Colors, Default, Fonts, graphColors } from '@constants/style';
@@ -8,6 +8,7 @@ import moment from 'moment';
 import { parseAccordionData2 } from '@utils/helper';
 import { useSelector, useDispatch } from 'react-redux';
 import Accordion from '@components/Accordion';
+import { setEmployeePayroll } from '@redux/slices/payrollSlice';
 const PayrollStaffDetail = ({ payWeekDates, showGraph }) => {
   const { t, i18n } = useTranslation();
   const isRtl = i18n.dir() === 'rtl';
@@ -22,7 +23,12 @@ const PayrollStaffDetail = ({ payWeekDates, showGraph }) => {
   } = selectedEmployee;
   const commission = userDeduct ? userDeduct : perDay;
   const invoices = payrollData[userId];
-
+  const dispatch = useDispatch();
+  useEffect(() => {
+    if (accordionData.length > 0) {
+      dispatch(setEmployeePayroll(accordionData));
+    }
+  }, [accordionData]);
   const { dates, total, tips } = invoices.reduce(
     (acc, item) => {
       const date = moment(item.testCreatedAt).format('DD');
@@ -85,9 +91,22 @@ const PayrollStaffDetail = ({ payWeekDates, showGraph }) => {
           />
         </>
       )}
-      <View style={{ paddingHorizontal: Default.fixPadding * 2, marginVertical: Default.fixPadding }}>
+      <View
+        style={{
+          paddingHorizontal: Default.fixPadding * 2,
+          marginTop: Default.fixPadding,
+          marginBottom: Default.fixPadding * 10,
+        }}
+      >
         <Accordion data={accordionData} type={'staff'} />
       </View>
+      <View
+        style={{
+          paddingHorizontal: Default.fixPadding * 2,
+          marginTop: Default.fixPadding,
+          marginBottom: Default.fixPadding * 10,
+        }}
+      ></View>
     </>
   );
 };

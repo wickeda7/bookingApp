@@ -13,20 +13,21 @@ const PayrollAccordionBody = ({ item }) => {
     { size: 1, name: 'additional' },
     { size: 1, name: 'total' },
   ];
-  const { data, tips, total } = item;
-  const { subtotal, items } = data.reduce(
+  const { data, tips, total, subtotal } = item;
+  const { items } = data.reduce(
     (acc, item) => {
-      acc.subtotal += item.subtotal * 100;
       const temp = item.services.map((service) => {
-        return { ...service, createdAt: item.createdAt };
+        return { ...service, createdAt: item.createdAt, type: item.type };
       });
       acc.items = [...acc.items, ...temp];
       return acc;
     },
-    { subtotal: 0, items: [] }
+    { items: [] }
   );
   const Item = ({ item }) => {
-    const { name, price, additional, total, createdAt } = item;
+    const { name, price, additional, total, createdAt, type } = item;
+    console.log('type', type);
+    const color = type === 'appointment' ? Colors.info : Colors.success;
     return (
       <>
         <View
@@ -40,19 +41,19 @@ const PayrollAccordionBody = ({ item }) => {
           ]}
         >
           <View style={{ flex: 1 }}>
-            <Text>{moment(createdAt).format(' h:mm A')}</Text>
+            <Text style={{ color: color }}>{moment(createdAt).format(' h:mm A')}</Text>
           </View>
           <View style={{ flex: 3 }}>
-            <Text>{name}</Text>
+            <Text style={{ color: color }}>{name}</Text>
           </View>
           <View style={{ flex: 1 }}>
-            <Text>{formatPrice(price * 100)}</Text>
+            <Text style={{ color: color }}>{formatPrice(price * 100)}</Text>
           </View>
           <View style={{ flex: 1 }}>
-            <Text>{additional && formatPrice(additional * 100)}</Text>
+            <Text style={{ color: color }}>{additional && formatPrice(additional * 100)}</Text>
           </View>
           <View style={{ flex: 1 }}>
-            <Text>{total && formatPrice(total * 100)}</Text>
+            <Text style={{ color: color }}>{total && formatPrice(total * 100)}</Text>
           </View>
         </View>
         <View style={[Fonts.Divider, { backgroundColor: Colors.bord, marginVertical: 5, marginHorizontal: 5 }]}></View>
