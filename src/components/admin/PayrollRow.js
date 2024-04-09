@@ -4,7 +4,7 @@ import { Colors, Default, Fonts } from '@constants/style';
 import Style from '@theme/style';
 import Icon6 from 'react-native-vector-icons/FontAwesome6';
 import { formatPrice } from '@utils/helper';
-const PayrollRow = ({ data, payrollData, totalDeduct, setShowInvoice, handleDisplayInvoice }) => {
+const PayrollRow = ({ data, payrollData, totalDeduct, handleDisplayInvoice }) => {
   const {
     id: userId,
     userInfo: { displayColor, firstName, lastName, perDay, totalDeduct: userDeduct },
@@ -13,9 +13,13 @@ const PayrollRow = ({ data, payrollData, totalDeduct, setShowInvoice, handleDisp
   commission = commission ? commission : perDay;
   commission = commission ? commission : totalDeduct;
   commission = typeof commission === 'number' ? formatPrice(commission * 100) : commission;
-  const total = payrollData[userId].reduce((acc, item) => {
-    return acc + item.subtotal * 100;
-  }, 0);
+  let total = 0;
+
+  if (payrollData[userId]) {
+    total = payrollData[userId].reduce((acc, item) => {
+      return acc + item.subtotal * 100;
+    }, 0);
+  }
   return (
     <>
       <View
@@ -44,7 +48,7 @@ const PayrollRow = ({ data, payrollData, totalDeduct, setShowInvoice, handleDisp
             }}
             style={[
               Style.buttonStyle,
-              Style.borderGreen,
+              Style.borderInfo,
               {
                 paddingVertical: 0,
                 marginTop: 0,
@@ -55,7 +59,7 @@ const PayrollRow = ({ data, payrollData, totalDeduct, setShowInvoice, handleDisp
               },
             ]}
           >
-            <Icon6 name={'file-invoice-dollar'} size={15} color={Colors.success} />
+            <Icon6 name={'file-invoice-dollar'} size={15} color={Colors.info} />
           </TouchableOpacity>
         </View>
       </View>

@@ -108,7 +108,8 @@
     "staff": "Staff",
     "images": "Images",
     "about": "About",
-    "payperiod": "Pay Period"
+    "payperiod": "Pay Period",
+    "amountPerTurn": "Amount Per Turn"
   },
   "payroll": {
     "payroll": "Payroll",

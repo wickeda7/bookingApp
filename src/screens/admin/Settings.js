@@ -114,6 +114,7 @@ const Settings = (props) => {
       hours,
       payperiod,
       payperiod_date,
+      amountPerTurn,
     } = storeInfo;
     hours = hours.map((item) => {
       delete item.selected;
@@ -133,6 +134,7 @@ const Settings = (props) => {
       hours,
       payperiod,
       payperiod_date,
+      amountPerTurn,
     };
 
     dispatch(updateStoreInfo({ storeId, data }));
@@ -325,6 +327,22 @@ const Settings = (props) => {
           ]}
         ></View>
         <View style={[Style.contentContainer, { flexDirection: isRtl ? 'row-reverse' : 'row' }]}>
+          <View
+            style={[
+              {
+                flexDirection: 'column',
+                width: 150,
+              },
+            ]}
+          >
+            <Text style={Fonts.Black14Medium}>{tr('amountPerTurn')}</Text>
+            <TextInput
+              style={Style.inputStyle}
+              onChangeText={(text) => handleOnchange(text, 'amountPerTurn')}
+              selectionColor={Colors.primary}
+              value={storeInfo.amountPerTurn}
+            />
+          </View>
           <View
             style={[
               {

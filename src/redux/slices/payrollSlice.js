@@ -18,9 +18,16 @@ export const payrollSlice = createSlice({
     },
     setEmployeePayroll: (state, action) => {
       if (action.payload && action.payload.length > 0) {
-        const { data, subtotal, tips, specialistId } = action.payload.reduce(
+        const { data, subtotal, tips, specialistId, invoiceIds } = action.payload.reduce(
           (acc, item) => {
             const { title, subtotal: isub, tips: itips, total: itotal, data } = item;
+            const ids = data.reduce((acc, item) => {
+              if (item.payroll === null) {
+                acc.push(item.id);
+              }
+              return acc;
+            }, []);
+            acc.invoiceIds = [...acc.invoiceIds, ...ids];
             const specialistId = data[0].specialist.id;
             acc.subtotal += isub;
             acc.tips += itips;
@@ -28,12 +35,10 @@ export const payrollSlice = createSlice({
             acc.data.push({ subtotal: isub, date: title, tips: itips, specialistId });
             return acc;
           },
-          { data: [], subtotal: 0, tips: 0, specialistId: null }
+          { data: [], subtotal: 0, tips: 0, specialistId: null, invoiceIds: [] }
         );
         state.employeePayroll = data;
-        state.payrollSummary = { subtotal, tips, specialistId };
-      } else {
-        state.employeePayroll2 = [];
+        state.payrollSummary = { subtotal, tips, specialistId, invoiceIds };
       }
     },
   },

@@ -67,12 +67,14 @@ const Payroll = (props) => {
   const startDate = payWeekDates[0];
 
   const handleDisplayInvoice = (userId) => {
+    if (!payrollData[userId]) return;
     if (selectedEmployee && userId === selectedEmployee.id) {
       setShowInvoice(true);
     }
   };
 
   const handlePress = (item) => {
+    if (!payrollData[item.id]) return;
     const newEmployees = employees.map((employee) => {
       if (employee.id === item.id) {
         if (!employee.selected) {

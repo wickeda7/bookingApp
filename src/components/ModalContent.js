@@ -4,6 +4,10 @@ import Style from '@theme/style';
 import { Colors, Default, Fonts } from '@constants/style';
 
 const ModalContent = ({ title, message, setVisible, okAction, okButtonTitle }) => {
+  const onOKPress = () => {
+    setVisible(false);
+    okAction();
+  };
   return (
     <View
       style={{
@@ -49,7 +53,7 @@ const ModalContent = ({ title, message, setVisible, okAction, okButtonTitle }) =
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {
-              okAction();
+              onOKPress();
             }}
           >
             <Text

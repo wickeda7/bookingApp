@@ -10,4 +10,13 @@ export const payroll = {
       throw error;
     }
   },
+  createPayroll: async (data) => {
+    try {
+      const response = await api.createPayroll(data);
+      return response;
+    } catch (error) {
+      console.log('error payrolljs createPayroll', error.response.data.error.message);
+      throw error;
+    }
+  },
 };
