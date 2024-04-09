@@ -438,4 +438,14 @@ export const api = {
       throw error;
     }
   },
+  createPayroll: async (data) => {
+    try {
+      const url = `${STRAPIURL}/api/payrolls`;
+      const response = await axios.post(url, { data });
+      return response.data;
+    } catch (error) {
+      console.log('error createPayroll API', error);
+      throw error;
+    }
+  },
 };
