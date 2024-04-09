@@ -16,12 +16,12 @@ import PayrollRow from '@components/admin/PayrollRow';
 import moment from 'moment';
 import { getDateOfMonth } from '@utils/helper';
 import { getPayrollData } from '@redux/actions/payrollAction';
-import { setSelectedEmployee } from '@redux/slices/payrollSlice';
+import { setSelectedEmployee, setEmployeePayroll } from '@redux/slices/payrollSlice';
 import PayrollCharts from '@components/admin/PayrollCharts';
 import PayrollChartSummary from '@components/admin/PayrollChartSummary';
 import PayrollStaffDetail from './PayrollStaffDetail';
 import { weekDaysObj } from '@constants/settings';
-import { use } from 'i18next';
+import PayrollInvoice from '@components/admin/PayrollInvoice';
 const Payroll = (props) => {
   const { t, i18n } = useTranslation();
   const isRtl = i18n.dir() === 'rtl';
@@ -50,7 +50,6 @@ const Payroll = (props) => {
   const store = userData?.storeAdmin;
   const payperiod = store?.payperiod;
   const payperiod_date = store?.payperiod_date;
-
   const weekDay = weekDaysObj[payperiod_date];
   const payDate = getDateOfMonth(weekDay, payperiod);
 
@@ -68,12 +67,9 @@ const Payroll = (props) => {
   const startDate = payWeekDates[0];
 
   const handleDisplayInvoice = (userId) => {
-    if (userId === selectedEmployee.id) {
+    if (selectedEmployee && userId === selectedEmployee.id) {
       setShowInvoice(true);
     }
-    console.log('userId', userId);
-    console.log('selectedEmployee', selectedEmployee);
-    console.log('showInvoice', showInvoice);
   };
 
   const handlePress = (item) => {
@@ -81,8 +77,11 @@ const Payroll = (props) => {
       if (employee.id === item.id) {
         if (!employee.selected) {
           dispatch(setSelectedEmployee(employee));
+          setShowInvoice(false);
         } else {
           dispatch(setSelectedEmployee(null));
+          dispatch(setEmployeePayroll([]));
+          setShowInvoice(false);
         }
 
         employee = { ...employee, selected: !employee.selected };
@@ -153,74 +152,81 @@ const Payroll = (props) => {
                   <Text style={{ marginLeft: Default.fixPadding }}>{tr('payrollSummary')}</Text>
                 </View>
                 <View style={{ flex: 1.5, flexDirection: 'row' }}>
-                  <TouchableOpacity
-                    onPress={() => handleSetHours()}
-                    style={[
-                      Style.buttonStyle,
-                      Style.borderInfo,
-                      {
-                        paddingVertical: 0,
-                        marginTop: 0,
-                        flexDirection: 'row',
-                        width: 120,
-                        height: 20,
-                        marginHorizontal: 10,
-                      },
-                    ]}
-                  >
-                    <Ionicons name={'calendar-number-outline'} size={15} color={Colors.info} />
-                    <Text style={[{ paddingHorizontal: Default.fixPadding * 0.5, color: Colors.info }]}>
-                      {tr('quarterly')}
-                    </Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={() => handleSetHours()}
-                    style={[
-                      Style.buttonStyle,
-                      Style.borderInfo,
-                      {
-                        paddingVertical: 0,
-                        marginTop: 0,
-                        flexDirection: 'row',
-                        width: 120,
-                        height: 20,
-                        marginHorizontal: 10,
-                      },
-                    ]}
-                  >
-                    <Ionicons name={'calendar-number-outline'} size={15} color={Colors.info} />
-                    <Text style={[{ paddingHorizontal: Default.fixPadding * 0.5, color: Colors.info }]}>
-                      {tr('monthly')}
-                    </Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={() => setShowGraph((prev) => !prev)}
-                    style={[
-                      Style.buttonStyle,
-                      showGraph ? Style.borderRed : Style.borderInfo,
-                      {
-                        paddingVertical: 0,
-                        marginTop: 0,
-                        flexDirection: 'row',
-                        width: 125,
-                        height: 20,
-                        marginHorizontal: 10,
-                      },
-                    ]}
-                  >
-                    <Ionicons
-                      name={showGraph ? 'eye-off-outline' : 'eye-outline'}
-                      size={15}
-                      color={showGraph ? Colors.red : Colors.info}
-                    />
-                    <Text
-                      style={[
-                        { paddingHorizontal: Default.fixPadding * 0.5, color: showGraph ? Colors.red : Colors.info },
-                      ]}
-                    >
-                      {showGraph ? tr('hideGraph') : tr('showGraph')}
-                    </Text>
-                  </TouchableOpacity>
+                  {!showInvoice && (
+                    <>
+                      <TouchableOpacity
+                        onPress={() => handleSetHours()}
+                        style={[
+                          Style.buttonStyle,
+                          Style.borderInfo,
+                          {
+                            paddingVertical: 0,
+                            marginTop: 0,
+                            flexDirection: 'row',
+                            width: 120,
+                            height: 20,
+                            marginHorizontal: 10,
+                          },
+                        ]}
+                      >
+                        <Ionicons name={'calendar-number-outline'} size={15} color={Colors.info} />
+                        <Text style={[{ paddingHorizontal: Default.fixPadding * 0.5, color: Colors.info }]}>
+                          {tr('quarterly')}
+                        </Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        onPress={() => handleSetHours()}
+                        style={[
+                          Style.buttonStyle,
+                          Style.borderInfo,
+                          {
+                            paddingVertical: 0,
+                            marginTop: 0,
+                            flexDirection: 'row',
+                            width: 120,
+                            height: 20,
+                            marginHorizontal: 10,
+                          },
+                        ]}
+                      >
+                        <Ionicons name={'calendar-number-outline'} size={15} color={Colors.info} />
+                        <Text style={[{ paddingHorizontal: Default.fixPadding * 0.5, color: Colors.info }]}>
+                          {tr('monthly')}
+                        </Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        onPress={() => setShowGraph((prev) => !prev)}
+                        style={[
+                          Style.buttonStyle,
+                          showGraph ? Style.borderRed : Style.borderInfo,
+                          {
+                            paddingVertical: 0,
+                            marginTop: 0,
+                            flexDirection: 'row',
+                            width: 125,
+                            height: 20,
+                            marginHorizontal: 10,
+                          },
+                        ]}
+                      >
+                        <Ionicons
+                          name={showGraph ? 'eye-off-outline' : 'eye-outline'}
+                          size={15}
+                          color={showGraph ? Colors.red : Colors.info}
+                        />
+                        <Text
+                          style={[
+                            {
+                              paddingHorizontal: Default.fixPadding * 0.5,
+                              color: showGraph ? Colors.red : Colors.info,
+                            },
+                          ]}
+                        >
+                          {showGraph ? tr('hideGraph') : tr('showGraph')}
+                        </Text>
+                      </TouchableOpacity>
+                    </>
+                  )}
                 </View>
               </View>
             </View>
@@ -229,7 +235,7 @@ const Payroll = (props) => {
             {selectedEmployee ? (
               <>
                 {showInvoice ? (
-                  <Text>Invoice</Text>
+                  <PayrollInvoice employee={selectedEmployee} store={store} startDate={startDate} endDate={endDate} />
                 ) : (
                   <PayrollStaffDetail payWeekDates={payWeekDates} showGraph={showGraph} />
                 )}

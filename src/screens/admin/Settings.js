@@ -81,7 +81,6 @@ const Settings = (props) => {
     for (const [key, value] of Object.entries(toggle)) {
       if (value) {
         payperiod = key;
-        console.log(`${key}: ${value}`);
       }
     }
     setStoreInfo((prevState) => ({ ...prevState, payperiod }));
@@ -135,7 +134,6 @@ const Settings = (props) => {
       payperiod,
       payperiod_date,
     };
-    console.log('data', data);
 
     dispatch(updateStoreInfo({ storeId, data }));
   };

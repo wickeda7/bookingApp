@@ -2,7 +2,6 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import React from 'react';
 import { Colors, Default, Fonts } from '@constants/style';
 import Style from '@theme/style';
-import moment from 'moment';
 import Icon6 from 'react-native-vector-icons/FontAwesome6';
 import { formatPrice } from '@utils/helper';
 const PayrollRow = ({ data, payrollData, totalDeduct, setShowInvoice, handleDisplayInvoice }) => {

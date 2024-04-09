@@ -249,6 +249,11 @@ export const Fonts = {
     fontSize: 15,
     fontFamily: 'Medium',
   },
+  Black15Regular: {
+    color: Colors.black,
+    fontSize: 15,
+    fontFamily: 'Regular',
+  },
   Black14Medium: {
     color: Colors.black,
     fontSize: 14,

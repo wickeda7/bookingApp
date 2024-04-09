@@ -26,7 +26,6 @@ const PayrollAccordionBody = ({ item }) => {
   );
   const Item = ({ item }) => {
     const { name, price, additional, total, createdAt, type } = item;
-    console.log('type', type);
     const color = type === 'appointment' ? Colors.info : Colors.success;
     return (
       <>

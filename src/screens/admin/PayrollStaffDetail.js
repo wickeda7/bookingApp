@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View } from 'react-native';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BarChart } from 'react-native-gifted-charts';
 import { useTranslation } from 'react-i18next';
 import { Colors, Default, Fonts, graphColors } from '@constants/style';
@@ -24,15 +24,16 @@ const PayrollStaffDetail = ({ payWeekDates, showGraph }) => {
   const commission = userDeduct ? userDeduct : perDay;
   const invoices = payrollData[userId];
   const dispatch = useDispatch();
+
   useEffect(() => {
     if (accordionData.length > 0) {
       dispatch(setEmployeePayroll(accordionData));
     }
-  }, [accordionData]);
+  }, [selectedEmployee]);
+
   const { dates, total, tips } = invoices.reduce(
     (acc, item) => {
       const date = moment(item.testCreatedAt).format('DD');
-      //console.log('item', moment(item.testCreatedAt).format('DD'));
       if (!acc.dates[item.testCreatedAt]) {
         acc.dates[item.testCreatedAt] = [];
       }
@@ -60,7 +61,6 @@ const PayrollStaffDetail = ({ payWeekDates, showGraph }) => {
     temp.frontColor = graphColors[index];
     barData.push(temp);
   });
-  console.log('tempAccordionData', tempAccordionData);
   const accordionData = parseAccordionData2(tempAccordionData);
   return (
     <>
