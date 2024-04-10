@@ -11,7 +11,7 @@ import GraphView from '@components/calendar/GraphView';
 import RBSheet from 'react-native-raw-bottom-sheet';
 //https://www.youtube.com/watch?v=F6xtNGtDAJE
 const Income = (props) => {
-  const { routte, navigation } = props;
+  const { route, navigation } = props;
   const { t, i18n } = useTranslation();
 
   const isRtl = i18n.dir() === 'rtl';

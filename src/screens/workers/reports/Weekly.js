@@ -23,19 +23,25 @@ const Weekly = (props) => {
   const { userData } = useAuthContext();
   const dispatch = useDispatch();
   const { invoiceByDate, weeklyTips, weeklyTotal, isLoading } = useSelector((state) => state.staff);
-  const monday = getMonday().toISOString().split('T')[0];
-  const nextMonday = moment(monday).add(7, 'days').toDate().toISOString().split('T')[0];
+  const monday = moment().day(1).format('YYYY-MM-DD');
+  const nextMonday = moment(monday).add(7, 'days').format('YYYY-MM-DD');
   const userId = userData?.id;
   const storeId = userData?.storeEmployee?.id;
+
   useEffect(() => {
     dispatch(getInvoiceByDate({ from: monday, to: nextMonday, userId, storeId }));
   }, []);
+
+  const date = invoiceByDate.length > 0 ? invoiceByDate[0].title : moment().format('YYYY-MM-DD');
   const getMarkedDates = () => {
     const marked = {};
+
+    if (isLoading) return;
+
     invoiceByDate.forEach((item) => {
       // NOTE: only mark dates with data
       if (item.data && item.data.length > 0) {
-        marked[item.title] = { marked: true };
+        marked[item.title] = { marked: true, selected: true };
       } else {
         marked[item.title] = { disabled: true };
       }
@@ -45,11 +51,18 @@ const Weekly = (props) => {
 
   const marked = useRef(getMarkedDates());
   const onDateChanged = (date, source) => {
-    console.log('TimelineCalendarScreen onDateChanged: ', date, source);
+    const currentDate = moment(date).day();
+    if (currentDate === 1) {
+      // if selected date is Monday
+      const fromDate = date;
+      const toDate = moment(date).add(7, 'days').toDate().toISOString().split('T')[0];
+      dispatch(getInvoiceByDate({ from: fromDate, to: toDate, userId, storeId }));
+    }
   };
   const renderItem = useCallback(({ item }) => {
     return <AgendaItem item={item} navigation={props.navigation} />;
   }, []);
+
   const sectionHeader = useCallback(
     (item) => {
       const temp = invoiceByDate.find((x) => x.title === item);
@@ -74,13 +87,12 @@ const Weekly = (props) => {
     },
     [invoiceByDate]
   );
-  if (invoiceByDate.length === 0) {
+  if (isLoading) {
     return <Loader visible={true} />;
   }
   return (
     <View style={{ flex: 1, backgroundColor: Colors.white }}>
       <MyStatusBar />
-
       <View style={[Style.primaryNav, { flexDirection: isRtl ? 'row-reverse' : 'row' }]}>
         <TouchableOpacity style={Style.navBackButton} onPress={() => props.navigation.navigate('reports')}>
           <Ionicons name={isRtl ? 'arrow-forward' : 'arrow-back'} size={20} color={Colors.white} />
@@ -96,7 +108,7 @@ const Weekly = (props) => {
           </View>
         </View>
       </View>
-      <CalendarProvider date={monday} onDateChanged={onDateChanged} showTodayButton>
+      <CalendarProvider onDateChanged={onDateChanged} showTodayButton date={date}>
         <ExpandableCalendar firstDay={1} markedDates={marked.current} theme={calendarTheme} />
         <AgendaList
           sections={invoiceByDate}

@@ -1,4 +1,4 @@
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View, LogBox } from 'react-native';
 import React from 'react';
 import { Colors, Fonts, Default, DefaultImage } from '@constants/style';
 import MyStatusBar from '@components/myStatusBar';
@@ -14,6 +14,9 @@ const Reports = (props) => {
   function tr(key) {
     return t(`reports:${key}`);
   }
+  LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
+  LogBox.ignoreAllLogs(); //Ignore all log notifications
+
   return (
     <View style={{ flex: 1, backgroundColor: Colors.white }}>
       <MyStatusBar />

@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import XDate from 'xdate';
 import moment from 'moment';
 const RANGE = 24;
-const now = moment(new Date()).format('YYYY-MM-DD');
+const now = moment().format('YYYY-MM-DD');
 const RangeCalendar = ({ setSelectedDate }) => {
   const [state, setState] = useState({
     isFromDatePicked: false,

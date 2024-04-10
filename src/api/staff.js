@@ -11,7 +11,7 @@ export const staff = {
       response.reduce((acc, item) => {
         const { id, attributes } = item;
         const data = { id, ...attributes };
-        const date = data.createdAt.split('T')[0];
+        const date = data.testCreatedAt.split('T')[0];
         tips += data.additional * 100;
         total += data.total * 100;
         let group = acc[date] || [];
@@ -20,6 +20,8 @@ export const staff = {
         return acc;
       }, invoices);
       const agendaItems = parseAccordionData(invoices);
+      //agendaitems tips and total are per day
+      /// tips and total are top level
 
       return { agendaItems, tips, total };
     } catch (error) {

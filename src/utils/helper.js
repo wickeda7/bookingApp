@@ -214,11 +214,12 @@ export const getPayDate = () => {
 };
 export const parseAccordionData = (data) => {
   const items = [];
-  console.log('check PayrollStaffDetail.js this does not return exact order of data');
+  // console.log('check PayrollStaffDetail.js this does not return exact order of data', data);
   for (const [key, value] of Object.entries(data)) {
     let temp = [];
     let total = 0;
     let tips = 0;
+
     value.map((item) => {
       total += item.total * 100;
       tips += item.additional * 100;

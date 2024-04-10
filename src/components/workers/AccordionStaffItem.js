@@ -17,8 +17,8 @@ const AccordionStaffItem = ({ children, item, expanded, onHeaderPress, navigatio
   return (
     <View style={[styles.section]}>
       <TouchableOpacity style={[styles.accordHeader]} onPress={onHeaderPress}>
-        <View style={[{ flex: 4 }]}>
-          <Text style={[Fonts.Primary14Medium]}>{moment(item.title).format('dddd MMM Do')}</Text>
+        <View style={[{ flex: 3 }]}>
+          <Text style={[Fonts.Primary14Medium]}>{moment(item.title).format('ddd MMM Do')}</Text>
         </View>
         <View style={[{ flex: 5 }]}>
           <Text style={{ color: Colors.primary, fontSize: 12 }}>
