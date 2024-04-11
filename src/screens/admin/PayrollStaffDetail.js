@@ -24,7 +24,6 @@ const PayrollStaffDetail = ({ payWeekDates, showGraph }) => {
   const commission = userDeduct ? userDeduct : perDay;
   const invoices = payrollData[userId];
   const dispatch = useDispatch();
-
   useEffect(() => {
     if (accordionData.length > 0) {
       dispatch(setEmployeePayroll(accordionData));

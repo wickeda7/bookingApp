@@ -45,4 +45,14 @@ export const payroll = {
       throw error;
     }
   },
+  updatePayroll: async (payrollId, data) => {
+    try {
+      const response = await api.updatePayroll(payrollId, data);
+      console.log('response updatePayroll', response);
+      return response;
+    } catch (error) {
+      console.log('error payrolljs updatePayroll', error.response.data.error.message);
+      throw error;
+    }
+  },
 };

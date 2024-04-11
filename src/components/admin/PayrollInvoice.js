@@ -21,7 +21,10 @@ const PayrollInvoice = ({ employee, store, startDate, endDate }) => {
   const { totalDeduct, tipDeduct, employee: storeEmployee, name, id: storeId } = store;
   const checkEmployee = storeEmployee.findIndex((item) => item.id === userId);
   const userPayrollId = employeePayroll[0].specialistId;
-  const commissionType = userPerDay ? 'Salary' : userDeduct;
+  let commissionType = userPerDay ? 'Salary' : userDeduct;
+  const payrollCreatedAt = payrollSummary.payrollCreatedAt;
+  const paidDate = payrollSummary.paidDate;
+  if (commissionType === null) commissionType = totalDeduct;
 
   const lastRow = employeePayroll.length - 1;
   if (userPayrollId !== userId)
@@ -68,7 +71,8 @@ const PayrollInvoice = ({ employee, store, startDate, endDate }) => {
           firstName={firstName}
           lastName={lastName}
           commissionType={commissionType}
-          totalDeduct={totalDeduct}
+          payrollCreatedAt={payrollCreatedAt}
+          paidDate={paidDate}
         />
 
         <View style={[styles.row]}>
@@ -77,7 +81,6 @@ const PayrollInvoice = ({ employee, store, startDate, endDate }) => {
           </View>
           <View style={[styles.row]}>
             <Summary
-              data={payrollSummary}
               commissionType={commissionType}
               storeTotalDeduct={totalDeduct}
               storeTipDeduct={tipDeduct}

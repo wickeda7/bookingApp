@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TouchableOpacity, View, Modal } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View, Modal, Image } from 'react-native';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Colors, Default, Fonts } from '@constants/style';
@@ -6,13 +6,11 @@ import Style from '@theme/style';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Icon6 from 'react-native-vector-icons/FontAwesome6';
 import { formatPrice } from '@utils/helper';
-import { payroll } from '@api/payroll';
-import Loader from '@components/loader';
 import ModalContent from '../ModalContent';
-import Toast from 'react-native-root-toast';
 import moment from 'moment';
+import { useSelector, useDispatch } from 'react-redux';
+import { createPayroll, updatePayroll } from '@redux/actions/payrollAction';
 const Summary = ({
-  data,
   commissionType,
   storeTotalDeduct,
   storeTipDeduct,
@@ -24,31 +22,44 @@ const Summary = ({
   storeId,
   specialistId,
 }) => {
-  const [loading, setLoading] = useState(false);
   const [visible, setVisible] = useState(false);
+  const { payrollSummary } = useSelector((state) => state.payroll);
+  const dispatch = useDispatch();
+
   let finalDeduct = commissionType;
   if (commissionType === 'Salary' || commissionType === null) finalDeduct = storeTotalDeduct;
   const deduct = finalDeduct.split('/');
-  const deductAmount = data.subtotal * (deduct[0] / 100);
-  let finalAmount = 0;
-  const dataTip = data.tips;
-  const dataSubtotal = data.subtotal;
-  const invoiceIds = data.invoiceIds;
-  let tips = 0;
-  if (data.tips > 0) {
-    const tipAmount = data.tips * (storeTipDeduct / 100);
-    tips = data.tips - tipAmount;
-  }
 
+  let finalAmount = 0;
+  const dataTip = payrollSummary.tips;
+  const dataSubtotal = payrollSummary.subtotal;
+  const invoiceIds = payrollSummary.invoiceIds; /// if invoiceIds.length === 0  payroll already created
+  const signature = payrollSummary.signature;
+  const payrollId = payrollSummary.payrollId;
+  const payrollCreatedAt = payrollSummary.payrollCreatedAt;
+  const paid = payrollSummary?.paid;
+  const deductAmount = dataSubtotal * (deduct[0] / 100);
+  let tips = 0;
+  if (dataTip > 0) {
+    const tipAmount = dataTip * (storeTipDeduct / 100);
+    tips = dataTip - tipAmount;
+  }
+  const today = moment().format('YYYY-MM-DD');
   const checkDate = () => {
-    const today = moment().format('YYYY-MM-DD');
     if (moment(endDate).isSame(today)) {
-      submitPayroll();
+      runPayroll();
     } else {
       setVisible(true);
     }
   };
-  const submitPayroll = async () => {
+  const submitPayroll = () => {
+    const data = {
+      paid: true,
+      paidDate: today,
+    };
+    dispatch(updatePayroll({ payrollId, data }));
+  };
+  const runPayroll = () => {
     const data = {
       startDate,
       endDate,
@@ -66,26 +77,11 @@ const Summary = ({
       invoices: invoiceIds,
     };
 
-    // setLoading(true);
-    console.log(data);
     if (invoiceIds.length === 0) return;
     try {
-      const res = await payroll.createPayroll(data);
-      console.log(res);
-      setLoading(false);
-      Toast.show('Payroll Created', {
-        duration: Toast.durations.LONG,
-        position: Toast.positions.CENTER,
-        shadow: true,
-        animation: true,
-        hideOnPress: true,
-        delay: 0,
-        backgroundColor: Colors.success,
-        onHidden: () => {},
-      });
+      dispatch(createPayroll(data));
     } catch (error) {
-      console.log('error submitPayroll', error);
-      setLoading(false);
+      console.log('error runPayroll', error);
     }
   };
 
@@ -93,7 +89,7 @@ const Summary = ({
     const salary = userPerDay * totalWorkDays * 100;
     let compareText = '';
 
-    if (data.subtotal > salary) {
+    if (dataSubtotal > salary) {
       compareText = 'greater';
       finalAmount = deductAmount > salary ? deductAmount : salary;
     } else {
@@ -131,24 +127,23 @@ const Summary = ({
 
   return (
     <View style={[styles.border, { flexDirection: 'column', width: '92%', marginHorizontal: 13 }]}>
-      <Loader visible={loading} />
       <Modal animationType='fade' transparent={true} visible={visible}>
         <ModalContent
           title='Run Payroll'
           message='This is not the end of payroll period. Are you sure you want to run payroll?'
           setVisible={setVisible}
-          okAction={submitPayroll}
+          okAction={runPayroll}
           okButtonTitle='Run Payroll'
         />
       </Modal>
       <View style={{ flexDirection: 'row', marginTop: Default.fixPadding }}>
         <Text style={[Fonts.Black14Bold]}>Total Tips: </Text>
-        <Text style={[Fonts.Black14Medium]}> {formatPrice(data.tips)}</Text>
+        <Text style={[Fonts.Black14Medium]}> {formatPrice(dataTip)}</Text>
       </View>
       <View style={[Style.divider, { marginTop: 3, marginBottom: Default.fixPadding }]} />
       <View style={{ flexDirection: 'row' }}>
         <Text style={[Fonts.Black14Bold]}>Total Amount: </Text>
-        <Text style={[Fonts.Black14Medium]}> {formatPrice(data.subtotal)}</Text>
+        <Text style={[Fonts.Black14Medium]}> {formatPrice(dataSubtotal)}</Text>
         <Text style={[{ color: Colors.lightGrey, fontStyle: 'italic' }]}>
           {' '}
           @{finalDeduct} {formatPrice(deductAmount)}
@@ -166,38 +161,90 @@ const Summary = ({
         <Text style={[Fonts.Black14Bold]}>Total Paid: </Text>
         <Text style={[Fonts.Black14Medium]}>{formatPrice(tips + deductAmount)}</Text>
       </View>
-
       <View style={[Style.divider, { marginTop: 3, marginBottom: Default.fixPadding }]} />
-      <View style={{ flexDirection: 'row', justifyContent: 'flex-end', marginVertical: Default.fixPadding * 2 }}>
-        <TouchableOpacity
-          onPress={() => checkDate()}
-          style={[
-            Style.buttonStyle,
-            // Style.borderInfo,
-            {
-              paddingVertical: 4,
-              marginTop: 0,
-              flexDirection: 'row',
-              width: 125,
-              height: 35,
-              marginHorizontal: 10,
-              backgroundColor: Colors.info,
-            },
-          ]}
-        >
-          <Icon6 name={'file-invoice-dollar'} size={15} color={Colors.white} />
-          <Text
-            style={[
-              Fonts.White14Bold,
-              {
-                paddingHorizontal: Default.fixPadding * 0.5,
-              },
-            ]}
-          >
-            Run Payroll
-          </Text>
-        </TouchableOpacity>
-      </View>
+      {signature ? (
+        <>
+          <View style={{ flexDirection: 'column', height: 130 }}>
+            <Text style={[Fonts.Black14Bold, { marginBottom: 10 }]}>Signature: </Text>
+            <Image
+              source={{ uri: signature }}
+              style={{ width: '100%', height: '100%', resizeMode: 'stretch', borderRadius: 10 }}
+            />
+          </View>
+          <View style={[Style.divider, { marginTop: 3, marginBottom: Default.fixPadding }]} />
+          {!paid && (
+            <View style={{ flexDirection: 'row', justifyContent: 'flex-end', marginVertical: Default.fixPadding * 2 }}>
+              <TouchableOpacity
+                onPress={() => submitPayroll()}
+                style={[
+                  Style.buttonStyle,
+                  {
+                    paddingVertical: 4,
+                    marginTop: 0,
+                    flexDirection: 'row',
+                    width: 135,
+                    height: 35,
+                    marginHorizontal: 10,
+                    backgroundColor: Colors.success,
+                  },
+                ]}
+              >
+                <Icon6 name={'file-invoice-dollar'} size={15} color={Colors.white} />
+                <Text
+                  style={[
+                    Fonts.White14Bold,
+                    {
+                      paddingHorizontal: Default.fixPadding * 0.5,
+                    },
+                  ]}
+                >
+                  Submit Payroll
+                </Text>
+              </TouchableOpacity>
+            </View>
+          )}
+        </>
+      ) : (
+        <View style={{ flexDirection: 'row', justifyContent: 'flex-end', marginVertical: Default.fixPadding * 2 }}>
+          {!payrollId ? (
+            <TouchableOpacity
+              onPress={() => checkDate()}
+              style={[
+                Style.buttonStyle,
+                // Style.borderInfo,
+                {
+                  paddingVertical: 4,
+                  marginTop: 0,
+                  flexDirection: 'row',
+                  width: 125,
+                  height: 35,
+                  marginHorizontal: 10,
+                  backgroundColor: Colors.info,
+                },
+              ]}
+            >
+              <Icon6 name={'file-invoice-dollar'} size={15} color={Colors.white} />
+              <Text
+                style={[
+                  Fonts.White14Bold,
+                  {
+                    paddingHorizontal: Default.fixPadding * 0.5,
+                  },
+                ]}
+              >
+                Run Payroll
+              </Text>
+            </TouchableOpacity>
+          ) : (
+            <View style={[Style.infoAlert, { flexDirection: 'row' }]}>
+              <Ionicons name={'information-circle'} size={18} color={Colors.info} />
+              <Text style={[Style.infoText, { marginLeft: 5 }]}>
+                Created on {moment(payrollCreatedAt).format('L')}. Waiting for confirmation.{' '}
+              </Text>
+            </View>
+          )}
+        </View>
+      )}
     </View>
   );
 };

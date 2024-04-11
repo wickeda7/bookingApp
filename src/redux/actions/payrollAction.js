@@ -19,3 +19,21 @@ export const getStaffPayrollData = createAsyncThunk('getStaffPayrollData', async
     throw error.response.data.error.message;
   }
 });
+export const createPayroll = createAsyncThunk('createPayroll', async (data) => {
+  try {
+    const response = await payroll.createPayroll(data);
+    return response;
+  } catch (error) {
+    console.log('error payrollAction createPayroll', error.response.data.error.message);
+    throw error.response.data.error.message;
+  }
+});
+export const updatePayroll = createAsyncThunk('updatePayroll', async ({ payrollId, data }) => {
+  try {
+    const response = await payroll.updatePayroll(payrollId, data);
+    return response;
+  } catch (error) {
+    console.log('error payrollAction createPayroll', error.response.data.error.message);
+    throw error.response.data.error.message;
+  }
+});

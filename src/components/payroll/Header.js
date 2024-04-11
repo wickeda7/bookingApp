@@ -5,7 +5,8 @@ import { Colors, Default, Fonts, graphColors } from '@constants/style';
 import Style from '@theme/style';
 import moment from 'moment';
 const width = Dimensions.get('screen').width;
-const Header = ({ startDate, endDate, firstName, lastName, commissionType, totalDeduct }) => {
+const Header = ({ startDate, endDate, firstName, lastName, commissionType, payrollCreatedAt, paidDate }) => {
+  const date = payrollCreatedAt ? moment(payrollCreatedAt).format('L') : moment().format('L');
   if (width < 500) {
     return (
       <>
@@ -24,12 +25,18 @@ const Header = ({ startDate, endDate, firstName, lastName, commissionType, total
           </View>
           <View style={[styles.rowSmall]}>
             <Text style={[Fonts.Black14Medium]}>Commission Type: </Text>
-            <Text style={[Fonts.Black15Regular]}> {commissionType ? commissionType : totalDeduct} </Text>
+            <Text style={[Fonts.Black15Regular]}> {commissionType} </Text>
           </View>
           <View style={[styles.rowSmall]}>
             <Text style={[Fonts.Black14Medium]}>Date: </Text>
-            <Text style={[Fonts.Black15Regular]}> {moment().format('L')} </Text>
+            <Text style={[Fonts.Black15Regular]}> {date} </Text>
           </View>
+          {paidDate && (
+            <View style={[styles.rowSmall]}>
+              <Text style={[Fonts.Black14Medium]}>Paid Date: </Text>
+              <Text style={[Fonts.Black15Regular]}> {moment(paidDate).format('L')} </Text>
+            </View>
+          )}
           <View style={[Style.divider, { marginBottom: Default.fixPadding }]} />
           <View style={[styles.rowSmall]}>
             <View style={[Style.divider, { marginBottom: Default.fixPadding * 0.5 }]} />
@@ -55,12 +62,18 @@ const Header = ({ startDate, endDate, firstName, lastName, commissionType, total
         </View>
         <View style={[{ flexDirection: 'row' }]}>
           <Text style={[Fonts.Black14Medium]}>Commission Type: </Text>
-          <Text style={[Fonts.Black15Regular]}> {commissionType ? commissionType : totalDeduct} </Text>
+          <Text style={[Fonts.Black15Regular]}> {commissionType} </Text>
         </View>
         <View style={[{ flexDirection: 'row' }]}>
           <Text style={[Fonts.Black14Medium]}>Date: </Text>
-          <Text style={[Fonts.Black15Regular]}> {moment().format('L')} </Text>
+          <Text style={[Fonts.Black15Regular]}> {date} </Text>
         </View>
+        {paidDate && (
+          <View style={[{ flexDirection: 'row' }]}>
+            <Text style={[Fonts.Black14Medium]}>Paid Date: </Text>
+            <Text style={[Fonts.Black15Regular]}> {moment(paidDate).format('L')}</Text>
+          </View>
+        )}
       </View>
       <View style={[Style.divider, { marginBottom: Default.fixPadding }]} />
     </>
