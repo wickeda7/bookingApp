@@ -19,4 +19,14 @@ export const payroll = {
       throw error;
     }
   },
+  getStaffPayrollData: async (storeId, payrollId, userId) => {
+    try {
+      const response = await api.getStaffPayrollData(storeId, payrollId, userId);
+      const { id, attributes } = response.data[0];
+      return { id, ...attributes };
+    } catch (error) {
+      console.log('error payrolljs getStaffPayrollData', error.response.data.error.message);
+      throw error;
+    }
+  },
 };

@@ -9,7 +9,7 @@ import { calendarTheme } from '@constants/style';
 import { ExpandableCalendar, AgendaList, CalendarProvider } from 'react-native-calendars';
 import { useAuthContext } from '@contexts/AuthContext';
 import AgendaItem from '@components/calendar/AgendaItem';
-import { getMonday, formatPrice } from '@utils/helper';
+import { formatPrice } from '@utils/helper';
 import moment from 'moment';
 import { useDispatch, useSelector } from 'react-redux';
 import { getInvoiceByDate } from '@redux/actions/staffAction';

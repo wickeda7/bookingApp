@@ -53,7 +53,7 @@ const Summary = ({
       startDate,
       endDate,
       commissionType,
-      totalTips: dataTip,
+      totalTip: dataTip,
       totalAmount: dataSubtotal,
       deductAmount,
       deductPercent: finalDeduct,
@@ -125,16 +125,6 @@ const Summary = ({
             <Text style={[Style.infoText, { marginLeft: 5 }]}>Total amount is {compareText} than salary amount. </Text>
           </View>
         </View>
-        <View style={{ flexDirection: 'row' }}>
-          <Text style={[Fonts.Black14Bold]}>Final Tip Amount: </Text>
-          <Text style={[Fonts.Black14Medium]}>{formatPrice(tips)}</Text>
-          <Text style={[{ color: Colors.lightGrey, fontStyle: 'italic' }]}> @{storeTipDeduct}% deduction</Text>
-        </View>
-        <View style={[Style.divider, { marginTop: 3, marginBottom: Default.fixPadding }]} />
-        <View style={{ flexDirection: 'row' }}>
-          <Text style={[Fonts.Black14Bold]}>Total Paid: </Text>
-          <Text style={[Fonts.Black14Medium]}>{formatPrice(tips + finalAmount)}</Text>
-        </View>
       </>
     );
   };
@@ -165,22 +155,17 @@ const Summary = ({
         </Text>
       </View>
       <View style={[Style.divider, { marginTop: 3, marginBottom: Default.fixPadding }]} />
-      {commissionType === 'Salary' ? (
-        <Salary />
-      ) : (
-        <>
-          <View style={{ flexDirection: 'row' }}>
-            <Text style={[Fonts.Black14Bold]}>Final Tip Amount: </Text>
-            <Text style={[Fonts.Black14Medium]}>{formatPrice(tips)}</Text>
-            <Text style={[{ color: Colors.lightGrey, fontStyle: 'italic' }]}> @{storeTipDeduct}% deduction</Text>
-          </View>
-          <View style={[Style.divider, { marginTop: 3, marginBottom: Default.fixPadding }]} />
-          <View style={{ flexDirection: 'row' }}>
-            <Text style={[Fonts.Black14Bold]}>Total Paid: </Text>
-            <Text style={[Fonts.Black14Medium]}>{formatPrice(tips + deductAmount)}</Text>
-          </View>
-        </>
-      )}
+      {commissionType === 'Salary' && <Salary />}
+      <View style={{ flexDirection: 'row' }}>
+        <Text style={[Fonts.Black14Bold]}>Final Tip Amount: </Text>
+        <Text style={[Fonts.Black14Medium]}>{formatPrice(tips)}</Text>
+        <Text style={[{ color: Colors.lightGrey, fontStyle: 'italic' }]}> @{storeTipDeduct}% deduction</Text>
+      </View>
+      <View style={[Style.divider, { marginTop: 3, marginBottom: Default.fixPadding }]} />
+      <View style={{ flexDirection: 'row' }}>
+        <Text style={[Fonts.Black14Bold]}>Total Paid: </Text>
+        <Text style={[Fonts.Black14Medium]}>{formatPrice(tips + deductAmount)}</Text>
+      </View>
 
       <View style={[Style.divider, { marginTop: 3, marginBottom: Default.fixPadding }]} />
       <View style={{ flexDirection: 'row', justifyContent: 'flex-end', marginVertical: Default.fixPadding * 2 }}>

@@ -1,12 +1,13 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { getPayrollData } from '@redux/actions/payrollAction';
+import { getPayrollData, getStaffPayrollData } from '@redux/actions/payrollAction';
 
 const initialState = {
   payrollData: [],
   selectedEmployee: null,
   isLoading: false,
   employeePayroll: [],
-  payrollSummary: {},
+  payrollSummary: null,
+  staffPayroll: null,
 };
 
 export const payrollSlice = createSlice({
@@ -52,6 +53,16 @@ export const payrollSlice = createSlice({
         state.payrollData = action.payload;
       })
       .addCase(getPayrollData.rejected, (state) => {
+        state.isLoading = false;
+      })
+      .addCase(getStaffPayrollData.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getStaffPayrollData.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.staffPayroll = action.payload;
+      })
+      .addCase(getStaffPayrollData.rejected, (state) => {
         state.isLoading = false;
       });
   },

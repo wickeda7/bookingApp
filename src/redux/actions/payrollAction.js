@@ -10,3 +10,12 @@ export const getPayrollData = createAsyncThunk('getPayrollData', async ({ storeI
     throw error.response.data.error.message;
   }
 });
+export const getStaffPayrollData = createAsyncThunk('getStaffPayrollData', async ({ storeId, payrollId, userId }) => {
+  try {
+    const response = await payroll.getStaffPayrollData(storeId, payrollId, userId);
+    return response;
+  } catch (error) {
+    console.log('error payrollAction getPayrollData', error.response.data.error.message);
+    throw error.response.data.error.message;
+  }
+});

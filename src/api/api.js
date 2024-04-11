@@ -368,10 +368,9 @@ export const api = {
   },
   getInvoiceByDate: async ({ from, to, userId, storeId }) => {
     try {
-      const url = `${STRAPIURL}/api/invoices?filters[$and][0][createdAt][$gte]=${from}&filters[$and][1][createdAt][$lt]=${to}&filters[store][id][$eq]=${storeId}&filters[specialist][id][$eq]=${userId}&populate[0]=client&populate[1]=client.userInfo&populate[2]=client.userInfo.profileImg&sort[0]=createdAt:DESC`;
-      //console.log('url', url);
+      // const url = `${STRAPIURL}/api/invoices?filters[$and][0][createdAt][$gte]=${from}&filters[$and][1][createdAt][$lt]=${to}&filters[store][id][$eq]=${storeId}&filters[specialist][id][$eq]=${userId}&populate[0]=client&populate[1]=client.userInfo&populate[2]=client.userInfo.profileImg&sort[0]=createdAt:DESC`;
+      const url = `${STRAPIURL}/api/invoices?filters[$and][0][testCreatedAt][$gte]=${from}&filters[$and][1][testCreatedAt][$lt]=${to}&filters[store][id][$eq]=${storeId}&filters[specialist][id][$eq]=${userId}&populate[0]=client&populate[1]=client.userInfo&populate[2]=client.userInfo.profileImg&sort[0]=testCreatedAt:ASC`;
       const response = await axios.get(url);
-      // console.log('response', response.data);
       return response.data.data;
     } catch (error) {
       throw error;
@@ -445,6 +444,16 @@ export const api = {
       return response.data;
     } catch (error) {
       console.log('error createPayroll API', error);
+      throw error;
+    }
+  },
+  getStaffPayrollData: async (storeId, payrollId, userId) => {
+    ///bookingbackend-ce816c7b0be8.herokuapp.com/api/payrolls?filters[$and][0][id][$eq]=5&filters[$and][1][storeId][$eq]=1&filters[$and][2][specialistId][$eq]=8
+    try {
+      const url = `${STRAPIURL}/api/payrolls?filters[$and][0][id][$eq]=${payrollId}&filters[$and][1][storeId][$eq]=${storeId}&filters[$and][2][specialistId][$eq]=${userId}`;
+      const response = await axios.get(url);
+      return response.data;
+    } catch (error) {
       throw error;
     }
   },

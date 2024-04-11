@@ -139,7 +139,9 @@
     "incomeRangeDesc": "Select start to end dates to view income reports",
     "invoice": "Invoices",
     "invoiceDesc": "View your invoices history here",
-    "noInvoice": "No Invoice yet"
+    "noInvoice": "No Invoice yet",
+    "payroll": "Payroll",
+    "payrollDesc": "View your current payroll "
   },
   "staff": {
     "staff": "Staff",

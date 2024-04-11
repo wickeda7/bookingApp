@@ -22,17 +22,18 @@ const Invoices = (props) => {
   const [visible, setVisible] = useState(false);
   const refRBSheet = useRef();
   const [data, setData] = useState([]);
-  const { getUserBooking } = useBookingContext();
+
   const [selectedDate, setSelectedDate] = useState();
   const from = selectedDate?.from ? `From ${moment(selectedDate.from).format('M/D/YY')}` : '';
   const to = selectedDate?.to ? ` to ${moment(selectedDate.to).format('M/D/YY')}` : '';
   useEffect(() => {
-    const getData = async () => {
-      // get invoices within the week of the calendar
-      let res = await getUserBooking(false, 'specialist');
-      setData(res);
-    };
-    getData();
+    console.log('selectedDate', selectedDate);
+    // const getData = async () => {
+    //   // get invoices within the week of the calendar
+    //   let res = await getUserBooking(false, 'specialist');
+    //   setData(res);
+    // };
+    // getData();
   }, []);
   useEffect(() => {
     if (!refRBSheet.current) return;
@@ -114,7 +115,10 @@ const Invoices = (props) => {
               }}
             >
               <TouchableOpacity
-                onPress={() => refRBSheet.current.open()}
+                onPress={() => {
+                  console.log('add invoice', refRBSheet, calendarView);
+                  refRBSheet.current.open();
+                }}
                 style={{
                   flex: 1,
                 }}

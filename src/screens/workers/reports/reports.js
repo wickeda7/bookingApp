@@ -1,11 +1,14 @@
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View, LogBox } from 'react-native';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Colors, Fonts, Default, DefaultImage } from '@constants/style';
 import MyStatusBar from '@components/myStatusBar';
 import { useTranslation } from 'react-i18next';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import Icon from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import NotificationsHelper from '@utils/notifications';
+import { useAuthContext } from '@contexts/AuthContext';
 const Reports = (props) => {
   const { t, i18n } = useTranslation();
 
@@ -17,8 +20,23 @@ const Reports = (props) => {
   LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
   LogBox.ignoreAllLogs(); //Ignore all log notifications
 
+  const [notification, setNotification] = useState(null);
+  const [newNotification, setNewNotification] = useState(null);
+  const [payrollId, setPayrollId] = useState(null);
+  const { userData } = useAuthContext();
+  const { id: userId } = userData;
+  useEffect(() => {
+    if (notification) {
+      const data = notification.request.content.data;
+      if (data.type === 'newPayroll' && data.specialistId === userId) {
+        setPayrollId(data.payrollId);
+        setNewNotification(true);
+      }
+    }
+  }, [notification]);
   return (
     <View style={{ flex: 1, backgroundColor: Colors.white }}>
+      <NotificationsHelper setNotification={setNotification} />
       <MyStatusBar />
       <View
         style={{
@@ -48,14 +66,14 @@ const Reports = (props) => {
             style={{
               alignItems: 'center',
               justifyContent: 'center',
-              backgroundColor: '#c7f9cc', //#c7f9cc https://coolors.co/palettes/trending
+              backgroundColor: '#63ffe9', //##63ffe9 https://coolors.co/palettes/trending
               borderRadius: 15,
               height: 55,
               width: 55,
               ...Default.shadow,
             }}
           >
-            <FontAwesome6 name='file-invoice-dollar' size={35} color={'#57cc99'} />
+            <MaterialCommunityIcons name='note' size={37} color={'#008000'} />
           </View>
           <View style={{ marginLeft: 12, flex: 1 }}>
             <Text style={[{ fontSize: 14, color: Colors.black }]}>{tr('income')}</Text>
@@ -76,7 +94,7 @@ const Reports = (props) => {
             style={{
               alignItems: 'center',
               justifyContent: 'center',
-              backgroundColor: '#b7e4c7', //#c7f9cc https://coolors.co/palettes/trending
+              backgroundColor: '#50e1cb', //#c7f9cc https://coolors.co/palettes/trending
               borderRadius: 15,
               height: 55,
               width: 55,
@@ -94,31 +112,39 @@ const Reports = (props) => {
         <View style={[Fonts.Divider, { backgroundColor: Colors.bord, marginVertical: 20 }]}></View>
         <TouchableOpacity
           style={{ flexDirection: 'row', alignItems: 'center' }}
-          onPress={() =>
+          onPress={() => {
             props.navigation.navigate('ReportsStack', {
-              screen: 'Invoices',
+              screen: 'Payroll',
               params: {
-                type: 'range',
+                //payrollId,
+                payrollId: 8,
               },
-            })
-          }
+            });
+            setNewNotification(null);
+            setPayrollId(null);
+          }}
         >
           <View
             style={{
               alignItems: 'center',
               justifyContent: 'center',
-              backgroundColor: '#ffb2e6', //#c7f9cc https://coolors.co/palettes/trending //note-plus
+              backgroundColor: '#3ccdb7', //#c7f9cc https://www.fgruber.ch/projects/50-colorScheme/?hexColor=3ccdb7 //note-plus
               borderRadius: 15,
               height: 55,
               width: 55,
               ...Default.shadow,
             }}
           >
-            <MaterialCommunityIcons name='note' size={37} color={'#2d00f7'} />
+            <FontAwesome6 name='file-invoice-dollar' size={35} color={'#008000'} />
           </View>
           <View style={{ marginLeft: 12, flex: 1 }}>
-            <Text style={[{ fontSize: 14, color: Colors.black }]}>{tr('invoice')}</Text>
-            <Text style={[{ fontSize: 12, color: Colors.disable }]}>{tr('invoiceDesc')}</Text>
+            <Text style={[{ fontSize: 14, color: Colors.black }]}>
+              {tr('payroll')}
+              {'     '}
+              {newNotification && <MaterialIcons name='new-releases' size={20} color={Colors.red} />}
+            </Text>
+
+            <Text style={[{ fontSize: 12, color: Colors.disable }]}>{tr('payrollDesc')}</Text>
           </View>
           <Icon name='chevron-forward' size={24} color={Colors.black} />
         </TouchableOpacity>

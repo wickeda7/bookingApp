@@ -4,6 +4,7 @@ import Income from '@screens/workers/reports/income';
 import Invoices from '@screens/workers/reports/Invoices';
 import Weekly from '@screens/workers/reports/Weekly';
 import InvoiceDetail from '@screens/workers/reports/InvoiceDetail';
+import Payroll from '@screens/workers/reports/Payroll';
 const Stack = createStackNavigator();
 
 const ReportsStack = () => {
@@ -15,6 +16,7 @@ const ReportsStack = () => {
     >
       <Stack.Screen name='Weekly' component={Weekly} options={{ headerShown: false }} />
       <Stack.Screen name='Income' component={Income} options={{ headerShown: false }} />
+      <Stack.Screen name='Payroll' component={Payroll} options={{ headerShown: false }} />
       <Stack.Screen name='Invoices' component={Invoices} options={{ headerShown: false }} />
       <Stack.Screen name='InvoiceDetail' component={InvoiceDetail} options={{ headerShown: false }} />
     </Stack.Navigator>
