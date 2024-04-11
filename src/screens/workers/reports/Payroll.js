@@ -11,6 +11,7 @@ import Loader from '@components/loader';
 import Header from '@components/payroll/Header';
 import Table from '@components/payroll/Table';
 import Summary from '@components/workers/Summary';
+import CaptureSignature from '@components/workers/Signature';
 import { useAuthContext } from '@contexts/AuthContext';
 
 const Payroll = (props) => {
@@ -22,7 +23,7 @@ const Payroll = (props) => {
     return t(`reports:${key}`);
   }
   const { navigation, route } = props;
-
+  const [scrollEnabled, setScrollEnabled] = useState(true);
   const { userData } = useAuthContext();
   const {
     id: userId,
@@ -62,8 +63,8 @@ const Payroll = (props) => {
               commissionType={staffPayroll.commissionType}
               totalDeduct={''}
             />
-            <ScrollView showsVerticalScrollIndicator={false}>
-              <View style={{ flexDirection: 'column', height: 'auto' }}>
+            <ScrollView showsVerticalScrollIndicator={false} scrollEnabled={scrollEnabled}>
+              <View style={{ flexDirection: 'column', height: 'auto', backgroundColor: Colors.white }}>
                 <View style={[styles.row, { flex: 1 }]}>
                   <Table data={staffPayroll.payrollData} />
                 </View>
@@ -80,9 +81,15 @@ const Payroll = (props) => {
                     totalWorkDays={staffPayroll.payrollData.length}
                   />
                 </View>
-                <View style={[styles.row, { margin: Default.fixPadding * 4 }]}>
-                  <Text>asdasdasd</Text>
+                <View style={[styles.row, { flex: 1, backgroundColor: Colors.white }]}>
+                  <CaptureSignature
+                    setScrollEnabled={setScrollEnabled}
+                    payrollId={payrollId}
+                    userId={userId}
+                    signature={staffPayroll.signature}
+                  />
                 </View>
+                <View style={[styles.row, { margin: Default.fixPadding * 4, backgroundColor: Colors.white }]}></View>
               </View>
             </ScrollView>
           </>

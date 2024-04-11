@@ -20,7 +20,7 @@ const Summary = ({
   userPerDay,
 }) => {
   return (
-    <View style={[styles.border, { flexDirection: 'column', width: '95%', marginHorizontal: 13 }]}>
+    <View style={[styles.border, { flexDirection: 'column', width: '100%' }]}>
       <View style={{ flexDirection: 'row', marginTop: Default.fixPadding }}>
         <Text style={[Fonts.Black14Bold]}>Total Tips:</Text>
         <Text style={[Fonts.Black14Medium]}>{formatPrice(totalTip)}</Text>
@@ -34,15 +34,15 @@ const Summary = ({
           @{deductPercent} {formatPrice(deductAmount)}
         </Text>
       </View>
+      <View style={[Style.divider, { marginTop: 3 }]} />
       {commissionType === 'Salary' && (
         <>
-          <View style={[Style.divider, { marginTop: 3 }]} />
           <View style={{ flexDirection: 'row', marginTop: Default.fixPadding }}>
             <Text style={[Fonts.Black14Bold]}>Total Work Days: </Text>
             <Text style={[Fonts.Black14Medium]}> {totalWorkDays}</Text>
           </View>
           <View style={[Style.divider, { marginTop: 3 }]} />
-          <View style={{ flexDirection: 'row', marginVertical: Default.fixPadding }}>
+          <View style={{ flexDirection: 'row', marginTop: Default.fixPadding }}>
             <Text style={[Fonts.Black14Bold]}>Total Salary:</Text>
             <Text style={[Fonts.Black14Medium]}>{formatPrice(totalWorkDays * userPerDay * 100)}</Text>
             <Text style={[{ color: Colors.lightGrey, fontStyle: 'italic' }]}>
@@ -50,9 +50,10 @@ const Summary = ({
               @{formatPrice(userPerDay * 100)} / per Day
             </Text>
           </View>
+          <View style={[Style.divider, { marginTop: 3 }]} />
         </>
       )}
-      <View style={[Style.divider, { marginTop: 3 }]} />
+
       <View style={{ flexDirection: 'row', marginTop: Default.fixPadding }}>
         <Text style={[Fonts.Black14Bold]}>Final Tip Amount:</Text>
         <Text style={[Fonts.Black14Medium]}>{formatPrice(finalTipAmount)}</Text>

@@ -450,11 +450,38 @@ export const api = {
   getStaffPayrollData: async (storeId, payrollId, userId) => {
     ///bookingbackend-ce816c7b0be8.herokuapp.com/api/payrolls?filters[$and][0][id][$eq]=5&filters[$and][1][storeId][$eq]=1&filters[$and][2][specialistId][$eq]=8
     try {
-      const url = `${STRAPIURL}/api/payrolls?filters[$and][0][id][$eq]=${payrollId}&filters[$and][1][storeId][$eq]=${storeId}&filters[$and][2][specialistId][$eq]=${userId}`;
+      const url = `${STRAPIURL}/api/payrolls?filters[$and][0][id][$eq]=${payrollId}&filters[$and][1][storeId][$eq]=${storeId}&filters[$and][2][specialistId][$eq]=${userId}&[populate][0]=signature`;
       const response = await axios.get(url);
       return response.data;
     } catch (error) {
       throw error;
+    }
+  },
+  uploadSignature: async (file, payrollId, userId) => {
+    try {
+      const url = `${STRAPIURL}/api/upload`;
+      const formData = new FormData();
+
+      formData.append('files', {
+        name: file.name,
+        type: file.type,
+        uri: file.uri,
+      });
+      formData.append('ref', 'api::payroll.payroll');
+      formData.append('refId', payrollId);
+      formData.append('field', 'signature');
+
+      const headers = {
+        accept: 'application/json',
+        'Accept-Language': 'en-US,en;q=0.8',
+        'Content-Type': 'multipart/form-data',
+      };
+      const res = await axios.post(url, formData, {
+        headers: headers,
+      });
+      return res.data;
+    } catch (error) {
+      console.log('error uploadSignature API', error);
     }
   },
 };

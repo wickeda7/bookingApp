@@ -23,9 +23,25 @@ export const payroll = {
     try {
       const response = await api.getStaffPayrollData(storeId, payrollId, userId);
       const { id, attributes } = response.data[0];
-      return { id, ...attributes };
+
+      let resData = { id, ...attributes };
+      if (resData.signature && resData.signature.data) {
+        resData.signature = attributes.signature.data.attributes.url;
+      } else {
+        resData.signature = null;
+      }
+      return resData;
     } catch (error) {
       console.log('error payrolljs getStaffPayrollData', error.response.data.error.message);
+      throw error;
+    }
+  },
+  uploadSignature: async (file, payrollId, userId) => {
+    try {
+      const response = await api.uploadSignature(file, payrollId);
+      return response;
+    } catch (error) {
+      console.log('error payrolljs uploadSignature', error.response.data.error.message);
       throw error;
     }
   },
