@@ -1,5 +1,5 @@
 import { StyleSheet, Text, TouchableOpacity, View, Platform, Image } from 'react-native';
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import RNFS from 'react-native-fs';
 import { Colors, Fonts, Default } from '@constants/style';
 import Style from '@theme/style';
@@ -7,9 +7,15 @@ import Signature from 'react-native-signature-canvas';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { payroll } from '@api/payroll';
 
-const CaptureSignature = ({ setScrollEnabled, payrollId, userId, signature }) => {
+const CaptureSignature = ({ setScrollEnabled, payrollId, userId, signature, storeId }) => {
   const ref = useRef();
+  const [signatureImage, setSignatureImage] = useState(null);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    setSignatureImage(signature);
+  }, [signature]);
+
   const style = `.m-signature-pad--footer
     .button {
       background-color: red;
@@ -37,7 +43,11 @@ const CaptureSignature = ({ setScrollEnabled, payrollId, userId, signature }) =>
     setLoading(true);
     const image = await createTempImage(signature);
     const res = await payroll.uploadSignature(image, payrollId, userId);
+    if (res) {
+      setSignatureImage(res[0].url);
+    }
     setLoading(false);
+    await payroll.sendMessage({ payrollId, userId, storeId });
   };
 
   const handleEmpty = () => {
@@ -56,9 +66,9 @@ const CaptureSignature = ({ setScrollEnabled, payrollId, userId, signature }) =>
         <View style={[styles.border, {}]}>
           <Text style={{ marginTop: 10, marginLeft: 10 }}>Signature:</Text>
           <View style={[{ height: 110 }]}>
-            {signature ? (
+            {signatureImage ? (
               <Image
-                source={{ uri: signature }}
+                source={{ uri: signatureImage }}
                 style={{ width: 350, height: 101, marginTop: 15 }}
                 resizeMode='stretch'
               />
@@ -79,7 +89,7 @@ const CaptureSignature = ({ setScrollEnabled, payrollId, userId, signature }) =>
         </View>
         <View style={[style.row, { paddingVertical: Default.fixPadding * 2, alignItems: 'center' }]}>
           <View style={[{ flexDirection: 'row', flex: 1, justifyContent: 'center' }]}>
-            {signature === null && (
+            {signatureImage === null && (
               <>
                 <TouchableOpacity
                   onPress={() => clear()}

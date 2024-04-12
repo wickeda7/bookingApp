@@ -62,6 +62,8 @@ const Payroll = (props) => {
               lastName={lastName}
               commissionType={staffPayroll.commissionType}
               totalDeduct={''}
+              payrollCreatedAt={staffPayroll.createdAt}
+              paidDate={staffPayroll.paidDate}
             />
             <ScrollView showsVerticalScrollIndicator={false} scrollEnabled={scrollEnabled}>
               <View style={{ flexDirection: 'column', height: 'auto', backgroundColor: Colors.white }}>
@@ -87,6 +89,7 @@ const Payroll = (props) => {
                     payrollId={payrollId}
                     userId={userId}
                     signature={staffPayroll.signature}
+                    storeId={storeId}
                   />
                 </View>
                 <View style={[styles.row, { margin: Default.fixPadding * 4, backgroundColor: Colors.white }]}></View>

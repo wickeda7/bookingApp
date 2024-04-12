@@ -55,4 +55,13 @@ export const payroll = {
       throw error;
     }
   },
+  sendMessage: async (data) => {
+    try {
+      const response = await api.sendMessage(data);
+      return response;
+    } catch (error) {
+      console.log('error payrolljs sendMessage', error.response.data.error.message);
+      throw error;
+    }
+  },
 };

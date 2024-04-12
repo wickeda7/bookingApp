@@ -1,7 +1,7 @@
 import axios from 'axios';
 /// always update the STRAPIURL to utils/socket.js too
-//import { STRAPIURL } from '@env';
-const STRAPIURL = 'http://localhost:1337';
+import { STRAPIURL } from '@env';
+//const STRAPIURL = 'http://localhost:1337';
 import moment from 'moment';
 export const api = {
   getUser: async (email) => {
@@ -491,6 +491,16 @@ export const api = {
       return response.data;
     } catch (error) {
       console.log('error updatePayroll API', error);
+      throw error;
+    }
+  },
+  sendMessage: async (data) => {
+    try {
+      const url = `${STRAPIURL}/api/payrolls/message`;
+      const response = await axios.post(url, { data });
+      return response.data;
+    } catch (error) {
+      console.log('error sendMessage API', error);
       throw error;
     }
   },
