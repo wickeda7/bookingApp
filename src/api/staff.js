@@ -29,4 +29,38 @@ export const staff = {
       throw error;
     }
   },
+  checkInvoice: async (specialistId, storeId, date) => {
+    try {
+      const response = await api.checkInvoice(specialistId, storeId, date);
+      const { tips, total, services } = response.data.reduce(
+        (acc, item) => {
+          const { attributes, id } = item;
+          acc.tips += attributes.additional * 100;
+          acc.total += attributes.subtotal * 100;
+          const { services } = attributes;
+          const temp = services.map((service) => {
+            return { ...service, createdAt: attributes.createdAt, type: attributes.type };
+          });
+          acc.services = [...acc.services, ...temp];
+          return acc;
+        },
+        { tips: 0, total: 0, services: [] }
+      );
+
+      return { tips, total, services };
+    } catch (error) {
+      console.log('error staff checkInvoice', error.response.data.error.message);
+      throw error;
+    }
+  },
+  getInvoiceBySpecialist: async ({ specialistId, appointmentId }) => {
+    try {
+      const response = await api.getInvoiceBySpecialist(specialistId, appointmentId);
+      const { id, attributes } = response.data[0];
+      return { id, ...attributes };
+    } catch (error) {
+      console.log('error staff getInvoiceBySpecialist', error.response.data.error.message);
+      throw error;
+    }
+  },
 };

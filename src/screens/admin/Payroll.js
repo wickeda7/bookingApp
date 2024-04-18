@@ -6,7 +6,7 @@ import Style from '@theme/style';
 import { useTranslation } from 'react-i18next';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Octicons from 'react-native-vector-icons/Octicons';
-
+import { Dropdown } from 'react-native-element-dropdown';
 import Loader from '@components/loader';
 import { useAuthContext } from '@contexts/AuthContext';
 import { useSelector, useDispatch } from 'react-redux';
@@ -23,6 +23,7 @@ import PayrollStaffDetail from './PayrollStaffDetail';
 import { weekDaysObj } from '@constants/settings';
 import PayrollInvoice from '@components/admin/PayrollInvoice';
 import NotificationsHelper from '@utils/notifications';
+import { use } from 'i18next';
 const Payroll = (props) => {
   const { t, i18n } = useTranslation();
   const isRtl = i18n.dir() === 'rtl';
@@ -37,11 +38,25 @@ const Payroll = (props) => {
   const [showGraph, setShowGraph] = useState(true);
   const [showInvoice, setShowInvoice] = useState(false);
   const [notification, setNotification] = useState(null);
-
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
   useEffect(() => {
     setEmployees(userData?.storeAdmin?.employee);
-    dispatch(getPayrollData({ storeId, startDate, endDate }));
   }, []);
+
+  useEffect(() => {
+    if (!selectedDate) return;
+
+    const { startDate, endDate } = selectedDate;
+    setStartDate(startDate);
+    setEndDate(endDate);
+    dispatch(getPayrollData({ storeId, startDate, endDate }));
+  }, [selectedDate]);
+
+  useEffect(() => {
+    setSelectedDate(seletedDate);
+  }, [seletedDate]);
 
   useEffect(() => {
     if (notification) {
@@ -60,23 +75,22 @@ const Payroll = (props) => {
   ];
 
   const store = userData?.storeAdmin;
-  const payperiod = store?.payperiod;
+  const payperiod = +store?.payperiod;
   const payperiod_date = store?.payperiod_date;
   const weekDay = weekDaysObj[payperiod_date];
   const payDate = getDateOfMonth(weekDay, payperiod);
-
+  payDate.reverse();
   const totalDeduct = store?.totalDeduct;
   const lastRow = employees.length - 1;
   const storeId = store?.id;
 
-  const endDate = payDate;
-  const payWeekDates = [];
-
-  let i = 13;
-  while (i--) {
-    payWeekDates.push(moment(endDate).subtract(i, 'days').toISOString().split('T')[0]);
-  }
-  const startDate = payWeekDates[0];
+  const seletedDate = payDate.find((item) => {
+    const endDate = moment(item.endDate);
+    const startDate = moment(item.startDate);
+    if (!(moment().isBefore(startDate) || moment().isAfter(endDate))) {
+      return item;
+    }
+  });
 
   const handleDisplayInvoice = (userId) => {
     if (!payrollData[userId]) return;
@@ -109,6 +123,14 @@ const Payroll = (props) => {
 
   if (userData?.role?.id !== 4) return <UnAuthorized />;
 
+  const renderItem = (item) => {
+    return (
+      <View style={[styles.item, { zIndex: 2 }]}>
+        <Text style={styles.textItem}>{item.label}</Text>
+      </View>
+    );
+  };
+
   return (
     <KeyboardAvoidingView style={Style.mainContainer} behavior={Platform.OS === 'ios' ? 'padding' : null}>
       <Loader visible={isLoading} />
@@ -127,8 +149,27 @@ const Payroll = (props) => {
               <View style={{ flexDirection: 'row', paddingVertical: Default.fixPadding }}>
                 <Ionicons name={'calendar-number'} size={20} color={Colors.black} />
                 <Text style={{ marginLeft: Default.fixPadding }}>
-                  Pay Period {moment(startDate).format('L')} - {moment(endDate).format('L')}
+                  Pay Period:
+                  {/* Pay Period {moment(startDate).format('L')} - {moment(endDate).format('L')} */}
                 </Text>
+                <Dropdown
+                  style={[styles.dropdown]}
+                  placeholderStyle={styles.placeholderStyle}
+                  selectedTextStyle={styles.selectedTextStyle}
+                  inputSearchStyle={styles.inputSearchStyle}
+                  data={payDate}
+                  maxHeight={300}
+                  labelField='label'
+                  valueField='value'
+                  placeholder=''
+                  value={selectedDate?.value}
+                  onChange={(item) => {
+                    const { startDate, endDate } = item;
+                    setSelectedDate(item);
+                    dispatch(getPayrollData({ storeId, startDate, endDate }));
+                  }}
+                  renderItem={renderItem}
+                />
               </View>
               <Header data={header} type={'payroll'} />
             </View>
@@ -252,7 +293,7 @@ const Payroll = (props) => {
                 {showInvoice ? (
                   <PayrollInvoice employee={selectedEmployee} store={store} startDate={startDate} endDate={endDate} />
                 ) : (
-                  <PayrollStaffDetail payWeekDates={payWeekDates} showGraph={showGraph} />
+                  <PayrollStaffDetail endDate={endDate} showGraph={showGraph} payperiod={payperiod} />
                 )}
               </>
             ) : (
@@ -270,4 +311,31 @@ const Payroll = (props) => {
 
 export default Payroll;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  dropdown: {
+    height: 20,
+    backgroundColor: 'transparent',
+    borderColor: Colors.bord,
+    borderBottomWidth: 1,
+    width: 220,
+    marginLeft: Default.fixPadding * 0.5,
+  },
+  borderNormal: {
+    borderColor: '#ccc',
+  },
+  borderError: {
+    borderColor: 'red',
+  },
+  selectedTextStyle: { fontSize: 14 },
+  item: {
+    paddingHorizontal: 17,
+    paddingVertical: 8,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  textItem: {
+    flex: 1,
+    fontSize: 14,
+  },
+});

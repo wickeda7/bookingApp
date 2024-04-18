@@ -3,6 +3,7 @@ import moment from 'moment';
 import tableMap from '@constants/map';
 import { Colors, Default, Fonts } from '@constants/style';
 import { t } from 'i18next';
+import { enableScreens } from 'react-native-screens';
 export const formatPhoneNumber = (value) => {
   //https://aprilescobar.medium.com/phone-number-formatting-made-easy-1b887872ab2f
   if (!value) return;
@@ -172,16 +173,68 @@ export const parseStrapiBooking = (data, userId) => {
   }
   return { ...attributes, id, client, specialists: specialistArr, services };
 };
-export const getMonday = () => {
-  const d = new Date();
-  var day = d.getDay(),
-    diff = d.getDate() - day + (day == 0 ? -6 : 1); // adjust when day is sunday
-  return new Date(d.setDate(diff));
+
+const getPayPeriods = (weekDay, payperiod) => {
+  //payperiod 1 = weekly, 2 = every 2 weeks, 4 = monthly
+  const currentYear = moment().year();
+  const firstDayOfYear = `${currentYear}-01-01`;
+  const result = moment(firstDayOfYear).startOf('month');
+
+  while (result.day() !== weekDay) {
+    result.add(1, 'day');
+  }
+
+  if (moment(firstDayOfYear).subtract(1, 'day').isBefore(result)) return result;
+
+  result = moment(firstDayOfYear).add(1, 'months').startOf('month');
+  while (result.day() !== weekDay) {
+    result.add(1, 'day');
+  }
+  return result;
 };
 export const getDateOfMonth = (weekDay, payperiod) => {
   //payperiod 1 = weekly, 2 = every 2 weeks, 4 = monthly
+  const currentMonth = moment().format('M');
+  const payPeriods = [];
+  if (payperiod === 4) {
+    const currentYear = moment().format('YYYY');
+    for (let i = 1; i <= currentMonth; i++) {
+      const month = moment(currentYear + '-' + i + '-1 00:00:00');
+      payPeriods.push({
+        startDate: month.format('YYYY-MM-DD'),
+        endDate: month.endOf('month').format('YYYY-MM-DD'),
+        label: `${moment(month).format('L')} - ${month.endOf('month').format('L')}`,
+        value: `${moment(month).format('L')} - ${month.endOf('month').format('L')}`,
+      });
+    }
+    return payPeriods;
+  }
+
+  const days = payperiod === 1 ? 6 : 13;
+  const firstDayOfYear = getPayPeriods(weekDay, payperiod);
+  const start = moment(firstDayOfYear).subtract(6, 'day');
+  let endMonth = 0;
+  let n = 0;
+  while (endMonth <= currentMonth) {
+    let startDate = n === 0 ? start : moment(payPeriods[payPeriods.length - 1].endDate).add(1, 'day');
+    const endDate = moment(startDate).add(days, 'day');
+    payPeriods.push({
+      startDate: startDate.format('YYYY-MM-DD'),
+      endDate: endDate.format('YYYY-MM-DD'),
+      label: `${startDate.format('L')} - ${endDate.format('L')}`,
+      value: `${startDate.format('L')} - ${endDate.format('L')}`,
+    });
+    n++;
+    endMonth = moment(payPeriods[payPeriods.length - 1].endDate).format('M');
+  }
+
+  return payPeriods;
+};
+export const getDateOfMonth__ = (weekDay, payperiod) => {
+  //payperiod 1 = weekly, 2 = every 2 weeks, 4 = monthly
+  const now = moment().format('YYYY-MM-DD');
   const days = [];
-  const d = new Date();
+  const d = new Date(now);
   const month = d.getMonth();
   const year = d.getFullYear();
   const date = new Date(year, month, 1);
@@ -207,7 +260,8 @@ export const getDateOfMonth = (weekDay, payperiod) => {
   }
 };
 export const getPayDate = () => {
-  const d = new Date();
+  const now = moment().format('YYYY-MM-DD');
+  const d = new Date(now);
   var day = d.getDay() || 7;
   if (day !== 1) d.setHours(-24 * (day - 1));
   return d;
@@ -255,6 +309,5 @@ export default {
   tableRows,
   parseStrapiBooking,
   getPayDate,
-  getMonday,
   parseAccordionData2,
 };

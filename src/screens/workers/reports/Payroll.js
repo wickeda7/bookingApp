@@ -36,6 +36,20 @@ const Payroll = (props) => {
   useEffect(() => {
     dispatch(getStaffPayrollData({ payrollId, userId, storeId }));
   }, []);
+  const checkInvoice = (item) => {
+    const { date, specialistId, subtotal, tips } = item;
+    if (specialistId !== userId) return;
+    props.navigation.navigate('ReportsStack', {
+      screen: 'Invoices',
+      params: {
+        date,
+        specialistId,
+        storeId,
+        subtotal,
+        tips,
+      },
+    });
+  };
   return (
     <View style={{ backgroundColor: Colors.white, height: '100%' }}>
       <Loader visible={isLoading} />
@@ -68,7 +82,7 @@ const Payroll = (props) => {
             <ScrollView showsVerticalScrollIndicator={false} scrollEnabled={scrollEnabled}>
               <View style={{ flexDirection: 'column', height: 'auto', backgroundColor: Colors.white }}>
                 <View style={[styles.row, { flex: 1 }]}>
-                  <Table data={staffPayroll.payrollData} />
+                  <Table data={staffPayroll.payrollData} detail={checkInvoice} />
                 </View>
                 <View style={[styles.row, { flex: 1 }]}>
                   <Summary

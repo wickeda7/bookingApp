@@ -5,6 +5,7 @@ import moment from 'moment';
 import Style from '@theme/style';
 import { formatPrice } from '@utils/helper';
 import Header from '../table/Header';
+import TotalView from '../TotalView';
 const PayrollAccordionBody = ({ item }) => {
   const header = [
     { size: 1, name: 'time' },
@@ -71,32 +72,9 @@ const PayrollAccordionBody = ({ item }) => {
           padding: Default.fixPadding * 2,
         }}
       >
-        <View style={[{ flex: 5 }]}></View>
-        <View style={[{ flex: 4, flexDirection: 'column' }]}>
-          <View style={{ flexDirection: 'row' }}>
-            <View style={[{ flex: 5, padding: Default.fixPadding, alignItems: 'flex-end' }]}>
-              <Text style={[Fonts.Primary14Medium]}>Subtotal:</Text>
-            </View>
-            <View style={[{ flex: 3, paddingVertical: Default.fixPadding }]}>
-              <Text style={[Fonts.Black14Medium]}>{formatPrice(subtotal)}</Text>
-            </View>
-          </View>
-          <View style={{ flexDirection: 'row' }}>
-            <View style={[{ flex: 5, padding: Default.fixPadding, alignItems: 'flex-end' }]}>
-              <Text style={[Fonts.Primary14Medium]}>Additional:</Text>
-            </View>
-            <View style={[{ flex: 3, paddingVertical: Default.fixPadding }]}>
-              <Text style={[Fonts.Black14Medium]}>{formatPrice(tips)}</Text>
-            </View>
-          </View>
-          <View style={{ flexDirection: 'row' }}>
-            <View style={[{ flex: 5, padding: Default.fixPadding, alignItems: 'flex-end' }]}>
-              <Text style={[Fonts.Primary14Medium]}>Total:</Text>
-            </View>
-            <View style={[{ flex: 3, paddingVertical: Default.fixPadding }]}>
-              <Text style={[Fonts.Black14Medium]}>{formatPrice(total)}</Text>
-            </View>
-          </View>
+        <View style={[{ flex: 1 }]}></View>
+        <View style={[{ flex: 1, flexDirection: 'column' }]}>
+          <TotalView subtotal={subtotal / 100} additional={tips / 100} total={total / 100} />
         </View>
       </View>
     </View>

@@ -128,6 +128,7 @@
     "service": "Service ",
     "price": "Price",
     "additional": "Additional",
+    "addition": "Addition",
     "hideGraph": "Hide Graph",
     "showGraph": "Show Graph"
   },

@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import { formatPrice } from '@utils/helper';
 import { addInvoice, updateBooking } from '@redux/actions/adminHomeAction';
+import TotalView from '../TotalView';
 
 const ServicesTable = ({ services, canceled }) => {
   const { t, i18n } = useTranslation();
@@ -17,11 +18,26 @@ const ServicesTable = ({ services, canceled }) => {
     return t(`homeScreen:${key}`);
   }
   const [specialistId, setSpecialistId] = useState('');
+  const [tip, setTip] = useState(0);
+  const [fees, setFees] = useState(0);
+  const [cash, setCash] = useState(0);
+  const [card, setCard] = useState(0);
+
   let status = false;
   let subtotal = 0;
   let additional = 0;
   let total = 0;
+
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (card == 0) return;
+    setFees(2);
+  }, [card]);
+
+  useEffect(() => {
+    setCash(total);
+  }, [tip, fees, additional]);
 
   const setService = (service, type, staff) => {
     dispatch(updateBooking({ type, service, staff }));
@@ -30,6 +46,7 @@ const ServicesTable = ({ services, canceled }) => {
   const setStaff = (staff) => {
     dispatch(updateStaff(staff));
   };
+
   const handleSubmit = () => {
     if (canceled) return;
     const model = {};
@@ -58,7 +75,7 @@ const ServicesTable = ({ services, canceled }) => {
         if (value.notes !== undefined) notes = value.notes;
 
         services.push({
-          additional: value.additional !== undefined ? value.additional !== undefined : 0,
+          additional: value.additional !== undefined ? value.additional : 0,
           price: value.price,
           bookingId: value.bookingId,
           id: value.id,
@@ -67,7 +84,8 @@ const ServicesTable = ({ services, canceled }) => {
           total: value.total,
         });
       }
-      total = subtotal + additional;
+      total = subtotal + additional + tip;
+
       dispatch(
         addInvoice({
           data: {
@@ -80,6 +98,10 @@ const ServicesTable = ({ services, canceled }) => {
             subtotal,
             additional,
             total,
+            tips: tip,
+            fees,
+            cashAmount: cash,
+            cardAmount: card,
             createdby: 'admin',
           },
         })
@@ -95,13 +117,15 @@ const ServicesTable = ({ services, canceled }) => {
     const value = field === 'additional' ? text : text.nativeEvent.text;
     dispatch(updatePrice({ value, item, field }));
   };
+
   for (var value of services) {
     if (value.status === 'pending') continue;
     if (value.price) subtotal += value.price;
     if (value.additional) additional += value.additional;
   }
   status = services.find((obj) => obj.status === 'working');
-  total = subtotal + additional;
+  total = subtotal + additional + tip + fees;
+
   return (
     <>
       <View style={[Style.divider, { marginHorizontal: Default.fixPadding }]} />
@@ -130,37 +154,26 @@ const ServicesTable = ({ services, canceled }) => {
         style={{
           flexDirection: 'row',
           paddingHorizontal: Default.fixPadding * 2,
-          paddingTop: Default.fixPadding * 2,
+          paddingTop: Default.fixPadding,
           paddingBottom: Default.fixPadding * 4,
           opacity: canceled ? 0.3 : 1,
         }}
       >
-        <View style={[{ flex: 5 }]}></View>
-        <View style={[{ flex: 4, flexDirection: 'column' }]}>
-          <View style={{ flexDirection: 'row' }}>
-            <View style={[{ flex: 5, padding: Default.fixPadding, alignItems: 'flex-end' }]}>
-              <Text style={[Fonts.Primary16Medium]}>Subtotal:</Text>
-            </View>
-            <View style={[{ flex: 3, paddingVertical: Default.fixPadding }]}>
-              <Text>{formatPrice(subtotal * 100)}</Text>
-            </View>
-          </View>
-          <View style={{ flexDirection: 'row' }}>
-            <View style={[{ flex: 5, padding: Default.fixPadding, alignItems: 'flex-end' }]}>
-              <Text style={[Fonts.Primary16Medium]}>Additional:</Text>
-            </View>
-            <View style={[{ flex: 3, paddingVertical: Default.fixPadding }]}>
-              <Text>{formatPrice(additional * 100)}</Text>
-            </View>
-          </View>
-          <View style={{ flexDirection: 'row' }}>
-            <View style={[{ flex: 5, padding: Default.fixPadding, alignItems: 'flex-end' }]}>
-              <Text style={[Fonts.Primary16Medium]}>Total:</Text>
-            </View>
-            <View style={[{ flex: 3, paddingVertical: Default.fixPadding }]}>
-              <Text>{formatPrice(total * 100)}</Text>
-            </View>
-          </View>
+        <View style={[{ flex: 1 }]}></View>
+        <View style={[{ flex: 1, flexDirection: 'column' }]}>
+          <TotalView
+            subtotal={subtotal}
+            additional={additional}
+            total={total}
+            editable={true}
+            setTip={setTip}
+            tips={tip}
+            fees={fees}
+            setCash={setCash}
+            card={card}
+            setCard={setCard}
+          />
+
           <View
             style={[Style.divider, { marginHorizontal: Default.fixPadding, marginVertical: Default.fixPadding * 1.5 }]}
           />

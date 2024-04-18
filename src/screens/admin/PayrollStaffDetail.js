@@ -9,7 +9,7 @@ import { parseAccordionData2 } from '@utils/helper';
 import { useSelector, useDispatch } from 'react-redux';
 import Accordion from '@components/Accordion';
 import { setEmployeePayroll } from '@redux/slices/payrollSlice';
-const PayrollStaffDetail = ({ payWeekDates, showGraph }) => {
+const PayrollStaffDetail = ({ endDate, showGraph, payperiod }) => {
   const { t, i18n } = useTranslation();
   const isRtl = i18n.dir() === 'rtl';
   function tr(key) {
@@ -21,6 +21,11 @@ const PayrollStaffDetail = ({ payWeekDates, showGraph }) => {
     id: userId,
     userInfo: { displayColor, firstName, lastName, perDay, totalDeduct: userDeduct },
   } = selectedEmployee;
+
+  let days = 0;
+  if (payperiod === 1) days = 7;
+  if (payperiod === 2) days = 14;
+  if (payperiod === 4) days = 30;
   const commission = userDeduct ? userDeduct : perDay;
   const invoices = payrollData[userId];
   const dispatch = useDispatch();
@@ -29,7 +34,11 @@ const PayrollStaffDetail = ({ payWeekDates, showGraph }) => {
       dispatch(setEmployeePayroll(accordionData));
     }
   }, [selectedEmployee]);
-
+  const payWeekDates = [];
+  let i = days;
+  while (i--) {
+    payWeekDates.push(moment(endDate).subtract(i, 'days').toISOString().split('T')[0]);
+  }
   const { dates, total, tips } = invoices.reduce(
     (acc, item) => {
       const date = moment(item.testCreatedAt).format('DD');

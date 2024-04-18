@@ -1,48 +1,81 @@
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import React, { useEffect, useRef, useState } from 'react';
-import { Colors, Fonts, Default, DefaultImage } from '@constants/style';
+import { Colors, Fonts, Default } from '@constants/style';
+import Style from '@theme/style';
 import MyStatusBar from '@components/myStatusBar';
 import { useTranslation } from 'react-i18next';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import TimeLine from '@components/calendar/TimeLine';
-import { useBookingContext } from '@contexts/BookingContext';
-import RBSheet from 'react-native-raw-bottom-sheet';
-import RangeCalendar from '@components/calendar/rangeCalendar';
 import moment from 'moment';
+import { formatPrice } from '@utils/helper';
+import { staff } from '@api/staff';
+import Header from '@components/table/Header';
 const Invoices = (props) => {
   const { t, i18n } = useTranslation();
-
   const isRtl = i18n.dir() === 'rtl';
-
   function tr(key) {
     return t(`reports:${key}`);
   }
-  const [calendarView, setCalendarView] = useState(false);
-  const [visible, setVisible] = useState(false);
-  const refRBSheet = useRef();
-  const [data, setData] = useState([]);
 
-  const [selectedDate, setSelectedDate] = useState();
-  const from = selectedDate?.from ? `From ${moment(selectedDate.from).format('M/D/YY')}` : '';
-  const to = selectedDate?.to ? ` to ${moment(selectedDate.to).format('M/D/YY')}` : '';
+  const { navigation, route } = props;
+  const date = route.params?.date;
+  const specialistId = route.params?.specialistId;
+  const storeId = route.params?.storeId;
+  const subtotal = route.params?.subtotal;
+  const tips = route.params?.tips;
+
+  const [data, setData] = useState(null);
+  const header = [
+    { size: 3, name: 'service' },
+    { size: 1, name: 'price' },
+    { size: 1, name: 'addition' },
+    { size: 1, name: 'total' },
+  ];
   useEffect(() => {
-    console.log('selectedDate', selectedDate);
-    // const getData = async () => {
-    //   // get invoices within the week of the calendar
-    //   let res = await getUserBooking(false, 'specialist');
-    //   setData(res);
-    // };
-    // getData();
+    const getData = async () => {
+      const res = await staff.checkInvoice(specialistId, storeId, date);
+      setData(res);
+    };
+    getData();
   }, []);
-  useEffect(() => {
-    if (!refRBSheet.current) return;
-    if (visible) {
-      refRBSheet.current.open();
-    } else {
-      refRBSheet.current.close();
-    }
-  }, [visible]);
+
+  const Item = ({ item }) => {
+    const { name, price, additional, total, createdAt, type } = item;
+    const color = type === 'appointment' ? Colors.info : Colors.success;
+    return (
+      <>
+        <View
+          style={[
+            Style.mainContainer,
+            {
+              flexDirection: 'row',
+              marginHorizontal: Default.fixPadding,
+              marginVertical: Default.fixPadding * 0.5,
+            },
+          ]}
+        >
+          <View style={{ flex: 3, flexDirection: 'row' }}>
+            <Text style={[Fonts.Black12Regular, { color: color, marginRight: 5 }]}>
+              {moment(createdAt).format(' h:mm A')}{' '}
+            </Text>
+            <Text style={[Fonts.Black12Regular, { color: color }]}>
+              {name.substring(0, 13)} {name.length >= 13 && '...'}
+            </Text>
+          </View>
+          <View style={{ flex: 1 }}>
+            <Text style={[Fonts.Black12Regular, { color: color }]}>{formatPrice(price * 100)}</Text>
+          </View>
+          <View style={{ flex: 1 }}>
+            <Text style={[Fonts.Black12Regular, { color: color }]}>{additional && formatPrice(additional * 100)}</Text>
+          </View>
+          <View style={{ flex: 1 }}>
+            <Text style={[Fonts.Black12Regular, { color: color }]}>{total && formatPrice(total * 100)}</Text>
+          </View>
+        </View>
+        <View style={[Fonts.Divider, { backgroundColor: Colors.bord, marginVertical: 5, marginHorizontal: 5 }]}></View>
+      </>
+    );
+  };
   return (
     <View style={{ flex: 1, backgroundColor: Colors.white }}>
       <MyStatusBar />
@@ -54,120 +87,51 @@ const Invoices = (props) => {
           height: 40,
         }}
       >
-        <TouchableOpacity
-          style={{ marginHorizontal: Default.fixPadding * 1.5 }}
-          onPress={() => props.navigation.navigate('reports')}
-        >
-          <Ionicons name={isRtl ? 'arrow-forward' : 'arrow-back'} size={30} color={Colors.white} />
+        <TouchableOpacity style={{ marginHorizontal: Default.fixPadding }} onPress={() => navigation.goBack()}>
+          <Ionicons name={isRtl ? 'arrow-forward' : 'arrow-back'} size={20} color={Colors.white} />
         </TouchableOpacity>
-        <Text style={Fonts.White18Bold}>{tr('invoice')}</Text>
+        <Text style={Fonts.White16Bold}>{tr('payroll')}</Text>
         <View style={{ flex: 1, alignItems: 'flex-end', marginHorizontal: Default.fixPadding * 1.5 }}>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <View style={{ flex: 3, alignItems: 'center', justifyContent: 'center' }}></View>
-            <View
-              style={{
-                flex: 1,
-                alignItems: 'center',
-                justifyContent: 'center',
-                backgroundColor: calendarView ? Colors.primary : Colors.white,
-                marginRight: Default.fixPadding,
-                borderRadius: 8,
-                padding: 2,
-              }}
-            >
-              <TouchableOpacity onPress={() => setCalendarView((prev) => !prev)}>
-                <Ionicons
-                  name={'calendar-number-outline'}
-                  size={22}
-                  color={calendarView ? Colors.white : Colors.primary}
-                />
-              </TouchableOpacity>
-            </View>
-            <View
-              style={{
-                flex: 1,
-                alignItems: 'center',
-                justifyContent: 'center',
-                backgroundColor: calendarView ? Colors.white : Colors.primary,
-                marginRight: Default.fixPadding,
-                borderRadius: 8,
-                padding: 2,
-              }}
-            >
-              <TouchableOpacity
-                onPress={() => {
-                  setCalendarView(true);
-                  setVisible((prev) => !prev);
-                }}
-              >
-                <Ionicons name={'calendar-outline'} size={22} color={calendarView ? Colors.primary : Colors.white} />
-              </TouchableOpacity>
-            </View>
-            <View
-              style={{
-                flex: 1,
-                alignItems: 'center',
-                justifyContent: 'center',
-                marginRight: Default.fixPadding,
-                borderRadius: 8,
-                padding: 2,
-                height: 33,
-              }}
-            >
-              <TouchableOpacity
-                onPress={() => {
-                  console.log('add invoice', refRBSheet, calendarView);
-                  refRBSheet.current.open();
-                }}
-                style={{
-                  flex: 1,
-                }}
-              >
-                <MaterialCommunityIcons name='note-plus' size={30} color={Colors.white} />
-              </TouchableOpacity>
+            <View style={{ flex: 3, alignItems: 'center', justifyContent: 'center', flexDirection: 'row' }}>
+              <Text style={[Fonts.White12Medium]}>{moment(date).format('M-DD-YYYY')}</Text>
+              <Text style={[Fonts.White12Medium, , { marginLeft: 10 }]}>{formatPrice(tips)}</Text>
+              <Text style={[Fonts.White12SemiBold, { marginLeft: 10 }]}>Total:</Text>
+              <Text style={[Fonts.White12Medium]}>{formatPrice(subtotal)}</Text>
             </View>
           </View>
         </View>
       </View>
-      {calendarView ? (
-        <>
-          <Text style={[{ fontSize: 14, color: Colors.black, fontWeight: '700' }]}>
-            {from}
-            {to}
-          </Text>
-          <RBSheet
-            ref={refRBSheet}
-            height={400}
-            openDuration={100}
-            onClose={() => setVisible(false)}
-            customStyles={{
-              container: {
-                borderTopRightRadius: 20,
-                borderTopLeftRadius: 20,
-                backgroundColor: Colors.white,
-              },
+      {data === null ? (
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <MaterialCommunityIcons name='note' size={50} color={Colors.primary} />
+          <Text
+            style={{
+              ...Fonts.Primary16Bold,
+              marginVertical: Default.fixPadding,
             }}
           >
-            <RangeCalendar setSelectedDate={setSelectedDate} r />
-          </RBSheet>
-        </>
+            {tr('noInvoice')}
+          </Text>
+        </View>
       ) : (
         <>
-          {data.length === 0 ? (
-            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-              <MaterialCommunityIcons name='note' size={50} color={Colors.primary} />
-              <Text
-                style={{
-                  ...Fonts.Primary16Bold,
-                  marginVertical: Default.fixPadding,
-                }}
-              >
-                {tr('noInvoice')}
-              </Text>
+          <Header data={header} type={'payroll'} styleHeader={'smTableHeader'} styleText={'tableHeaderText12Medium'} />
+          <ScrollView showsVerticalScrollIndicator={false}>
+            <View style={{ borderColor: 'red', borderWidth: 1, marginVertical: 10 }}>
+              {data.services.map((item, index) => {
+                return <Item key={index} item={item} />;
+              })}
             </View>
-          ) : (
-            <TimeLine data={data} />
-          )}
+          </ScrollView>
+          <View
+            style={{
+              flexDirection: 'row',
+              padding: Default.fixPadding * 2,
+            }}
+          >
+            <Text style={[Fonts.Primary14Medium]}>Subtotal:</Text>
+          </View>
         </>
       )}
     </View>

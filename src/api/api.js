@@ -369,7 +369,7 @@ export const api = {
   getInvoiceByDate: async ({ from, to, userId, storeId }) => {
     try {
       // const url = `${STRAPIURL}/api/invoices?filters[$and][0][createdAt][$gte]=${from}&filters[$and][1][createdAt][$lt]=${to}&filters[store][id][$eq]=${storeId}&filters[specialist][id][$eq]=${userId}&populate[0]=client&populate[1]=client.userInfo&populate[2]=client.userInfo.profileImg&sort[0]=createdAt:DESC`;
-      const url = `${STRAPIURL}/api/invoices?filters[$and][0][testCreatedAt][$gte]=${from}&filters[$and][1][testCreatedAt][$lt]=${to}&filters[store][id][$eq]=${storeId}&filters[specialist][id][$eq]=${userId}&populate[0]=client&populate[1]=client.userInfo&populate[2]=client.userInfo.profileImg&sort[0]=testCreatedAt:ASC`;
+      const url = `${STRAPIURL}/api/invoices?filters[$and][0][testCreatedAt][$gte]=${from}&filters[$and][1][testCreatedAt][$lt]=${to}&filters[store][id][$eq]=${storeId}&filters[specialist][id][$eq]=${userId}&populate[0]=client&populate[1]=client.userInfo&populate[2]=client.userInfo.profileImg&populate[3]=appointment&populate[4]=appointment.specialists&populate[5]=specialist&sort[0]=testCreatedAt:ASC`;
       const response = await axios.get(url);
       return response.data.data;
     } catch (error) {
@@ -501,6 +501,25 @@ export const api = {
       return response.data;
     } catch (error) {
       console.log('error sendMessage API', error);
+      throw error;
+    }
+  },
+  checkInvoice: async (specialistId, storeId, date) => {
+    try {
+      console.log('checkInvoice API', specialistId, storeId, date);
+      const url = `${STRAPIURL}/api/invoices/?filters[$and][0][specialist][id][$eq]=${specialistId}&filters[$and][1][store][id][$eq]=${storeId}&filters[$and][1][testCreatedAt][$eq]=${date}`;
+      const response = await axios.get(url);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  getInvoiceBySpecialist: async (specialistId, appointmentId) => {
+    try {
+      const url = `${STRAPIURL}/api/invoices?filters[appointment][id][$eq]=${appointmentId}&filters[specialist][id][$eq]=${specialistId}&populate[0]=specialist&populate[1]=specialist.userInfo`;
+      const response = await axios.get(url);
+      return response.data;
+    } catch (error) {
       throw error;
     }
   },

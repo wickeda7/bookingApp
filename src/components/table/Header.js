@@ -14,7 +14,7 @@ const Header = ({ data, type, styleHeader, styleText }) => {
   return (
     <View style={[Style[header], { flexDirection: 'row' }]}>
       {data.map((item, index) => (
-        <Text key={index} style={[Style[textSize], { flex: item.size }]}>
+        <Text key={index} style={[Style[textSize], { flex: item.size, marginLeft: 0 }]}>
           {tr(item.name)}
         </Text>
       ))}

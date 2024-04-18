@@ -115,8 +115,8 @@ const NotificationsHelper = ({ setNotification }) => {
     });
 
     responseListener.current = Notifications.addNotificationResponseReceivedListener((response) => {
-      alert(`response ${response}`);
-      console.log('response', response);
+      // alert(`response ${response}`);
+      // console.log('response', response);
     });
 
     return () => {

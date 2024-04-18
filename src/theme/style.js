@@ -38,7 +38,7 @@ export default StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: Default.fixPadding,
-    padding: Default.fixPadding *0.5,
+    padding: Default.fixPadding * 0.5,
     backgroundColor: Colors.lightPrimary,
   },
   tableRow: {
@@ -54,6 +54,7 @@ export default StyleSheet.create({
   tableHeaderText16Medium: { ...Fonts.Primary16Medium, marginLeft: Default.fixPadding * 1.5 },
   tableHeaderText15Medium: { ...Fonts.Primary15Medium, marginLeft: Default.fixPadding * 1.5 },
   tableHeaderText14Medium: { ...Fonts.Primary14Medium, marginLeft: Default.fixPadding * 1.5 },
+  tableHeaderText12Medium: { ...Fonts.Primary12Medium, marginLeft: Default.fixPadding },
   divider: {
     height: 1,
     backgroundColor: Colors.bord,

@@ -204,6 +204,16 @@ export const Fonts = {
     fontSize: 14,
     fontFamily: 'Regular',
   },
+  Primary13Medium: {
+    color: Colors.primary,
+    fontSize: 13,
+    fontFamily: 'Medium',
+  },
+  Primary12Medium: {
+    color: Colors.primary,
+    fontSize: 12,
+    fontFamily: 'Medium',
+  },
   Divider: {
     height: 1,
     backgroundColor: Colors.bord,
@@ -278,6 +288,21 @@ export const Fonts = {
     fontSize: 14,
     fontFamily: 'Bold',
   },
+  Black13Regular: {
+    color: Colors.black,
+    fontSize: 13,
+    fontFamily: 'Regular',
+  },
+  Black13Medium: {
+    color: Colors.black,
+    fontSize: 13,
+    fontFamily: 'Medium',
+  },
+  Black12Regular: {
+    color: Colors.black,
+    fontSize: 12,
+    fontFamily: 'Regular',
+  },
   White16Bold: {
     color: Colors.white,
     fontSize: 16,
@@ -293,10 +318,41 @@ export const Fonts = {
     fontSize: 20,
     fontFamily: 'Bold',
   },
+
+  White18SemiBold: {
+    color: Colors.white,
+    fontSize: 18,
+    fontFamily: 'SemiBold',
+  },
   White18Bold: {
     color: Colors.white,
     fontSize: 18,
     fontFamily: 'Bold',
+  },
+  White16Medium: {
+    color: Colors.white,
+    fontSize: 16,
+    fontFamily: 'Medium',
+  },
+  White14Medium: {
+    color: Colors.white,
+    fontSize: 14,
+    fontFamily: 'Medium',
+  },
+  white14SemiBold: {
+    color: Colors.white,
+    fontSize: 14,
+    fontFamily: 'SemiBold',
+  },
+  White12Medium: {
+    color: Colors.white,
+    fontSize: 12,
+    fontFamily: 'Medium',
+  },
+  White12SemiBold: {
+    color: Colors.white,
+    fontSize: 12,
+    fontFamily: 'SemiBold',
   },
   Yellow20Bold: {
     color: Colors.yellow,
@@ -329,16 +385,7 @@ export const Fonts = {
     fontSize: 14,
     fontFamily: 'SemiBold',
   },
-  white14SemiBold: {
-    color: Colors.white,
-    fontSize: 14,
-    fontFamily: 'SemiBold',
-  },
-  White18SemiBold: {
-    color: Colors.white,
-    fontSize: 18,
-    fontFamily: 'SemiBold',
-  },
+
   Grey14Medium: {
     color: Colors.grey,
     fontSize: 14,
@@ -352,12 +399,6 @@ export const Fonts = {
   Grey12Medium: {
     color: Colors.grey,
     fontSize: 12,
-    fontFamily: 'Medium',
-  },
-
-  White16Medium: {
-    color: Colors.white,
-    fontSize: 16,
     fontFamily: 'Medium',
   },
 
@@ -380,12 +421,6 @@ export const Fonts = {
   Red16Medium: {
     color: Colors.red,
     fontSize: 16,
-    fontFamily: 'Medium',
-  },
-
-  White14Medium: {
-    color: Colors.white,
-    fontSize: 14,
     fontFamily: 'Medium',
   },
 

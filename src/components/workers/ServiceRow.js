@@ -14,7 +14,8 @@ const ServiceRow = ({ item, handleTextChange, show }) => {
     return t(`homeScreen:${key}`);
   }
   const [open, setOpen] = useState(false);
-  const additional = item.additional ? item.additional.toString() : '';
+  const additional = item.additional;
+  //const additional = item.additional ? item.additional.toString() : '';
   const notes = item.notes ? item.notes : `notes`;
   const price = item.price;
   const total = item.total ? item.total : price;
@@ -54,9 +55,9 @@ const ServiceRow = ({ item, handleTextChange, show }) => {
           { flexDirection: 'row', marginHorizontal: Default.fixPadding, marginTop: 5, marginBottom: 10 },
         ]}
       >
-        <View style={[{ flex: 3, flexDirection: 'row' }]}>
+        <View style={[{ flex: show ? 1 : 2, flexDirection: 'row' }]}>
           {show ? (
-            <Text style={[Fonts.Grey14Medium, { marginHorizontal: 10 }]}>{tr('notes')}:</Text>
+            <Text style={[Fonts.Grey14Medium, {}]}>{tr('notes')}:</Text>
           ) : (
             <TouchableOpacity
               activeOpacity={0.8}
@@ -70,7 +71,7 @@ const ServiceRow = ({ item, handleTextChange, show }) => {
             </TouchableOpacity>
           )}
         </View>
-        <View style={[{ flex: 7 }]}>
+        <View style={[{ flex: 7, flexDirection: 'row' }]}>
           {open ? (
             <TextInput
               multiline={true}
@@ -83,7 +84,10 @@ const ServiceRow = ({ item, handleTextChange, show }) => {
               //value={notes}
             />
           ) : (
-            <Text style={[Fonts.Grey14Medium]}>{item.notes}</Text>
+            <>
+              <Text style={[Fonts.Grey14Medium]}>{item.notes}</Text>
+              {item?.specialistName && <Text style={{ color: item.displayColor }}>{item.specialistName}</Text>}
+            </>
           )}
         </View>
       </View>
