@@ -8,7 +8,6 @@ import { useTranslation } from 'react-i18next';
 import StoreServiceItem from './StoreServiceItem';
 import Accordion from '@components/Accordion';
 import { useAdminContext } from '@contexts/AdminContext';
-import { updateService } from '@redux/actions/adminHomeAction';
 import { useDispatch } from 'react-redux';
 const AccordionStoreBody = ({ catId, serviceId }) => {
   const { t, i18n } = useTranslation();

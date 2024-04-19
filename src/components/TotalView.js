@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { Colors, Fonts, Default } from '@constants/style';
 import Style from '@theme/style';
@@ -7,22 +7,12 @@ import DashedLine from 'react-native-dashed-line';
 import NumericInput from '@wwdrew/react-native-numeric-textinput';
 import MatIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
-const TotalView = ({
-  subtotal,
-  additional,
-  total,
-  editable,
-  setTip,
-  tips,
-  fees,
-  setCash,
-  card,
-  setCard,
-  cardAmount,
-  cashAmount,
-}) => {
+const TotalView = ({ subtotal, additional, total, editable, setTip, tips, fees, setCash, card, setCard, setPayBy }) => {
   const [cashValue, setCashValue] = useState(0);
   const [cardValue, setCardValue] = useState(0);
+
+  console.log('total', tips);
+  console.log('card', card);
 
   useEffect(() => {
     setCashValue(total);
@@ -51,10 +41,20 @@ const TotalView = ({
                 marginVertical: Default.fixPadding * 0.25,
               }}
             >
-              <MatIcons size={27} name='cash' color={Colors.success} />
-              <Text style={[Fonts.Black15Medium, { marginTop: 5, marginRight: 3, color: Colors.success }]}>
-                Total in Cash:
-              </Text>
+              <TouchableOpacity
+                style={{
+                  flexDirection: 'row',
+                }}
+                activeOpacity={0.8}
+                onPress={() => {
+                  setPayBy('cash');
+                }}
+              >
+                <MatIcons size={27} name='cash' color={Colors.success} />
+                <Text style={[Fonts.Black15Medium, { marginTop: 5, marginRight: 3, color: Colors.success }]}>
+                  Total in Cash:
+                </Text>
+              </TouchableOpacity>
               <NumericInput
                 type='decimal'
                 decimalPlaces={2}
@@ -72,10 +72,20 @@ const TotalView = ({
                 marginVertical: Default.fixPadding * 0.25,
               }}
             >
-              <MatIcons size={27} name='credit-card-outline' color={Colors.info} />
-              <Text style={[Fonts.Black15Medium, { marginTop: 5, marginRight: 11, color: Colors.info }]}>
-                Total in Card:
-              </Text>
+              <TouchableOpacity
+                style={{
+                  flexDirection: 'row',
+                }}
+                activeOpacity={0.8}
+                onPress={() => {
+                  setPayBy('card');
+                }}
+              >
+                <MatIcons size={27} name='credit-card-outline' color={Colors.info} />
+                <Text style={[Fonts.Black15Medium, { marginTop: 5, marginRight: 11, color: Colors.info }]}>
+                  Total in Card:
+                </Text>
+              </TouchableOpacity>
               <NumericInput
                 type='decimal'
                 decimalPlaces={2}

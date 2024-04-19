@@ -4,7 +4,6 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { Colors, Default, Fonts } from '@constants/style';
 import Style from '@theme/style';
 import { useTranslation } from 'react-i18next';
-import { formatPrice } from '@utils/helper';
 import AccordionStoreBody from './AccordionStoreBody';
 import { updateService } from '@redux/actions/adminHomeAction';
 import { useDispatch } from 'react-redux';

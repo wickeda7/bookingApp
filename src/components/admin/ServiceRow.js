@@ -21,12 +21,13 @@ const ServiceRow = ({ item, setService, setStaff, handleTextChange, canceled }) 
   const [add, setAdd] = useState(false);
   const [addedItem, setAddedItem] = useState(null);
   const [value, setValue] = useState('');
+  const [ogPrice, setOgPrice] = useState(null);
   const ref = useRef();
-
   const specialist = item.specialist;
   const color = specialist ? specialist.userInfo.displayColor : '#000';
   const firstName = specialist ? specialist.userInfo.firstName : '';
   const lastName = specialist ? specialist.userInfo.lastName : '';
+
   const id = specialist ? specialist.id : '';
   const price = item.price;
   const additional = item.additional ? item.additional.toString() : '';
@@ -44,6 +45,7 @@ const ServiceRow = ({ item, setService, setStaff, handleTextChange, canceled }) 
     temp.name = `${item.name} - Split`;
     temp.price = 0;
     temp.total = 0;
+    setOgPrice(price);
     setAddedItem(temp);
     setAdd(!add);
   };
@@ -68,11 +70,11 @@ const ServiceRow = ({ item, setService, setStaff, handleTextChange, canceled }) 
     temp.price = value;
     temp.total = value;
     setAddedItem(temp);
-    let newPrice = price * 100 - value * 100;
+    const newPrice = ogPrice * 100 - value * 100;
     setValue(newPrice / 100);
   };
   const handleCancel = () => {
-    const newPrice = price * 100 + addedItem.price * 100;
+    const newPrice = ogPrice * 100;
     dispatch(updatePrice({ value: newPrice / 100, item, field: 'price' }));
     setAdd(!add);
     setAddedItem(null);

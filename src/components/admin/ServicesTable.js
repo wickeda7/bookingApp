@@ -7,7 +7,6 @@ import { useTranslation } from 'react-i18next';
 import { updateStaff, updatePrice, resetMessage } from '@redux/slices/adminHomeSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import AntIcon from 'react-native-vector-icons/AntDesign';
-import { formatPrice } from '@utils/helper';
 import { addInvoice, updateBooking } from '@redux/actions/adminHomeAction';
 import TotalView from '../TotalView';
 
@@ -22,6 +21,7 @@ const ServicesTable = ({ services, canceled }) => {
   const [fees, setFees] = useState(0);
   const [cash, setCash] = useState(0);
   const [card, setCard] = useState(0);
+  const [payBy, setPayBy] = useState('cash');
 
   let status = false;
   let subtotal = 0;
@@ -31,11 +31,26 @@ const ServicesTable = ({ services, canceled }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    if (payBy === 'cash') {
+      setCard(0);
+      setFees(0);
+      setCash(total);
+    } else if (payBy === 'card') {
+      setCash(0);
+      setFees(2);
+      setCard(total);
+    }
+    console.log('useEffect payBy', payBy);
+  }, [payBy]);
+
+  useEffect(() => {
+    console.log('useEffect card', card);
     if (card == 0) return;
     setFees(2);
   }, [card]);
 
   useEffect(() => {
+    console.log('useEffect  tip,fees,additional', tip, fees, additional);
     setCash(total);
   }, [tip, fees, additional]);
 
@@ -172,6 +187,7 @@ const ServicesTable = ({ services, canceled }) => {
             setCash={setCash}
             card={card}
             setCard={setCard}
+            setPayBy={setPayBy}
           />
 
           <View
