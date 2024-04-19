@@ -23,7 +23,6 @@ import PayrollStaffDetail from './PayrollStaffDetail';
 import { weekDaysObj } from '@constants/settings';
 import PayrollInvoice from '@components/admin/PayrollInvoice';
 import NotificationsHelper from '@utils/notifications';
-import { use } from 'i18next';
 const Payroll = (props) => {
   const { t, i18n } = useTranslation();
   const isRtl = i18n.dir() === 'rtl';
@@ -78,20 +77,20 @@ const Payroll = (props) => {
   const payperiod = +store?.payperiod;
   const payperiod_date = store?.payperiod_date;
   const weekDay = weekDaysObj[payperiod_date];
+
   const payDate = getDateOfMonth(weekDay, payperiod);
   payDate.reverse();
   const totalDeduct = store?.totalDeduct;
   const lastRow = employees.length - 1;
   const storeId = store?.id;
-
   const seletedDate = payDate.find((item) => {
     const endDate = moment(item.endDate);
     const startDate = moment(item.startDate);
+    //if (!(moment().isSameOrBefore(startDate) || moment().isSameOrAfter(endDate))) {
     if (!(moment().isBefore(startDate) || moment().isAfter(endDate))) {
       return item;
     }
   });
-
   const handleDisplayInvoice = (userId) => {
     if (!payrollData[userId]) return;
     if (selectedEmployee && userId === selectedEmployee.id) {

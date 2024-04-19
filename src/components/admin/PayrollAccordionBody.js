@@ -14,7 +14,8 @@ const PayrollAccordionBody = ({ item }) => {
     { size: 1, name: 'additional' },
     { size: 1, name: 'total' },
   ];
-  const { data, tips, total, subtotal } = item;
+  const { data, tips, additional, total, subtotal } = item;
+
   const { items } = data.reduce(
     (acc, item) => {
       const temp = item.services.map((service) => {
@@ -27,6 +28,7 @@ const PayrollAccordionBody = ({ item }) => {
   );
   const Item = ({ item }) => {
     const { name, price, additional, total, createdAt, type } = item;
+
     const color = type === 'appointment' ? Colors.info : Colors.success;
     return (
       <>
@@ -74,7 +76,7 @@ const PayrollAccordionBody = ({ item }) => {
       >
         <View style={[{ flex: 1 }]}></View>
         <View style={[{ flex: 1, flexDirection: 'column' }]}>
-          <TotalView subtotal={subtotal / 100} additional={tips / 100} total={total / 100} />
+          <TotalView subtotal={subtotal / 100} additional={additional / 100} tips={tips / 100} total={total / 100} />
         </View>
       </View>
     </View>

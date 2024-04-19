@@ -47,7 +47,7 @@ const PayrollStaffDetail = ({ endDate, showGraph, payperiod }) => {
       }
       acc.dates[item.testCreatedAt].push(item);
       acc.total += item.subtotal * 100;
-      acc.tips += item.additional * 100;
+      acc.tips += item.tips * 100;
       return acc;
     },
     { dates: {}, total: 0, tips: 0 }
