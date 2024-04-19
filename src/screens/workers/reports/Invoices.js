@@ -10,6 +10,8 @@ import moment from 'moment';
 import { formatPrice } from '@utils/helper';
 import { staff } from '@api/staff';
 import Header from '@components/table/Header';
+import TotalView from '@components/TotalView';
+import { useCallback } from 'react';
 const Invoices = (props) => {
   const { t, i18n } = useTranslation();
   const isRtl = i18n.dir() === 'rtl';
@@ -39,8 +41,14 @@ const Invoices = (props) => {
     getData();
   }, []);
 
+  const itemPressed = useCallback((item) => {
+    navigation.navigate('ReportsStack', {
+      screen: 'InvoiceDetail',
+      params: { data: item },
+    });
+  }, []);
   const Item = ({ item }) => {
-    const { name, price, additional, total, createdAt, type } = item;
+    const { name, price, additional, total, createdAt, type, data } = item;
     const color = type === 'appointment' ? Colors.info : Colors.success;
     return (
       <>
@@ -88,7 +96,7 @@ const Invoices = (props) => {
         }}
       >
         <TouchableOpacity style={{ marginHorizontal: Default.fixPadding }} onPress={() => navigation.goBack()}>
-          <Ionicons name={isRtl ? 'arrow-forward' : 'arrow-back'} size={20} color={Colors.white} />
+          <Ionicons name={isRtl ? 'arrow-forward' : 'arrow-back'} size={22} color={Colors.white} />
         </TouchableOpacity>
         <Text style={Fonts.White16Bold}>{tr('payroll')}</Text>
         <View style={{ flex: 1, alignItems: 'flex-end', marginHorizontal: Default.fixPadding * 1.5 }}>
@@ -118,19 +126,32 @@ const Invoices = (props) => {
         <>
           <Header data={header} type={'payroll'} styleHeader={'smTableHeader'} styleText={'tableHeaderText12Medium'} />
           <ScrollView showsVerticalScrollIndicator={false}>
-            <View style={{ borderColor: 'red', borderWidth: 1, marginVertical: 10 }}>
+            <View style={{ marginVertical: 10 }}>
               {data.services.map((item, index) => {
-                return <Item key={index} item={item} />;
+                return (
+                  <TouchableOpacity onPress={() => itemPressed(item.data)} key={index}>
+                    <Item key={index} item={item} />
+                  </TouchableOpacity>
+                );
               })}
             </View>
           </ScrollView>
           <View
             style={{
               flexDirection: 'row',
-              padding: Default.fixPadding * 2,
+              marginBottom: Default.fixPadding * 3,
+              marginTop: Default.fixPadding,
+              marginHorizontal: Default.fixPadding,
             }}
           >
-            <Text style={[Fonts.Primary14Medium]}>Subtotal:</Text>
+            <View style={[{ flex: 1, flexDirection: 'column' }]}>
+              <TotalView
+                subtotal={data.total / 100}
+                additional={data.additional / 100}
+                tips={data.tips / 100}
+                total={(data.total + data.additional + data.tips) / 100}
+              />
+            </View>
           </View>
         </>
       )}

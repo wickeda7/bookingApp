@@ -55,7 +55,7 @@ const ServiceRow = ({ item, handleTextChange, show }) => {
           { flexDirection: 'row', marginHorizontal: Default.fixPadding, marginTop: 5, marginBottom: 10 },
         ]}
       >
-        <View style={[{ flex: show ? 1 : 2, flexDirection: 'row' }]}>
+        <View style={[{ flex: show ? 1.3 : 2, flexDirection: 'row' }]}>
           {show ? (
             <Text style={[Fonts.Grey14Medium, {}]}>{tr('notes')}:</Text>
           ) : (

@@ -32,22 +32,23 @@ export const staff = {
   checkInvoice: async (specialistId, storeId, date) => {
     try {
       const response = await api.checkInvoice(specialistId, storeId, date);
-      const { tips, total, services } = response.data.reduce(
+      const { additional, tips, total, services } = response.data.reduce(
         (acc, item) => {
           const { attributes, id } = item;
-          acc.tips += attributes.additional * 100;
+          acc.additional += attributes.additional * 100;
+          acc.tips += attributes.tips * 100;
           acc.total += attributes.subtotal * 100;
           const { services } = attributes;
           const temp = services.map((service) => {
-            return { ...service, createdAt: attributes.createdAt, type: attributes.type };
+            return { ...service, createdAt: attributes.createdAt, type: attributes.type, data: { id, ...attributes } };
           });
           acc.services = [...acc.services, ...temp];
           return acc;
         },
-        { tips: 0, total: 0, services: [] }
+        { tips: 0, total: 0, additional: 0, services: [] }
       );
 
-      return { tips, total, services };
+      return { tips, total, additional, services };
     } catch (error) {
       console.log('error staff checkInvoice', error.response.data.error.message);
       throw error;

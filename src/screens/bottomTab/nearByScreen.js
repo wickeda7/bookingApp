@@ -61,7 +61,6 @@ const NearByScreen = (props) => {
         outputRange: [1, 1.5, 1],
         extrapolate: 'clamp',
       });
-
       return { scale };
     });
     setInterpolations(temp);
@@ -171,26 +170,28 @@ const NearByScreen = (props) => {
         </View>
       </View>
       <MapView ref={_map} initialRegion={initialMapState.region} style={{ flex: 1 }} provider={PROVIDER_GOOGLE}>
-        {initialMapState.stores.map((marker, index) => {
-          const scaleStyle = {
-            transform: [
-              {
-                scale: interpolations[index].scale,
-              },
-            ],
-          };
-          return (
-            <Marker key={index} coordinate={marker.coordinate} onPress={(e) => onMarkerPress(e)}>
-              <Animated.View>
-                <Animated.Image
-                  source={require('@assets/images/map.png')}
-                  style={[styles.marker, scaleStyle]}
-                  resizeMode='cover'
-                />
-              </Animated.View>
-            </Marker>
-          );
-        })}
+        {initialMapState.stores.length > 0 &&
+          initialMapState.stores.map((marker, index) => {
+            if (interpolations.length === 0) return null;
+            const scaleStyle = {
+              transform: [
+                {
+                  scale: interpolations[index].scale,
+                },
+              ],
+            };
+            return (
+              <Marker key={index} coordinate={marker.coordinate} onPress={(e) => onMarkerPress(e)}>
+                <Animated.View>
+                  <Animated.Image
+                    source={require('@assets/images/map.png')}
+                    style={[styles.marker, scaleStyle]}
+                    resizeMode='cover'
+                  />
+                </Animated.View>
+              </Marker>
+            );
+          })}
       </MapView>
 
       <Animated.ScrollView

@@ -507,7 +507,7 @@ export const api = {
   checkInvoice: async (specialistId, storeId, date) => {
     try {
       console.log('checkInvoice API', specialistId, storeId, date);
-      const url = `${STRAPIURL}/api/invoices/?filters[$and][0][specialist][id][$eq]=${specialistId}&filters[$and][1][store][id][$eq]=${storeId}&filters[$and][1][testCreatedAt][$eq]=${date}`;
+      const url = `${STRAPIURL}/api/invoices/?filters[$and][0][specialist][id][$eq]=${specialistId}&filters[$and][1][store][id][$eq]=${storeId}&filters[$and][1][testCreatedAt][$eq]=${date}&populate[0]=client&populate[1]=client.userInfo`;
       const response = await axios.get(url);
       return response.data;
     } catch (error) {

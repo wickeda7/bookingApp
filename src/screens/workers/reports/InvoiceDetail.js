@@ -13,6 +13,7 @@ import InvoiceTable from '@components/workers/InvoiceTable';
 const InvoiceDetail = (props) => {
   const { navigation, route } = props;
   const { data } = route.params;
+
   const [invoiceData, setInvoiceData] = useState([]);
 
   useEffect(() => {
@@ -25,7 +26,7 @@ const InvoiceDetail = (props) => {
     }
   }, []);
 
-  const { client, appointment, createdAt, specialist } = data;
+  const { client, appointment, createdAt, specialist, id } = data;
   const userAttributes = client?.data?.attributes?.userInfo?.data?.attributes;
 
   const lastName = userAttributes.lastName ? userAttributes.lastName : '';
@@ -33,8 +34,8 @@ const InvoiceDetail = (props) => {
   const image = userAttributes.profileImg?.data?.attributes?.url
     ? userAttributes.profileImg?.data?.attributes?.url
     : '';
-  const specialists = appointment?.data?.attributes.specialists.data;
-  const appointmentId = appointment.data.id;
+  const specialists = appointment?.data?.attributes.specialists.data || [];
+  const appointmentId = appointment?.data.id ? appointment?.data.id : id;
 
   const getItem = async (specialistId, appointmentId) => {
     const invoice = await staff.getInvoiceBySpecialist({ specialistId, appointmentId });
@@ -63,7 +64,7 @@ const InvoiceDetail = (props) => {
       <MyStatusBar />
       <View style={[Style.primaryNav, { flexDirection: isRtl ? 'row-reverse' : 'row' }]}>
         <TouchableOpacity style={Style.navBackButton} onPress={() => navigation.pop()}>
-          <Ionicons name={isRtl ? 'arrow-forward' : 'arrow-back'} size={20} color={Colors.white} />
+          <Ionicons name={isRtl ? 'arrow-forward' : 'arrow-back'} size={22} color={Colors.white} />
         </TouchableOpacity>
         <Text style={Fonts.White16Bold}>Report</Text>
       </View>

@@ -154,7 +154,7 @@ const Settings = (props) => {
       <MyStatusBar />
       <View style={[Style.primaryNav, { flexDirection: isRtl ? 'row-reverse' : 'row' }]}>
         <TouchableOpacity onPress={() => navigation.navigate('Home')} style={Style.navBackButton}>
-          <Ionicons name={isRtl ? 'arrow-forward' : 'arrow-back'} size={20} color={Colors.white} />
+          <Ionicons name={isRtl ? 'arrow-forward' : 'arrow-back'} size={22} color={Colors.white} />
         </TouchableOpacity>
         <Text style={Fonts.White16Bold}>{tr('settings')}</Text>
       </View>

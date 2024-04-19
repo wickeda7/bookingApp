@@ -137,7 +137,7 @@ const Payroll = (props) => {
       <MyStatusBar />
       <View style={[Style.primaryNav, { flexDirection: isRtl ? 'row-reverse' : 'row' }]}>
         <TouchableOpacity onPress={() => props.navigation.navigate('Home')} style={Style.navBackButton}>
-          <Ionicons name={isRtl ? 'arrow-forward' : 'arrow-back'} size={20} color={Colors.white} />
+          <Ionicons name={isRtl ? 'arrow-forward' : 'arrow-back'} size={22} color={Colors.white} />
         </TouchableOpacity>
         <Text style={Fonts.White16Bold}>{tr('payroll')}</Text>
       </View>
