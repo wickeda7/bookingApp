@@ -16,7 +16,6 @@ const ServicesTable = ({ services, canceled }) => {
   function tr(key) {
     return t(`homeScreen:${key}`);
   }
-  const [specialistId, setSpecialistId] = useState('');
   const [tip, setTip] = useState(0);
   const [fees, setFees] = useState(0);
   const [cash, setCash] = useState(0);
@@ -27,8 +26,16 @@ const ServicesTable = ({ services, canceled }) => {
   let subtotal = 0;
   let additional = 0;
   let total = 0;
-
+  const feesAmount = 2;
   const dispatch = useDispatch();
+
+  for (var value of services) {
+    if (value.status === 'pending') continue;
+    if (value.price) subtotal += value.price;
+    if (value.additional) additional += value.additional;
+  }
+  status = services.find((obj) => obj.status === 'working');
+  total = subtotal + additional + tip + fees;
 
   useEffect(() => {
     if (payBy === 'cash') {
@@ -37,21 +44,23 @@ const ServicesTable = ({ services, canceled }) => {
       setCash(total);
     } else if (payBy === 'card') {
       setCash(0);
-      setFees(2);
-      setCard(total);
+      setFees(feesAmount);
+      setCard(total + feesAmount);
     }
-    console.log('useEffect payBy', payBy);
   }, [payBy]);
 
   useEffect(() => {
-    console.log('useEffect card', card);
-    if (card == 0) return;
+    if (card === 0) return;
     setFees(2);
   }, [card]);
 
   useEffect(() => {
-    console.log('useEffect  tip,fees,additional', tip, fees, additional);
-    setCash(total);
+    if (payBy === 'card') {
+      setCard(total);
+    } else if (payBy === 'cash') {
+      setCash(total);
+    } else {
+    }
   }, [tip, fees, additional]);
 
   const setService = (service, type, staff) => {
@@ -121,6 +130,11 @@ const ServicesTable = ({ services, canceled }) => {
           },
         })
       );
+      setCard(0);
+      setCash(0);
+      setTip(0);
+      setPayBy('cash');
+      setFees(0);
     }
   };
   const handleDelete = () => {
@@ -132,14 +146,6 @@ const ServicesTable = ({ services, canceled }) => {
     const value = field === 'additional' ? text : text.nativeEvent.text;
     dispatch(updatePrice({ value, item, field }));
   };
-
-  for (var value of services) {
-    if (value.status === 'pending') continue;
-    if (value.price) subtotal += value.price;
-    if (value.additional) additional += value.additional;
-  }
-  status = services.find((obj) => obj.status === 'working');
-  total = subtotal + additional + tip + fees;
 
   return (
     <>
@@ -184,6 +190,7 @@ const ServicesTable = ({ services, canceled }) => {
             setTip={setTip}
             tips={tip}
             fees={fees}
+            cash={cash}
             setCash={setCash}
             card={card}
             setCard={setCard}

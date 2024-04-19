@@ -7,25 +7,29 @@ import DashedLine from 'react-native-dashed-line';
 import NumericInput from '@wwdrew/react-native-numeric-textinput';
 import MatIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
-const TotalView = ({ subtotal, additional, total, editable, setTip, tips, fees, setCash, card, setCard, setPayBy }) => {
-  const [cashValue, setCashValue] = useState(0);
-  const [cardValue, setCardValue] = useState(0);
-
-  console.log('total', tips);
-  console.log('card', card);
-
-  useEffect(() => {
-    setCashValue(total);
-    setCardValue(card);
-  }, [total]);
-
+const TotalView = ({
+  subtotal,
+  additional,
+  total,
+  editable,
+  setTip,
+  tips,
+  fees,
+  cash,
+  setCash,
+  card,
+  setCard,
+  setPayBy,
+}) => {
   const handlePriceChange = (value, field) => {
+    setPayBy('both');
+    const totalCash = cash;
+    const totalCard = card;
+    const temp = total - value;
     if (field === 'cash') {
-      setCashValue(value);
+      setCash(value);
+      setCard(temp);
     } else {
-      const temp = total - value;
-      setCashValue(temp);
-      setCardValue(value);
       setCard(value);
       setCash(temp);
     }
@@ -58,7 +62,7 @@ const TotalView = ({ subtotal, additional, total, editable, setTip, tips, fees, 
               <NumericInput
                 type='decimal'
                 decimalPlaces={2}
-                value={cashValue}
+                value={cash}
                 onUpdate={(value) => {
                   handlePriceChange(value, 'cash');
                 }}
@@ -89,7 +93,7 @@ const TotalView = ({ subtotal, additional, total, editable, setTip, tips, fees, 
               <NumericInput
                 type='decimal'
                 decimalPlaces={2}
-                value={cardValue}
+                value={card}
                 onUpdate={(value) => {
                   handlePriceChange(value, 'card');
                 }}
