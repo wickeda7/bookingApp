@@ -109,7 +109,8 @@
     "images": "Images",
     "about": "About",
     "payperiod": "Pay Period",
-    "amountPerTurn": "Amount Per Turn"
+    "amountPerTurn": "Amount Per Turn",
+    "setTurns": "Set Turns"
   },
   "payroll": {
     "payroll": "Payroll",

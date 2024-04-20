@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Colors, Default, Fonts } from '@constants/style';
 import Style from '@theme/style';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import Icons6 from 'react-native-vector-icons/FontAwesome6';
 import NotificationsHelper from '@utils/notifications';
 import { useTranslation } from 'react-i18next';
 import { useAuthContext } from '@contexts/AuthContext';
@@ -16,6 +17,7 @@ import StaffRow from '@components/admin/StaffRow';
 import Accordion from '@components/Accordion';
 import { DraxProvider } from 'react-native-drax';
 import socket from '@utils/socket';
+import Dlist from '../../components/admin/Dlist';
 const AdminHome = () => {
   const { t, i18n } = useTranslation();
   const isRtl = i18n.dir() === 'rtl';
@@ -26,6 +28,7 @@ const AdminHome = () => {
   LogBox.ignoreAllLogs(); //Ignore all log notifications
   const [notification, setNotification] = useState(null);
   const [notificationNumber, setNotificationNumber] = useState(0);
+  const [clockIn, setClockIn] = useState(false);
   const { userData } = useAuthContext();
   const dispatch = useDispatch();
   const { isLoading, staffAvailable, staffUnAvailable, walkin, appointment } = useSelector((state) => state.adminHome);
@@ -104,8 +107,21 @@ const AdminHome = () => {
             marginHorizontal: Default.fixPadding * 1.5,
           }}
         >
-          <View style={{ flex: 9, justifyContent: 'center' }}>
+          <View style={{ flex: 15, justifyContent: 'center' }}>
             <Text style={Fonts.White18Bold}>{userData.storeAdmin.name}</Text>
+          </View>
+
+          <View
+            style={{
+              flex: 1,
+
+              alignItems: 'flex-end',
+              paddingTop: 8,
+            }}
+          >
+            <TouchableOpacity onPress={() => setClockIn(!clockIn)}>
+              <Icons6 name={'user-gear'} size={25} color={Colors.white} />
+            </TouchableOpacity>
           </View>
           <View
             style={{
@@ -142,12 +158,18 @@ const AdminHome = () => {
       </View>
       <View style={[Style.mainContainer, { flexDirection: 'row', padding: Default.fixPadding * 1.5 }]}>
         <View style={[{ flex: 2 }]}>
-          {staffAvailable.map((item, index) => {
-            return <StaffRow key={index} item={item} busy={false} />;
-          })}
-          {staffUnAvailable.map((item, index) => {
-            return <StaffRow key={index} item={item} busy={true} />;
-          })}
+          {clockIn ? (
+            <Dlist staffAvailable={staffAvailable} />
+          ) : (
+            <>
+              {staffAvailable.map((item, index) => {
+                return <StaffRow key={index} item={item} busy={false} />;
+              })}
+              {staffUnAvailable.map((item, index) => {
+                return <StaffRow key={index} item={item} busy={true} />;
+              })}
+            </>
+          )}
         </View>
         <View style={[styles.borderLeft, { flex: 4 }]}>
           <ScrollView contentInsetAdjustmentBehavior='automatic' style={styles.container}>

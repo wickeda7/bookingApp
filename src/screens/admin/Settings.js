@@ -28,6 +28,7 @@ import StoreHours from '@components/admin/StoreHours';
 import StoreServices from '@components/admin/StoreServices';
 import SettingsEmplyee from '@components/admin/SettingsEmplyee';
 import UnAuthorized from '@components/UnAuthorized';
+import NumericInput from '@wwdrew/react-native-numeric-textinput';
 const Settings = (props) => {
   const { t, i18n } = useTranslation();
   const isRtl = i18n.dir() === 'rtl';
@@ -44,6 +45,7 @@ const Settings = (props) => {
   const { isLoading, storeSettings } = useSelector((state) => state.adminHome);
   const [formattedNumber, setFormattedNumber] = useState();
   const [toggleCheckBox, setToggleCheckBox] = useState(payperiods);
+  const [toggleTurnsCheckBox, setToggleTurnsCheckBox] = useState({ 1: false, 2: false });
 
   useEffect(() => {
     dispatch(getSettings({ storeId }));
@@ -53,6 +55,8 @@ const Settings = (props) => {
     setStoreServices(storeSettings.services || []);
     setStoreInfo(storeSettings);
     setFormattedNumber(formatPhoneNumber(storeSettings.phone));
+    const turns = storeSettings.setTurns ? storeSettings.setTurns : false;
+    setToggleTurnsCheckBox({ 1: turns, 2: !turns });
     const payperiod = storeSettings.payperiod;
     if (payperiod) {
       const toggle = Object.keys(toggleCheckBox).reduce((acc, key) => {
@@ -67,6 +71,19 @@ const Settings = (props) => {
     }
   }, [storeSettings]);
 
+  const handleSetTurns = (turn, val) => {
+    let temp = { ...toggleTurnsCheckBox };
+    if (turn === '2') {
+      if (val) temp[1] = false;
+      temp[2] = !temp[2];
+    }
+    if (turn === '1') {
+      temp[1] = val;
+      temp[2] = !val;
+    }
+    setToggleTurnsCheckBox(temp);
+    setStoreInfo((prevState) => ({ ...prevState, setTurns: temp[1] }));
+  };
   const handleCheckBox = (week) => {
     const toggle = Object.keys(toggleCheckBox).reduce((acc, key) => {
       if (key === week) {
@@ -115,6 +132,7 @@ const Settings = (props) => {
       payperiod,
       payperiod_date,
       amountPerTurn,
+      setTurns,
     } = storeInfo;
     hours = hours.map((item) => {
       delete item.selected;
@@ -135,6 +153,7 @@ const Settings = (props) => {
       payperiod,
       payperiod_date,
       amountPerTurn,
+      setTurns,
     };
 
     dispatch(updateStoreInfo({ storeId, data }));
@@ -331,23 +350,55 @@ const Settings = (props) => {
             style={[
               {
                 flexDirection: 'column',
-                width: 150,
+                width: 130,
+              },
+            ]}
+          >
+            <Text style={Fonts.Black14Medium}>{tr('setTurns')}</Text>
+            <View style={{ flexDirection: 'row', marginTop: 7 }}>
+              <CheckBox
+                value={toggleTurnsCheckBox[1]}
+                onValueChange={(val) => {
+                  handleSetTurns('1', val);
+                }}
+                style={{ transform: [{ scaleX: 0.8 }, { scaleY: 0.8 }] }}
+              />
+              <Text style={{ paddingTop: 5, fontSize: 13, marginRight: 10 }}>ON</Text>
+              <CheckBox
+                value={toggleTurnsCheckBox[2]}
+                onValueChange={(val) => {
+                  handleSetTurns('2', val);
+                }}
+                style={{ transform: [{ scaleX: 0.8 }, { scaleY: 0.8 }] }}
+              />
+              <Text style={{ paddingTop: 5, fontSize: 13, marginRight: 10 }}>OFF</Text>
+            </View>
+          </View>
+          <View
+            style={[
+              {
+                flexDirection: 'column',
+                width: 130,
               },
             ]}
           >
             <Text style={Fonts.Black14Medium}>{tr('amountPerTurn')}</Text>
-            <TextInput
-              style={Style.inputStyle}
-              onChangeText={(text) => handleOnchange(text, 'amountPerTurn')}
-              selectionColor={Colors.primary}
+            <NumericInput
+              type='decimal'
+              decimalPlaces={2}
               value={storeInfo.amountPerTurn}
+              onUpdate={(value) => {
+                handleOnchange(value, 'amountPerTurn');
+              }}
+              style={[Style.inputStyle, { width: 75, height: 30, marginVertical: 0, padding: 4 }]}
+              selectionColor={Colors.primary}
             />
           </View>
           <View
             style={[
               {
                 flexDirection: 'column',
-                width: 150,
+                width: 120,
               },
             ]}
           >
@@ -373,7 +424,7 @@ const Settings = (props) => {
             style={[
               {
                 flexDirection: 'column',
-                width: 150,
+                width: 120,
               },
             ]}
           >
@@ -431,7 +482,7 @@ const Settings = (props) => {
               <Text style={{ paddingTop: 5, fontSize: 13, marginRight: 10 }}>Every 4 Weeks</Text>
               <Text style={{ paddingTop: 5, fontSize: 13, marginRight: 10 }}>On</Text>
               <Dropdown
-                style={[Style.inputStyle, { width: 120 }]}
+                style={[Style.inputStyle, { width: 110 }]}
                 placeholderStyle={styles.placeholderStyle}
                 selectedTextStyle={styles.selectedTextStyle}
                 inputSearchStyle={styles.inputSearchStyle}

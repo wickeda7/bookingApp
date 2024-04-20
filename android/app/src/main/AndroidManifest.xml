@@ -40,7 +40,6 @@
         <data android:scheme="bookingapp"/>
         <data android:scheme="com.wickeda7.bookingApp"/>
         <data android:scheme="exp+bookingapp"/>
-        <data android:scheme="fb1403305993896132"/>
       </intent-filter>
     </activity>
     <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" android:exported="false"/>
