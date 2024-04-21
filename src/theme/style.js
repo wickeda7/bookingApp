@@ -147,4 +147,16 @@ export default StyleSheet.create({
     borderColor: Colors.orange,
     borderWidth: 1,
   },
+  inText: {
+    marginLeft: 5,
+    marginTop: 3,
+    color: Colors.success,
+    fontSize: 12,
+  },
+  outText: {
+    marginLeft: 5,
+    marginTop: 3,
+    color: 'red',
+    fontSize: 12,
+  },
 });

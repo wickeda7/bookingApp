@@ -71,4 +71,21 @@ export const stores = {
       throw error;
     }
   },
+  timeCard: async (data) => {
+    try {
+      const id = data.timeCardId;
+      if (id) {
+        delete data.timeCardId;
+        delete data.userId;
+        delete data.storeId;
+        delete data.date;
+        delete data.in;
+      }
+      const response = await api.timeCard(id, data);
+      return response;
+    } catch (error) {
+      console.log('error timeCard', error);
+      throw error;
+    }
+  },
 };

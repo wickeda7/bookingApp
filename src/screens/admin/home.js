@@ -35,7 +35,8 @@ const AdminHome = () => {
   const employee = userData.storeAdmin.employee;
   const today = moment().format('YYYY-MM-DD');
   const storeId = userData.storeAdmin.id;
-
+  const amountPerTurn = userData.storeAdmin.amountPerTurn;
+  const setTurn = userData.storeAdmin.setTurns;
   useEffect(() => {
     const handlerNewOrder = (data) => {
       dispatch(updateNotification(data));
@@ -119,9 +120,11 @@ const AdminHome = () => {
               paddingTop: 8,
             }}
           >
-            <TouchableOpacity onPress={() => setClockIn(!clockIn)}>
-              <Icons6 name={'user-gear'} size={25} color={Colors.white} />
-            </TouchableOpacity>
+            {setTurn && (
+              <TouchableOpacity onPress={() => setClockIn(!clockIn)}>
+                <Icons6 name={'user-gear'} size={25} color={Colors.white} />
+              </TouchableOpacity>
+            )}
           </View>
           <View
             style={{

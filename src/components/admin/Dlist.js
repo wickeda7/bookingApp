@@ -5,24 +5,33 @@ import AntIcon from 'react-native-vector-icons/AntDesign';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MatIcons from 'react-native-vector-icons/MaterialIcons';
 
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { setStaff } from '@redux/slices/adminHomeSlice';
+import { timeCard } from '@redux/actions/adminHomeAction';
 import { Default, Colors } from '@constants/style';
+import Style from '@theme/style';
 import DraggableFlatList, { ScaleDecorator } from 'react-native-draggable-flatlist';
 import { appointmentTime } from '@utils/helper';
+import moment from 'moment';
 
 const Dlist = ({ staffAvailable }) => {
   const [data, setData] = useState([]);
   const { appointment } = useSelector((state) => state.adminHome);
+
+  const dispatch = useDispatch();
   useEffect(() => {
-    console.log('staffAvailable', staffAvailable);
     setData(staffAvailable);
-  }, []);
+  }, [staffAvailable]);
 
   const updateData = (data) => {
-    console.log('data', data);
     setData(data);
+    dispatch(setStaff(data));
   };
   const renderItem = ({ item, drag, isActive }) => {
+    const userId = item.id;
+    const storeId = item.storeEmployee.id;
+    const timeCardId = item.timeCardId;
+
     const appNum = appointment.filter((app) => {
       if (app.specialist) return app.specialist.id === item.id;
     });
@@ -38,6 +47,20 @@ const Dlist = ({ staffAvailable }) => {
     }
     const { userInfo } = item;
     const color = userInfo.displayColor ? userInfo.displayColor : '#000';
+
+    const handlePunchClock = () => {
+      const date = moment().format('YYYY-MM-DD');
+      const hour = moment().format('HH:mm:ss.SSS');
+      const postData = { userId, storeId, date };
+      let user = { ...item };
+      if (!user.in) {
+        postData.in = hour;
+      } else {
+        postData.out = hour;
+        postData.timeCardId = timeCardId;
+      }
+      dispatch(timeCard({ data: postData }));
+    };
     return (
       <ScaleDecorator>
         <View style={[styles.row, { borderColor: color }]}>
@@ -63,9 +86,12 @@ const Dlist = ({ staffAvailable }) => {
                 </View>
               </View>
             )}
-            <TouchableOpacity onPress={() => console.log('delete')} style={{ flexDirection: 'row' }}>
-              <MatIcons name='punch-clock' size={20} color={color} />
-              <Text style={{ marginLeft: 5, marginTop: 3 }}>IN: 8:00 AM</Text>
+            <TouchableOpacity onPress={() => handlePunchClock()} style={{ flexDirection: 'row' }}>
+              <MatIcons name='punch-clock' size={18} color={color} />
+              {item.in && <Text style={[Style.inText]}>IN: {moment(item.in, 'HH:mm:ss.SSS').format('h:mm A')}</Text>}
+              {item.out && (
+                <Text style={[Style.outText]}>OUT: {moment(item.out, 'HH:mm:ss.SSS').format('h:mm a')}</Text>
+              )}
             </TouchableOpacity>
           </View>
         </View>

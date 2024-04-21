@@ -8,7 +8,6 @@ export const api = {
     const url = `${STRAPIURL}/api/users/${email}`;
     try {
       const response = await axios.get(url);
-
       return response.data;
     } catch (error) {
       throw error;
@@ -518,6 +517,23 @@ export const api = {
     try {
       const url = `${STRAPIURL}/api/invoices?filters[appointment][id][$eq]=${appointmentId}&filters[specialist][id][$eq]=${specialistId}&populate[0]=specialist&populate[1]=specialist.userInfo`;
       const response = await axios.get(url);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  timeCard: async (id, data) => {
+    try {
+      let url = '';
+      let response = '';
+      if (id) {
+        url = `${STRAPIURL}/api/timecards/${id}`;
+        response = await axios.put(url, { data });
+      } else {
+        url = `${STRAPIURL}/api/timecards`;
+        response = await axios.post(url, { data });
+      }
+
       return response.data;
     } catch (error) {
       throw error;

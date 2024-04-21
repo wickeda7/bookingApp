@@ -9,6 +9,7 @@ import {
   updateService,
   updateEmployee,
   updateStoreInfo,
+  timeCard,
 } from '../actions/adminHomeAction';
 import { t } from 'i18next';
 const initialState = {
@@ -437,6 +438,38 @@ export const adminHomeSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(updateStoreInfo.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = true;
+      })
+      .addCase(timeCard.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(timeCard.fulfilled, (state, action) => {
+        const { id: timeCardId, in: inTime, out: outTime, userId } = action.payload;
+        const staffs = [...state.staffAvailable];
+        const objIndex = staffs.findIndex((obj) => obj.id === userId);
+        let staff = { ...staffs[objIndex] };
+        staffs.splice(objIndex, 1);
+        if (outTime) {
+          staff.out = outTime;
+          delete staff.in;
+          staffs.push(staff);
+        } else {
+          staff.in = inTime;
+          staff['timeCardId'] = timeCardId;
+          delete staff.out;
+
+          const indexes = staffs.map((e, i) => (e.in !== undefined ? i : undefined)).filter((x) => x >= 0);
+          if (indexes.length > 0) {
+            staffs.splice(indexes.length, 0, staff);
+          } else {
+            staffs.unshift(staff);
+          }
+        }
+        state.staffAvailable = staffs;
+        state.isLoading = false;
+      })
+      .addCase(timeCard.rejected, (state, action) => {
         state.isLoading = false;
         state.error = true;
       });

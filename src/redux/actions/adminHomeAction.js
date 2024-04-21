@@ -101,3 +101,13 @@ export const updateStoreInfo = createAsyncThunk('updateStoreInfo', async ({ stor
     throw error;
   }
 });
+export const timeCard = createAsyncThunk('timeCard', async ({ data }) => {
+  try {
+    const res = await stores.timeCard(data);
+    const { id, attributes } = res.data;
+    return { ...attributes, id };
+  } catch (error) {
+    console.log('error staffAction timeCard', error);
+    throw error;
+  }
+});
