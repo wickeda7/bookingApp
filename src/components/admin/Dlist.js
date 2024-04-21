@@ -24,7 +24,6 @@ const Dlist = ({ staffAvailable }) => {
   }, [staffAvailable]);
 
   const updateData = (data) => {
-    setData(data);
     dispatch(setStaff(data));
   };
   const renderItem = ({ item, drag, isActive }) => {
