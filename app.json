@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "bookingApp",
-    "slug": "bookingApp",
+    "name": "bookingapp",
+    "slug": "bookingapp",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -39,7 +39,7 @@
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.wickeda7.bookingApp",
+      "bundleIdentifier": "com.wickeda7.bookingapp",
       "config": {
         "googleMapsApiKey": "AIzaSyBvma0JNZQhrzbwpDdmEu-u3VYe7pqXm4s"
       },
@@ -65,7 +65,7 @@
           "apiKey": "AIzaSyDga4QLT0NFeAnYQJTLzk3UZvR4DgOIT2g"
         }
       },
-      "package": "com.wickeda7.bookingApp",
+      "package": "com.wickeda7.bookingapp",
       "googleServicesFile": "./google-services.json",
       "permissions": ["android.permission.INTERNET"]
     },

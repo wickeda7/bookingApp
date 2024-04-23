@@ -38,7 +38,7 @@
         <category android:name="android.intent.category.DEFAULT"/>
         <category android:name="android.intent.category.BROWSABLE"/>
         <data android:scheme="bookingapp"/>
-        <data android:scheme="com.wickeda7.bookingApp"/>
+        <data android:scheme="com.wickeda7.bookingapp"/>
         <data android:scheme="exp+bookingapp"/>
       </intent-filter>
     </activity>

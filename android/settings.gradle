@@ -1,4 +1,4 @@
-rootProject.name = 'bookingApp'
+rootProject.name = 'bookingapp'
 
 dependencyResolutionManagement {
   versionCatalogs {

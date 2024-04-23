@@ -1,4 +1,4 @@
-package com.wickeda7.bookingApp
+package com.wickeda7.bookingapp
 
 import android.app.Application
 import android.content.res.Configuration
