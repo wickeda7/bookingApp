@@ -11,6 +11,6 @@
     <key>EXUpdatesSDKVersion</key>
     <string>50.0.0</string>
     <key>EXUpdatesURL</key>
-    <string>https://exp.host/@wickeda7/bookingapp</string>
+    <string>https://exp.host/@wickeda7/bookingApp</string>
   </dict>
 </plist>

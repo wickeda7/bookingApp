@@ -31,6 +31,7 @@ export const api = {
     try {
       //const url = `${STRAPIURL}/api/stores?[filters][county][$eq]=Los Angeles County&[filters][type][$eq]=nail&[populate][0]=logo`;
       const url = `${STRAPIURL}/api/stores/getStores/${county}/${type}`;
+      console.log('getStores API', url);
       const response = await axios.get(url);
       return response.data;
     } catch (error) {

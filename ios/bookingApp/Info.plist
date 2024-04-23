@@ -7,7 +7,7 @@
     <key>CFBundleDevelopmentRegion</key>
     <string>$(DEVELOPMENT_LANGUAGE)</string>
     <key>CFBundleDisplayName</key>
-    <string>bookingapp</string>
+    <string>bookingApp</string>
     <key>CFBundleExecutable</key>
     <string>$(EXECUTABLE_NAME)</string>
     <key>CFBundleIdentifier</key>
@@ -28,7 +28,7 @@
         <key>CFBundleURLSchemes</key>
         <array>
           <string>bookingapp</string>
-          <string>com.wickeda7.bookingapp</string>
+          <string>com.wickeda7.bookingApp</string>
         </array>
       </dict>
       <dict>
