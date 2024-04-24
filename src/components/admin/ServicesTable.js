@@ -4,8 +4,8 @@ import Style from '@theme/style';
 import { Default, Fonts, Colors } from '@constants/style';
 import ServiceRow from './ServiceRow';
 import { useTranslation } from 'react-i18next';
-import { updateStaff, updatePrice, resetMessage } from '@redux/slices/adminHomeSlice';
-import { useDispatch, useSelector } from 'react-redux';
+import { updateStaff, updatePrice } from '@redux/slices/adminHomeSlice';
+import { useDispatch } from 'react-redux';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import { addInvoice, updateBooking } from '@redux/actions/adminHomeAction';
 import TotalView from '../TotalView';
@@ -146,7 +146,6 @@ const ServicesTable = ({ services, canceled }) => {
     const value = field === 'additional' ? text : text.nativeEvent.text;
     dispatch(updatePrice({ value, item, field }));
   };
-
   return (
     <>
       <View style={[Style.divider, { marginHorizontal: Default.fixPadding }]} />
@@ -195,6 +194,7 @@ const ServicesTable = ({ services, canceled }) => {
             card={card}
             setCard={setCard}
             setPayBy={setPayBy}
+            status={status}
           />
 
           <View

@@ -76,6 +76,7 @@ export default StyleSheet.create({
     marginTop: Default.fixPadding,
     borderRadius: 10,
     ...Default.shadow,
+    backgroundColor: Colors.white,
   },
   infoAlert: {
     padding: Default.fixPadding * 0.5,
@@ -101,8 +102,8 @@ export default StyleSheet.create({
   },
   tick: {
     position: 'absolute',
-    top: 3,
-    left: 3,
+    top: 0,
+    left: 15,
     height: 20,
     width: 20,
     borderRadius: 10,

@@ -20,6 +20,7 @@ const TotalView = ({
   card,
   setCard,
   setPayBy,
+  status,
 }) => {
   const handlePriceChange = (value, field) => {
     setPayBy('both');
@@ -51,6 +52,7 @@ const TotalView = ({
                 }}
                 activeOpacity={0.8}
                 onPress={() => {
+                  if (!status) return;
                   setPayBy('cash');
                 }}
               >
@@ -82,6 +84,7 @@ const TotalView = ({
                 }}
                 activeOpacity={0.8}
                 onPress={() => {
+                  if (!status) return;
                   setPayBy('card');
                 }}
               >

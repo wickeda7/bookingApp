@@ -122,7 +122,7 @@ const AdminHome = () => {
           >
             {setTurn && (
               <TouchableOpacity onPress={() => setClockIn(!clockIn)}>
-                <Icons6 name={'user-gear'} size={25} color={Colors.white} />
+                <Icons6 name={'user-gear'} size={25} color={clockIn ? Colors.disable : Colors.white} />
               </TouchableOpacity>
             )}
           </View>
