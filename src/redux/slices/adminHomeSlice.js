@@ -68,12 +68,23 @@ export const adminHomeSlice = createSlice({
           bookings[bookingIndex] = booking;
           state[invoice.type] = bookings;
         }
-
+        const totalAmount = invoice.additional + invoice.subtotal;
         const objectIndex = state.staffUnAvailable.findIndex((obj) => obj.id === invoice.specialist);
         if (objectIndex !== -1) {
           const staff = state.staffUnAvailable[objectIndex];
+          const perTurnAmount = staff.amountPerTurn;
+          const positionAt = staff.positionAt;
+          const turn = staff.turn;
           state.staffUnAvailable.splice(objectIndex, 1);
-          state.staffAvailable.push(staff);
+          if (turn > 1 || totalAmount > perTurnAmount) {
+            delete staff.date;
+            delete staff.positionAt;
+            delete staff.turn;
+            delete staff.amountPerTurn;
+            state.staffAvailable.push(staff);
+          } else {
+            state.staffAvailable.splice(positionAt, 0, staff);
+          }
         }
         delete state.invoice[keys[0]];
       }

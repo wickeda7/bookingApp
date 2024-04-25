@@ -9,6 +9,9 @@ import { useDispatch } from 'react-redux';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import { addInvoice, updateBooking } from '@redux/actions/adminHomeAction';
 import TotalView from '../TotalView';
+import { useAdminContext } from '@contexts/AdminContext';
+import moment from 'moment';
+import { useSelector } from 'react-redux';
 
 const ServicesTable = ({ services, canceled }) => {
   const { t, i18n } = useTranslation();
@@ -16,12 +19,13 @@ const ServicesTable = ({ services, canceled }) => {
   function tr(key) {
     return t(`homeScreen:${key}`);
   }
+  const { setTurn, amountPerTurn } = useAdminContext();
+  const { staffAvailable } = useSelector((state) => state.adminHome);
   const [tip, setTip] = useState(0);
   const [fees, setFees] = useState(0);
   const [cash, setCash] = useState(0);
   const [card, setCard] = useState(0);
   const [payBy, setPayBy] = useState('cash');
-
   let status = false;
   let subtotal = 0;
   let additional = 0;
@@ -68,6 +72,15 @@ const ServicesTable = ({ services, canceled }) => {
   };
 
   const setStaff = (staff) => {
+    if (setTurn && amountPerTurn) {
+      const date = moment().format('YYYY-MM-DD');
+      const objectIndex = staffAvailable.findIndex((obj) => obj.id === staff.id);
+      if (!moment(date).isSame(staff.date)) {
+        staff = { ...staff, date, amountPerTurn, turn: 1, positionAt: objectIndex };
+      } else {
+        staff = { ...staff, turn: staff.turn + 1, positionAt: objectIndex };
+      }
+    }
     dispatch(updateStaff(staff));
   };
 
@@ -81,6 +94,7 @@ const ServicesTable = ({ services, canceled }) => {
       acc[specialist] = group;
       return acc;
     }, model);
+
     for (const key in model) {
       let subtotal = 0;
       let additional = 0;

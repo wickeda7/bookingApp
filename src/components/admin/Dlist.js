@@ -13,7 +13,9 @@ import Style from '@theme/style';
 import DraggableFlatList, { ScaleDecorator } from 'react-native-draggable-flatlist';
 import { appointmentTime } from '@utils/helper';
 import moment from 'moment';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { KEY } from '@constants/settings';
+import { t } from 'i18next';
 const Dlist = ({ staffAvailable }) => {
   const [data, setData] = useState([]);
   const { appointment } = useSelector((state) => state.adminHome);
@@ -23,7 +25,9 @@ const Dlist = ({ staffAvailable }) => {
     setData(staffAvailable);
   }, [staffAvailable]);
 
-  const updateData = (data) => {
+  const updateData = (data, from, to) => {
+    const id = data[to].id;
+    AsyncStorage.removeItem(KEY + id);
     dispatch(setStaff(data));
   };
   const renderItem = ({ item, drag, isActive }) => {
@@ -62,7 +66,7 @@ const Dlist = ({ staffAvailable }) => {
     };
     return (
       <ScaleDecorator>
-        <View style={[styles.row, { borderColor: color }]}>
+        <View style={[styles.row, { borderColor: color, backgroundColor: Colors.regularGrey, opacity: 0.5 }]}>
           <View style={{ flex: 10, flexDirection: 'row', justifyContent: 'space-between' }}>
             <TouchableOpacity
               size='lg'
@@ -102,7 +106,7 @@ const Dlist = ({ staffAvailable }) => {
     <View>
       <DraggableFlatList
         data={data}
-        onDragEnd={({ data }) => updateData(data)}
+        onDragEnd={({ data, from, to }) => updateData(data, from, to)}
         keyExtractor={(item) => item.id}
         renderItem={renderItem}
       />

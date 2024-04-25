@@ -7,17 +7,24 @@ import Icons6 from 'react-native-vector-icons/FontAwesome6';
 import NotificationsHelper from '@utils/notifications';
 import { useTranslation } from 'react-i18next';
 import { useAuthContext } from '@contexts/AuthContext';
-import { setStaff, setAppointment, setWalkin } from '@redux/slices/adminHomeSlice';
+import { useAdminContext } from '@contexts/AdminContext';
 import { useDispatch, useSelector } from 'react-redux';
 import Loader from '@components/loader';
 import moment from 'moment';
 import { getBooking } from '@redux/actions/adminHomeAction';
-import { updateNotification, updateNewInvoice, updateAppointment } from '@redux/slices/adminHomeSlice';
+import {
+  updateNotification,
+  updateNewInvoice,
+  updateAppointment,
+  setStaff,
+  setAppointment,
+  setWalkin,
+} from '@redux/slices/adminHomeSlice';
 import StaffRow from '@components/admin/StaffRow';
 import Accordion from '@components/Accordion';
 import { DraxProvider } from 'react-native-drax';
 import socket from '@utils/socket';
-import Dlist from '../../components/admin/Dlist';
+import Dlist from '@components/admin/Dlist';
 const AdminHome = () => {
   const { t, i18n } = useTranslation();
   const isRtl = i18n.dir() === 'rtl';
@@ -30,6 +37,7 @@ const AdminHome = () => {
   const [notificationNumber, setNotificationNumber] = useState(0);
   const [clockIn, setClockIn] = useState(false);
   const { userData } = useAuthContext();
+  const { setSetTurn, setAmountPerTurn } = useAdminContext();
   const dispatch = useDispatch();
   const { isLoading, staffAvailable, staffUnAvailable, walkin, appointment } = useSelector((state) => state.adminHome);
   const employee = userData.storeAdmin.employee;
@@ -37,7 +45,10 @@ const AdminHome = () => {
   const storeId = userData.storeAdmin.id;
   const amountPerTurn = userData.storeAdmin.amountPerTurn;
   const setTurn = userData.storeAdmin.setTurns;
+
   useEffect(() => {
+    setAmountPerTurn(amountPerTurn);
+    setSetTurn(setTurn);
     const handlerNewOrder = (data) => {
       dispatch(updateNotification(data));
     };
@@ -57,6 +68,7 @@ const AdminHome = () => {
       socket.off('bookingChanged', handlerNewOrder);
     };
   }, []);
+
   useEffect(() => {
     if (notification) {
       const data = notification.request.content.data;
@@ -159,7 +171,7 @@ const AdminHome = () => {
           </View>
         </View>
       </View>
-      <View style={[Style.mainContainer, { flexDirection: 'row', padding: Default.fixPadding * 1.5 }]}>
+      <View style={[Style.mainContainer, { flexDirection: 'row', padding: Default.fixPadding * 1.5, marginTop: 5 }]}>
         <View style={[{ flex: 2 }]}>
           {clockIn ? (
             <Dlist staffAvailable={staffAvailable} />

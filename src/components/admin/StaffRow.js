@@ -24,6 +24,7 @@ const StaffRow = ({ item, busy }) => {
     } = appNum[0];
     time = appointmentTime(hours, timeslot);
   }
+  if (!item) return null;
   const { userInfo } = item;
   const color = userInfo.displayColor ? userInfo.displayColor : '#000';
 

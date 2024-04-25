@@ -62,7 +62,6 @@ const SettingsEmployeeRow = ({ data }) => {
 
   return (
     <>
-      <Loader visible={isLoading} />
       <View style={[Style.mainContainer, { flexDirection: 'row', marginVertical: 5 }]}>
         <View style={{ flex: 2 }}>
           <Text style={{ color: employee.displayColor }}>

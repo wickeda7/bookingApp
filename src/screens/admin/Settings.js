@@ -169,7 +169,6 @@ const Settings = (props) => {
 
   return (
     <KeyboardAvoidingView style={Style.mainContainer} behavior={Platform.OS === 'ios' ? 'padding' : null}>
-      <Loader visible={isLoading} />
       <MyStatusBar />
       <View style={[Style.primaryNav, { flexDirection: isRtl ? 'row-reverse' : 'row' }]}>
         <TouchableOpacity onPress={() => navigation.navigate('Home')} style={Style.navBackButton}>

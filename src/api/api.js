@@ -2,7 +2,6 @@ import axios from 'axios';
 /// always update the STRAPIURL to utils/socket.js too
 import { STRAPIURL } from '@env';
 //const STRAPIURL = 'http://localhost:1337';
-import moment from 'moment';
 export const api = {
   getUser: async (email) => {
     const url = `${STRAPIURL}/api/users/${email}`;
@@ -305,16 +304,17 @@ export const api = {
   postInvoice: async (data) => {
     try {
       const url = `${STRAPIURL}/api/invoices`;
-      const today = moment().format('YYYY-MM-DD');
+      const response = await axios.post(url, { data });
+      return data;
 
-      const filterURL = `${STRAPIURL}/api/invoices?filters[appointment][id][$eq]=${data.appointment}&filters[specialist][id][$eq]=${data.specialist}&filters[createAt][$eq]=${today}`;
-      const res = await axios.get(filterURL);
-      if (res.data.data.length > 0) {
-        return data;
-      } else {
-        const response = await axios.post(url, { data });
-        return data;
-      }
+      // const filterURL = `${STRAPIURL}/api/invoices?filters[appointment][id][$eq]=${data.appointment}&filters[specialist][id][$eq]=${data.specialist}&filters[createAt][$eq]=${today}`;
+      // const res = await axios.get(filterURL);
+      // if (res.data.data.length > 0) {
+      //   return data;
+      // } else {
+      //   const response = await axios.post(url, { data });
+      //   return data;
+      // }
     } catch (error) {
       console.log('error postInvoice API', error);
       throw error;

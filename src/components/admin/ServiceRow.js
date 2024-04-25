@@ -306,8 +306,8 @@ const ServiceRow = ({ item, setService, setStaff, handleTextChange, canceled }) 
         onReceiveDragDrop={(event) => {
           const userId = event.dragged.payload.id;
           const receivedId = event.receiver.payload.specialist?.id ? event.receiver.payload.specialist.id : undefined;
-          console.log('receivedId', event.receiver.payload);
-          console.log('userId', userId);
+          // console.log('receivedId', event.receiver.payload);
+          // console.log('userId', userId);
           if (receivedId === undefined || (userId === receivedId && !canceled)) {
             setService(event.receiver.payload, 'service', event.dragged.payload);
             setStaff(event.dragged.payload);

@@ -165,7 +165,6 @@ const StaffImage = ({ type, setUserInfo, userInfo, staff }) => {
 
       <BottomSheet visible={visible} onBackButtonPress={toggleClose} onBackdropPress={toggleClose}>
         <View style={[styles.bottomSheetMain, { backgroundColor: Colors.white, padding: Default.fixPadding }]}>
-          <Loader visible={isLoading} />
           <Text
             style={{
               ...Fonts.Black18Bold,
