@@ -369,7 +369,7 @@ export const api = {
   getInvoiceByDate: async ({ from, to, userId, storeId }) => {
     try {
       // const url = `${STRAPIURL}/api/invoices?filters[$and][0][createdAt][$gte]=${from}&filters[$and][1][createdAt][$lt]=${to}&filters[store][id][$eq]=${storeId}&filters[specialist][id][$eq]=${userId}&populate[0]=client&populate[1]=client.userInfo&populate[2]=client.userInfo.profileImg&sort[0]=createdAt:DESC`;
-      const url = `${STRAPIURL}/api/invoices?filters[$and][0][testCreatedAt][$gte]=${from}&filters[$and][1][testCreatedAt][$lt]=${to}&filters[store][id][$eq]=${storeId}&filters[specialist][id][$eq]=${userId}&populate[0]=client&populate[1]=client.userInfo&populate[2]=client.userInfo.profileImg&populate[3]=appointment&populate[4]=appointment.specialists&populate[5]=specialist&sort[0]=testCreatedAt:ASC`;
+      const url = `${STRAPIURL}/api/invoices?filters[$and][0][createdAt][$gte]=${from}&filters[$and][1][createdAt][$lt]=${to}&filters[store][id][$eq]=${storeId}&filters[specialist][id][$eq]=${userId}&populate[0]=client&populate[1]=client.userInfo&populate[2]=client.userInfo.profileImg&populate[3]=appointment&populate[4]=appointment.specialists&populate[5]=specialist&sort[0]=createdAt:ASC`;
       const response = await axios.get(url);
       return response.data.data;
     } catch (error) {
@@ -506,8 +506,8 @@ export const api = {
   },
   checkInvoice: async (specialistId, storeId, date) => {
     try {
-      console.log('checkInvoice API', specialistId, storeId, date);
-      const url = `${STRAPIURL}/api/invoices/?filters[$and][0][specialist][id][$eq]=${specialistId}&filters[$and][1][store][id][$eq]=${storeId}&filters[$and][1][testCreatedAt][$eq]=${date}&populate[0]=client&populate[1]=client.userInfo`;
+      //console.log('checkInvoice API', specialistId, storeId, date);
+      const url = `${STRAPIURL}/api/invoices/?filters[$and][0][specialist][id][$eq]=${specialistId}&filters[$and][1][store][id][$eq]=${storeId}&filters[$and][1][createdAt][$eq]=${date}&populate[0]=client&populate[1]=client.userInfo`;
       const response = await axios.get(url);
       return response.data;
     } catch (error) {

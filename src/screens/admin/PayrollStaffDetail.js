@@ -41,11 +41,12 @@ const PayrollStaffDetail = ({ endDate, showGraph, payperiod }) => {
   }
   const { dates, total, tips } = invoices.reduce(
     (acc, item) => {
-      const date = moment(item.testCreatedAt).format('DD');
-      if (!acc.dates[item.testCreatedAt]) {
-        acc.dates[item.testCreatedAt] = [];
+      const date = moment(item.createdAt).format('DD');
+      const createdAt = moment(item.createdAt).toISOString().split('T')[0];
+      if (!acc.dates[createdAt]) {
+        acc.dates[createdAt] = [];
       }
-      acc.dates[item.testCreatedAt].push(item);
+      acc.dates[createdAt].push(item);
       acc.total += item.subtotal * 100;
       acc.tips += item.tips * 100;
       return acc;
