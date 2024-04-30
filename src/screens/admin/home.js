@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View, TouchableOpacity, ScrollView, LogBox } from 'react-native';
-import React, { useEffect, useState } from 'react';
-import { Colors, Default, Fonts } from '@constants/style';
+import React, { useEffect, useRef, useState } from 'react';
+import { Colors, Default, Fonts, calendarTheme } from '@constants/style';
 import Style from '@theme/style';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Icons6 from 'react-native-vector-icons/FontAwesome6';
@@ -25,6 +25,7 @@ import Accordion from '@components/Accordion';
 import { DraxProvider } from 'react-native-drax';
 import socket from '@utils/socket';
 import Dlist from '@components/admin/Dlist';
+
 const AdminHome = () => {
   const { t, i18n } = useTranslation();
   const isRtl = i18n.dir() === 'rtl';
@@ -34,7 +35,7 @@ const AdminHome = () => {
   LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
   LogBox.ignoreAllLogs(); //Ignore all log notifications
   const [notification, setNotification] = useState(null);
-  const [notificationNumber, setNotificationNumber] = useState(0);
+  const [notificationNumber, setNotificationNumber] = useState(1);
   const [clockIn, setClockIn] = useState(false);
   const { userData } = useAuthContext();
   const { setSetTurn, setAmountPerTurn } = useAdminContext();
@@ -42,6 +43,7 @@ const AdminHome = () => {
   const { isLoading, staffAvailable, staffUnAvailable, walkin, appointment } = useSelector((state) => state.adminHome);
   const employee = userData.storeAdmin.employee;
   const today = moment().format('YYYY-MM-DD');
+
   const storeId = userData.storeAdmin.id;
   const amountPerTurn = userData.storeAdmin.amountPerTurn;
   const setTurn = userData.storeAdmin.setTurns;
@@ -105,95 +107,68 @@ const AdminHome = () => {
   }, [notification]);
 
   return (
-    <DraxProvider>
-      <NotificationsHelper setNotification={setNotification} />
-      <Loader visible={isLoading} />
-      <View
-        style={{
-          paddingVertical: Default.fixPadding,
-          backgroundColor: Colors.primary,
-        }}
-      >
+    <>
+      <DraxProvider>
+        <NotificationsHelper setNotification={setNotification} />
+        <Loader visible={isLoading} />
         <View
           style={{
-            flexDirection: isRtl ? 'row-reverse' : 'row',
-            marginHorizontal: Default.fixPadding * 1.5,
+            paddingVertical: Default.fixPadding,
+            backgroundColor: Colors.primary,
           }}
         >
-          <View style={{ flex: 15, justifyContent: 'center' }}>
-            <Text style={Fonts.White18Bold}>{userData.storeAdmin.name}</Text>
+          <View style={{ flexDirection: isRtl ? 'row-reverse' : 'row', marginHorizontal: Default.fixPadding * 1.5 }}>
+            <View style={{ flex: 1, flexDirection: 'row' }}>
+              <Text style={Fonts.White18Bold}>{userData.storeAdmin.name}</Text>
+            </View>
+            <View style={{ flex: 5, flexDirection: 'row-reverse' }}>
+              <View style={{ width: 70, height: 50, position: 'relative' }}>
+                <TouchableOpacity
+                  onPress={() => setNotificationNumber(0)}
+                  style={{ position: 'absolute', top: 5, right: 10 }}
+                >
+                  <Ionicons name='notifications-outline' size={30} color={Colors.white} />
+                  {notificationNumber > 0 && (
+                    <View style={[Style.tick]}>
+                      <Text style={Fonts.Black14}>{notificationNumber}</Text>
+                    </View>
+                  )}
+                </TouchableOpacity>
+              </View>
+              <View style={{ width: 70, alignItems: 'flex-end', paddingTop: 8 }}>
+                {setTurn && (
+                  <TouchableOpacity onPress={() => setClockIn(!clockIn)}>
+                    <Icons6 name={'user-gear'} size={25} color={clockIn ? Colors.disable : Colors.white} />
+                  </TouchableOpacity>
+                )}
+              </View>
+            </View>
           </View>
-
-          <View
-            style={{
-              flex: 1,
-
-              alignItems: 'flex-end',
-              paddingTop: 8,
-            }}
-          >
-            {setTurn && (
-              <TouchableOpacity onPress={() => setClockIn(!clockIn)}>
-                <Icons6 name={'user-gear'} size={25} color={clockIn ? Colors.disable : Colors.white} />
-              </TouchableOpacity>
+        </View>
+        <View style={[Style.mainContainer, { flexDirection: 'row', padding: Default.fixPadding * 1.5, marginTop: 5 }]}>
+          <View style={[{ flex: 2 }]}>
+            {clockIn ? (
+              <Dlist staffAvailable={staffAvailable} />
+            ) : (
+              <>
+                {staffAvailable.map((item, index) => {
+                  return <StaffRow key={index} item={item} busy={false} />;
+                })}
+                {staffUnAvailable.map((item, index) => {
+                  return <StaffRow key={index} item={item} busy={true} />;
+                })}
+              </>
             )}
           </View>
-          <View
-            style={{
-              flex: 1,
-              height: 50,
-              position: 'relative',
-            }}
-          >
-            <TouchableOpacity
-              onPress={() => setNotificationNumber(0)}
-              style={{ position: 'absolute', top: 5, right: 10 }}
-            >
-              <Ionicons name='notifications-outline' size={30} color={Colors.white} />
-              {notificationNumber > 0 && (
-                <View
-                  style={{
-                    position: 'absolute',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    width: 20,
-                    height: 20,
-                    top: 6,
-                    right: 20,
-                    borderRadius: 8,
-                    backgroundColor: Colors.white,
-                  }}
-                >
-                  <Text style={Fonts.Black14}>{notificationNumber}</Text>
-                </View>
-              )}
-            </TouchableOpacity>
+          <View style={[styles.borderLeft, { flex: 4 }]}>
+            <ScrollView contentInsetAdjustmentBehavior='automatic' style={styles.container}>
+              <Accordion data={walkin} type={'admin'} />
+              <Accordion data={appointment} type={'admin'} />
+            </ScrollView>
           </View>
         </View>
-      </View>
-      <View style={[Style.mainContainer, { flexDirection: 'row', padding: Default.fixPadding * 1.5, marginTop: 5 }]}>
-        <View style={[{ flex: 2 }]}>
-          {clockIn ? (
-            <Dlist staffAvailable={staffAvailable} />
-          ) : (
-            <>
-              {staffAvailable.map((item, index) => {
-                return <StaffRow key={index} item={item} busy={false} />;
-              })}
-              {staffUnAvailable.map((item, index) => {
-                return <StaffRow key={index} item={item} busy={true} />;
-              })}
-            </>
-          )}
-        </View>
-        <View style={[styles.borderLeft, { flex: 4 }]}>
-          <ScrollView contentInsetAdjustmentBehavior='automatic' style={styles.container}>
-            <Accordion data={walkin} type={'admin'} />
-            <Accordion data={appointment} type={'admin'} />
-          </ScrollView>
-        </View>
-      </View>
-    </DraxProvider>
+      </DraxProvider>
+    </>
   );
 };
 

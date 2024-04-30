@@ -3,6 +3,7 @@ import HomeScreen from '@screens/bottomTab/homeScreen';
 import ProfileScreen from '@screens/bottomTab/profileScreen';
 import Staff from '@screens/admin/Staff';
 import Payroll from '@screens/admin/Payroll';
+import Batches from '@screens/admin/Batches';
 import Settings from '@screens/admin/Settings';
 import SplashScreen from '@screens/splashScreen';
 import OnboardingScreen from '@screens/auth/onboardingScreen';
@@ -76,6 +77,29 @@ const DrawerNavigator = () => {
             return (
               <Icons6
                 name={'money-check-dollar'}
+                size={15}
+                color={focused ? Colors.white : Colors.primary}
+                style={{ position: 'absolute', left: 15 }}
+              />
+            );
+          },
+        }}
+      />
+      <Drawer.Screen
+        name='Batches'
+        component={Batches}
+        options={{
+          headerShown: false,
+          drawerItemStyle: { borderRadius: 5, marginHorizontal: 2 },
+          drawerLabel: ({ focused, color }) => {
+            return <Text style={[focused ? Fonts.White16Bold : Fonts.Primary16Bold]}>Batches & Reports</Text>;
+          },
+          drawerActiveBackgroundColor: Colors.primary,
+          drawerInactiveBackgroundColor: Colors.white,
+          drawerIcon: ({ focused }) => {
+            return (
+              <Icons6
+                name={'file-invoice-dollar'}
                 size={15}
                 color={focused ? Colors.white : Colors.primary}
                 style={{ position: 'absolute', left: 15 }}

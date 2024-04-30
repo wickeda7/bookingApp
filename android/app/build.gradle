@@ -83,7 +83,7 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace "com.wickeda7.bookingApp"
+    namespace 'com.wickeda7.bookingApp'
     defaultConfig {
         applicationId 'com.wickeda7.bookingApp'
         minSdkVersion rootProject.ext.minSdkVersion

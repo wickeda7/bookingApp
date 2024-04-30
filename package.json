@@ -1,5 +1,5 @@
 {
-  "name": "bookingapp",
+  "name": "bookingApp",
   "version": "1.0.0",
   "scripts": {
     "start": "expo start --dev-client",
@@ -96,9 +96,6 @@
     "@babel/core": "^7.20.0",
     "babel-plugin-module-resolver": "^5.0.0",
     "react-native-dotenv": "^3.4.9"
-  },
-  "resolutions": {
-    "@expo/config-plugins": "~7.8.0"
   },
   "private": true
 }

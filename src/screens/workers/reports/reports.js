@@ -117,7 +117,7 @@ const Reports = (props) => {
               screen: 'Payroll',
               params: {
                 //payrollId,
-                payrollId: 19,
+                payrollId: 20,
               },
             });
             setNewNotification(null);
