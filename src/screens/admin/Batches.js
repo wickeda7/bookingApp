@@ -14,15 +14,15 @@ import Style from '@theme/style';
 import MyStatusBar from '@components/myStatusBar';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Icons6 from 'react-native-vector-icons/FontAwesome6';
-import NotificationsHelper from '@utils/notifications';
 import { useTranslation } from 'react-i18next';
 import { useAuthContext } from '@contexts/AuthContext';
-import { useAdminContext } from '@contexts/AdminContext';
 import { useDispatch, useSelector } from 'react-redux';
 import Loader from '@components/loader';
+import Accordion from '@components/Accordion';
 import moment from 'moment';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import { Calendar } from 'react-native-calendars';
+import { getInvoicesByDate } from '@redux/actions/batchesAction';
 
 const Batches = (props) => {
   const { t, i18n } = useTranslation();
@@ -31,8 +31,9 @@ const Batches = (props) => {
     return t(`batchesScreen:${key}`);
   }
 
+  const { userData } = useAuthContext();
   const dispatch = useDispatch();
-  const { isLoading, staffAvailable, staffUnAvailable, walkin, appointment } = useSelector((state) => state.adminHome);
+  const { isLoading, batches } = useSelector((state) => state.batches);
 
   const today = moment().format('YYYY-MM-DD');
   const [calendar, setCalendar] = useState(false);
@@ -40,6 +41,7 @@ const Batches = (props) => {
   const [displayDate, setDisplayDate] = useState('');
   const refRBSheet = useRef();
 
+  const storeId = userData.storeAdmin.id;
   useEffect(() => {
     if (!refRBSheet.current) return;
     if (calendar) {
@@ -54,12 +56,10 @@ const Batches = (props) => {
     if (!selected) {
       setDisplayDate(moment().format('dddd, MMMM Do YYYY'));
     } else {
-      if (selected === today) {
-        console.log('today no fetch', today);
-      }
       setDisplayDate(moment(selected).format('dddd, MMMM Do YYYY'));
     }
-    console.log('selected', selected);
+    const date = selected ? selected : today;
+    dispatch(getInvoicesByDate({ storeId, date }));
   }, [selected]);
 
   return (
@@ -71,7 +71,7 @@ const Batches = (props) => {
           <TouchableOpacity onPress={() => props.navigation.navigate('Home')} style={Style.navBackButton}>
             <Ionicons name={isRtl ? 'arrow-forward' : 'arrow-back'} size={22} color={Colors.white} />
           </TouchableOpacity>
-          <Text style={Fonts.White16Bold}>Batches</Text>
+          <Text style={Fonts.White16Bold}>Batches & Reports</Text>
         </View>
         <View style={{ flex: 1, flexDirection: 'row-reverse', paddingHorizontal: 20 }}>
           <View style={{ width: 220, alignItems: 'flex-end', paddingTop: 3 }}>
@@ -83,6 +83,16 @@ const Batches = (props) => {
               <Ionicons name='caret-down' size={15} color={Colors.white} style={{ marginTop: 3 }} />
             </TouchableOpacity>
           </View>
+        </View>
+      </View>
+      <View style={[Style.contentContainer, { flexDirection: 'row' }]}>
+        <View style={{ flex: 1, flexDirection: 'column', height: 'auto' }}>
+          {/* <View>{batches && <Accordion data={batches} type={'batches'} />}</View> */}
+        </View>
+        <View style={{ flex: 1, flexDirection: 'column', height: 800 }}>
+          <ScrollView contentInsetAdjustmentBehavior='automatic' style={{ flex: 1 }}>
+            <View>{batches && <Accordion data={batches} type={'batches'} />}</View>
+          </ScrollView>
         </View>
       </View>
       <RBSheet

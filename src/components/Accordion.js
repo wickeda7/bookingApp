@@ -3,6 +3,7 @@ import AccordionItem from '@components/admin/AccordionItem';
 import AccordionStaffItem from '@components/workers/AccordionStaffItem';
 import AccordionStoreServicesItem from '@components/admin/AccordionStoreServicesItem';
 import AccordionStoreSubServicesItem from '@components/admin/AccordionStoreSubServicesItem';
+import AccordionBatchesItem from '@components/admin/AccordionBatchesItem';
 import { LayoutAnimation } from 'react-native';
 
 const Components = {
@@ -10,6 +11,7 @@ const Components = {
   staff: AccordionStaffItem,
   service: AccordionStoreServicesItem,
   subService: AccordionStoreSubServicesItem,
+  batches: AccordionBatchesItem,
 };
 function Accordion({ data, type, navigation, serviceId }) {
   const [expandedIndex, setExpandedIndex] = useState(null);
