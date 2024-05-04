@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { getInvoicesByDate } from '../actions/batchesAction';
 
-const initialState = { batches: null, isLoading: false };
+const initialState = { batches: null, serviceItems: null, isLoading: false };
 
 export const batchesSlice = createSlice({
   name: 'batches',
@@ -10,8 +10,8 @@ export const batchesSlice = createSlice({
     setBatches: (state, action) => {
       state.batches = action.payload;
     },
-    setLoading: (state, action) => {
-      state.isLoading = action.payload;
+    setServiceItems: (state, action) => {
+      state.serviceItems = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -28,5 +28,5 @@ export const batchesSlice = createSlice({
       });
   },
 });
-export const { setBatches, setLoading } = batchesSlice.actions;
+export const { setBatches, setServiceItems } = batchesSlice.actions;
 export default batchesSlice.reducer;

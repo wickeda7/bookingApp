@@ -27,8 +27,8 @@ const AccordionBatchesItem = ({ children, item, expanded, onHeaderPress }) => {
   const {
     attributes: { firstName, lastName, displayColor },
   } = userInfo.data;
-  const time = moment(createdAt).format('YYYY-MM-DD h:mm A');
-  const borderColor = type === 'walkin' ? Colors.info : Colors.success;
+  const time = moment(createdAt).format(' h:mm A');
+  const borderColor = type === 'walkin' ? Colors.success : Colors.info;
   return (
     <View style={[styles.accordContainer, { borderColor: borderColor }]}>
       <TouchableOpacity style={[styles.accordHeader]} onPress={onHeaderPress}>

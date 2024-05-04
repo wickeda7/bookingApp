@@ -1,19 +1,9 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  ScrollView,
-  LogBox,
-  KeyboardAvoidingView,
-  Platform,
-} from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
 import React, { useEffect, useRef, useState } from 'react';
 import { Colors, Default, Fonts, calendarTheme } from '@constants/style';
 import Style from '@theme/style';
 import MyStatusBar from '@components/myStatusBar';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import Icons6 from 'react-native-vector-icons/FontAwesome6';
 import { useTranslation } from 'react-i18next';
 import { useAuthContext } from '@contexts/AuthContext';
 import { useDispatch, useSelector } from 'react-redux';
@@ -23,7 +13,9 @@ import moment from 'moment';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import { Calendar } from 'react-native-calendars';
 import { getInvoicesByDate } from '@redux/actions/batchesAction';
-
+import BatchesLeft from '@components/admin/BatchesLeft';
+import { getSettings } from '@redux/actions/adminHomeAction';
+import { setServiceItems } from '@redux/slices/batchesSlice';
 const Batches = (props) => {
   const { t, i18n } = useTranslation();
   const isRtl = i18n.dir() === 'rtl';
@@ -34,7 +26,7 @@ const Batches = (props) => {
   const { userData } = useAuthContext();
   const dispatch = useDispatch();
   const { isLoading, batches } = useSelector((state) => state.batches);
-
+  const { storeSettings } = useSelector((state) => state.adminHome);
   const today = moment().format('YYYY-MM-DD');
   const [calendar, setCalendar] = useState(false);
   const [selected, setSelected] = useState('');
@@ -50,6 +42,25 @@ const Batches = (props) => {
       refRBSheet.current.close();
     }
   }, [calendar]);
+
+  useEffect(() => {
+    dispatch(getSettings({ storeId }));
+  }, []);
+
+  useEffect(() => {
+    if (!storeSettings.services) return;
+    let serviceItems = [];
+    storeSettings.services.forEach((service) => {
+      if (service.items.length > 0) {
+        serviceItems = [...serviceItems, ...service.items];
+      } else {
+        service.sub_services.forEach((subService) => {
+          serviceItems = [...serviceItems, ...subService.items];
+        });
+      }
+    });
+    dispatch(setServiceItems(serviceItems));
+  }, [storeSettings]);
 
   useEffect(() => {
     if (selected) refRBSheet.current.close();
@@ -85,16 +96,15 @@ const Batches = (props) => {
           </View>
         </View>
       </View>
-      <View style={[Style.contentContainer, { flexDirection: 'row' }]}>
-        <View style={{ flex: 1, flexDirection: 'column', height: 'auto' }}>
-          {/* <View>{batches && <Accordion data={batches} type={'batches'} />}</View> */}
-        </View>
-        <View style={{ flex: 1, flexDirection: 'column', height: 800 }}>
-          <ScrollView contentInsetAdjustmentBehavior='automatic' style={{ flex: 1 }}>
-            <View>{batches && <Accordion data={batches} type={'batches'} />}</View>
+      <View style={[Style.contentContainer, { flexDirection: 'row', alignItems: 'flex-start' }]}>
+        <View style={{ flex: 1 }}>{batches && <BatchesLeft data={batches} />}</View>
+        <View style={[styles.borderLeft, { flex: 1 }]}>
+          <ScrollView contentInsetAdjustmentBehavior='automatic'>
+            <View style={{ paddingBottom: 100 }}>{batches && <Accordion data={batches} type={'batches'} />}</View>
           </ScrollView>
         </View>
       </View>
+
       <RBSheet
         ref={refRBSheet}
         height={400}
@@ -127,4 +137,11 @@ const Batches = (props) => {
 
 export default Batches;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  borderLeft: {
+    borderLeftColor: Colors.bord,
+    borderLeftWidth: 1,
+    marginLeft: Default.fixPadding * 2,
+    paddingLeft: Default.fixPadding * 1.5,
+  },
+});
