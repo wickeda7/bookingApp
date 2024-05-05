@@ -152,6 +152,7 @@ const BatchesCharts = ({ servicesData, amountData, additionalData, tipsData }) =
         dataPointsColor1={graph?.dataPointsColor}
         textColor1={graph?.textColor}
         height={300}
+        adjustToWidth
         showVerticalLines
         spacing={60}
         dataPointsHeight={6}
