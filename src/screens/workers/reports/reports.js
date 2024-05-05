@@ -116,8 +116,8 @@ const Reports = (props) => {
             props.navigation.navigate('ReportsStack', {
               screen: 'Payroll',
               params: {
-                //payrollId,
-                payrollId: 20,
+                payrollId,
+                //payrollId: 20,
               },
             });
             setNewNotification(null);

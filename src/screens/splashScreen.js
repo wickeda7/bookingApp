@@ -1,4 +1,4 @@
-import { Text, Image, View, Dimensions } from 'react-native';
+import { Text, Image, View } from 'react-native';
 import React, { useEffect } from 'react';
 import { Fonts } from '@constants/style';
 import MyStatusBar from '@components/myStatusBar';
@@ -7,8 +7,7 @@ import Device from 'react-native-device-info';
 const isTablet = Device.isTablet();
 const SplashScreen = (props) => {
   const { loading, loggedIn } = useAuthContext();
-  const { width, height } = Dimensions.get('window');
-  console.log(width, height);
+
   useEffect(() => {
     if (!loading && loggedIn) {
       if (isTablet) {

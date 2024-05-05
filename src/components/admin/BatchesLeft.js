@@ -84,6 +84,7 @@ const BatchesLeft = ({ data }) => {
   let additionalData = [];
   let tipsData = [];
   let servicesData = [];
+  if (!serviceItems) return null;
   services.forEach((service, index) => {
     const { name, displayColor } = serviceItems.find((item) => item.id === index);
     servicesData.push({
@@ -94,43 +95,49 @@ const BatchesLeft = ({ data }) => {
   });
   specialistsAmount.forEach((amount, index) => {
     const specialist = employees.find((employee) => employee.id === index);
-    const { firstName, lastName, displayColor } = specialist.userInfo;
-    const color = displayColor ? displayColor : '#000000';
-    const name = `${firstName.slice(0, 1)}${lastName.slice(0, 1)}`;
-    amountData.push({
-      value: amount / 100,
-      dataPointText: amount / 100,
-      frontColor: color,
-      label: name,
-      labelTextStyle: { color: color },
-    });
+    if (specialist) {
+      const { firstName, lastName, displayColor } = specialist.userInfo;
+      const color = displayColor ? displayColor : '#000000';
+      const name = `${firstName.slice(0, 1)}${lastName.slice(0, 1)}`;
+      amountData.push({
+        value: amount / 100,
+        dataPointText: amount / 100,
+        frontColor: color,
+        label: name,
+        labelTextStyle: { color: color },
+      });
+    }
   });
 
   specialistsAdditional.forEach((additional, index) => {
     const specialist = employees.find((employee) => employee.id === index);
-    const { firstName, lastName, displayColor } = specialist.userInfo;
-    const color = displayColor ? displayColor : '#000000';
-    const name = `${firstName.slice(0, 1)}${lastName.slice(0, 1)}`;
-    additionalData.push({
-      value: additional / 100,
-      dataPointText: additional / 100,
-      frontColor: color,
-      label: name,
-      labelTextStyle: { color: color },
-    });
+    if (specialist) {
+      const { firstName, lastName, displayColor } = specialist.userInfo;
+      const color = displayColor ? displayColor : '#000000';
+      const name = `${firstName.slice(0, 1)}${lastName.slice(0, 1)}`;
+      additionalData.push({
+        value: additional / 100,
+        dataPointText: additional / 100,
+        frontColor: color,
+        label: name,
+        labelTextStyle: { color: color },
+      });
+    }
   });
   specialistsTips.forEach((tips, index) => {
     const specialist = employees.find((employee) => employee.id === index);
-    const { firstName, lastName, displayColor } = specialist.userInfo;
-    const color = displayColor ? displayColor : '#000000';
-    const name = `${firstName.slice(0, 1)}${lastName.slice(0, 1)}`;
-    tipsData.push({
-      value: tips / 100,
-      dataPointText: tips / 100,
-      frontColor: color,
-      label: name,
-      labelTextStyle: { color: color },
-    });
+    if (specialist) {
+      const { firstName, lastName, displayColor } = specialist.userInfo;
+      const color = displayColor ? displayColor : '#000000';
+      const name = `${firstName.slice(0, 1)}${lastName.slice(0, 1)}`;
+      tipsData.push({
+        value: tips / 100,
+        dataPointText: tips / 100,
+        frontColor: color,
+        label: name,
+        labelTextStyle: { color: color },
+      });
+    }
   });
   return (
     <>

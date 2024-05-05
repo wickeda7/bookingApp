@@ -59,6 +59,7 @@ const Batches = (props) => {
   useEffect(() => {
     if (!storeSettings.services) return;
     let serviceItems = [];
+
     storeSettings.services.forEach((service) => {
       if (service.items.length > 0) {
         serviceItems = [...serviceItems, ...service.items];
@@ -91,7 +92,7 @@ const Batches = (props) => {
           <TouchableOpacity onPress={() => props.navigation.navigate('Home')} style={Style.navBackButton}>
             <Ionicons name={isRtl ? 'arrow-forward' : 'arrow-back'} size={22} color={Colors.white} />
           </TouchableOpacity>
-          <Text style={Fonts.White16Bold}>Batches & Reports</Text>
+          <Text style={Fonts.White16Bold}>Batches & Reports v1.1</Text>
         </View>
         <View style={{ flex: 1, flexDirection: 'row-reverse', paddingHorizontal: 20 }}>
           <View style={{ width: 220, alignItems: 'flex-end', paddingTop: 3 }}>
@@ -106,8 +107,7 @@ const Batches = (props) => {
         </View>
       </View>
       <View style={[Style.contentContainer, { flexDirection: 'row', alignItems: 'flex-start' }]}>
-        <Text>{width}</Text>
-        <View style={{ flex: 1 }}>{batches && <BatchesLeft data={batches} />}</View>
+        <View style={{ flex: 1, width: 650 }}>{batches && <BatchesLeft data={batches} />}</View>
         <View style={[styles.borderLeft, { flex: 1 }]}>
           <ScrollView contentInsetAdjustmentBehavior='automatic'>
             <View style={{ paddingBottom: 100 }}>{batches && <Accordion data={batches} type={'batches'} />}</View>

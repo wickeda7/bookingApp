@@ -1,10 +1,11 @@
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View, Dimensions } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { Colors, Fonts, Default } from '@constants/style';
 import Style from '@theme/style';
 
 import { LineChart } from 'react-native-gifted-charts';
-
+const { width, height } = Dimensions.get('window');
+const chartWidth = Math.floor(width / 2) - 70;
 const BatchesCharts = ({ servicesData, amountData, additionalData, tipsData }) => {
   const [graph, setGraph] = useState(null);
   useEffect(() => {
@@ -152,7 +153,7 @@ const BatchesCharts = ({ servicesData, amountData, additionalData, tipsData }) =
         dataPointsColor1={graph?.dataPointsColor}
         textColor1={graph?.textColor}
         height={300}
-        adjustToWidth
+        width={chartWidth}
         showVerticalLines
         spacing={60}
         dataPointsHeight={6}
@@ -161,6 +162,8 @@ const BatchesCharts = ({ servicesData, amountData, additionalData, tipsData }) =
         textShiftX={-5}
         textFontSize={13}
         isAnimated
+        xAxisLength={chartWidth - 5}
+        rulesLength={chartWidth - 5}
       />
       {/* <LineChart
         data={amountData}
