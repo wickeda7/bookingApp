@@ -5,9 +5,8 @@ import MyStatusBar from '@components/myStatusBar';
 import { Colors, Fonts, Default, DefaultImage } from '@constants/style';
 import Style from '@theme/style';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import AntIcon from 'react-native-vector-icons/AntDesign';
 import { Avatar } from 'react-native-paper';
-import { formatPhoneNumber, formatPrice } from '@utils/helper';
+import { formatPrice } from '@utils/helper';
 import moment from 'moment';
 import DashedLine from 'react-native-dashed-line';
 import ServiceRow from '@components/workers/ServiceRow';
@@ -17,9 +16,18 @@ import debounce from 'lodash/debounce';
 import Loader from '@components/loader';
 const BookingDetail = (props) => {
   let bookingId = props.route.params.bookingId;
-  const { userBookings, isLoading } = useSelector((state) => state.booking);
+  const { userBookings, isLoading, bookingStatus } = useSelector((state) => state.booking);
+  useEffect(() => {
+    if (bookingStatus === 'completed') {
+      props.navigation.pop();
+    }
+  }, [bookingStatus]);
 
   let booking = userBookings.find((obj) => obj.id === bookingId);
+  if (!booking) {
+    return null;
+  }
+
   const { client, specialists, services, date, id, timeslot, canceled } = booking;
 
   const {
@@ -38,7 +46,6 @@ const BookingDetail = (props) => {
   const [subtotal, setSubtotal] = useState(0);
   const [additional, setAdditional] = useState(0);
   const [total, setTotal] = useState(0);
-  const [enableSubmit, setEnableSubmit] = useState(false);
   const ref = useRef();
   let bookingHour = '';
 
@@ -68,10 +75,6 @@ const BookingDetail = (props) => {
       setAdditional(addition);
       setTotal(tot);
       booking = { ...booking, services: pServices, subtotal: sub, additional: addition, total: tot };
-
-      if (pServices[0].status === 'working' && !canceled) {
-        setEnableSubmit(true);
-      }
     }
   }, [pServices]);
 
@@ -195,8 +198,9 @@ const BookingDetail = (props) => {
         <Text style={{ ...Fonts.Grey14Medium, textAlign: 'center' }}>
           {firstName} {lastName}
         </Text>
-        <Text style={{ ...Fonts.Grey14Medium, textAlign: 'center' }}>{email}</Text>
-        <Text style={{ ...Fonts.Grey14Medium, textAlign: 'center' }}>{formatPhoneNumber(phoneNumber)}</Text>
+
+        {/* <Text style={{ ...Fonts.Grey14Medium, textAlign: 'center' }}>{email}</Text>
+        <Text style={{ ...Fonts.Grey14Medium, textAlign: 'center' }}>{formatPhoneNumber(phoneNumber)}</Text> */}
         <ScrollView showsVerticalScrollIndicator={false}>
           <View
             style={{
@@ -323,7 +327,7 @@ const BookingDetail = (props) => {
                 ]}
               />
               <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-                {enableSubmit && (
+                {/* {enableSubmit && (
                   <TouchableOpacity
                     activeOpacity={0.8}
                     onPress={() => {
@@ -344,7 +348,7 @@ const BookingDetail = (props) => {
                       {tr('submit')}
                     </Text>
                   </TouchableOpacity>
-                )}
+                )} */}
               </View>
             </View>
           </View>

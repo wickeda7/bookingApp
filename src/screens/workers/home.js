@@ -13,7 +13,7 @@ import NotificationsHelper from '@utils/notifications';
 import Loader from '@components/loader';
 import { useDispatch, useSelector } from 'react-redux';
 import { getUserBooking, getBookingById, getStaffBooking } from '@redux/actions/bookingAction';
-import { updateUserBooking, resetMessage } from '@redux/slices/bookingSlice';
+import { updateUserBooking, resetMessage, setBookingStatus } from '@redux/slices/bookingSlice';
 import Toast from 'react-native-root-toast';
 const WorkerHome = ({ props }) => {
   const { userData } = useAuthContext();
@@ -57,7 +57,10 @@ const WorkerHome = ({ props }) => {
       } else if (data?.type === 'newBooking') {
         dispatch(getBookingById({ id: data.id, type: data.type, userId: data.specialistID }));
       } else {
-        dispatch(updateUserBooking({ data: data, userId: userData.id }));
+        dispatch(setBookingStatus({ status: 'completed' }));
+        setTimeout(() => {
+          dispatch(updateUserBooking({ data: data, userId: userData.id }));
+        }, 1000);
       }
     }
   }, [notification]);

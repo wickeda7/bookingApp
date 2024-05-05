@@ -8,6 +8,8 @@ import { calendarTheme } from '@constants/style';
 import { parseEvents } from '@utils/helper';
 import EventView from './EventView';
 import { useAuthContext } from '@contexts/AuthContext';
+import { useDispatch } from 'react-redux';
+import { setBookingStatus } from '@redux/slices/bookingSlice';
 import moment from 'moment';
 
 const INITIAL_TIME = { hour: 9, minutes: 0 };
@@ -18,6 +20,7 @@ const TimeLine = (props) => {
   const [marked, setMarked] = useState({});
   const [event, setEvent] = useState([]);
   const { userData } = useAuthContext();
+  const dispatch = useDispatch();
   useEffect(() => {
     const marked = groupBy(data, (event) => CalendarUtils.getCalendarDateString(event.date));
     for (let item of Object.keys(marked)) {
@@ -33,6 +36,7 @@ const TimeLine = (props) => {
     });
   }, [data]);
   const onEventPress = (event) => {
+    dispatch(setBookingStatus({ status: null }));
     navigation.push('StoresStack', { screen: 'bookingDetail', params: { bookingId: event.id } });
   };
 

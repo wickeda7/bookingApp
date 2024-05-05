@@ -21,12 +21,16 @@ const initialState = {
   isLoading: false,
   error: false,
   message: '',
+  bookingStatus: null,
 };
 
 export const bookingSlice = createSlice({
   name: 'booking',
   initialState,
   reducers: {
+    setBookingStatus: (state, action) => {
+      state.bookingStatus = action.payload.status;
+    },
     setBookingType: (state, action) => {
       state.bookingType = action.payload;
     },
@@ -234,6 +238,7 @@ export const {
   resetState,
   updateUserBooking,
   resetMessage,
+  setBookingStatus,
 } = bookingSlice.actions;
 
 export default bookingSlice.reducer;
