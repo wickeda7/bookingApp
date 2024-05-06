@@ -15,7 +15,8 @@ const AccordionStoreBody = ({ catId, serviceId }) => {
   function tr(key) {
     return t(`settings:${key}`);
   }
-  const { storeServices, setStoreServices, categoryId, subCategoryId } = useAdminContext();
+  const { storeServices, setStoreServices, categoryId, subCategoryId, storeInfo } = useAdminContext();
+  const storeId = storeInfo.id;
   const dispatch = useDispatch();
   let service = {};
   if (serviceId) {
@@ -50,7 +51,15 @@ const AccordionStoreBody = ({ catId, serviceId }) => {
     let category = { ...services[categoryIndex] };
     let subCategory = [];
     let itemsArr = [];
-    const newService = { description: '', name: '', price: 0, priceOption: '', enable: true, id: uid };
+    const newService = {
+      description: '',
+      name: '',
+      price: 0,
+      priceOption: '',
+      enable: true,
+      id: uid,
+      storeId: storeId,
+    };
 
     if (subCategoryId) {
       newService.sub_service = subCategoryId;

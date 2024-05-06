@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native';
-import React, { useEffect, useMemo, useRef, useState, useId } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Colors, Fonts, Default } from '@constants/style';
 import Style from '@theme/style';
 import CheckBox from '@react-native-community/checkbox';

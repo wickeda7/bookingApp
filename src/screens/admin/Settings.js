@@ -18,7 +18,6 @@ import MyStatusBar from '@components/myStatusBar';
 import { useTranslation } from 'react-i18next';
 import { useAuthContext } from '@contexts/AuthContext';
 import { useAdminContext } from '@contexts/AdminContext';
-import Loader from '@components/loader';
 import { useDispatch, useSelector } from 'react-redux';
 import { getSettings, updateStoreInfo } from '@redux/actions/adminHomeAction';
 import StoreImages from '@components/admin/StoreImages';
