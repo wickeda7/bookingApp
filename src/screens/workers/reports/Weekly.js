@@ -23,13 +23,12 @@ const Weekly = (props) => {
   const { userData } = useAuthContext();
   const dispatch = useDispatch();
   const { invoiceByDate, weeklyTips, weeklyTotal, isLoading } = useSelector((state) => state.staff);
-  const monday = moment().day(1).format('YYYY-MM-DD');
-  const nextMonday = moment(monday).add(7, 'days').format('YYYY-MM-DD');
+  const startOfWeek = moment().startOf('week').add('days', 1).format('YYYY-MM-DD');
+  const nextMonday = moment(startOfWeek).add(7, 'days').format('YYYY-MM-DD');
   const userId = userData?.id;
   const storeId = userData?.storeEmployee?.id;
-
   useEffect(() => {
-    dispatch(getInvoiceByDate({ from: monday, to: nextMonday, userId, storeId }));
+    dispatch(getInvoiceByDate({ from: startOfWeek, to: nextMonday, userId, storeId }));
   }, []);
 
   const date = invoiceByDate.length > 0 ? invoiceByDate[0].title : moment().format('YYYY-MM-DD');

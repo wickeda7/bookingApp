@@ -34,8 +34,9 @@ const InvoiceDetail = (props) => {
   const image = userAttributes.profileImg?.data?.attributes?.url
     ? userAttributes.profileImg?.data?.attributes?.url
     : '';
+
   const specialists = appointment?.data?.attributes.specialists.data || [];
-  const appointmentId = appointment?.data.id ? appointment?.data.id : id;
+  const appointmentId = appointment?.data?.id ? appointment?.data.id : id;
 
   const getItem = async (specialistId, appointmentId) => {
     const invoice = await staff.getInvoiceBySpecialist({ specialistId, appointmentId });
