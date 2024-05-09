@@ -10,3 +10,12 @@ export const getInvoicesByDate = createAsyncThunk('getInvoicesByDate', async ({ 
     throw error.response.data.error.message;
   }
 });
+export const getServiceItems = createAsyncThunk('getServiceItems', async ({ storeId }) => {
+  try {
+    const response = await batches.getServiceItems(storeId);
+    return response;
+  } catch (error) {
+    console.log('error batchesAction getServiceItems', error.response.data.error.message);
+    throw error.response.data.error.message;
+  }
+});

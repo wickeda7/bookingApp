@@ -11,7 +11,6 @@ import ModalContent from '@components/ModalContent';
 import { Dropdown } from 'react-native-element-dropdown';
 import NumericInput from '@wwdrew/react-native-numeric-textinput';
 import { totalDeduct, tipDeduct } from '@constants/settings';
-import Loader from '@components/loader';
 import { formatPrice } from '@utils/helper';
 const SettingsEmployeeRow = ({ data }) => {
   const { t, i18n } = useTranslation();
@@ -19,7 +18,7 @@ const SettingsEmployeeRow = ({ data }) => {
     return t(`settings:${key}`);
   }
   const dispatch = useDispatch();
-  const { isLoading, storeSettings } = useSelector((state) => state.adminHome);
+  const { storeSettings } = useSelector((state) => state.adminHome);
   const [visible, setVisible] = useState(false);
   const [catEdit, setCatEdit] = useState(false);
   const [employee, setEmployee] = useState({});

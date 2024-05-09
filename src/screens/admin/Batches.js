@@ -1,13 +1,4 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  ScrollView,
-  KeyboardAvoidingView,
-  Platform,
-  Dimensions,
-} from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
 import React, { useEffect, useRef, useState } from 'react';
 import { Colors, Default, Fonts, calendarTheme } from '@constants/style';
 import Style from '@theme/style';
@@ -31,10 +22,9 @@ const Batches = (props) => {
   function tr(key) {
     return t(`batchesScreen:${key}`);
   }
-  const { height, width } = Dimensions.get('window');
   const { userData } = useAuthContext();
   const dispatch = useDispatch();
-  const { isLoading, batches } = useSelector((state) => state.batches);
+  const { isLoading, batches, serviceItems } = useSelector((state) => state.batches);
   const { storeSettings } = useSelector((state) => state.adminHome);
   const today = moment().format('YYYY-MM-DD');
   const [calendar, setCalendar] = useState(false);
@@ -53,6 +43,7 @@ const Batches = (props) => {
   }, [calendar]);
 
   useEffect(() => {
+    if (serviceItems) return;
     dispatch(getSettings({ storeId }));
   }, []);
 

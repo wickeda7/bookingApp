@@ -12,7 +12,8 @@ import TotalView from '../TotalView';
 import { useAdminContext } from '@contexts/AdminContext';
 import moment from 'moment';
 import { useSelector } from 'react-redux';
-
+import { useAuthContext } from '@contexts/AuthContext';
+import { getServiceItems } from '@redux/actions/batchesAction';
 const ServicesTable = ({ services, canceled }) => {
   const { t, i18n } = useTranslation();
   const isRtl = i18n.dir() === 'rtl';
@@ -20,12 +21,16 @@ const ServicesTable = ({ services, canceled }) => {
     return t(`homeScreen:${key}`);
   }
   const { setTurn, amountPerTurn } = useAdminContext();
+  const { userData } = useAuthContext();
   const { staffAvailable } = useSelector((state) => state.adminHome);
+  const { serviceItems } = useSelector((state) => state.batches);
   const [tip, setTip] = useState(0);
   const [fees, setFees] = useState(0);
   const [cash, setCash] = useState(0);
   const [card, setCard] = useState(0);
   const [payBy, setPayBy] = useState('cash');
+  const [addService, setAddService] = useState(false);
+  const storeId = userData.storeAdmin.id;
   let status = false;
   let subtotal = 0;
   let additional = 0;
@@ -33,6 +38,9 @@ const ServicesTable = ({ services, canceled }) => {
   const feesAmount = 2;
   const dispatch = useDispatch();
 
+  const serviceIcon = addService ? 'closecircle' : 'pluscircle';
+  const serviceColor = addService ? Colors.red : Colors.info;
+  const serviceText = addService ? 'Cancel' : 'Add Service';
   for (var value of services) {
     if (value.status === 'pending') continue;
     if (value.price) subtotal += value.price;
@@ -160,6 +168,27 @@ const ServicesTable = ({ services, canceled }) => {
     const value = field === 'additional' ? text : text.nativeEvent.text;
     dispatch(updatePrice({ value, item, field }));
   };
+  const handleAddService = () => {
+    setAddService(!addService);
+    if (!addService) {
+      console.log('addService', addService);
+      if (!serviceItems) {
+        dispatch(getServiceItems({ storeId }));
+      }
+      let tempService = { ...services[0] };
+      tempService.newService = true;
+      tempService.name = '';
+      tempService.price = 0;
+      tempService.additional = 0;
+      tempService.total = 0;
+      services.push(tempService);
+      console.log('services', services);
+    } else {
+    }
+
+    // if (canceled) return;
+    // dispatch(updateBooking({ type: 'add' }));
+  };
   return (
     <>
       <View style={[Style.divider, { marginHorizontal: Default.fixPadding }]} />
@@ -184,6 +213,30 @@ const ServicesTable = ({ services, canceled }) => {
           />
         ))}
       </ScrollView>
+      <View style={{ flexDirection: 'row', paddingHorizontal: Default.fixPadding * 2 }}>
+        <View style={[{ flex: 1 }]}>
+          <TouchableOpacity
+            onPress={() => {
+              handleAddService();
+            }}
+            style={[
+              {
+                flexDirection: 'row',
+                width: 150,
+              },
+            ]}
+          >
+            <AntIcon size={15} name={serviceIcon} color={serviceColor} />
+            <Text
+              style={[
+                { paddingHorizontal: Default.fixPadding * 0.5, color: serviceColor, fontSize: 13, fontWeight: '600' },
+              ]}
+            >
+              {serviceText}
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </View>
       <View
         style={{
           flexDirection: 'row',

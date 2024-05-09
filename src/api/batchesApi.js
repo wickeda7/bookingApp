@@ -21,9 +21,10 @@ export const batchApi = {
       throw error;
     }
   },
-  createBatch: async (data) => {
+  getServiceItems: async (id) => {
     try {
-      const response = await axios.post(`${STRAPIURL}/batches`, data);
+      const url = `${STRAPIURL}/api/items?filters[storeId][id][$eq]=${id}&pagination[start]=0&pagination[limit]=-1`;
+      const response = await axios.get(url);
       return response.data;
     } catch (error) {
       console.error('Error: ', error);

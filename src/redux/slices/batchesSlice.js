@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { getInvoicesByDate } from '../actions/batchesAction';
+import { getInvoicesByDate, getServiceItems } from '../actions/batchesAction';
 
 const initialState = { batches: null, serviceItems: null, isLoading: false };
 
@@ -24,6 +24,16 @@ export const batchesSlice = createSlice({
         state.batches = action.payload;
       })
       .addCase(getInvoicesByDate.rejected, (state, action) => {
+        state.isLoading = false;
+      })
+      .addCase(getServiceItems.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getServiceItems.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.serviceItems = action.payload;
+      })
+      .addCase(getServiceItems.rejected, (state, action) => {
         state.isLoading = false;
       });
   },

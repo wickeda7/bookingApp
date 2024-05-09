@@ -11,4 +11,21 @@ export const batches = {
       throw error;
     }
   },
+  getServiceItems: async (storeId) => {
+    try {
+      const response = await batchApi.getServiceItems(storeId);
+      const res = response.data.reduce((acc, service) => {
+        const { id, attributes } = service;
+        acc.push({
+          id,
+          ...attributes,
+        });
+        return acc;
+      }, []);
+      return res;
+    } catch (error) {
+      console.error('Error batches getServiceItems: ', error);
+      throw error;
+    }
+  },
 };

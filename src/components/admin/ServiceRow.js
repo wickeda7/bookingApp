@@ -88,6 +88,7 @@ const ServiceRow = ({ item, setService, setStaff, handleTextChange, canceled }) 
           const incomingText = receivingDrag?.payload?.text;
           // console.log('viewState', viewState);
           // console.log('receivingDrag?.payload', receivingDrag?.payload);
+          console.log('item', item);
           return (
             <>
               <View
@@ -102,8 +103,13 @@ const ServiceRow = ({ item, setService, setStaff, handleTextChange, canceled }) 
                     {firstName} {lastName} {id}
                   </Text>
                 </View>
+
                 <View style={[{ flex: 4 }]}>
-                  <Text style={{ fontSize: 14 }}>{item.name}</Text>
+                  {item.newService ? (
+                    <Text style={{ fontSize: 14, color: 'red' }}>New Service</Text>
+                  ) : (
+                    <Text style={{ fontSize: 14 }}>{item.name}</Text>
+                  )}
                 </View>
                 <View style={[{ flex: 1 }]}>
                   <Text style={{ fontSize: 14 }}>{formatPrice(price * 100)}</Text>

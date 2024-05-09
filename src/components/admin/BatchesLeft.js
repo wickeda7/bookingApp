@@ -86,12 +86,14 @@ const BatchesLeft = ({ data }) => {
   let servicesData = [];
   if (!serviceItems) return null;
   services.forEach((service, index) => {
-    const { name, displayColor } = serviceItems.find((item) => item.id === index);
-    servicesData.push({
-      value: service,
-      dataPointText: service,
-      label: name.replace(/\s/g, '').slice(0, 5),
-    });
+    const item = serviceItems.find((item) => item.id === index);
+    if (item) {
+      servicesData.push({
+        value: service,
+        dataPointText: service,
+        label: item.name.replace(/\s/g, '').slice(0, 5),
+      });
+    }
   });
   specialistsAmount.forEach((amount, index) => {
     const specialist = employees.find((employee) => employee.id === index);
