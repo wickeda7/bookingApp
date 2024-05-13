@@ -11,6 +11,7 @@ const AdminContextProvider = ({ children }) => {
   const [subCategoryId, setSubCategoryId] = useState(null);
   const [amountPerTurn, setAmountPerTurn] = useState(null);
   const [setTurn, setSetTurn] = useState(null);
+  const [newService, setNewService] = useState(null);
   const value = {
     visible,
     setVisible,
@@ -30,6 +31,8 @@ const AdminContextProvider = ({ children }) => {
     setAmountPerTurn,
     setTurn,
     setSetTurn,
+    newService,
+    setNewService,
   };
 
   return <AdminContext.Provider value={value}>{children}</AdminContext.Provider>;

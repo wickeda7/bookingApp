@@ -111,3 +111,13 @@ export const timeCard = createAsyncThunk('timeCard', async ({ data }) => {
     throw error;
   }
 });
+
+export const updateBookingService = createAsyncThunk('updateBookingService', async ({ id, services }) => {
+  try {
+    const res = await booking.updateBookingService(id, services);
+    return res;
+  } catch (error) {
+    console.log('error  updateBookingService', error);
+    throw error;
+  }
+});

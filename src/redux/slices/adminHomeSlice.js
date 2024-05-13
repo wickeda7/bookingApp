@@ -10,6 +10,7 @@ import {
   updateEmployee,
   updateStoreInfo,
   timeCard,
+  updateBookingService,
 } from '../actions/adminHomeAction';
 import { t } from 'i18next';
 const initialState = {
@@ -483,6 +484,20 @@ export const adminHomeSlice = createSlice({
       .addCase(timeCard.rejected, (state, action) => {
         state.isLoading = false;
         state.error = true;
+      })
+      .addCase(updateBookingService.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(updateBookingService.fulfilled, (state, action) => {
+        const services = action.payload;
+        const bookingType = services.timeslot === null ? 'walkin' : 'appointment';
+        const bookingId = services.id;
+        const bookingIndex = state[bookingType].findIndex((obj) => obj.id === bookingId);
+        state[bookingType][bookingIndex] = services;
+        state.isLoading = false;
+      })
+      .addCase(updateBookingService.rejected, (state, action) => {
+        state.isLoading = false;
       });
   },
 });

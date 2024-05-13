@@ -43,7 +43,6 @@ const AdminHome = () => {
   const { isLoading, staffAvailable, staffUnAvailable, walkin, appointment } = useSelector((state) => state.adminHome);
   const employee = userData.storeAdmin.employee;
   const today = moment().format('YYYY-MM-DD');
-
   const storeId = userData.storeAdmin.id;
   const amountPerTurn = userData.storeAdmin.amountPerTurn;
   const setTurn = userData.storeAdmin.setTurns;

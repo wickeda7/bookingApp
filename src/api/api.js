@@ -330,6 +330,16 @@ export const api = {
       throw error;
     }
   },
+  updateBookingService: async (id, data) => {
+    try {
+      const url = `${STRAPIURL}/api/appointments/${id}?populate=client&populate[1]=client.userInfo`;
+      const response = await axios.put(url, { data: { services: data } });
+      return response.data;
+    } catch (error) {
+      console.log('error updateBookingService API', error);
+      throw error;
+    }
+  },
   updateBooking: async ({ service, type, staff }) => {
     try {
       const id = service.bookingId;

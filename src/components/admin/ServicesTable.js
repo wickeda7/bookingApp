@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { updateStaff, updatePrice } from '@redux/slices/adminHomeSlice';
 import { useDispatch } from 'react-redux';
 import AntIcon from 'react-native-vector-icons/AntDesign';
-import { addInvoice, updateBooking } from '@redux/actions/adminHomeAction';
+import { addInvoice, updateBooking, updateBookingService } from '@redux/actions/adminHomeAction';
 import TotalView from '../TotalView';
 import { useAdminContext } from '@contexts/AdminContext';
 import moment from 'moment';
@@ -20,7 +20,7 @@ const ServicesTable = ({ services, canceled }) => {
   function tr(key) {
     return t(`homeScreen:${key}`);
   }
-  const { setTurn, amountPerTurn } = useAdminContext();
+  const { setTurn, amountPerTurn, newService, setNewService } = useAdminContext();
   const { userData } = useAuthContext();
   const { staffAvailable } = useSelector((state) => state.adminHome);
   const { serviceItems } = useSelector((state) => state.batches);
@@ -74,6 +74,21 @@ const ServicesTable = ({ services, canceled }) => {
     } else {
     }
   }, [tip, fees, additional]);
+
+  useEffect(() => {
+    if (newService) {
+      setAddService(false);
+      let tempService = { ...services[0] };
+      tempService = { ...services[0], ...newService };
+      services.push(tempService);
+      ////
+      const updatedServices = services.map((service) => {
+        return { id: service.id, name: service.name, price: service.price };
+      });
+      dispatch(updateBookingService({ id: tempService.bookingId, services: updatedServices }));
+      setNewService(null);
+    }
+  }, [newService]);
 
   const setService = (service, type, staff) => {
     dispatch(updateBooking({ type, service, staff }));
@@ -171,7 +186,6 @@ const ServicesTable = ({ services, canceled }) => {
   const handleAddService = () => {
     setAddService(!addService);
     if (!addService) {
-      console.log('addService', addService);
       if (!serviceItems) {
         dispatch(getServiceItems({ storeId }));
       }
@@ -182,8 +196,8 @@ const ServicesTable = ({ services, canceled }) => {
       tempService.additional = 0;
       tempService.total = 0;
       services.push(tempService);
-      console.log('services', services);
     } else {
+      services.pop();
     }
 
     // if (canceled) return;

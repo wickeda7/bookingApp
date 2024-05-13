@@ -180,4 +180,41 @@ export const booking = {
       throw error;
     }
   },
+  updateBookingService: async (id, data) => {
+    try {
+      const response = await api.updateBookingService(id, data);
+      const { id: bookingId, attributes } = response.data;
+      const services = attributes.services;
+      const cli = attributes.client.data;
+      const info = cli.attributes.userInfo.data;
+      delete cli.attributes.userInfo;
+      const clientinfo = { ...info.attributes, id: info.id };
+      const cli_ = { ...cli.attributes, id: cli.id };
+      const client = { ...cli_, userInfo: clientinfo };
+      const servArr = services.reduce((acc, item) => {
+        acc.push({
+          ...item,
+          bookingId,
+          client,
+          storeId: attributes.storeID,
+          status: 'pending',
+          type: attributes.timeslot === null ? 'walkin' : 'appointment',
+        });
+        return acc;
+      }, []);
+      const final = {
+        id: bookingId,
+        client,
+        status: 'pending',
+        storeID: attributes.storeID,
+        timeslot: attributes.timeslot,
+        services: servArr,
+      };
+
+      return final;
+    } catch (error) {
+      console.log('error updateBookingService', error);
+      throw error;
+    }
+  },
 };

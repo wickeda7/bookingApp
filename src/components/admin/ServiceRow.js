@@ -11,6 +11,7 @@ import { updatePrice } from '@redux/slices/adminHomeSlice';
 import { addSplitService } from '@redux/actions/adminHomeAction';
 import { useDispatch } from 'react-redux';
 import debounce from 'lodash/debounce';
+import NewServiceDropdown from '../NewServiceDropdown';
 
 const ServiceRow = ({ item, setService, setStaff, handleTextChange, canceled }) => {
   const { t, i18n } = useTranslation();
@@ -79,6 +80,7 @@ const ServiceRow = ({ item, setService, setStaff, handleTextChange, canceled }) 
     setAdd(!add);
     setAddedItem(null);
   };
+
   return (
     <>
       <DraxView
@@ -88,7 +90,6 @@ const ServiceRow = ({ item, setService, setStaff, handleTextChange, canceled }) 
           const incomingText = receivingDrag?.payload?.text;
           // console.log('viewState', viewState);
           // console.log('receivingDrag?.payload', receivingDrag?.payload);
-          console.log('item', item);
           return (
             <>
               <View
@@ -105,11 +106,7 @@ const ServiceRow = ({ item, setService, setStaff, handleTextChange, canceled }) 
                 </View>
 
                 <View style={[{ flex: 4 }]}>
-                  {item.newService ? (
-                    <Text style={{ fontSize: 14, color: 'red' }}>New Service</Text>
-                  ) : (
-                    <Text style={{ fontSize: 14 }}>{item.name}</Text>
-                  )}
+                  {item.newService ? <NewServiceDropdown /> : <Text style={{ fontSize: 14 }}>{item.name}</Text>}
                 </View>
                 <View style={[{ flex: 1 }]}>
                   <Text style={{ fontSize: 14 }}>{formatPrice(price * 100)}</Text>
