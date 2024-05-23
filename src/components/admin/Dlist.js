@@ -15,7 +15,6 @@ import { appointmentTime } from '@utils/helper';
 import moment from 'moment';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { KEY } from '@constants/settings';
-import { t } from 'i18next';
 const Dlist = ({ staffAvailable }) => {
   const [data, setData] = useState([]);
   const { appointment } = useSelector((state) => state.adminHome);
@@ -89,7 +88,10 @@ const Dlist = ({ staffAvailable }) => {
                 </View>
               </View>
             )}
-            <TouchableOpacity onPress={() => handlePunchClock()} style={{ flexDirection: 'row' }}>
+            <TouchableOpacity
+              onPress={() => handlePunchClock()}
+              style={{ flexDirection: 'row', paddingHorizontal: 10 }}
+            >
               <MatIcons name='punch-clock' size={18} color={color} />
               {item.in && <Text style={[Style.inText]}>IN: {moment(item.in, 'HH:mm:ss.SSS').format('h:mm A')}</Text>}
               {item.out && (

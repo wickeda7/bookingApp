@@ -83,7 +83,7 @@ const Batches = (props) => {
           <TouchableOpacity onPress={() => props.navigation.navigate('Home')} style={Style.navBackButton}>
             <Ionicons name={isRtl ? 'arrow-forward' : 'arrow-back'} size={22} color={Colors.white} />
           </TouchableOpacity>
-          <Text style={Fonts.White16Bold}>Batches & Reports v1.1</Text>
+          <Text style={Fonts.White16Bold}>Batches & Reports</Text>
         </View>
         <View style={{ flex: 1, flexDirection: 'row-reverse', paddingHorizontal: 20 }}>
           <View style={{ width: 220, alignItems: 'flex-end', paddingTop: 3 }}>

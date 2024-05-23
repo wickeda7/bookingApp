@@ -103,7 +103,7 @@ export default StyleSheet.create({
   tick: {
     position: 'absolute',
     top: 0,
-    left: 15,
+    left: 5,
     height: 20,
     width: 20,
     borderRadius: 10,

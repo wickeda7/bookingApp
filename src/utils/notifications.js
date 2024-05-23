@@ -49,32 +49,32 @@ async function registerForPushNotificationsAsync() {
   return token;
 }
 
-TaskManager.defineTask(BACKGROUND_FETCH_TASK, async () => {
-  const now = Date.now();
+// TaskManager.defineTask(BACKGROUND_FETCH_TASK, async () => {
+//   const now = Date.now();
 
-  console.log(`Got background fetch call at date: ${new Date(now).toISOString()}`);
-  await Notifications.scheduleNotificationAsync({
-    content: {
-      title: 'Background Fetch',
-      body: BACKGROUND_FETCH_TASK,
-      data: { data: 'goes here' },
-    },
-    trigger: null,
-  });
-  // Be sure to return the successful result type!
-  return BackgroundFetch.BackgroundFetchResult.NewData;
-});
-async function registerBackgroundFetchAsync() {
-  return BackgroundFetch.registerTaskAsync(BACKGROUND_FETCH_TASK, {
-    minimumInterval: 15, // 15 minutes
-    stopOnTerminate: false, // android only,
-    startOnBoot: true, // android only
-  }).then(() => BackgroundFetch.setMinimumIntervalAsync(60 * 2));
-}
+//   console.log(`Got background fetch call at date: ${new Date(now).toISOString()}`);
+//   await Notifications.scheduleNotificationAsync({
+//     content: {
+//       title: 'Background Fetch',
+//       body: BACKGROUND_FETCH_TASK,
+//       data: { data: 'goes here' },
+//     },
+//     trigger: null,
+//   });
+//   // Be sure to return the successful result type!
+//   return BackgroundFetch.BackgroundFetchResult.NewData;
+// });
+// async function registerBackgroundFetchAsync() {
+//   return BackgroundFetch.registerTaskAsync(BACKGROUND_FETCH_TASK, {
+//     minimumInterval: 15, // 15 minutes
+//     stopOnTerminate: false, // android only,
+//     startOnBoot: true, // android only
+//   }).then(() => BackgroundFetch.setMinimumIntervalAsync(60 * 2));
+// }
 
-async function unregisterBackgroundFetchAsync() {
-  return BackgroundFetch.unregisterTaskAsync(BACKGROUND_FETCH_TASK);
-}
+// async function unregisterBackgroundFetchAsync() {
+//   return BackgroundFetch.unregisterTaskAsync(BACKGROUND_FETCH_TASK);
+// }
 
 const NotificationsHelper = ({ setNotification }) => {
   const { userData, updateToken } = useAuthContext();
@@ -84,18 +84,18 @@ const NotificationsHelper = ({ setNotification }) => {
   const responseListener = useRef();
   const [isRegistered, setIsRegistered] = useState(false);
   const [status, setStatus] = useState(null);
-  const checkStatusAsync = async () => {
-    await registerBackgroundFetchAsync();
-    const status = await BackgroundFetch.getStatusAsync();
-    const isRegistered = await TaskManager.isTaskRegisteredAsync(BACKGROUND_FETCH_TASK);
-    const tasks = await TaskManager.getRegisteredTasksAsync();
+  // const checkStatusAsync = async () => {
+  //   await registerBackgroundFetchAsync();
+  //   const status = await BackgroundFetch.getStatusAsync();
+  //   const isRegistered = await TaskManager.isTaskRegisteredAsync(BACKGROUND_FETCH_TASK);
+  //   const tasks = await TaskManager.getRegisteredTasksAsync();
 
-    setStatus(status);
-    setIsRegistered(isRegistered);
-  };
-  useEffect(() => {
-    checkStatusAsync();
-  }, []);
+  //   setStatus(status);
+  //   setIsRegistered(isRegistered);
+  // };
+  // useEffect(() => {
+  //   checkStatusAsync();
+  // }, []);
 
   useEffect(() => {
     if (!expoPushToken) return;

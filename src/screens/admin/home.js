@@ -118,7 +118,7 @@ const AdminHome = () => {
         >
           <View style={{ flexDirection: isRtl ? 'row-reverse' : 'row', marginHorizontal: Default.fixPadding * 1.5 }}>
             <View style={{ flex: 1, flexDirection: 'row' }}>
-              <Text style={Fonts.White18Bold}>{userData.storeAdmin.name}</Text>
+              <Text style={Fonts.White18Bold}>{userData.storeAdmin.name} v1.3</Text>
             </View>
             <View style={{ flex: 5, flexDirection: 'row-reverse' }}>
               <View style={{ width: 70, height: 50, position: 'relative' }}>
@@ -146,18 +146,23 @@ const AdminHome = () => {
         </View>
         <View style={[Style.mainContainer, { flexDirection: 'row', padding: Default.fixPadding * 1.5, marginTop: 5 }]}>
           <View style={[{ flex: 2 }]}>
-            {clockIn ? (
-              <Dlist staffAvailable={staffAvailable} />
-            ) : (
-              <>
-                {staffAvailable.map((item, index) => {
-                  return <StaffRow key={index} item={item} busy={false} />;
-                })}
-                {staffUnAvailable.map((item, index) => {
-                  return <StaffRow key={index} item={item} busy={true} />;
-                })}
-              </>
-            )}
+            <ScrollView
+              contentInsetAdjustmentBehavior='automatic'
+              style={[styles.container, { paddingLeft: Default.fixPadding * 3 }]}
+            >
+              {clockIn ? (
+                <Dlist staffAvailable={staffAvailable} />
+              ) : (
+                <>
+                  {staffAvailable.map((item, index) => {
+                    return <StaffRow key={index} item={item} busy={false} />;
+                  })}
+                  {staffUnAvailable.map((item, index) => {
+                    return <StaffRow key={index} item={item} busy={true} />;
+                  })}
+                </>
+              )}
+            </ScrollView>
           </View>
           <View style={[styles.borderLeft, { flex: 4 }]}>
             <ScrollView contentInsetAdjustmentBehavior='automatic' style={styles.container}>

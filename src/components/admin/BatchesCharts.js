@@ -47,10 +47,32 @@ const BatchesCharts = ({ servicesData, amountData, additionalData, tipsData }) =
             flex: 1,
             flexDirection: 'row',
             justifyContent: 'space-evenly',
-            marginTop: 24,
+            marginTop: 20,
             backgroundColor: 'yellow',
           }}
         >
+          <TouchableOpacity onPress={() => updateGrapp('total')}>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <View
+                style={{
+                  height: 12,
+                  width: 12,
+                  borderRadius: 6,
+                  backgroundColor: '#ce2b13',
+                  marginRight: 8,
+                }}
+              />
+              <Text
+                style={{
+                  width: 60,
+                  height: 16,
+                  color: '#ce2b13',
+                }}
+              >
+                Total
+              </Text>
+            </View>
+          </TouchableOpacity>
           <TouchableOpacity onPress={() => updateGrapp('additional')}>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <View
@@ -95,28 +117,7 @@ const BatchesCharts = ({ servicesData, amountData, additionalData, tipsData }) =
               </Text>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => updateGrapp('total')}>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <View
-                style={{
-                  height: 12,
-                  width: 12,
-                  borderRadius: 6,
-                  backgroundColor: '#ce2b13',
-                  marginRight: 8,
-                }}
-              />
-              <Text
-                style={{
-                  width: 60,
-                  height: 16,
-                  color: '#ce2b13',
-                }}
-              >
-                Total
-              </Text>
-            </View>
-          </TouchableOpacity>
+
           <TouchableOpacity onPress={() => updateGrapp('services')}>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <View
@@ -152,7 +153,7 @@ const BatchesCharts = ({ servicesData, amountData, additionalData, tipsData }) =
         color1={graph?.color}
         dataPointsColor1={graph?.dataPointsColor}
         textColor1={graph?.textColor}
-        height={300}
+        height={200}
         width={chartWidth}
         showVerticalLines
         spacing={60}
