@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, TouchableOpacity, ScrollView, LogBox } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Colors, Default, Fonts } from '@constants/style';
 import Style from '@theme/style';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -25,7 +25,9 @@ import Accordion from '@components/Accordion';
 import { DraxProvider } from 'react-native-drax';
 import socket from '@utils/socket';
 import Dlist from '@components/admin/Dlist';
-import TestW2 from '../../components/TestW2';
+
+import ExternalDisplay, { getScreens } from 'react-native-external-display';
+import ExternalScreen from '@components/admin/ExternalScreen';
 
 const AdminHome = () => {
   const { t, i18n } = useTranslation();
@@ -39,7 +41,7 @@ const AdminHome = () => {
   const [notificationNumber, setNotificationNumber] = useState(1);
   const [clockIn, setClockIn] = useState(false);
   const { userData } = useAuthContext();
-  const { setSetTurn, setAmountPerTurn, showExtend } = useAdminContext();
+  const { setSetTurn, setAmountPerTurn, showExtend, setShowExtend } = useAdminContext();
   const dispatch = useDispatch();
   const { isLoading, staffAvailable, staffUnAvailable, walkin, appointment } = useSelector((state) => state.adminHome);
   const employee = userData.storeAdmin.employee;
@@ -47,6 +49,10 @@ const AdminHome = () => {
   const storeId = userData.storeAdmin.id;
   const amountPerTurn = userData.storeAdmin.amountPerTurn;
   const setTurn = userData.storeAdmin.setTurns;
+
+  const [info, setInfo] = useState(getScreens());
+  const [on, setOn] = useState(true);
+  const [mount, setMount] = useState(true);
 
   useEffect(() => {
     setAmountPerTurn(amountPerTurn);
@@ -105,9 +111,9 @@ const AdminHome = () => {
       }
     }
   }, [notification]);
-
   return (
     <>
+      <View>{mount && <ExternalScreen on={on} setInfo={setInfo} info={info} />}</View>
       <DraxProvider>
         <NotificationsHelper setNotification={setNotification} />
         <Loader visible={isLoading} />
@@ -119,7 +125,7 @@ const AdminHome = () => {
         >
           <View style={{ flexDirection: isRtl ? 'row-reverse' : 'row', marginHorizontal: Default.fixPadding * 1.5 }}>
             <View style={{ flex: 1, flexDirection: 'row' }}>
-              <Text style={Fonts.White18Bold}>{userData.storeAdmin.name} v1.4.1</Text>
+              <Text style={Fonts.White18Bold}>{userData.storeAdmin.name} v1.4</Text>
             </View>
             <View style={{ flex: 5, flexDirection: 'row-reverse' }}>
               <View style={{ width: 70, height: 50, position: 'relative' }}>
@@ -143,12 +149,7 @@ const AdminHome = () => {
                 )}
               </View>
               <View style={{ width: 70, alignItems: 'flex-end', paddingTop: 8 }}>
-                <TouchableOpacity
-                  onPress={() => {
-                    // getPermission();
-                    //setShowExtend(!showExtend);
-                  }}
-                >
+                <TouchableOpacity onPress={() => setShowExtend(!showExtend)}>
                   <Icons6 name={'display'} size={25} color={showExtend ? Colors.disable : Colors.white} />
                 </TouchableOpacity>
               </View>
@@ -177,7 +178,6 @@ const AdminHome = () => {
           </View>
           <View style={[styles.borderLeft, { flex: 4 }]}>
             <ScrollView contentInsetAdjustmentBehavior='automatic' style={styles.container}>
-              <TestW2 />
               <Accordion data={walkin} type={'admin'} />
               <Accordion data={appointment} type={'admin'} />
             </ScrollView>
