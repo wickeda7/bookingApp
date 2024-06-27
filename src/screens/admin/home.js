@@ -142,7 +142,7 @@ const AdminHome = () => {
                   </TouchableOpacity>
                 )}
               </View>
-              <View style={{ width: 70, alignItems: 'flex-end', paddingTop: 8 }}>
+              {/* <View style={{ width: 70, alignItems: 'flex-end', paddingTop: 8 }}>
                 <TouchableOpacity
                   onPress={() => {
                     // getPermission();
@@ -151,7 +151,7 @@ const AdminHome = () => {
                 >
                   <Icons6 name={'display'} size={25} color={showExtend ? Colors.disable : Colors.white} />
                 </TouchableOpacity>
-              </View>
+              </View> */}
             </View>
           </View>
         </View>
@@ -177,7 +177,7 @@ const AdminHome = () => {
           </View>
           <View style={[styles.borderLeft, { flex: 4 }]}>
             <ScrollView contentInsetAdjustmentBehavior='automatic' style={styles.container}>
-              <TestW2 />
+              {/* <TestW2 /> */}
               <Accordion data={walkin} type={'admin'} />
               <Accordion data={appointment} type={'admin'} />
             </ScrollView>

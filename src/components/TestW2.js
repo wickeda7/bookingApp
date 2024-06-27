@@ -12,18 +12,23 @@ import {
 } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { BleManager } from 'react-native-ble-plx';
-import base64 from 'react-native-base64';
 import { Buffer } from 'buffer';
 import { requestBluetoothPermissions } from '@utils/Permissions';
+import { useAdminContext } from '@contexts/AdminContext';
+
 export const manager = new BleManager();
+const SERVICE_UUID = '0000180d-0000-1000-8000-00805f9b34fb'; // Replace with your service UUID
+const CHARACTERISTIC_UUID = '00002a37-0000-1000-8000-00805f9b34fb'; // Replace with your characteristic UUID
+
 const TestW2 = () => {
   const [device, setDevice] = useState(null);
-  const [isConnected, setIsConnected] = useState(false);
   const [receivedData, setReceivedData] = useState('');
-  const [connectedDevice, setConnectedDevice] = useState(null);
   const [messageToSend, setMessageToSend] = useState('');
+  const { isConnected, setIsConnected } = useAdminContext();
+  let subOnDisconnected = null;
 
   useEffect(() => {
+    if (!manager) return;
     const initBluetooth = async () => {
       const granted = await requestBluetoothPermissions();
       if (!granted) {
@@ -41,6 +46,7 @@ const TestW2 = () => {
       // Listen to Bluetooth state changes
       const subscription = manager.onStateChange((state) => {
         setIsBluetoothEnabled(state === 'PoweredOn');
+        //scanAndConnect();
       }, true);
 
       return () => {
@@ -51,18 +57,11 @@ const TestW2 = () => {
     initBluetooth();
 
     return () => {
+      subOnDisconnected && subOnDisconnected.remove();
       manager.stopDeviceScan();
+      manager.destroy();
     };
   }, [manager]);
-
-  useEffect(() => {
-    console.log('connectedDevice useEffect');
-    if (connectedDevice === null) {
-      return;
-    }
-    console.log('connectedDevice', connectedDevice);
-    setupNotification();
-  }, [connectedDevice]);
 
   const startScan = () => {
     manager.startDeviceScan(null, null, (error, device) => {
@@ -73,8 +72,8 @@ const TestW2 = () => {
       }
 
       if (device && device.name === 'My BLE Device') {
-        connect(device);
         manager.stopDeviceScan();
+        connect(device);
       }
     });
   };
@@ -89,22 +88,10 @@ const TestW2 = () => {
         })
         .then(async (device) => {
           setIsConnected(true);
-          const services = await device.services();
-          services.forEach(async (service) => {
-            const characteristics = await device.characteristicsForService(service.uuid);
-            characteristics.forEach((ch) => {
-              if (ch.isNotifiable && ch.isReadable && ch.isWritableWithResponse) {
-                console.log('setConnectedDevice:!!!!!!!!');
-                setConnectedDevice({
-                  deviceid: device.id,
-                  serviceUUID: service.uuid,
-                  characteristicsUUID: ch.uuid,
-                });
-              }
-            });
-          });
+          setupNotification(device);
+          setupDisconnectListener(device); // Setup listener for disconnection
         })
-        .then((device) => {})
+
         .catch((error) => {
           console.error(error);
           Alert.alert('Connection error', error.message);
@@ -114,44 +101,37 @@ const TestW2 = () => {
     }
   };
 
-  const setupNotification = () => {
-    try {
-      console.log('setupNotification', connectedDevice);
-      if (!device && !connectedDevice) {
-        Alert.alert('No device connected.');
+  const setupNotification = (device) => {
+    device.monitorCharacteristicForService(SERVICE_UUID, CHARACTERISTIC_UUID, (error, characteristic) => {
+      if (error) {
+        console.error(error);
         return;
       }
-      device.monitorCharacteristicForService(
-        connectedDevice.serviceUUID,
-        connectedDevice.characteristicsUUID,
-        (error, characteristic) => {
-          if (error) {
-            console.error(error);
-            return;
-          }
-          var value = base64.decode(characteristic.value);
-          const message = Buffer.from(characteristic.value, 'base64').toString('utf-8');
-          console.log('base64 is', value);
-          console.log('Data Read  Buffer:', message);
-          console.log('raw Data:', characteristic.value);
-          setReceivedData(characteristic.value);
-        }
-      );
-    } catch (error) {
-      console.error('Error setting up notification:', error);
-    }
+      console.log('Data Read:', characteristic.value);
+      const decodedData = Buffer.from(characteristic.value, 'base64').toString('utf-8');
+      console.log('Data Read:', decodedData);
+      setReceivedData(decodedData);
+    });
+  };
+
+  const setupDisconnectListener = (device) => {
+    subOnDisconnected = device.onDisconnected((error, disconnectedDevice) => {
+      if (error) {
+        console.error(error);
+      } else {
+        setIsConnected(false);
+        setDevice(null);
+        Alert.alert('Disconnected', 'Connection to the server has been lost.');
+      }
+    });
   };
 
   const sendData = () => {
     console.log('sendData', messageToSend);
-    if (device && connectedDevice && messageToSend !== '') {
+    if (device && isConnected && messageToSend !== '') {
       const encodedData = Buffer.from(messageToSend, 'utf-8').toString('base64');
       device
-        .writeCharacteristicWithResponseForService(
-          connectedDevice.serviceUUID,
-          connectedDevice.characteristicsUUID,
-          encodedData
-        )
+        .writeCharacteristicWithResponseForService(SERVICE_UUID, CHARACTERISTIC_UUID, encodedData)
         .then(() => {
           Alert.alert('Success', 'Data sent successfully');
         })
@@ -164,109 +144,6 @@ const TestW2 = () => {
     }
   };
 
-  const connect22 = (device) => {
-    try {
-      manager
-        .connectToDevice(device.id)
-        .then((device) => {
-          setDevices(device);
-          return device.discoverAllServicesAndCharacteristics();
-        })
-        .then(async (device) => {
-          const services = await device.services();
-          services.forEach(async (service) => {
-            const characteristics = await device.characteristicsForService(service.uuid);
-            characteristics.forEach((ch) => {
-              if (ch.isNotifiable && ch.isReadable && ch.isWritableWithResponse) {
-                console.log('setConnectedDevice:!!!!!!!!');
-                setConnectedDevice({
-                  deviceid: device.id,
-                  serviceUUID: service.uuid,
-                  characteristicsUUID: ch.uuid,
-                  device: device,
-                });
-              }
-
-              handleRetrieveData(service.uuid, ch.uuid, device);
-            });
-          });
-        })
-        .catch((error) => {
-          console.error('Connection error:', error);
-        });
-    } catch (error) {
-      console.error('Error connecting to device:', error);
-    }
-  };
-  const handleRetrieveData = async (uuid, chuuid, device) => {
-    try {
-      device.readCharacteristicForService(uuid, chuuid).then((data) => {
-        try {
-          var value = base64.decode(data.value); // base64 is import from "react-native-base64" library for convert the base64 format to human readable strin
-
-          const message = Buffer.from(data.value, 'base64').toString('utf-8');
-          console.log('base64 is', value);
-          console.log('Data Read  Buffer:', message);
-          console.log('Data Read from the BLE device base64:', data.value, data);
-        } catch (error) {
-          console.log('error decode', error);
-        }
-        g;
-      });
-      console.log('connectedDevice', connectedDevice);
-      // const readData = await manager
-      //   .ReadCharacteristicForDevice(
-      //     '4D:E6:38:F4:CB:EE',
-      //     '00001801-0000-1000-8000-00805f9b34fb',
-      //     '00002a05-0000-1000-8000-00805f9b34fb'
-      //   )
-      //   .then((readData) => {
-      //     console.log('Data Read from the BLE device:', readData);
-      //   })
-      //   .catch((error) => {
-      //     console.log('“Error while reading data from BLE device:”', error);
-      //   });
-    } catch (error) {
-      console.log('Error reading data from BLE device:', error);
-    }
-  };
-  const sendMessage = () => {
-    console.log('sendMessage', messageToSend);
-    return;
-    if (!connectedDevice) {
-      console.log('No device connected.');
-      return;
-    }
-
-    const message = messageToSend.trim();
-    if (message.length === 0) {
-      console.log('Message cannot be empty.');
-      return;
-    }
-
-    const serviceUUID = 'YOUR_SERVICE_UUID';
-    const characteristicUUID = 'YOUR_CHARACTERISTIC_UUID';
-
-    // manager.writeWithoutResponse(connectedDevice.id, serviceUUID, characteristicUUID, messageToSend)
-    //   .then(() => {
-    //     console.log('Message sent:', messageToSend);
-    //     // Optionally, update UI or clear message input
-    //     setMessageToSend('');
-    //   })
-    //   .catch((error) => {
-    //     console.error('Write error:', error);
-    //   });
-    manager
-      .write(connectedDevice.id, serviceUUID, characteristicUUID, messageToSend)
-      .then(() => {
-        console.log('Message sent:', messageToSend);
-        // Optionally, update UI or clear message input
-        setMessageToSend('');
-      })
-      .catch((error) => {
-        console.error('Write error:', error);
-      });
-  };
   const stopScan = () => {
     manager.stopDeviceScan();
   };
@@ -279,9 +156,7 @@ const TestW2 = () => {
       <View style={{ marginTop: 20 }}>
         <Button title='Stop Scan' onPress={stopScan} />
       </View>
-      <View style={{ marginTop: 20 }}>
-        <Button title='View Message' onPress={handleRetrieveData} />
-      </View>
+
       <View style={{ marginTop: 20 }}>
         {/* {devices.map((device) => (
           <Button key={device.id} title={`${device.name || device.id}`} onPress={() => connectToDevice(device)} />

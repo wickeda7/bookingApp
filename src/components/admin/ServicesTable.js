@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { updateStaff, updatePrice } from '@redux/slices/adminHomeSlice';
 import { useDispatch } from 'react-redux';
 import AntIcon from 'react-native-vector-icons/AntDesign';
+import Ionicons from 'react-native-vector-icons/MaterialIcons';
 import { addInvoice, updateBooking, updateBookingService } from '@redux/actions/adminHomeAction';
 import TotalView from '../TotalView';
 import { useAdminContext } from '@contexts/AdminContext';
@@ -20,7 +21,7 @@ const ServicesTable = ({ services, canceled }) => {
   function tr(key) {
     return t(`homeScreen:${key}`);
   }
-  const { setTurn, amountPerTurn, newService, setNewService } = useAdminContext();
+  const { setTurn, amountPerTurn, newService, setNewService, isConnected } = useAdminContext();
   const { userData } = useAuthContext();
   const { staffAvailable } = useSelector((state) => state.adminHome);
   const { serviceItems } = useSelector((state) => state.batches);
@@ -31,6 +32,9 @@ const ServicesTable = ({ services, canceled }) => {
   const [payBy, setPayBy] = useState('cash');
   const [addService, setAddService] = useState(false);
   const storeId = userData.storeAdmin.id;
+
+  const extendIcon = isConnected ? 'screen-share' : 'stop-screen-share';
+  const extendText = isConnected ? 'Screen On' : 'Screen Off';
   let status = false;
   let subtotal = 0;
   let additional = 0;
@@ -106,9 +110,13 @@ const ServicesTable = ({ services, canceled }) => {
     }
     dispatch(updateStaff(staff));
   };
-
+  const handleToggleScreen = () => {
+    console.log('handleToggleScreen', canceled, status);
+    if (canceled || !status) return;
+    console.log('toggle screen show');
+  };
   const handleSubmit = () => {
-    if (canceled) return;
+    if (canceled || !status) return;
     const model = {};
     services.reduce((acc, person) => {
       const specialist = person.specialist.id;
@@ -260,7 +268,27 @@ const ServicesTable = ({ services, canceled }) => {
           opacity: canceled ? 0.3 : 1,
         }}
       >
-        <View style={[{ flex: 1 }]}></View>
+        <View style={[{ flex: 1, justifyContent: 'flex-end' }]}>
+          <TouchableOpacity
+            activeOpacity={0.8}
+            onPress={() => {
+              handleDelete();
+            }}
+            style={[
+              Style.buttonStyle,
+              {
+                backgroundColor: Colors.red,
+                marginTop: 0,
+                flexDirection: 'row',
+                width: 110,
+                opacity: status ? 0.4 : 1,
+              },
+            ]}
+          >
+            <AntIcon size={18} name='delete' color={Colors.white} />
+            <Text style={[{ paddingHorizontal: Default.fixPadding * 0.5 }, Fonts.White14Bold]}>{tr('delete')}</Text>
+          </TouchableOpacity>
+        </View>
         <View style={[{ flex: 1, flexDirection: 'column' }]}>
           <TotalView
             subtotal={subtotal}
@@ -282,28 +310,28 @@ const ServicesTable = ({ services, canceled }) => {
             style={[Style.divider, { marginHorizontal: Default.fixPadding, marginVertical: Default.fixPadding * 1.5 }]}
           />
           <View style={{ flexDirection: 'row' }}>
-            <View style={[{ flex: 5, padding: Default.fixPadding, alignItems: 'center' }]}>
+            <View style={[{ flex: 1, padding: Default.fixPadding, alignItems: 'center' }]}>
               <TouchableOpacity
                 activeOpacity={0.8}
                 onPress={() => {
-                  handleDelete();
+                  handleToggleScreen();
                 }}
                 style={[
                   Style.buttonStyle,
                   {
-                    backgroundColor: Colors.red,
+                    backgroundColor: Colors.green,
                     marginTop: 0,
                     flexDirection: 'row',
-                    width: 110,
-                    opacity: status ? 0.4 : 1,
+                    width: 120,
+                    opacity: status ? 1 : 0.4,
                   },
                 ]}
               >
-                <AntIcon size={18} name='delete' color={Colors.white} />
-                <Text style={[{ paddingHorizontal: Default.fixPadding * 0.5 }, Fonts.White14Bold]}>{tr('delete')}</Text>
+                <Ionicons name={extendIcon} size={18} color={Colors.white} />
+                <Text style={[{ paddingHorizontal: Default.fixPadding * 0.5 }, Fonts.White14Bold]}>{extendText}</Text>
               </TouchableOpacity>
             </View>
-            <View style={[{ flex: 3, paddingVertical: Default.fixPadding, alignItems: 'center' }]}>
+            <View style={[{ flex: 1, paddingVertical: Default.fixPadding, alignItems: 'center' }]}>
               <TouchableOpacity
                 activeOpacity={0.8}
                 onPress={() => {
