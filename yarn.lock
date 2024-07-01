@@ -2890,11 +2890,6 @@
   resolved "https://registry.yarnpkg.com/@xmldom/xmldom/-/xmldom-0.7.13.tgz#ff34942667a4e19a9f4a0996a76814daac364cf3"
   integrity sha512-lm2GW5PkosIzccsaZIz7tp8cPADSIlIHWDFTR1N0SzfinhhYgeIQjFMz4rYzanCScr3DqQLeomUDArp6MWKm+g==
 
-Buffer@^0.0.0:
-  version "0.0.0"
-  resolved "https://registry.yarnpkg.com/Buffer/-/Buffer-0.0.0.tgz#82cf8e986a2109ff6d1d6f1c436e47d07127aea4"
-  integrity sha512-+zdncl8lI5TCkARStn9F1BwcuJYofYmD0oEHe5FNfCvGfeDJwf6+dSikCdQN6BMXXmHMhNNUagBN367WST1AIQ==
-
 abort-controller@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/abort-controller/-/abort-controller-3.0.0.tgz#eaf54d53b62bae4138e809ca225c8439a6efb392"
@@ -8467,6 +8462,11 @@ terser@^5.15.0:
     acorn "^8.8.2"
     commander "^2.20.0"
     source-map-support "~0.5.20"
+
+text-encoding@^0.7.0:
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/text-encoding/-/text-encoding-0.7.0.tgz#f895e836e45990624086601798ea98e8f36ee643"
+  integrity sha512-oJQ3f1hrOnbRLOcwKz0Liq2IcrvDeZRHXhd9RgLrsT+DjWY/nty1Hi7v3dtkaEYbPYe0mUoOfzRrMwfXXwgPUA==
 
 text-table@^0.2.0:
   version "0.2.0"

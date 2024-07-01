@@ -1,12 +1,13 @@
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState, useCallback } from 'react';
 import { Colors, Fonts, Default } from '@constants/style';
 import Style from '@theme/style';
 import { formatPrice } from '@utils/helper';
 import DashedLine from 'react-native-dashed-line';
 import NumericInput from '@wwdrew/react-native-numeric-textinput';
 import MatIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-
+import { feesAmount } from '@constants/settings';
+import _ from 'lodash';
 const TotalView = ({
   subtotal,
   additional,
@@ -19,21 +20,72 @@ const TotalView = ({
   setCash,
   card,
   setCard,
+  payBy,
   setPayBy,
   status,
+  setFees,
 }) => {
+  const [displayTotal, setDisplayTotal] = useState('');
+  const [cashInput, setCashInput] = useState(0);
+  const [cardInput, setCardInput] = useState(0);
+
+  const debouncedHandleChange = useCallback(
+    _.debounce((value, field, total, tips, setCash, setCard) => {
+      let tempFees = feesAmount;
+      setFees(feesAmount);
+      const tempTip = tips > 0 ? tips : 0;
+      const temp = total - value + tempTip;
+      if (field === 'cash') {
+        setCash(value);
+        setCashInput(value);
+        setCard(temp + tempFees);
+        setCardInput(temp + tempFees);
+      } else {
+        if (value === 0) {
+          tempFees = 0;
+          setFees(0);
+        }
+        setCard(value + tempFees);
+        setCardInput(value + tempFees);
+        setCash(temp);
+        setCashInput(temp);
+      }
+      setDisplayTotal(total + tempTip + tempFees);
+    }, 500), // Adjust the debounce delay (in milliseconds) as needed
+    []
+  );
+
+  useEffect(() => {
+    if (payBy === null) return;
+    if (payBy === 'cash') {
+      setCashInfo();
+    } else if (payBy === 'card') {
+      setCardInfo();
+    }
+  }, [payBy, tips, fees, total]);
+
+  const setCashInfo = () => {
+    const tempTips = tips > 0 ? tips : 0;
+    const temp = total + tempTips;
+    setCash(temp);
+    setCashInput(temp);
+    setDisplayTotal(temp);
+  };
+
+  const setCardInfo = () => {
+    setFees(feesAmount);
+    setCash(0);
+    const tempTips = tips > 0 ? tips : 0;
+    const temp = total + tempTips + feesAmount;
+    setCard(temp);
+    setCardInput(temp);
+    setDisplayTotal(temp);
+  };
+
   const handlePriceChange = (value, field) => {
     setPayBy('both');
-    const totalCash = cash;
-    const totalCard = card;
-    const temp = total - value;
-    if (field === 'cash') {
-      setCash(value);
-      setCard(temp);
-    } else {
-      setCard(value);
-      setCash(temp);
-    }
+    if (!value) value = 0;
+    debouncedHandleChange(value, field, total, tips, setCash, setCard);
   };
   if (editable) {
     return (
@@ -54,6 +106,9 @@ const TotalView = ({
                 onPress={() => {
                   if (!status) return;
                   setPayBy('cash');
+                  setCard(0);
+                  setFees(0);
+                  setCardInput(0);
                 }}
               >
                 <MatIcons size={27} name='cash' color={Colors.success} />
@@ -64,8 +119,9 @@ const TotalView = ({
               <NumericInput
                 type='decimal'
                 decimalPlaces={2}
-                value={cash}
+                value={cashInput}
                 onUpdate={(value) => {
+                  setCashInput(value);
                   handlePriceChange(value, 'cash');
                 }}
                 style={[Style.inputStyle, { width: 65, height: 25, marginVertical: 0, padding: 4 }]}
@@ -86,6 +142,9 @@ const TotalView = ({
                 onPress={() => {
                   if (!status) return;
                   setPayBy('card');
+                  setCash(0);
+                  setCashInput(0);
+                  setFees(feesAmount);
                 }}
               >
                 <MatIcons size={27} name='credit-card-outline' color={Colors.info} />
@@ -96,8 +155,9 @@ const TotalView = ({
               <NumericInput
                 type='decimal'
                 decimalPlaces={2}
-                value={card}
+                value={cardInput}
                 onUpdate={(value) => {
+                  setCardInput(value);
                   handlePriceChange(value, 'card');
                 }}
                 style={[Style.inputStyle, { width: 65, height: 25, marginVertical: 0, padding: 4 }]}
@@ -131,7 +191,10 @@ const TotalView = ({
                   type='decimal'
                   decimalPlaces={2}
                   value={tips}
-                  onUpdate={(value) => setTip(value)}
+                  onUpdate={(value) => {
+                    if (!value) value = 0;
+                    setTip(value);
+                  }}
                   style={[Style.inputStyle, { width: '50%', height: 25, marginVertical: 0, padding: 4 }]}
                   selectionColor={Colors.primary}
                 />
@@ -155,7 +218,7 @@ const TotalView = ({
                 <Text style={[Fonts.Primary14Medium, { marginRight: 5 }]}>Total:</Text>
               </View>
               <View style={[{ flex: 1 }]}>
-                <Text style={[Fonts.Black14Medium]}>{formatPrice(total * 100)}</Text>
+                <Text style={[Fonts.Black14Medium]}>{formatPrice(displayTotal * 100)}</Text>
               </View>
             </View>
           </View>
@@ -229,7 +292,7 @@ const TotalView = ({
               <Text style={[Fonts.Primary13Medium]}>Total: </Text>
             </View>
             <View style={[{ flex: 1 }]}>
-              <Text style={[Fonts.Black13Medium]}>{formatPrice(total * 100)}</Text>
+              <Text style={[Fonts.Black13Medium]}>{formatPrice(displayTotal * 100)}</Text>
             </View>
           </View>
         </View>

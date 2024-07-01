@@ -1,3 +1,4 @@
+export const feesAmount = 2;
 export const STATES = [
   { label: 'AL', value: 'AL' },
   { label: 'AK', value: 'AK' },

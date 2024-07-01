@@ -15,13 +15,24 @@ import moment from 'moment';
 import { useSelector } from 'react-redux';
 import { useAuthContext } from '@contexts/AuthContext';
 import { getServiceItems } from '@redux/actions/batchesAction';
+import { cleanServices } from '@utils/helper';
+
 const ServicesTable = ({ services, canceled }) => {
   const { t, i18n } = useTranslation();
   const isRtl = i18n.dir() === 'rtl';
   function tr(key) {
     return t(`homeScreen:${key}`);
   }
-  const { setTurn, amountPerTurn, newService, setNewService, isConnected } = useAdminContext();
+  const {
+    setTurn,
+    amountPerTurn,
+    newService,
+    setNewService,
+    isConnected,
+    startScan,
+    disconnectFromDevice,
+    receivedData,
+  } = useAdminContext();
   const { userData } = useAuthContext();
   const { staffAvailable } = useSelector((state) => state.adminHome);
   const { serviceItems } = useSelector((state) => state.batches);
@@ -29,55 +40,50 @@ const ServicesTable = ({ services, canceled }) => {
   const [fees, setFees] = useState(0);
   const [cash, setCash] = useState(0);
   const [card, setCard] = useState(0);
-  const [payBy, setPayBy] = useState('cash');
+  const [payBy, setPayBy] = useState(null);
+  const [subtotal, setSubtotal] = useState(0);
+  const [additional, setAdditional] = useState(0);
+  const [total, setTotal] = useState(0);
   const [addService, setAddService] = useState(false);
+
   const storeId = userData.storeAdmin.id;
 
   const extendIcon = isConnected ? 'screen-share' : 'stop-screen-share';
   const extendText = isConnected ? 'Screen On' : 'Screen Off';
   let status = false;
-  let subtotal = 0;
-  let additional = 0;
-  let total = 0;
-  const feesAmount = 2;
   const dispatch = useDispatch();
 
+  const bookingId = services[0].bookingId;
   const serviceIcon = addService ? 'closecircle' : 'pluscircle';
   const serviceColor = addService ? Colors.red : Colors.info;
   const serviceText = addService ? 'Cancel' : 'Add Service';
-  for (var value of services) {
-    if (value.status === 'pending') continue;
-    if (value.price) subtotal += value.price;
-    if (value.additional) additional += value.additional;
-  }
+
+  useEffect(() => {
+    if (services.length === 0) return;
+
+    let tempSubtotal = 0;
+    let tempAdditional = 0;
+    for (var value of services) {
+      if (value.status === 'pending') continue;
+      if (value.price) tempSubtotal += value.price;
+      if (value.additional) tempAdditional += value.additional;
+    }
+    setSubtotal(tempSubtotal);
+    setAdditional(tempAdditional);
+    setTotal(tempSubtotal + tempAdditional);
+    if (payBy === null) setPayBy('cash');
+  }, [services]);
+
   status = services.find((obj) => obj.status === 'working');
-  total = subtotal + additional + tip + fees;
 
   useEffect(() => {
-    if (payBy === 'cash') {
-      setCard(0);
-      setFees(0);
-      setCash(total);
-    } else if (payBy === 'card') {
-      setCash(0);
-      setFees(feesAmount);
-      setCard(total + feesAmount);
-    }
-  }, [payBy]);
-
-  useEffect(() => {
-    if (card === 0) return;
-    setFees(2);
-  }, [card]);
-
-  useEffect(() => {
-    if (payBy === 'card') {
-      setCard(total);
-    } else if (payBy === 'cash') {
-      setCash(total);
-    } else {
-    }
-  }, [tip, fees, additional]);
+    if (receivedData === null) return;
+    if (bookingId !== receivedData.bookingId) return;
+    setTip(receivedData.tip);
+    setFees(receivedData.fees);
+    setCash(receivedData.cash);
+    setCard(receivedData.card);
+  }, [receivedData]);
 
   useEffect(() => {
     if (newService) {
@@ -110,10 +116,14 @@ const ServicesTable = ({ services, canceled }) => {
     }
     dispatch(updateStaff(staff));
   };
+
   const handleToggleScreen = () => {
-    console.log('handleToggleScreen', canceled, status);
     if (canceled || !status) return;
-    console.log('toggle screen show');
+    const bookingId = services[0].bookingId;
+
+    const newServices = cleanServices(services);
+    const data = { newServices, subtotal, total, additional, bookingId };
+    startScan(data);
   };
   const handleSubmit = () => {
     if (canceled || !status) return;
@@ -302,14 +312,36 @@ const ServicesTable = ({ services, canceled }) => {
             setCash={setCash}
             card={card}
             setCard={setCard}
+            payBy={payBy}
             setPayBy={setPayBy}
             status={status}
+            setFees={setFees}
           />
 
           <View
             style={[Style.divider, { marginHorizontal: Default.fixPadding, marginVertical: Default.fixPadding * 1.5 }]}
           />
           <View style={{ flexDirection: 'row' }}>
+            <View style={[{ flex: 1, padding: Default.fixPadding, alignItems: 'center' }]}>
+              <TouchableOpacity
+                activeOpacity={0.8}
+                onPress={() => {
+                  disconnectFromDevice();
+                }}
+                style={[
+                  Style.buttonStyle,
+                  {
+                    backgroundColor: Colors.green,
+                    marginTop: 0,
+                    flexDirection: 'row',
+                    width: 120,
+                    opacity: status ? 1 : 0.4,
+                  },
+                ]}
+              >
+                <Text style={[{ paddingHorizontal: Default.fixPadding * 0.5 }, Fonts.White14Bold]}>STOP</Text>
+              </TouchableOpacity>
+            </View>
             <View style={[{ flex: 1, padding: Default.fixPadding, alignItems: 'center' }]}>
               <TouchableOpacity
                 activeOpacity={0.8}

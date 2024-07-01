@@ -46,7 +46,7 @@ const TestW2 = () => {
       // Listen to Bluetooth state changes
       const subscription = manager.onStateChange((state) => {
         setIsBluetoothEnabled(state === 'PoweredOn');
-        //scanAndConnect();
+        //startScan();
       }, true);
 
       return () => {
