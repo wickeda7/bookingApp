@@ -23,16 +23,8 @@ const ServicesTable = ({ services, canceled }) => {
   function tr(key) {
     return t(`homeScreen:${key}`);
   }
-  const {
-    setTurn,
-    amountPerTurn,
-    newService,
-    setNewService,
-    isConnected,
-    startScan,
-    disconnectFromDevice,
-    receivedData,
-  } = useAdminContext();
+  const { setTurn, amountPerTurn, newService, setNewService, isConnected, startScan, disconnectFromDevice } =
+    useAdminContext();
   const { userData } = useAuthContext();
   const { staffAvailable } = useSelector((state) => state.adminHome);
   const { serviceItems } = useSelector((state) => state.batches);
@@ -75,15 +67,6 @@ const ServicesTable = ({ services, canceled }) => {
   }, [services]);
 
   status = services.find((obj) => obj.status === 'working');
-
-  useEffect(() => {
-    if (receivedData === null) return;
-    if (bookingId !== receivedData.bookingId) return;
-    setTip(receivedData.tip);
-    setFees(receivedData.fees);
-    setCash(receivedData.cash);
-    setCard(receivedData.card);
-  }, [receivedData]);
 
   useEffect(() => {
     if (newService) {
@@ -316,6 +299,7 @@ const ServicesTable = ({ services, canceled }) => {
             setPayBy={setPayBy}
             status={status}
             setFees={setFees}
+            bookingId={bookingId}
           />
 
           <View

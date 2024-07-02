@@ -7,6 +7,7 @@ import DashedLine from 'react-native-dashed-line';
 import NumericInput from '@wwdrew/react-native-numeric-textinput';
 import MatIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { feesAmount } from '@constants/settings';
+import { useAdminContext } from '@contexts/AdminContext';
 import _ from 'lodash';
 const TotalView = ({
   subtotal,
@@ -24,10 +25,24 @@ const TotalView = ({
   setPayBy,
   status,
   setFees,
+  bookingId,
 }) => {
   const [displayTotal, setDisplayTotal] = useState('');
   const [cashInput, setCashInput] = useState(0);
   const [cardInput, setCardInput] = useState(0);
+  const { receivedData } = useAdminContext();
+
+  useEffect(() => {
+    if (receivedData === null) return;
+    if (bookingId !== receivedData.bookingId) return;
+    setTip(receivedData.tip);
+    setFees(receivedData.fees);
+    setCash(receivedData.cash);
+    setCashInput(receivedData.cash);
+    setCard(receivedData.card);
+    setCardInput(receivedData.card);
+    setPayBy(receivedData.payBy);
+  }, [receivedData]);
 
   const debouncedHandleChange = useCallback(
     _.debounce((value, field, total, tips, setCash, setCard) => {
@@ -61,6 +76,12 @@ const TotalView = ({
       setCashInfo();
     } else if (payBy === 'card') {
       setCardInfo();
+    } else if (payBy === 'both') {
+      const tempTips = tips > 0 ? tips : 0;
+      const tempCardAmount = total - cash + tempTips + feesAmount;
+      setCard(tempCardAmount);
+      setCardInput(tempCardAmount);
+      setDisplayTotal(total + tempTips + feesAmount);
     }
   }, [payBy, tips, fees, total]);
 
