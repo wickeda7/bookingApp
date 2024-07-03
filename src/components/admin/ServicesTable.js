@@ -23,7 +23,7 @@ const ServicesTable = ({ services, canceled }) => {
   function tr(key) {
     return t(`homeScreen:${key}`);
   }
-  const { setTurn, amountPerTurn, newService, setNewService, isConnected, startScan, disconnectFromDevice } =
+  const { setTurn, amountPerTurn, newService, setNewService, totalView, startScan, disconnectFromDevice } =
     useAdminContext();
   const { userData } = useAuthContext();
   const { staffAvailable } = useSelector((state) => state.adminHome);
@@ -39,9 +39,19 @@ const ServicesTable = ({ services, canceled }) => {
   const [addService, setAddService] = useState(false);
 
   const storeId = userData.storeAdmin.id;
+  let extendIcon = '';
+  let extendText = '';
+  let extendColor = '';
 
-  const extendIcon = isConnected ? 'screen-share' : 'stop-screen-share';
-  const extendText = isConnected ? 'Screen On' : 'Screen Off';
+  if (totalView) {
+    extendIcon = 'screen-share';
+    extendText = 'Screen On';
+    extendColor = Colors.green;
+  } else {
+    extendIcon = 'stop-screen-share';
+    extendText = 'Screen Off';
+    extendColor = Colors.red;
+  }
   let status = false;
   const dispatch = useDispatch();
 
@@ -103,9 +113,9 @@ const ServicesTable = ({ services, canceled }) => {
   const handleToggleScreen = () => {
     if (canceled || !status) return;
     const bookingId = services[0].bookingId;
+    const newServices = cleanServices(services); //tip, fees, cash, card, payBy
 
-    const newServices = cleanServices(services);
-    const data = { newServices, subtotal, total, additional, bookingId };
+    const data = { newServices, subtotal, total, additional, bookingId, tip, fees, cash, card, payBy };
     startScan(data);
   };
   const handleSubmit = () => {
@@ -335,7 +345,7 @@ const ServicesTable = ({ services, canceled }) => {
                 style={[
                   Style.buttonStyle,
                   {
-                    backgroundColor: Colors.green,
+                    backgroundColor: extendColor,
                     marginTop: 0,
                     flexDirection: 'row',
                     width: 120,

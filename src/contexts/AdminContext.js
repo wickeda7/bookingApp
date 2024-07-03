@@ -3,7 +3,7 @@ import { BleManager } from 'react-native-ble-plx';
 
 import { requestBluetoothPermissions } from '@utils/Permissions';
 import Toast from 'react-native-root-toast';
-import { Colors, Default, Fonts } from '@constants/style';
+import { Colors } from '@constants/style';
 import { TextEncoder } from 'text-encoding';
 import { Buffer } from 'buffer';
 
@@ -28,9 +28,10 @@ const AdminContextProvider = ({ children }) => {
   const [setTurn, setSetTurn] = useState(null);
   const [newService, setNewService] = useState(null);
 
-  const [isConnected, setIsConnected] = useState(false);
+  const [isConnected, setIsConnected] = useState(false); // device is connected or not
   const [device, setDevice] = useState(null);
   const [receivedData, setReceivedData] = useState(null);
+  const [totalView, setTotalView] = useState(false); /// totalView is showing or not
   let messageToSend = null;
 
   let subOnDisconnected = null;
@@ -44,21 +45,12 @@ const AdminContextProvider = ({ children }) => {
         showToast(`Permission denied: Bluetooth permissions are required to use this app.`, Colors.red);
         return;
       }
-
-      // const subscription = manager.onStateChange((state) => {
-      //   if (state === 'PoweredOn') {
-      //     // scanAndConnect();
-      //   }
-      // }, true);
-
-      // return () => {
-      //   subscription.remove();
-      // };
     };
 
     initBluetooth();
 
     return () => {
+      // subscription.remove();
       subOnDisconnected && subOnDisconnected.remove();
       moniterCharacteristic && moniterCharacteristic.remove();
       manager.stopDeviceScan();
@@ -96,6 +88,7 @@ const AdminContextProvider = ({ children }) => {
       sendData(device);
       return;
     }
+
     manager.startDeviceScan(null, null, (error, device) => {
       if (error) {
         showToast(`Scan error: ${error}`, Colors.red);
@@ -119,16 +112,13 @@ const AdminContextProvider = ({ children }) => {
         })
         .then(async (device) => {
           setIsConnected(true);
-          showToast(`Device Connected`, Colors.success);
           setupNotification(device);
           setupDisconnectListener(device); // Setup listener for disconnection
         })
         .then(async () => {
-          console.log('negotiateMTUSize');
           await negotiateMTUSize(device, 517);
         })
         .then(() => {
-          console.log('negotiateMTUSize done');
           sendData(device);
         })
         .catch((error) => {
@@ -142,7 +132,6 @@ const AdminContextProvider = ({ children }) => {
   };
 
   const setupNotification = (device) => {
-    console.log('setupNotification');
     try {
       moniterCharacteristic = device.monitorCharacteristicForService(
         SERVICE_UUID,
@@ -155,8 +144,14 @@ const AdminContextProvider = ({ children }) => {
           }
 
           const decodedData = Buffer.from(characteristic.value, 'base64').toString('utf-8');
-          console.log('decodedData', decodedData);
-          setReceivedData(JSON.parse(decodedData));
+          const data = JSON.parse(decodedData);
+
+          if ('totalView' in data) {
+            setTotalView(data.totalView);
+          } else {
+            setTotalView(true);
+            setReceivedData(data);
+          }
         }
       );
     } catch (error) {
@@ -171,6 +166,7 @@ const AdminContextProvider = ({ children }) => {
         showToast(` ${error}`, Colors.red);
       } else {
         setIsConnected(false);
+        setTotalView(false);
         setDevice(null);
         showToast('Connection to the server has been lost.', Colors.red);
       }
@@ -183,7 +179,6 @@ const AdminContextProvider = ({ children }) => {
       const mtuSize = 517;
       const chunkSize = mtuSize - 3; // Subtract 3 bytes for the ATT protocol header
       const chunks = [];
-      console.log('sendData messageToSend', messageToSend);
       for (let i = 0; i < bytes.length; i += chunkSize) {
         chunks.push(bytes.slice(i, i + chunkSize));
       }
@@ -195,7 +190,6 @@ const AdminContextProvider = ({ children }) => {
           Buffer.from(chunk).toString('base64')
         );
       }
-      console.log('sendData END_OF_DATA');
       // Send an end-of-data flag
       const endFlag = new TextEncoder().encode('END_OF_DATA');
       await device.writeCharacteristicWithoutResponseForService(
@@ -209,7 +203,6 @@ const AdminContextProvider = ({ children }) => {
   };
 
   const disconnectFromDevice = async () => {
-    console.log('Disconnecting from device');
     await manager
       .cancelDeviceConnection(device.id)
       .then((device) => {
@@ -258,6 +251,7 @@ const AdminContextProvider = ({ children }) => {
     receivedData,
     sendData,
     disconnectFromDevice,
+    totalView,
   };
 
   return <AdminContext.Provider value={value}>{children}</AdminContext.Provider>;
