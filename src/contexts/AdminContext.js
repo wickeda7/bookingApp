@@ -1,7 +1,5 @@
 import { createContext, useEffect, useState, useContext } from 'react';
-import { BleManager } from 'react-native-ble-plx';
 
-import { requestBluetoothPermissions } from '@utils/Permissions';
 import Toast from 'react-native-root-toast';
 import { Colors } from '@constants/style';
 import { TextEncoder } from 'text-encoding';
@@ -13,7 +11,6 @@ const END_OF_DATA = 'END_OF_DATA';
 let connectOptions = {
   requestMTU: 512,
 };
-const deviceNotConnectedErrorText = 'Device is not connected';
 
 const AdminContext = createContext({});
 
@@ -33,49 +30,35 @@ const AdminContextProvider = ({ children }) => {
   const [device, setDevice] = useState(null);
   const [receivedData, setReceivedData] = useState(null);
   const [totalView, setTotalView] = useState(false); /// totalView is showing or not
-  let messageToSend = null;
-
-  let subOnDisconnected = null;
   let moniterCharacteristic = null;
 
-  // useEffect(() => {
-  //   if (!manager) return;
-  //   const initBluetooth = async () => {
-  //     const granted = await requestBluetoothPermissions();
-  //     if (!granted) {
-  //       showToast(`Permission denied: Bluetooth permissions are required to use this app.`, Colors.red);
-  //       return;
-  //     }
-  //   };
-
-  //   initBluetooth();
-
-  //   return () => {
-  //     // subscription.remove();
-  //     subOnDisconnected && subOnDisconnected.remove();
-  //     moniterCharacteristic && moniterCharacteristic.remove();
-  //     manager.stopDeviceScan();
-  //     manager.destroy();
-  //   };
-  // }, [manager]);
+  useEffect(() => {
+    return () => {
+      moniterCharacteristic && moniterCharacteristic.remove();
+    };
+  }, []);
 
   const showToast = (message, color) => {
-    Toast.show(message, {
-      duration: Toast.durations.LONG,
-      position: Toast.positions.CENTER,
-      shadow: true,
-      animation: true,
-      hideOnPress: true,
-      delay: 0,
-      backgroundColor: color,
-      // onHidden: () => {
-      //   setAccessCode(false);
-      // },
-    });
+    try {
+      Toast.show(message, {
+        duration: Toast.durations.LONG,
+        position: Toast.positions.CENTER,
+        shadow: true,
+        animation: true,
+        hideOnPress: true,
+        delay: 0,
+        backgroundColor: color,
+        // onHidden: () => {
+        //   setAccessCode(false);
+        // },
+      });
+    } catch (error) {
+      console.error('Error showing toast:', error);
+    }
   };
 
   const startScan = async (data) => {
-    console.log('startScan data', data);
+    console.log('startScan data');
     if (isConnected) {
       console.log('isConnected sendData!!!!!!');
       sendData(data);
@@ -107,14 +90,14 @@ const AdminContextProvider = ({ children }) => {
         showToast('Connection failed.', Colors.red);
         return;
       }
-      /// setIsConnected(true); uncomment this line later
+      setIsConnected(true);
       const mtuRequest = await BLEService.requestMTUForDevice(connectOptions.requestMTU);
       if (!mtuRequest) {
         showToast('MTU negotiation failed.', Colors.red);
         return;
       }
       setIsConnected(true);
-      await setupNotification();
+      await setupNotification(connectedDevice);
       setupDisconnectListener(); // Setup listener for disconnection
       sendData(data);
     } catch (error) {
@@ -123,32 +106,35 @@ const AdminContextProvider = ({ children }) => {
     }
   };
 
-  const setupNotification = () => {
-    new Promise((resolve, reject) => {
-      BLEService.setupMonitorService(
+  const setupNotification = (device) => {
+    if (!device) {
+      showToast('Device is not connected.', Colors.red);
+      return;
+    }
+    try {
+      moniterCharacteristic = device.monitorCharacteristicForService(
         SERVICE_UUID,
         CHARACTERISTIC_UUID,
-        (async (error) => {
-          console.error(error);
-          await BLEService.finishMonitor();
-          reject(error);
-        },
-        async (characteristic) => {
+        (error, characteristic) => {
+          if (error) {
+            console.error('Error monitoring characteristic:', error);
+            showToast(`Error monitoring characteristic: ${error}`, Colors.red);
+            return;
+          }
           const decodedData = Buffer.from(characteristic.value, 'base64').toString('utf-8');
           const data = JSON.parse(decodedData);
-
           if ('totalView' in data) {
             setTotalView(data.totalView);
           } else {
             setTotalView(true);
-            // setReceivedData(data);
+            setReceivedData(data);
           }
-          await BLEService.finishMonitor();
-          console.info('success');
-          resolve();
-        })
+        }
       );
-    });
+    } catch (error) {
+      console.error('Error setting up notification:', error);
+      showToast(`Error setting up notification: ${error}`, Colors.red);
+    }
   };
 
   const setupDisconnectListener = () => {
@@ -192,6 +178,7 @@ const AdminContextProvider = ({ children }) => {
         Buffer.from(endFlag).toString('base64')
       );
     } catch (error) {
+      showToast(error.message, Colors.red);
       console.error(`Send error: ${error.message}`);
     }
   };
