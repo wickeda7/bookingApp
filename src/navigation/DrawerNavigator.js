@@ -5,6 +5,7 @@ import Staff from '@screens/admin/Staff';
 import Payroll from '@screens/admin/Payroll';
 import Batches from '@screens/admin/Batches';
 import Settings from '@screens/admin/Settings';
+import Devices from '@screens/devices/Devices';
 import SplashScreen from '@screens/splashScreen';
 import OnboardingScreen from '@screens/auth/onboardingScreen';
 import LoginScreen from '@screens/auth/loginScreen';
@@ -17,6 +18,7 @@ import { Colors, Fonts } from '../constants/style';
 import { Text } from 'react-native';
 import Icons6 from 'react-native-vector-icons/FontAwesome6';
 import Icon from 'react-native-vector-icons/Ionicons';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { useAuthContext } from '@contexts/AuthContext';
 import UserStack from '@navigation/UserStack';
 
@@ -151,6 +153,30 @@ const DrawerNavigator = () => {
               <Icons6
                 name={'gear'}
                 size={15}
+                color={focused ? Colors.white : Colors.primary}
+                style={{ position: 'absolute', left: 15 }}
+              />
+            );
+          },
+        }}
+      />
+      <Drawer.Screen
+        name='Devices'
+        component={Devices}
+        options={{
+          headerShown: false,
+          drawerItemStyle: { borderRadius: 5, marginHorizontal: 2 },
+          drawerLabel: ({ focused }) => {
+            return <Text style={[focused ? Fonts.White16Bold : Fonts.Primary16Bold]}>Devices</Text>;
+          },
+          drawerActiveBackgroundColor: Colors.primary,
+          drawerInactiveBackgroundColor: Colors.white,
+
+          drawerIcon: ({ focused }) => {
+            return (
+              <MaterialIcons
+                name={'devices-other'}
+                size={17}
                 color={focused ? Colors.white : Colors.primary}
                 style={{ position: 'absolute', left: 15 }}
               />

@@ -313,6 +313,7 @@ export const cleanServices = (services) => {
   }, []);
   return newServices;
 };
+export const cloneDeep = (objectToClone) => JSON.parse(JSON.stringify(objectToClone));
 export default {
   formatPhoneNumber,
   parseReduceData,
@@ -324,4 +325,5 @@ export default {
   getPayDate,
   parseAccordionData2,
   cleanServices,
+  cloneDeep,
 };

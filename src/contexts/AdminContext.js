@@ -6,14 +6,15 @@ import Toast from 'react-native-root-toast';
 import { Colors } from '@constants/style';
 import { TextEncoder } from 'text-encoding';
 import { Buffer } from 'buffer';
+import { BLEService } from '@services/BLEService';
+import { SERVICE_UUID, CHARACTERISTIC_UUID, deviceName } from '@constants/settings';
 
-export const manager = new BleManager();
-const SERVICE_UUID = '0000180d-0000-1000-8000-00805f9b34fb'; // Replace with your service UUID
-const CHARACTERISTIC_UUID = '00002a37-0000-1000-8000-00805f9b34fb'; // Replace with your characteristic UUID
 const END_OF_DATA = 'END_OF_DATA';
 let connectOptions = {
   requestMTU: 512,
 };
+const deviceNotConnectedErrorText = 'Device is not connected';
+
 const AdminContext = createContext({});
 
 const AdminContextProvider = ({ children }) => {
@@ -37,26 +38,26 @@ const AdminContextProvider = ({ children }) => {
   let subOnDisconnected = null;
   let moniterCharacteristic = null;
 
-  useEffect(() => {
-    if (!manager) return;
-    const initBluetooth = async () => {
-      const granted = await requestBluetoothPermissions();
-      if (!granted) {
-        showToast(`Permission denied: Bluetooth permissions are required to use this app.`, Colors.red);
-        return;
-      }
-    };
+  // useEffect(() => {
+  //   if (!manager) return;
+  //   const initBluetooth = async () => {
+  //     const granted = await requestBluetoothPermissions();
+  //     if (!granted) {
+  //       showToast(`Permission denied: Bluetooth permissions are required to use this app.`, Colors.red);
+  //       return;
+  //     }
+  //   };
 
-    initBluetooth();
+  //   initBluetooth();
 
-    return () => {
-      // subscription.remove();
-      subOnDisconnected && subOnDisconnected.remove();
-      moniterCharacteristic && moniterCharacteristic.remove();
-      manager.stopDeviceScan();
-      manager.destroy();
-    };
-  }, [manager]);
+  //   return () => {
+  //     // subscription.remove();
+  //     subOnDisconnected && subOnDisconnected.remove();
+  //     moniterCharacteristic && moniterCharacteristic.remove();
+  //     manager.stopDeviceScan();
+  //     manager.destroy();
+  //   };
+  // }, [manager]);
 
   const showToast = (message, color) => {
     Toast.show(message, {
@@ -73,76 +74,66 @@ const AdminContextProvider = ({ children }) => {
     });
   };
 
-  const negotiateMTUSize = async (device, mtuSize) => {
-    try {
-      const mtu = await device.requestMTU(mtuSize);
-    } catch (error) {
-      console.error('Error negotiating MTU size:', error);
-    }
-  };
-
-  const startScan = (data) => {
-    messageToSend = data;
-
+  const startScan = async (data) => {
+    console.log('startScan data', data);
     if (isConnected) {
-      sendData(device);
+      console.log('isConnected sendData!!!!!!');
+      sendData(data);
       return;
     }
-
-    manager.startDeviceScan(null, null, (error, device) => {
-      if (error) {
-        showToast(`Scan error: ${error}`, Colors.red);
-        manager.stopDeviceScan();
+    try {
+      const init = await BLEService.initializeBLE();
+      if (!init) {
+        showToast('Bluetooth is not enabled.', Colors.red);
         return;
       }
-      if (device && device.name === 'My BLE Device') {
-        manager.stopDeviceScan();
-        connect(device);
-      }
-    });
-  };
 
-  const connect = (device) => {
-    try {
-      manager
-        .connectToDevice(device.id)
-        .then((device) => {
-          setDevice(device);
-          return device.discoverAllServicesAndCharacteristics();
-        })
-        .then(async (device) => {
-          setIsConnected(true);
-          setupNotification(device);
-          setupDisconnectListener(device); // Setup listener for disconnection
-        })
-        .then(async () => {
-          await negotiateMTUSize(device, 517);
-        })
-        .then(() => {
-          sendData(device);
-        })
-        .catch((error) => {
-          console.log(`Connection error: ${error.message}`);
-          showToast(`Connection error: ${error.message}`, Colors.red);
-        });
+      const granted = await BLEService.requestBluetoothPermission();
+      if (!granted) {
+        showToast('Bluetooth permission is required.', Colors.red);
+        return;
+      }
+      const device = await BLEService.scanDevices(deviceName, null, true);
+      if (!device) {
+        showToast('Device not found.', Colors.red);
+        return;
+      }
+      const connectedDevice = await BLEService.connectToDevice(device).then((device) => {
+        setDevice(device);
+        console.log('device connectedDevice then', device.id);
+        return device.discoverAllServicesAndCharacteristics();
+      });
+      if (!connectedDevice) {
+        showToast('Connection failed.', Colors.red);
+        return;
+      }
+      /// setIsConnected(true); uncomment this line later
+      const mtuRequest = await BLEService.requestMTUForDevice(connectOptions.requestMTU);
+      if (!mtuRequest) {
+        showToast('MTU negotiation failed.', Colors.red);
+        return;
+      }
+      setIsConnected(true);
+      await setupNotification();
+      setupDisconnectListener(); // Setup listener for disconnection
+      sendData(data);
     } catch (error) {
-      console.error('Error connecting to device:', error);
-      showToast(`Error connecting to device: ${error}`, Colors.red);
+      console.error('Error scanning device:', error);
+      showToast(`Error scanning device: ${error}`, Colors.red);
     }
   };
 
-  const setupNotification = (device) => {
-    try {
-      moniterCharacteristic = device.monitorCharacteristicForService(
+  const setupNotification = () => {
+    new Promise((resolve, reject) => {
+      BLEService.setupMonitorService(
         SERVICE_UUID,
         CHARACTERISTIC_UUID,
-        (error, characteristic) => {
-          if (error) {
-            console.error(error);
-            showToast(` ${error}`, Colors.red);
-            return;
-          }
-
+        (async (error) => {
+          console.error(error);
+          await BLEService.finishMonitor();
+          reject(error);
+        },
+        async (characteristic) => {
           const decodedData = Buffer.from(characteristic.value, 'base64').toString('utf-8');
           const data = JSON.parse(decodedData);
 
@@ -150,31 +141,34 @@ const AdminContextProvider = ({ children }) => {
             setTotalView(data.totalView);
           } else {
             setTotalView(true);
-            setReceivedData(data);
+            // setReceivedData(data);
           }
-        }
+          await BLEService.finishMonitor();
+          console.info('success');
+          resolve();
+        })
       );
-    } catch (error) {
-      console.error(`Notification error: ${error.message}`);
-    }
+    });
   };
 
-  const setupDisconnectListener = (device) => {
-    subOnDisconnected = device.onDisconnected((error, disconnectedDevice) => {
+  const setupDisconnectListener = () => {
+    const onDeviceDisconnectedSubscription = BLEService.onDeviceDisconnected((device, error) => {
       if (error) {
         console.error(error);
         showToast(` ${error}`, Colors.red);
+        onDeviceDisconnectedSubscription.remove();
       } else {
         setIsConnected(false);
         setTotalView(false);
         setDevice(null);
         showToast('Connection to the server has been lost.', Colors.red);
+        onDeviceDisconnectedSubscription.remove();
       }
     });
   };
-  const sendData = async (device) => {
+  const sendData = async (data) => {
     try {
-      const jsonString = JSON.stringify(messageToSend);
+      const jsonString = JSON.stringify(data);
       const bytes = new TextEncoder().encode(jsonString);
       const mtuSize = 517;
       const chunkSize = mtuSize - 3; // Subtract 3 bytes for the ATT protocol header
@@ -184,7 +178,7 @@ const AdminContextProvider = ({ children }) => {
       }
       console.log('sendData chunks');
       for (const chunk of chunks) {
-        await device.writeCharacteristicWithoutResponseForService(
+        await BLEService.writeCharacteristicWithoutResponseForService(
           SERVICE_UUID,
           CHARACTERISTIC_UUID,
           Buffer.from(chunk).toString('base64')
@@ -192,7 +186,7 @@ const AdminContextProvider = ({ children }) => {
       }
       // Send an end-of-data flag
       const endFlag = new TextEncoder().encode('END_OF_DATA');
-      await device.writeCharacteristicWithoutResponseForService(
+      await BLEService.writeCharacteristicWithoutResponseForService(
         SERVICE_UUID,
         CHARACTERISTIC_UUID,
         Buffer.from(endFlag).toString('base64')
