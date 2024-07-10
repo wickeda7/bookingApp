@@ -253,7 +253,11 @@ export const Fonts = {
     fontSize: 16,
     fontFamily: 'Medium',
   },
-
+  Black15Bold: {
+    color: Colors.black,
+    fontSize: 15,
+    fontFamily: 'Bold',
+  },
   Black15Medium: {
     color: Colors.black,
     fontSize: 15,
@@ -332,6 +336,11 @@ export const Fonts = {
   White16Medium: {
     color: Colors.white,
     fontSize: 16,
+    fontFamily: 'Medium',
+  },
+  White15Medium: {
+    color: Colors.white,
+    fontSize: 15,
     fontFamily: 'Medium',
   },
   White14Medium: {

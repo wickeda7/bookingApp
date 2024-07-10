@@ -23,7 +23,7 @@ const ServicesTable = ({ services, canceled }) => {
   function tr(key) {
     return t(`homeScreen:${key}`);
   }
-  const { setTurn, amountPerTurn, newService, setNewService, totalView, startScan, disconnectFromDevice } =
+  const { setTurn, amountPerTurn, newService, setNewService, totalView, sendData, disconnectFromDevice } =
     useAdminContext();
   const { userData } = useAuthContext();
   const { staffAvailable } = useSelector((state) => state.adminHome);
@@ -116,7 +116,7 @@ const ServicesTable = ({ services, canceled }) => {
     const newServices = cleanServices(services); //tip, fees, cash, card, payBy
 
     const data = { newServices, subtotal, total, additional, bookingId, tip, fees, cash, card, payBy };
-    startScan(data);
+    sendData(data);
   };
   const handleSubmit = () => {
     if (canceled || !status) return;

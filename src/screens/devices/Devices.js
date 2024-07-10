@@ -1,162 +1,108 @@
-import {
-  KeyboardAvoidingView,
-  Platform,
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  SafeAreaView,
-  FlatList,
-} from 'react-native';
-import React from 'react';
+import { KeyboardAvoidingView, Platform, StyleSheet, Text, View, TouchableOpacity, FlatList } from 'react-native';
+import React, { useEffect } from 'react';
 import Style from '@theme/style';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import { Default, Fonts, Colors } from '@constants/style';
 import MyStatusBar from '@components/myStatusBar';
 import { useState } from 'react';
-import { cloneDeep } from '@utils/helper';
-import BleDevice from '@components/devices/BleDevice';
-import { BLEService } from '@services/BLEService';
-import DeviceScreen from './DeviceScreen';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import { SERVICE_UUID, CHARACTERISTIC_UUID, deviceName } from '@constants/settings';
+import { useAdminContext } from '@contexts/AdminContext';
+import Toast from 'react-native-root-toast';
 
 const MIN_TIME_BEFORE_UPDATE_IN_MILLISECONDS = 5000;
-const Devices = () => {
-  const [isConnecting, setIsConnecting] = useState(false);
-  const [foundDevices, setFoundDevices] = useState([]);
-  const [screen, setScreen] = useState('DASHBOARD_SCREEN');
-  const [connectedDevice, setConnectedDevice] = useState(null);
-  const addFoundDevice = (device) =>
-    setFoundDevices((prevState) => {
-      if (!isFoundDeviceUpdateNecessary(prevState, device)) {
-        return prevState;
-      }
-      // deep clone
-      const nextState = cloneDeep(prevState);
-      const extendedDevice = {
-        ...device,
-        updateTimestamp: Date.now() + MIN_TIME_BEFORE_UPDATE_IN_MILLISECONDS,
-      };
+const Devices = (props) => {
+  const { device, isConnected, scanConnect, disconnectFromDevice } = useAdminContext();
+  let statusText = '';
+  let statusColor = '';
+  let btnText = '';
+  let btnColor = '';
 
-      const indexToReplace = nextState.findIndex((currentDevice) => currentDevice.id === device.id);
-      if (indexToReplace === -1) {
-        return nextState.concat(extendedDevice);
-      }
-      nextState[indexToReplace] = extendedDevice;
-      return nextState;
-    });
-  const isFoundDeviceUpdateNecessary = (currentDevices, updatedDevice) => {
-    const currentDevice = currentDevices.find(({ id }) => updatedDevice.id === id);
-    if (!currentDevice) {
-      return true;
+  if (isConnected) {
+    statusText = 'Connected';
+    statusColor = Colors.success;
+    btnText = 'Disconnect';
+    btnColor = Colors.red;
+  } else {
+    statusText = 'Disconnected';
+    statusColor = Colors.red;
+    btnText = 'Connect';
+    btnColor = Colors.success;
+  }
+
+  const showToast = (message, color) => {
+    console.log('showToast message', message);
+    try {
+      Toast.show(message, {
+        duration: Toast.durations.LONG,
+        position: Toast.positions.CENTER,
+        shadow: true,
+        animation: true,
+        hideOnPress: true,
+        delay: 0,
+        backgroundColor: color,
+        // onHidden: () => {
+        //   setAccessCode(false);
+        // },
+      });
+    } catch (error) {
+      console.error('Error showing toast:', error);
     }
-    return currentDevice.updateTimestamp < Date.now();
   };
 
-  const onConnectSuccess = () => {
-    const connectedDevice = BLEService.getDevice();
-    setConnectedDevice(connectedDevice);
-    //navigation.navigate('DEVICE_DETAILS_SCREEN');
-    setScreen('DEVICE_DETAILS_SCREEN');
-    setIsConnecting(false);
+  const handleConnect = () => {
+    if (!isConnected) {
+      scanConnect(deviceName);
+    } else {
+      disconnectFromDevice(device.id);
+    }
   };
-
-  const onConnectFail = (error) => {
-    console.log('onConnectFail', error);
-    setIsConnecting(false);
-  };
-
-  const deviceRender = (device) => (
-    <BleDevice
-      onPress={(pickedDevice) => {
-        setIsConnecting(true);
-        console.log('pickedDevice');
-        BLEService.connectToDevice(pickedDevice)
-          .then(onConnectSuccess)
-          .catch((error) => {
-            onConnectFail(error);
-          });
-      }}
-      key={device.id}
-      device={device}
-    />
-  );
-
   return (
     <KeyboardAvoidingView style={Style.mainContainer} behavior={Platform.OS === 'ios' ? 'padding' : null}>
       <MyStatusBar />
-      <View
-        style={{
-          marginVertical: 50,
-          marginHorizontal: 20,
-          flex: 1,
-          flexDirection: 'row',
-          borderBlockColor: 'red',
-          borderWidth: 1,
-        }}
-      >
-        {isConnecting && (
-          <View style={styles.dropDown}>
-            <Text style={{ fontSize: 20, color: 'white' }}>Connecting.......</Text>
+      <View style={[Style.primaryNav, { flexDirection: 'row' }]}>
+        <TouchableOpacity onPress={() => props.navigation.navigate('Home')} style={Style.navBackButton}>
+          <Ionicons name={'arrow-back'} size={22} color={Colors.white} />
+        </TouchableOpacity>
+        <Text style={Fonts.White16Bold}>Devices</Text>
+      </View>
+      <View style={{ flexDirection: 'row' }}>
+        <View style={{ flex: 1, flexDirection: 'row' }}>
+          <View
+            style={[
+              Style.contentContainer,
+              Style.borderBlue,
+              {
+                flexDirection: 'column',
+                marginTop: 10,
+                paddingHorizontal: 20,
+                borderRadius: 10,
+                alignItems: 'flex-start',
+              },
+            ]}
+          >
+            <View style={{ flexDirection: 'row' }}>
+              <MaterialIcons name={'devices-other'} size={20} />
+              <Text style={[Fonts.Black15Bold, { marginLeft: 5, marginTop: 2 }]}>Front Device</Text>
+            </View>
+            <View style={{ flexDirection: 'row' }}>
+              <View style={[Style.divider, { flex: 1 }]} />
+            </View>
+            <View style={{ flexDirection: 'row', marginTop: 10 }}>
+              <Text style={[Fonts.Black15Medium, { marginRight: 5 }]}>Status: </Text>
+              <Text style={[Fonts.Black15Medium, { color: statusColor }]}>{statusText}</Text>
+            </View>
+            <View style={{ flexDirection: 'row', marginTop: 10 }}>
+              <TouchableOpacity
+                onPress={() => handleConnect()}
+                style={[Style.buttonStyle, { backgroundColor: btnColor, width: 110 }]}
+              >
+                <Text style={[Fonts.White15Medium]}>{btnText} </Text>
+              </TouchableOpacity>
+            </View>
           </View>
-        )}
-        <View style={{ flex: 1, flexDirection: 'column' }}>
-          <Text style={{ fontSize: 16 }}>Screen: {screen}</Text>
-          {connectedDevice?.id && (
-            <>
-              <Text style={{ fontSize: 16 }}>Connected device ID: {connectedDevice.id}</Text>
-              <Text style={{ fontSize: 16 }}>Connected device Name: {connectedDevice.name}</Text>
-            </>
-          )}
-          <TouchableOpacity
-            style={styles.btn}
-            onPress={() => {
-              setFoundDevices([]);
-              BLEService.initializeBLE().then(() => BLEService.scanDevices(addFoundDevice, null, true));
-            }}
-          >
-            <Text style={{ fontSize: 16, color: 'white' }}>Look for devices</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.btn}
-            onPress={() => {
-              setFoundDevices([]);
-              BLEService.initializeBLE().then(() => BLEService.scanDevices(addFoundDevice, null, false));
-            }}
-          >
-            <Text style={{ fontSize: 16, color: 'white' }}>Look for devices (legacy off)</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.btn} onPress={BLEService.requestBluetoothPermission}>
-            <Text style={{ fontSize: 16, color: 'white' }}>Ask for permissions</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.btn} onPress={BLEService.requestBluetoothPermission}>
-            <Text style={{ fontSize: 16, color: 'white' }}>Go to nRF test</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.btn} onPress={() => BLEService.isDeviceWithIdConnected('asd')}>
-            <Text style={{ fontSize: 16, color: 'white' }}>Call disconnect with wrong id</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.btn}
-            onPress={() => navigation.navigate('DEVICE_CONNECT_DISCONNECT_TEST_SCREEN')}
-          >
-            <Text style={{ fontSize: 16, color: 'white' }}>Connect/disconnect test</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.btn} onPress={() => navigation.navigate('INSTANCE_DESTROY_SCREEN')}>
-            <Text style={{ fontSize: 16, color: 'white' }}>instance destroy screen</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.btn} onPress={() => navigation.navigate('DEVICE_ON_DISCONNECT_TEST_SCREEN')}>
-            <Text style={{ fontSize: 16, color: 'white' }}>On disconnect test</Text>
-          </TouchableOpacity>
         </View>
-        <View style={{ flex: 3, flexDirection: 'column' }}>
-          {screen === 'DASHBOARD_SCREEN' && (
-            <FlatList
-              style={{ flex: 1 }}
-              data={foundDevices}
-              renderItem={({ item }) => deviceRender(item)}
-              keyExtractor={(device) => device.id}
-            />
-          )}
-          {screen === 'DEVICE_DETAILS_SCREEN' && <DeviceScreen BLEService={BLEService} />}
-        </View>
+        <View style={{ flex: 3, flexDirection: 'row' }}></View>
       </View>
     </KeyboardAvoidingView>
   );

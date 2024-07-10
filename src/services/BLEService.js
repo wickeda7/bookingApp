@@ -1,6 +1,7 @@
 import { BleErrorCode, BleManager, State as BluetoothState, LogLevel } from 'react-native-ble-plx';
 import { PermissionsAndroid, Platform } from 'react-native';
-import Toast from 'react-native-toast-message';
+//import Toast from 'react-native-toast-message';
+import Toast from 'react-native-root-toast';
 const deviceNotConnectedErrorText = 'Device is not connected';
 class BLEServiceInstance {
   manager = null;
@@ -27,7 +28,6 @@ class BLEServiceInstance {
       const subscription = this.manager.onStateChange((state) => {
         switch (state) {
           case BluetoothState.Unsupported:
-            this.showErrorToast('');
             break;
           case BluetoothState.PoweredOff:
             this.onBluetoothPowerOff();
@@ -53,33 +53,33 @@ class BLEServiceInstance {
     });
 
   disconnectDevice = () => {
+    console.log('disconnectDevice', this.device);
     if (!this.device) {
-      this.showErrorToast(deviceNotConnectedErrorText);
       throw new Error(deviceNotConnectedErrorText);
     }
-    return this.manager
-      .cancelDeviceConnection(this.device.id)
-      .then(() => this.showSuccessToast('Device disconnected'))
-      .catch((error) => {
-        if (error?.code !== BleErrorCode.DeviceDisconnected) {
-          this.onError(error);
-        }
-      });
+    return this.manager.cancelDeviceConnection(this.device.id).catch((error) => {
+      if (error?.code !== BleErrorCode.DeviceDisconnected) {
+        this.onError(error);
+      }
+    });
   };
 
   disconnectDeviceById = (id) =>
-    this.manager
-      .cancelDeviceConnection(id)
-      .then(() => this.showSuccessToast('Device disconnected'))
-      .catch((error) => {
-        if (error?.code !== BleErrorCode.DeviceDisconnected) {
-          this.onError(error);
-        }
-      });
+    new Promise((resolve, reject) => {
+      this.manager
+        .cancelDeviceConnection(id)
+        .then(() => {
+          resolve('Device disconnected');
+        })
+        .catch((error) => {
+          if (error?.code !== BleErrorCode.DeviceDisconnected) {
+            this.onError(error);
+            reject(error);
+          }
+        });
+    });
 
-  onBluetoothPowerOff = () => {
-    this.showErrorToast('Bluetooth is turned off');
-  };
+  onBluetoothPowerOff = () => {};
 
   scanDevices = (deviceName, UUIDs, legacyScan) => {
     return new Promise((resolve, reject) => {
@@ -118,7 +118,6 @@ class BLEServiceInstance {
             resolve(this.device);
           } else {
             if (error.errorCode === '201') {
-              this.showErrorToast('Please restart the device and try again.');
             }
             // this.restart(pickedDevice);
             this.onError(error);
@@ -126,6 +125,7 @@ class BLEServiceInstance {
           }
         });
     });
+
   discoverAllServicesAndCharacteristics = async (device) => {
     new Promise((resolve, reject) => {
       device
@@ -143,7 +143,6 @@ class BLEServiceInstance {
   discoverAllServicesAndCharacteristicsForDevice = async () =>
     new Promise((resolve, reject) => {
       if (!this.device) {
-        this.showErrorToast(deviceNotConnectedErrorText);
         reject(new Error(deviceNotConnectedErrorText));
         return;
       }
@@ -161,7 +160,6 @@ class BLEServiceInstance {
   readCharacteristicForDevice = async (serviceUUID, characteristicUUID) =>
     new Promise((resolve, reject) => {
       if (!this.device) {
-        this.showErrorToast(deviceNotConnectedErrorText);
         reject(new Error(deviceNotConnectedErrorText));
         return;
       }
@@ -177,8 +175,7 @@ class BLEServiceInstance {
 
   writeCharacteristicWithResponseForDevice = async (serviceUUID, characteristicUUID, time) => {
     if (!this.device) {
-      this.showErrorToast(deviceNotConnectedErrorText);
-      throw new Error(deviceNotConnectedErrorText);
+      throw new Error(`writeCharacteristicWithResponseForDevice: ${deviceNotConnectedErrorText}`);
     }
     return this.manager
       .writeCharacteristicWithResponseForDevice(this.device.id, serviceUUID, characteristicUUID, time)
@@ -189,8 +186,7 @@ class BLEServiceInstance {
 
   writeCharacteristicWithoutResponseForDevice = async (serviceUUID, characteristicUUID, time) => {
     if (!this.device) {
-      this.showErrorToast(deviceNotConnectedErrorText);
-      throw new Error(deviceNotConnectedErrorText);
+      throw new Error(`writeCharacteristicWithoutResponseForDevice: ${deviceNotConnectedErrorText}`);
     }
     return this.manager
       .writeCharacteristicWithoutResponseForDevice(this.device.id, serviceUUID, characteristicUUID, time)
@@ -201,8 +197,7 @@ class BLEServiceInstance {
 
   writeCharacteristicWithoutResponseForService = async (serviceUUID, characteristicUUID, data) => {
     if (!this.device) {
-      //this.showErrorToast(deviceNotConnectedErrorText);
-      throw new Error(deviceNotConnectedErrorText);
+      throw new Error(`writeCharacteristicWithoutResponseForService: ${deviceNotConnectedErrorText}`);
     }
     return this.device
       .writeCharacteristicWithoutResponseForService(serviceUUID, characteristicUUID, data)
@@ -212,20 +207,23 @@ class BLEServiceInstance {
   };
   setupMonitorService = (serviceUUID, characteristicUUID, onCharacteristicReceived, onError) => {
     if (!this.device) {
-      throw new Error(deviceNotConnectedErrorText);
+      throw new Error(`setupMonitorService: ${deviceNotConnectedErrorText}`);
     }
     this.characteristicMonitor = this.device.monitorCharacteristicForService(
       serviceUUID,
       characteristicUUID,
       (error, characteristic) => {
         if (error) {
+          console.error('error????1', error);
           if (error.errorCode === 2 && this.isCharacteristicMonitorDisconnectExpected) {
             this.isCharacteristicMonitorDisconnectExpected = false;
             return;
           }
+          console.error('error????2', error);
           onError(error);
           if (!hideErrorDisplay) {
             this.onError(error);
+            console.error('error????3', error);
             this.characteristicMonitor?.remove();
           }
           return;
@@ -247,8 +245,7 @@ class BLEServiceInstance {
     hideErrorDisplay
   ) => {
     if (!this.device) {
-      this.showErrorToast(deviceNotConnectedErrorText);
-      throw new Error(deviceNotConnectedErrorText);
+      throw new Error(`setupMonitor: ${deviceNotConnectedErrorText}`);
     }
     this.characteristicMonitor = this.manager.monitorCharacteristicForDevice(
       this.device?.id,
@@ -256,13 +253,17 @@ class BLEServiceInstance {
       characteristicUUID,
       (error, characteristic) => {
         if (error) {
+          console.error('error????3', error);
           if (error.errorCode === 2 && this.isCharacteristicMonitorDisconnectExpected) {
+            console.error('error????4', error);
             this.isCharacteristicMonitorDisconnectExpected = false;
             return;
           }
           onError(error);
+          console.error('error????5', error);
           if (!hideErrorDisplay) {
             this.onError(error);
+            console.error('error????6', error);
             this.characteristicMonitor?.remove();
           }
           return;
@@ -284,8 +285,7 @@ class BLEServiceInstance {
 
   writeDescriptorForDevice = async (serviceUUID, characteristicUUID, descriptorUUID, data) => {
     if (!this.device) {
-      this.showErrorToast(deviceNotConnectedErrorText);
-      throw new Error(deviceNotConnectedErrorText);
+      throw new Error(`writeDescriptorForDevice: ${deviceNotConnectedErrorText}`);
     }
     return this.manager
       .writeDescriptorForDevice(this.device.id, serviceUUID, characteristicUUID, descriptorUUID, data)
@@ -296,8 +296,7 @@ class BLEServiceInstance {
 
   readDescriptorForDevice = async (serviceUUID, characteristicUUID, descriptorUUID) => {
     if (!this.device) {
-      this.showErrorToast(deviceNotConnectedErrorText);
-      throw new Error(deviceNotConnectedErrorText);
+      throw new Error(`readDescriptorForDevice: ${deviceNotConnectedErrorText}`);
     }
     return this.manager
       .readDescriptorForDevice(this.device.id, serviceUUID, characteristicUUID, descriptorUUID)
@@ -308,8 +307,7 @@ class BLEServiceInstance {
 
   getServicesForDevice = () => {
     if (!this.device) {
-      this.showErrorToast(deviceNotConnectedErrorText);
-      throw new Error(deviceNotConnectedErrorText);
+      throw new Error(`getServicesForDevice: ${deviceNotConnectedErrorText}`);
     }
     return this.manager.servicesForDevice(this.device.id).catch((error) => {
       this.onError(error);
@@ -318,8 +316,7 @@ class BLEServiceInstance {
 
   getCharacteristicsForDevice = (serviceUUID) => {
     if (!this.device) {
-      this.showErrorToast(deviceNotConnectedErrorText);
-      throw new Error(deviceNotConnectedErrorText);
+      throw new Error(`getCharacteristicsForDevice: ${deviceNotConnectedErrorText}`);
     }
     return this.manager.characteristicsForDevice(this.device.id, serviceUUID).catch((error) => {
       this.onError(error);
@@ -328,8 +325,7 @@ class BLEServiceInstance {
 
   getDescriptorsForDevice = (serviceUUID, characteristicUUID) => {
     if (!this.device) {
-      this.showErrorToast(deviceNotConnectedErrorText);
-      throw new Error(deviceNotConnectedErrorText);
+      throw new Error(`getDescriptorsForDevice: ${deviceNotConnectedErrorText}`);
     }
     return this.manager.descriptorsForDevice(this.device.id, serviceUUID, characteristicUUID).catch((error) => {
       this.onError(error);
@@ -338,18 +334,16 @@ class BLEServiceInstance {
 
   isDeviceConnected = () => {
     if (!this.device) {
-      this.showErrorToast(deviceNotConnectedErrorText);
-      throw new Error(deviceNotConnectedErrorText);
+      throw new Error(`isDeviceConnected: ${deviceNotConnectedErrorText}`);
     }
     return this.manager.isDeviceConnected(this.device.id);
   };
 
-  isDeviceWithIdConnected = (id) => this.manager.isDeviceConnected(id).catch(console.error);
+  isDeviceWithIdConnected = (id) => this.manager.isDeviceConnected(id).catch(console.error('error????4'));
 
   getConnectedDevices = (expectedServices) => {
     if (!this.device) {
-      this.showErrorToast(deviceNotConnectedErrorText);
-      throw new Error(deviceNotConnectedErrorText);
+      throw new Error(`getConnectedDevices: ${deviceNotConnectedErrorText}`);
     }
     return this.manager.connectedDevices(expectedServices).catch((error) => {
       this.onError(error);
@@ -358,8 +352,7 @@ class BLEServiceInstance {
 
   requestMTUForDevice = (mtu) => {
     if (!this.device) {
-      this.showErrorToast(deviceNotConnectedErrorText);
-      throw new Error(deviceNotConnectedErrorText);
+      throw new Error(`requestMTUForDevice: ${deviceNotConnectedErrorText}`);
     }
     return this.device.requestMTU(mtu).catch((error) => {
       this.onError(error);
@@ -367,10 +360,12 @@ class BLEServiceInstance {
   };
 
   onDeviceDisconnected = (listener, device) => {
+    console.log('onDeviceDisconnected', device);
+    console.log('onDeviceDisconnected', this.device);
     if (!this.device) {
-      this.showErrorToast(deviceNotConnectedErrorText);
-      throw new Error(deviceNotConnectedErrorText);
+      throw new Error(`onDeviceDisconnected: ${deviceNotConnectedErrorText}`);
     }
+    console.error('error????6', error);
     return this.device.onDisconnected(this.device, listener);
   };
 
@@ -378,8 +373,7 @@ class BLEServiceInstance {
 
   readRSSIForDevice = () => {
     if (!this.device) {
-      this.showErrorToast(deviceNotConnectedErrorText);
-      throw new Error(deviceNotConnectedErrorText);
+      throw new Error(`readRSSIForDevice: ${deviceNotConnectedErrorText}`);
     }
     return this.manager.readRSSIForDevice(this.device.id).catch((error) => {
       this.onError(error);
@@ -388,8 +382,7 @@ class BLEServiceInstance {
 
   getDevices = () => {
     if (!this.device) {
-      this.showErrorToast(deviceNotConnectedErrorText);
-      throw new Error(deviceNotConnectedErrorText);
+      throw new Error(`getDevices: ${deviceNotConnectedErrorText}`);
     }
     return this.manager.devices([this.device.id]).catch((error) => {
       this.onError(error);
@@ -419,17 +412,14 @@ class BLEServiceInstance {
         this.requestBluetoothPermission();
         break;
       case BleErrorCode.LocationServicesDisabled:
-        this.showErrorToast('Location services are disabled');
         break;
       default:
-        this.showErrorToast(JSON.stringify(error, null, 4));
     }
   };
 
   requestConnectionPriorityForDevice = (priority) => {
     if (!this.device) {
-      this.showErrorToast(deviceNotConnectedErrorText);
-      throw new Error(deviceNotConnectedErrorText);
+      throw new Error(`requestConnectionPriorityForDevice: ${deviceNotConnectedErrorText}`);
     }
     return this.manager.requestConnectionPriorityForDevice(this.device?.id, priority);
   };
@@ -446,8 +436,7 @@ class BLEServiceInstance {
   };
   cancelDeviceConnection = () => {
     if (!this.device) {
-      this.showErrorToast(deviceNotConnectedErrorText);
-      throw new Error(deviceNotConnectedErrorText);
+      throw new Error(`cancelDeviceConnection: ${deviceNotConnectedErrorText}`);
     }
     return this.manager.cancelDeviceConnection(this.device?.id);
   };
@@ -476,25 +465,7 @@ class BLEServiceInstance {
       }
     }
 
-    this.showErrorToast('Permission have not been granted');
-
     return false;
-  };
-  showErrorToast = (error) => {
-    Toast.show({
-      type: 'error',
-      text1: 'Error',
-      text2: error,
-    });
-    console.error(error);
-  };
-
-  showSuccessToast = (info) => {
-    Toast.show({
-      type: 'success',
-      text1: 'Success',
-      text2: info,
-    });
   };
 }
 

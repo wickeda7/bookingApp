@@ -1,7 +1,7 @@
 export const feesAmount = 2;
 export const SERVICE_UUID = '0000180d-0000-1000-8000-00805f9b34fb';
 export const CHARACTERISTIC_UUID = '00002a37-0000-1000-8000-00805f9b34fb';
-export const deviceName = 'My BLE Device';
+export const deviceName = 'BLE FRONT';
 export const STATES = [
   { label: 'AL', value: 'AL' },
   { label: 'AK', value: 'AK' },
