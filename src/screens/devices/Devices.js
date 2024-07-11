@@ -5,14 +5,16 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { Default, Fonts, Colors } from '@constants/style';
 import MyStatusBar from '@components/myStatusBar';
 import { useState } from 'react';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import MaterialIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { SERVICE_UUID, CHARACTERISTIC_UUID, deviceName } from '@constants/settings';
 import { useAdminContext } from '@contexts/AdminContext';
 import Toast from 'react-native-root-toast';
+import { useAuthContext } from '@contexts/AuthContext';
 
-const MIN_TIME_BEFORE_UPDATE_IN_MILLISECONDS = 5000;
 const Devices = (props) => {
-  const { device, isConnected, scanConnect, disconnectFromDevice } = useAdminContext();
+  const { device, isConnected, scanConnect, disconnectFromDevice, sendData } = useAdminContext();
+  const { userData } = useAuthContext();
+  const storeId = userData.storeAdmin.id;
   let statusText = '';
   let statusColor = '';
   let btnText = '';
@@ -82,8 +84,8 @@ const Devices = (props) => {
             ]}
           >
             <View style={{ flexDirection: 'row' }}>
-              <MaterialIcons name={'devices-other'} size={20} />
-              <Text style={[Fonts.Black15Bold, { marginLeft: 5, marginTop: 2 }]}>Front Device</Text>
+              <MaterialIcons name={'devices'} size={35} />
+              <Text style={[Fonts.Black15Bold, { marginLeft: 5, marginTop: 14 }]}>Front Device</Text>
             </View>
             <View style={{ flexDirection: 'row' }}>
               <View style={[Style.divider, { flex: 1 }]} />
@@ -100,6 +102,25 @@ const Devices = (props) => {
                 <Text style={[Fonts.White15Medium]}>{btnText} </Text>
               </TouchableOpacity>
             </View>
+            {isConnected && (
+              <>
+                <View style={{ flexDirection: 'row', marginTop: 20 }}>
+                  <MaterialIcons name={'cloud-sync-outline'} size={35} />
+                  <Text style={[Fonts.Black15Bold, { marginLeft: 5, marginTop: 14 }]}>Send Info To Device</Text>
+                </View>
+                <View style={{ flexDirection: 'row' }}>
+                  <View style={[Style.divider, { flex: 1 }]} />
+                </View>
+                <View style={{ flexDirection: 'row', marginTop: 10 }}>
+                  <TouchableOpacity
+                    onPress={() => sendData({ storeId })}
+                    style={[Style.buttonStyle, { backgroundColor: Colors.info, width: 110 }]}
+                  >
+                    <Text style={[Fonts.White15Medium]}>Sync</Text>
+                  </TouchableOpacity>
+                </View>
+              </>
+            )}
           </View>
         </View>
         <View style={{ flex: 3, flexDirection: 'row' }}></View>

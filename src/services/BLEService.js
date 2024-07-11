@@ -195,6 +195,17 @@ class BLEServiceInstance {
       });
   };
 
+  writeCharacteristicWithResponseForService = async (serviceUUID, characteristicUUID, time) => {
+    if (!this.device) {
+      throw new Error(`writeCharacteristicWithResponseForService: ${deviceNotConnectedErrorText}`);
+    }
+    return this.device
+      .writeCharacteristicWithResponseForService(serviceUUID, characteristicUUID, time)
+      .catch((error) => {
+        this.onError(error);
+      });
+  };
+
   writeCharacteristicWithoutResponseForService = async (serviceUUID, characteristicUUID, data) => {
     if (!this.device) {
       throw new Error(`writeCharacteristicWithoutResponseForService: ${deviceNotConnectedErrorText}`);

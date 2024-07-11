@@ -88,16 +88,16 @@ const AdminContextProvider = ({ children }) => {
         showToast('Connection failed.', Colors.red);
         return;
       }
+      setIsConnected(true);
       setDevice(connectedDevice);
       const mtuRequest = await BLEService.requestMTUForDevice(connectOptions.requestMTU);
       if (!mtuRequest) {
         showToast('MTU negotiation failed.', Colors.red);
         return;
       }
-      setIsConnected(true);
+
       await setupNotification(connectedDevice);
       setupDisconnectListener(); // Setup listener for disconnection
-
       showToast('Device connected successfully.', Colors.success);
     } catch (error) {
       console.error('Error scanning device11:', error);
@@ -158,25 +158,20 @@ const AdminContextProvider = ({ children }) => {
     }
   };
 
-  const setupDisconnectListener2 = () => {
-    onDeviceDisconnectedSubscription = BLEService.onDeviceDisconnected((device, error) => {
-      console.log('onDeviceDisconnectedSubscription', error);
-      if (error) {
-        console.error(error);
-        showToast(` ${error}`, Colors.red);
-        onDeviceDisconnectedSubscription.remove();
-      } else {
-        console.log('Device disconnected:', device.id);
-        // setIsConnected(false);
-        // setTotalView(false);
-        // setDevice(null);
-        // showToast('Connection to the server has been lost.', Colors.red);
-        // onDeviceDisconnectedSubscription.remove();
-      }
-    });
+  const sendStoreId = async (storeId) => {
+    try {
+      const jsonString = JSON.stringify({ storeId });
+      const base64Data = Buffer.from(jsonString).toString('base64');
+      await BLEService.writeCharacteristicWithResponseForService(SERVICE_UUID, CHARACTERISTIC_UUID, base64Data);
+      console.log('sendStoreId');
+    } catch (error) {
+      console.error(`Send storeId error: ${error.message}`);
+    }
   };
+
   const sendData = async (data) => {
     try {
+      console.log('sendData', data, isConnected);
       if (!isConnected) {
         scanConnect(deviceName);
       }
