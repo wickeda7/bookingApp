@@ -24,6 +24,7 @@ const AccordionItem = ({ children, item, expanded, onHeaderPress }) => {
   const [messageType, setMessageType] = useState('');
 
   let { timeslot, createdAt, callBack, client, specialist, services, confirmed, canceled, alert: itemAlert, id } = item;
+  const name = client?.firstName ? `${client?.firstName} ${client?.lastName}` : `${client.name}`;
 
   let time = moment(createdAt).format('h:mm A');
   if (timeslot) {
@@ -44,7 +45,7 @@ const AccordionItem = ({ children, item, expanded, onHeaderPress }) => {
         {id} {'  '}
         {tr(type)}
         {'  '} {time} {'  '}
-        {client?.userInfo?.firstName} {client?.userInfo?.lastName} {'  '}
+        {name !== 'undefined' && `${name}  `}
         {specialist && `${tr('request')} ${specialist?.userInfo?.firstName} ${specialist?.userInfo?.lastName}`}
       </Text>
       <Text style={[styles.accordTitle, { color: borderColor, marginTop: Default.fixPadding * 0.5 }]}>

@@ -83,7 +83,16 @@ export const booking = {
             const userInfo = { ...attributes, id };
             clientData['id'] = attr.client.data.id;
             clientData['email'] = attr.client.data.attributes.email;
-            clientData['userInfo'] = userInfo;
+            clientData['firstName'] = userInfo.firstName;
+            clientData['lastName'] = userInfo.lastName;
+          }
+          if (attr.register.data) {
+            const { email, name, phone } = attr.register.data.attributes;
+
+            clientData['id'] = attr.register.data.id;
+            clientData['email'] = email;
+            clientData['name'] = name;
+            clientData['phone'] = phone;
           }
           let services = typeof attr.services === 'string' ? JSON.parse(attr.services) : attr.services;
           const type = attr.timeslot === null ? 'walkin' : 'appointment';
