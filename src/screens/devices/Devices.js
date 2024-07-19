@@ -15,6 +15,7 @@ const Devices = (props) => {
   const { device, isConnected, scanConnect, disconnectFromDevice, sendData } = useAdminContext();
   const { userData } = useAuthContext();
   const storeId = userData.storeAdmin.id;
+  const storeName = userData.storeAdmin.name;
   let statusText = '';
   let statusColor = '';
   let btnText = '';
@@ -113,7 +114,7 @@ const Devices = (props) => {
                 </View>
                 <View style={{ flexDirection: 'row', marginTop: 10 }}>
                   <TouchableOpacity
-                    onPress={() => sendData({ storeId })}
+                    onPress={() => sendData({ storeId, storeName })}
                     style={[Style.buttonStyle, { backgroundColor: Colors.info, width: 110 }]}
                   >
                     <Text style={[Fonts.White15Medium]}>Sync</Text>
