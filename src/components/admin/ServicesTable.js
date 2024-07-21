@@ -16,6 +16,7 @@ import { useSelector } from 'react-redux';
 import { useAuthContext } from '@contexts/AuthContext';
 import { getServiceItems } from '@redux/actions/batchesAction';
 import { cleanServices } from '@utils/helper';
+import { BLEService } from '@services/BLEService';
 
 const ServicesTable = ({ services, canceled }) => {
   const { t, i18n } = useTranslation();
@@ -98,15 +99,18 @@ const ServicesTable = ({ services, canceled }) => {
   };
 
   const setStaff = (staff) => {
+    const startTime = moment().format('HH:mm');
+
     if (setTurn && amountPerTurn) {
       const date = moment().format('YYYY-MM-DD');
       const objectIndex = staffAvailable.findIndex((obj) => obj.id === staff.id);
       if (!moment(date).isSame(staff.date)) {
-        staff = { ...staff, date, amountPerTurn, turn: 1, positionAt: objectIndex };
+        staff = { ...staff, date, amountPerTurn, turn: 1, positionAt: objectIndex, startTime };
       } else {
-        staff = { ...staff, turn: staff.turn + 1, positionAt: objectIndex };
+        staff = { ...staff, turn: staff.turn + 1, positionAt: objectIndex, startTime };
       }
     }
+    BLEService.setData(staff);
     dispatch(updateStaff(staff));
   };
 

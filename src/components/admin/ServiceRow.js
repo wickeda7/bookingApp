@@ -9,16 +9,18 @@ import { DraxView, DraxViewDragStatus, DraxSnapbackTargetPreset } from 'react-na
 import NumericInput from '@wwdrew/react-native-numeric-textinput';
 import { updatePrice } from '@redux/slices/adminHomeSlice';
 import { addSplitService } from '@redux/actions/adminHomeAction';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import debounce from 'lodash/debounce';
 import NewServiceDropdown from '../NewServiceDropdown';
-
+import { setStaffToService } from '@redux/slices/adminHomeSlice';
+import Toast from 'react-native-root-toast';
 const ServiceRow = ({ item, setService, setStaff, handleTextChange, canceled }) => {
   const { t, i18n } = useTranslation();
   const isRtl = i18n.dir() === 'rtl';
   function tr(key) {
     return t(`homeScreen:${key}`);
   }
+  const { staffToService } = useSelector((state) => state.adminHome);
   const [add, setAdd] = useState(false);
   const [addedItem, setAddedItem] = useState(null);
   const [value, setValue] = useState('');
@@ -80,244 +82,235 @@ const ServiceRow = ({ item, setService, setStaff, handleTextChange, canceled }) 
     setAdd(!add);
     setAddedItem(null);
   };
-
+  const moveStaffService = () => {
+    if (!staffToService) {
+      Toast.show('Please select staff first', {
+        duration: Toast.durations.LONG,
+        position: Toast.positions.CENTER,
+        shadow: true,
+        animation: true,
+        hideOnPress: true,
+        delay: 0,
+        backgroundColor: Colors.red,
+      });
+      return;
+    }
+    if (specialist) return;
+    setService(item, 'service', staffToService);
+    setStaff(staffToService);
+    dispatch(setStaffToService(null));
+  };
   return (
     <>
-      <DraxView
-        receiverPayload={item}
-        renderContent={({ viewState }) => {
-          const receivingDrag = viewState?.receivingDrag;
-          const incomingText = receivingDrag?.payload?.text;
-          // console.log('viewState', viewState);
-          // console.log('receivingDrag?.payload', receivingDrag?.payload);
-          return (
-            <>
-              <View
-                style={[
-                  Style.mainContainer,
-                  { flexDirection: 'row', marginHorizontal: Default.fixPadding * 1.5, opacity: canceled ? 0.3 : 1 },
-                ]}
-              >
-                <View style={[{ flex: 2, paddingLeft: 10, flexDirection: 'row' }]}>
-                  <AntIcon size={15} name='menu-unfold' color={color} />
-                  <Text style={[{ marginHorizontal: Default.fixPadding, color: color, fontSize: 14 }]}>
-                    {firstName} {lastName} {id}
-                  </Text>
-                </View>
+      <TouchableOpacity
+        style={[
+          Style.mainContainer,
+          {
+            flexDirection: 'row',
+            marginHorizontal: Default.fixPadding * 1.5,
+            padding: Default.fixPadding,
+            opacity: canceled ? 0.3 : 1,
+          },
+        ]}
+        onPress={() => moveStaffService()}
+      >
+        <View style={[{ flex: 2, paddingLeft: 10, flexDirection: 'row' }]}>
+          <AntIcon size={15} name='menu-unfold' color={color} />
+          <Text style={[{ marginHorizontal: Default.fixPadding, color: color, fontSize: 14 }]}>
+            {firstName} {lastName} {id}
+          </Text>
+        </View>
 
-                <View style={[{ flex: 4 }]}>
-                  {item.newService ? <NewServiceDropdown /> : <Text style={{ fontSize: 14 }}>{item.name}</Text>}
-                </View>
-                <View style={[{ flex: 1 }]}>
-                  <Text style={{ fontSize: 14 }}>{formatPrice(price * 100)}</Text>
-                </View>
-                <View style={[{ flex: 1 }]}>
-                  <NumericInput
-                    type='decimal'
-                    decimalPlaces={2}
-                    value={additional}
-                    onUpdate={(value) => handleTextChange(value, item, 'additional')}
-                    style={[Style.inputStyle, { width: '80%', height: 25, marginVertical: 0, padding: 4 }]}
-                    selectionColor={Colors.primary}
-                    editable={editable}
-                  />
-                </View>
-                <View style={[{ flex: 1 }]}>
-                  <Text style={{ fontSize: 14 }}>{formatPrice(total * 100)}</Text>
-                </View>
-              </View>
-              {add && (
-                <View
-                  style={[
-                    Style.mainContainer,
-                    {
-                      flexDirection: 'row',
-                      marginHorizontal: Default.fixPadding * 1.5,
-                      marginTop: Default.fixPadding,
-                      opacity: canceled ? 0.3 : 1,
-                      backgroundColor: '#ffffad',
-                      paddingVertical: 8,
-                    },
-                  ]}
-                >
-                  <View style={[{ flex: 2, paddingLeft: 10, flexDirection: 'row' }]}></View>
-                  <View style={[{ flex: 4 }]}>
-                    <Text style={{ fontSize: 14 }}>{addedItem.name}</Text>
-                  </View>
-                  <View style={[{ flex: 1 }]}>
-                    <NumericInput
-                      type='decimal'
-                      decimalPlaces={2}
-                      value={addedItem.price}
-                      onUpdate={(value) => handlePriceChange(value)}
-                      style={[Style.inputStyle, { width: '80%', height: 25, marginVertical: 0, padding: 4 }]}
-                      selectionColor={Colors.primary}
-                      editable={editable}
-                    />
-                  </View>
-                  <View style={[{ flex: 1 }]}></View>
-                  <View style={[{ flex: 1 }]}>
-                    <Text style={{ fontSize: 14 }}>{formatPrice(addedItem.total * 100)}</Text>
-                  </View>
-                </View>
+        <View style={[{ flex: 4 }]}>
+          {item.newService ? <NewServiceDropdown /> : <Text style={{ fontSize: 14 }}>{item.name}</Text>}
+        </View>
+        <View style={[{ flex: 1 }]}>
+          <Text style={{ fontSize: 14 }}>{formatPrice(price * 100)}</Text>
+        </View>
+        <View style={[{ flex: 1 }]}>
+          <NumericInput
+            type='decimal'
+            decimalPlaces={2}
+            value={additional}
+            onUpdate={(value) => handleTextChange(value, item, 'additional')}
+            style={[Style.inputStyle, { width: '80%', height: 25, marginVertical: 0, padding: 4 }]}
+            selectionColor={Colors.primary}
+            editable={editable}
+          />
+        </View>
+        <View style={[{ flex: 1 }]}>
+          <Text style={{ fontSize: 14 }}>{formatPrice(total * 100)}</Text>
+        </View>
+      </TouchableOpacity>
+      {add && (
+        <View
+          style={[
+            Style.mainContainer,
+            {
+              flexDirection: 'row',
+              marginHorizontal: Default.fixPadding * 1.5,
+              marginTop: Default.fixPadding,
+              opacity: canceled ? 0.3 : 1,
+              backgroundColor: '#ffffad',
+              paddingVertical: 8,
+            },
+          ]}
+        >
+          <View style={[{ flex: 2, paddingLeft: 10, flexDirection: 'row' }]}></View>
+          <View style={[{ flex: 4 }]}>
+            <Text style={{ fontSize: 14 }}>{addedItem.name}</Text>
+          </View>
+          <View style={[{ flex: 1 }]}>
+            <NumericInput
+              type='decimal'
+              decimalPlaces={2}
+              value={addedItem.price}
+              onUpdate={(value) => handlePriceChange(value)}
+              style={[Style.inputStyle, { width: '80%', height: 25, marginVertical: 0, padding: 4 }]}
+              selectionColor={Colors.primary}
+              editable={editable}
+            />
+          </View>
+          <View style={[{ flex: 1 }]}></View>
+          <View style={[{ flex: 1 }]}>
+            <Text style={{ fontSize: 14 }}>{formatPrice(addedItem.total * 100)}</Text>
+          </View>
+        </View>
+      )}
+      <View
+        style={[
+          Style.mainContainer,
+          {
+            flexDirection: 'row',
+            marginHorizontal: Default.fixPadding * 1.5,
+            marginTop: Default.fixPadding,
+            opacity: canceled ? 0.3 : 1,
+          },
+        ]}
+      >
+        <View style={[{ flex: 3, paddingLeft: 10, flexDirection: 'row' }]}>
+          {specialist && (
+            <>
+              {add ? (
+                <>
+                  <TouchableOpacity
+                    activeOpacity={0.8}
+                    onPress={() => {
+                      if (canceled) return;
+                      setAdd(!add);
+                      setAddedItem(null);
+                      dispatch(addSplitService({ service: addedItem, type: 'splitService' }));
+                    }}
+                    style={[
+                      Style.buttonStyle,
+                      Style.borderGreen,
+                      {
+                        paddingVertical: 2,
+                        marginTop: 0,
+                        flexDirection: 'row',
+                        width: 100,
+                        height: 30,
+                        marginRight: 20,
+                      },
+                    ]}
+                  >
+                    <AntIcon size={18} name='check' color='green' />
+                    <Text style={[{ paddingHorizontal: Default.fixPadding * 0.5, color: 'green' }]}>Confirm</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    activeOpacity={0.8}
+                    onPress={() => {
+                      if (canceled) return;
+                      handleCancel();
+                    }}
+                    style={[
+                      Style.buttonStyle,
+                      Style.borderRed,
+                      {
+                        paddingVertical: 2,
+                        marginTop: 0,
+                        flexDirection: 'row',
+                        width: 80,
+                        height: 30,
+                        marginRight: 10,
+                      },
+                    ]}
+                  >
+                    <AntIcon size={18} name='close' color={Colors.red} />
+                    <Text style={[{ paddingHorizontal: Default.fixPadding * 0.5, color: Colors.red }]}>Cancel</Text>
+                  </TouchableOpacity>
+                </>
+              ) : (
+                <>
+                  <TouchableOpacity
+                    activeOpacity={0.8}
+                    onPress={() => {
+                      if (canceled) return;
+                      setService(item, 'remove');
+                    }}
+                    style={[
+                      Style.buttonStyle,
+                      Style.borderRed,
+                      {
+                        paddingVertical: 2,
+                        marginTop: 0,
+                        flexDirection: 'row',
+                        width: 100,
+                        height: 30,
+                        marginRight: 20,
+                      },
+                    ]}
+                  >
+                    <AntIcon size={18} name='deleteuser' color={Colors.red} />
+                    <Text style={[{ paddingHorizontal: Default.fixPadding * 0.5, color: Colors.red }]}>
+                      {tr('removestaff')}
+                    </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    activeOpacity={0.8}
+                    onPress={() => {
+                      if (canceled) return;
+                      handleAddRow();
+                    }}
+                    style={[
+                      Style.buttonStyle,
+                      Style.borderInfo,
+                      {
+                        paddingVertical: 2,
+                        marginTop: 0,
+                        flexDirection: 'row',
+                        width: 80,
+                        height: 30,
+                        marginRight: 10,
+                      },
+                    ]}
+                  >
+                    <AntIcon size={18} name='adduser' color={Colors.info} />
+                    <Text style={[{ paddingHorizontal: Default.fixPadding * 0.5, color: Colors.info }]}>
+                      {tr('add')}
+                    </Text>
+                  </TouchableOpacity>
+                </>
               )}
-              <View
-                style={[
-                  Style.mainContainer,
-                  {
-                    flexDirection: 'row',
-                    marginHorizontal: Default.fixPadding * 1.5,
-                    marginTop: Default.fixPadding,
-                    opacity: canceled ? 0.3 : 1,
-                  },
-                ]}
-              >
-                <View style={[{ flex: 3, paddingLeft: 10, flexDirection: 'row' }]}>
-                  {specialist && (
-                    <>
-                      {add ? (
-                        <>
-                          <TouchableOpacity
-                            activeOpacity={0.8}
-                            onPress={() => {
-                              if (canceled) return;
-                              setAdd(!add);
-                              setAddedItem(null);
-                              dispatch(addSplitService({ service: addedItem, type: 'splitService' }));
-                            }}
-                            style={[
-                              Style.buttonStyle,
-                              Style.borderGreen,
-                              {
-                                paddingVertical: 2,
-                                marginTop: 0,
-                                flexDirection: 'row',
-                                width: 100,
-                                height: 30,
-                                marginRight: 20,
-                              },
-                            ]}
-                          >
-                            <AntIcon size={18} name='check' color='green' />
-                            <Text style={[{ paddingHorizontal: Default.fixPadding * 0.5, color: 'green' }]}>
-                              Confirm
-                            </Text>
-                          </TouchableOpacity>
-                          <TouchableOpacity
-                            activeOpacity={0.8}
-                            onPress={() => {
-                              if (canceled) return;
-                              handleCancel();
-                            }}
-                            style={[
-                              Style.buttonStyle,
-                              Style.borderRed,
-                              {
-                                paddingVertical: 2,
-                                marginTop: 0,
-                                flexDirection: 'row',
-                                width: 80,
-                                height: 30,
-                                marginRight: 10,
-                              },
-                            ]}
-                          >
-                            <AntIcon size={18} name='close' color={Colors.red} />
-                            <Text style={[{ paddingHorizontal: Default.fixPadding * 0.5, color: Colors.red }]}>
-                              Cancel
-                            </Text>
-                          </TouchableOpacity>
-                        </>
-                      ) : (
-                        <>
-                          <TouchableOpacity
-                            activeOpacity={0.8}
-                            onPress={() => {
-                              if (canceled) return;
-                              setService(item, 'remove');
-                            }}
-                            style={[
-                              Style.buttonStyle,
-                              Style.borderRed,
-                              {
-                                paddingVertical: 2,
-                                marginTop: 0,
-                                flexDirection: 'row',
-                                width: 100,
-                                height: 30,
-                                marginRight: 20,
-                              },
-                            ]}
-                          >
-                            <AntIcon size={18} name='deleteuser' color={Colors.red} />
-                            <Text style={[{ paddingHorizontal: Default.fixPadding * 0.5, color: Colors.red }]}>
-                              {tr('removestaff')}
-                            </Text>
-                          </TouchableOpacity>
-                          <TouchableOpacity
-                            activeOpacity={0.8}
-                            onPress={() => {
-                              if (canceled) return;
-                              handleAddRow();
-                            }}
-                            style={[
-                              Style.buttonStyle,
-                              Style.borderInfo,
-                              {
-                                paddingVertical: 2,
-                                marginTop: 0,
-                                flexDirection: 'row',
-                                width: 80,
-                                height: 30,
-                                marginRight: 10,
-                              },
-                            ]}
-                          >
-                            <AntIcon size={18} name='adduser' color={Colors.info} />
-                            <Text style={[{ paddingHorizontal: Default.fixPadding * 0.5, color: Colors.info }]}>
-                              {tr('add')}
-                            </Text>
-                          </TouchableOpacity>
-                        </>
-                      )}
-                    </>
-                  )}
-                </View>
-                <View style={[{ flex: 4, flexDirection: 'row' }]}>
-                  <Text style={{ fontSize: 14, marginTop: 5, marginRight: 5 }}>{tr('notes')}: </Text>
-                  <TextInput
-                    multiline={true}
-                    numberOfLines={5}
-                    selectionColor={Colors.primary}
-                    style={[Style.inputStyle, { width: '90%', height: 50 }]}
-                    placeholder={notes}
-                    onEndEditing={(text) => handleTextChange(text, item, 'notes')}
-                    editable={editable}
-                    //value={notes}
-                  />
-                </View>
-              </View>
-              <View
-                style={[
-                  Style.divider,
-                  { marginHorizontal: Default.fixPadding, marginVertical: Default.fixPadding * 1.5 },
-                ]}
-              />
             </>
-          );
-        }}
-        onReceiveDragDrop={(event) => {
-          const userId = event.dragged.payload.id;
-          const receivedId = event.receiver.payload.specialist?.id ? event.receiver.payload.specialist.id : undefined;
-          // console.log('receivedId', event.receiver.payload);
-          // console.log('userId', userId);
-          if (receivedId === undefined || (userId === receivedId && !canceled)) {
-            setService(event.receiver.payload, 'service', event.dragged.payload);
-            setStaff(event.dragged.payload);
-          }
-          DraxViewDragStatus.Inactive;
-          return DraxSnapbackTargetPreset.None;
-        }}
+          )}
+        </View>
+        <View style={[{ flex: 4, flexDirection: 'row' }]}>
+          <Text style={{ fontSize: 14, marginTop: 5, marginRight: 5 }}>{tr('notes')}: </Text>
+          <TextInput
+            multiline={true}
+            numberOfLines={5}
+            selectionColor={Colors.primary}
+            style={[Style.inputStyle, { width: '90%', height: 50 }]}
+            placeholder={notes}
+            onEndEditing={(text) => handleTextChange(text, item, 'notes')}
+            editable={editable}
+            //value={notes}
+          />
+        </View>
+      </View>
+      <View
+        style={[Style.divider, { marginHorizontal: Default.fixPadding, marginVertical: Default.fixPadding * 1.5 }]}
       />
     </>
   );

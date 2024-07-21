@@ -22,8 +22,8 @@ const initialState = {
   message: '',
   invoice: {},
   storeSettings: {},
-
   status: null,
+  staffToService: null,
 };
 function tr(key) {
   return t(`homeScreen:${key}`);
@@ -33,6 +33,9 @@ export const adminHomeSlice = createSlice({
   name: 'adminHome',
   initialState,
   reducers: {
+    setStaffToService: (state, action) => {
+      state.staffToService = action.payload;
+    },
     updateAppointment: (state, action) => {
       const type = action.payload?.type;
       if (type === 'cancel') {
@@ -71,6 +74,7 @@ export const adminHomeSlice = createSlice({
         }
         const totalAmount = invoice.additional + invoice.subtotal;
         const objectIndex = state.staffUnAvailable.findIndex((obj) => obj.id === invoice.specialist);
+
         if (objectIndex !== -1) {
           const staff = state.staffUnAvailable[objectIndex];
           const perTurnAmount = staff.amountPerTurn;
@@ -229,9 +233,20 @@ export const adminHomeSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(updateBooking.fulfilled, (state, action) => {
-        const { id, services, timeslot, specialists, date, specialistID, callBack, storeID, userID, client, removeId } =
-          action.payload;
-
+        const {
+          id,
+          services,
+          timeslot,
+          specialists,
+          date,
+          specialistID,
+          callBack,
+          storeID,
+          userID,
+          client,
+          removeId,
+          updatedAt,
+        } = action.payload;
         const bookingType = timeslot === null ? 'walkin' : 'appointment';
         const bookingIndex = state[bookingType].findIndex((obj) => obj.id === id);
         const booking = { ...state[bookingType][bookingIndex] };
@@ -514,5 +529,6 @@ export const {
   updateNotification,
   updateNewInvoice,
   updateStoreSettings,
+  setStaffToService,
 } = adminHomeSlice.actions;
 export default adminHomeSlice.reducer;

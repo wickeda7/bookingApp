@@ -6,6 +6,7 @@ import { TextEncoder } from 'text-encoding';
 import { Buffer } from 'buffer';
 import { BLEService } from '@services/BLEService';
 import { SERVICE_UUID, CHARACTERISTIC_UUID, deviceName } from '@constants/settings';
+import { useSelector } from 'react-redux';
 
 const END_OF_DATA = 'END_OF_DATA';
 let connectOptions = {
@@ -95,7 +96,6 @@ const AdminContextProvider = ({ children }) => {
         showToast('MTU negotiation failed.', Colors.red);
         return;
       }
-
       await setupNotification(connectedDevice);
       setupDisconnectListener(); // Setup listener for disconnection
       showToast('Device connected successfully.', Colors.success);
@@ -121,10 +121,13 @@ const AdminContextProvider = ({ children }) => {
             moniterCharacteristic.remove();
             return;
           }
+
           const decodedData = Buffer.from(characteristic.value, 'base64').toString('utf-8');
           const data = JSON.parse(decodedData);
           if ('totalView' in data) {
             setTotalView(data.totalView);
+          } else if ('availability' in data) {
+            sendAvailability();
           } else {
             setTotalView(true);
             setReceivedData(data);
@@ -163,15 +166,25 @@ const AdminContextProvider = ({ children }) => {
       const jsonString = JSON.stringify({ storeId });
       const base64Data = Buffer.from(jsonString).toString('base64');
       await BLEService.writeCharacteristicWithResponseForService(SERVICE_UUID, CHARACTERISTIC_UUID, base64Data);
-      console.log('sendStoreId');
     } catch (error) {
       console.error(`Send storeId error: ${error.message}`);
     }
   };
 
+  const sendAvailability = async () => {
+    try {
+      const data = BLEService.getData();
+      const staff = data.map((item) => {
+        return { id: item.id, startTime: item.startTime };
+      });
+      console.log('sendAvailability staff', staff);
+      sendData({ availability: staff });
+    } catch (error) {
+      console.error(`Send availability error: ${error.message}`);
+    }
+  };
   const sendData = async (data) => {
     try {
-      console.log('sendData', data, isConnected);
       if (!isConnected) {
         scanConnect(deviceName);
       }

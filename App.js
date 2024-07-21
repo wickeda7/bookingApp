@@ -1,7 +1,8 @@
 import 'react-native-gesture-handler';
 import { useFonts } from 'expo-font';
 import { NavigationContainer } from '@react-navigation/native';
-
+import { Provider } from 'react-redux';
+import { store } from '@redux/store';
 import { withTranslation } from 'react-i18next';
 import TabNavigator from '@navigation/TabNavigator';
 import DrawerNavigator from '@navigation/DrawerNavigator';
@@ -64,13 +65,15 @@ const MainNavigation = () => {
   };
   return (
     <NavigationContainer linking={linking}>
-      <AuthContextProvider>
-        <StoreContextProvider>
-          <BookingContextProvider>
-            <AdminContextProvider>{isTablet ? <DrawerNavigator /> : <TabNavigator />}</AdminContextProvider>
-          </BookingContextProvider>
-        </StoreContextProvider>
-      </AuthContextProvider>
+      <Provider store={store}>
+        <AuthContextProvider>
+          <StoreContextProvider>
+            <BookingContextProvider>
+              <AdminContextProvider>{isTablet ? <DrawerNavigator /> : <TabNavigator />}</AdminContextProvider>
+            </BookingContextProvider>
+          </StoreContextProvider>
+        </AuthContextProvider>
+      </Provider>
     </NavigationContainer>
   );
 };

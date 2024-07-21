@@ -39,7 +39,7 @@ const AdminHome = () => {
   const [notificationNumber, setNotificationNumber] = useState(1);
   const [clockIn, setClockIn] = useState(false);
   const { userData } = useAuthContext();
-  const { setSetTurn, setAmountPerTurn, showExtend } = useAdminContext();
+  const { setSetTurn, setAmountPerTurn } = useAdminContext();
   const dispatch = useDispatch();
   const { isLoading, staffAvailable, staffUnAvailable, walkin, appointment } = useSelector((state) => state.adminHome);
   const employee = userData.storeAdmin.employee;
@@ -125,6 +125,7 @@ const AdminHome = () => {
               <View style={{ width: 70, height: 50, position: 'relative' }}>
                 <TouchableOpacity
                   onPress={() => setNotificationNumber(0)}
+                  // onPress={() => console.log('staffUnAvailable', staffUnAvailable)}
                   style={{ position: 'absolute', top: 5, right: 10 }}
                 >
                   <Ionicons name='notifications-outline' size={30} color={Colors.white} />

@@ -8,6 +8,7 @@ class BLEServiceInstance {
   device = null;
   characteristicMonitor = null;
   isCharacteristicMonitorDisconnectExpected = false;
+  data = [];
 
   constructor() {
     this.device = null;
@@ -22,7 +23,10 @@ class BLEServiceInstance {
   };
 
   getDevice = () => this.device;
-
+  setData = (data) => {
+    this.data.push(data);
+  };
+  getData = () => this.data;
   initializeBLE = () =>
     new Promise((resolve) => {
       const subscription = this.manager.onStateChange((state) => {
