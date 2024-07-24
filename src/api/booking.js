@@ -94,32 +94,40 @@ export const booking = {
             clientData['name'] = name;
             clientData['phone'] = phone;
           }
-          let services = typeof attr.services === 'string' ? JSON.parse(attr.services) : attr.services;
-          const type = attr.timeslot === null ? 'walkin' : 'appointment';
+          let services = null;
+          let type = 'walkin';
+          if (attr.services) {
+            services = typeof attr.services === 'string' ? JSON.parse(attr.services) : attr.services;
+          }
+          if (attr.timeslot !== null) {
+            type = 'appointment';
+          }
           specialistData = attr.specialists.data.length > 0 ? specialistData : null;
+          if (services) {
+            services = services.map((service) => {
+              if (service.status === 'working') {
+                workingId.add(service.specialist.id);
+              }
+              if (service.bookingId) {
+                return service;
+              } else {
+                return {
+                  id: service.id,
+                  description: service.description,
+                  name: service.name,
+                  price: service.price,
+                  priceOption: service.priceOption,
+                  specialist: service.specialist === undefined ? specialistData : service.specialist,
+                  client: clientData,
+                  storeId,
+                  status: service.status ? service.status : 'pending',
+                  bookingId: id,
+                  type,
+                };
+              }
+            });
+          }
 
-          services = services.map((service) => {
-            if (service.status === 'working') {
-              workingId.add(service.specialist.id);
-            }
-            if (service.bookingId) {
-              return service;
-            } else {
-              return {
-                id: service.id,
-                description: service.description,
-                name: service.name,
-                price: service.price,
-                priceOption: service.priceOption,
-                specialist: service.specialist === undefined ? specialistData : service.specialist,
-                client: clientData,
-                storeId,
-                status: service.status ? service.status : 'pending',
-                bookingId: id,
-                type,
-              };
-            }
-          });
           const final = { ...attr, client: clientData, specialist: specialistData, services, id };
           if (Array.from(workingId).length > 0) {
             const temp = Array.from(workingId);
