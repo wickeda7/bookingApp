@@ -167,10 +167,12 @@ export const adminHomeSlice = createSlice({
       state.staffAvailable = action.payload;
     },
     setWalkin: (state, action) => {
-      state.walkin = [action.payload, ...state.walkin];
+      let walkin = [...state.walkin];
+      state.walkin = walkin.push(action.payload);
     },
     setAppointment: (state, action) => {
-      state.appointment = [action.payload, ...state.appointment];
+      let appointment = [...state.appointment];
+      state.appointment = appointment.push(action.payload);
     },
     updateNewInvoice: (state, action) => {
       const { appointment, specialist, type, store } = action.payload;
