@@ -24,7 +24,7 @@ const AccordionItem = ({ children, item, expanded, onHeaderPress }) => {
   const [messageType, setMessageType] = useState('');
 
   let { timeslot, createdAt, callBack, client, specialist, services, confirmed, canceled, alert: itemAlert, id } = item;
-  const name = client?.firstName ? `${client?.firstName} ${client?.lastName}` : `${client.name}`;
+  const name = client?.firstName ? `${client?.firstName} ${client?.lastName}` : `${client?.name}`;
 
   let time = moment(createdAt).format('h:mm A');
   if (timeslot) {
