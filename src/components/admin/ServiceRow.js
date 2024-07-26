@@ -6,7 +6,7 @@ import { formatPrice } from '@utils/helper';
 import { useTranslation } from 'react-i18next';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import NumericInput from '@wwdrew/react-native-numeric-textinput';
-import { updatePrice } from '@redux/slices/adminHomeSlice';
+import { updateServiceRow } from '@redux/slices/adminHomeSlice';
 import { addSplitService } from '@redux/actions/adminHomeAction';
 import { useDispatch, useSelector } from 'react-redux';
 import debounce from 'lodash/debounce';
@@ -51,7 +51,7 @@ const ServiceRow = ({ item, setService, setStaff, handleTextChange, canceled }) 
     setAdd(!add);
   };
   const onChange = () => {
-    dispatch(updatePrice({ value, item, field: 'price' }));
+    dispatch(updateServiceRow({ value, item, field: 'price' }));
   };
   useEffect(() => {
     ref.current = onChange;
@@ -76,7 +76,7 @@ const ServiceRow = ({ item, setService, setStaff, handleTextChange, canceled }) 
   };
   const handleCancel = () => {
     const newPrice = ogPrice * 100;
-    dispatch(updatePrice({ value: newPrice / 100, item, field: 'price' }));
+    dispatch(updateServiceRow({ value: newPrice / 100, item, field: 'price' }));
     setAdd(!add);
     setAddedItem(null);
   };

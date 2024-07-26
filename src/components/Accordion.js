@@ -20,7 +20,6 @@ function Accordion({ data, type, navigation, serviceId }) {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     setExpandedIndex(expandedIndex === index ? null : index);
   }
-
   return (
     <>
       {data.map((item, index) => (

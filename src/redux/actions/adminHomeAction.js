@@ -8,7 +8,7 @@ export const getBooking = createAsyncThunk('getBooking', async ({ storeId, today
     const response = await booking.getBooking(storeId, today);
     return response;
   } catch (error) {
-    console.log('error adminHomeAction getBooking', error.response.data.error.message);
+    console.error('error adminHomeAction getBooking', error.response.data.error.message);
     throw error.response.data.error.message;
   }
 });
@@ -17,7 +17,7 @@ export const addInvoice = createAsyncThunk('addInvoice', async ({ data }) => {
     const response = await booking.postInvoice(data);
     return response;
   } catch (error) {
-    console.log('error adminHomeAction postInvoice', error.response.data.error.message);
+    console.error('error adminHomeAction postInvoice', error.response.data.error.message);
     throw error.response.data.error.message;
   }
 });
@@ -26,7 +26,7 @@ export const updateBooking = createAsyncThunk('updateBooking', async ({ service,
     const response = await booking.updateBooking({ service, type, staff });
     return response;
   } catch (error) {
-    console.log('error adminHomeAction postInvoice', error.response.data.error.message);
+    console.error('error adminHomeAction postInvoice', error.response.data.error.message);
     throw error.response.data.error.message;
   }
 });
@@ -35,7 +35,7 @@ export const addSplitService = createAsyncThunk('addSplitService', async (data) 
     const response = await booking.updateBooking(data);
     return response;
   } catch (error) {
-    console.log('error adminHomeAction addSplitService', error.response.data.error.message);
+    console.error('error adminHomeAction addSplitService', error.response.data.error.message);
     throw error.response.data.error.message;
   }
 });
@@ -44,7 +44,7 @@ export const getSettings = createAsyncThunk('getSettings', async ({ storeId }) =
     const response = await stores.getSettings(storeId);
     return response;
   } catch (error) {
-    console.log('error adminHomeAction getSettings', error.response.data.error.message);
+    console.error('error adminHomeAction getSettings', error.response.data.error.message);
     throw error.response.data.error.message;
   }
 });
@@ -54,7 +54,7 @@ export const uploadStoreImage = createAsyncThunk('uploadStoreImage', async ({ id
     const newImage = { id: res[0].id, url: res[0].url };
     return { imageType, newImage };
   } catch (error) {
-    console.log('error adminHomeAction uploadStoreImage', error.response.data.error.message);
+    console.error('error adminHomeAction uploadStoreImage', error.response.data.error.message);
     throw error.response.data.error.message;
   }
 });
@@ -73,7 +73,7 @@ export const updateService = createAsyncThunk('updateService', async ({ ids, dat
     if (data.delete) return { ids: prevIds, data: { ...data, id: res.data.id }, type };
     return { ids: prevIds, data: { ...res.data.attributes, id: res.data.id }, type };
   } catch (error) {
-    console.log('error adminHomeAction uploadStoreImage', error.response.data.error.message);
+    console.error('error adminHomeAction uploadStoreImage', error.response.data.error.message);
     throw error.response.data.error.message;
   }
 });
@@ -87,7 +87,7 @@ export const updateEmployee = createAsyncThunk('updateEmployee', async ({ userId
 
     return { userId, data, id };
   } catch (error) {
-    console.log('error staffAction updateEmployee', error);
+    console.error('error staffAction updateEmployee', error);
     throw error;
   }
 });
@@ -97,7 +97,7 @@ export const updateStoreInfo = createAsyncThunk('updateStoreInfo', async ({ stor
     const { id, attributes } = res.data;
     return { ...attributes, id };
   } catch (error) {
-    console.log('error staffAction updateStoreInfo', error);
+    console.error('error staffAction updateStoreInfo', error);
     throw error;
   }
 });
@@ -107,7 +107,7 @@ export const timeCard = createAsyncThunk('timeCard', async ({ data }) => {
     const { id, attributes } = res.data;
     return { ...attributes, id };
   } catch (error) {
-    console.log('error staffAction timeCard', error);
+    console.error('error staffAction timeCard', error);
     throw error;
   }
 });
@@ -117,7 +117,7 @@ export const updateBookingService = createAsyncThunk('updateBookingService', asy
     const res = await booking.updateBookingService(id, services);
     return res;
   } catch (error) {
-    console.log('error  updateBookingService', error);
+    console.error('error  updateBookingService', error);
     throw error;
   }
 });

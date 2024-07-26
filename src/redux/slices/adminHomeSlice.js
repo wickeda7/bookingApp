@@ -113,31 +113,40 @@ export const adminHomeSlice = createSlice({
       state[bookingType] = bookings;
     },
 
-    updatePrice: (state, action) => {
+    updateServiceRow: (state, action) => {
       let {
         value,
         item: { price, id, timeslot, bookingId },
         field,
       } = action.payload;
+
       const bookingType = timeslot === null ? 'walkin' : 'appointment';
       let bookings = state[bookingType];
-      const bookingIndex = bookings.findIndex((obj) => obj.id === bookingId);
-      let booking = { ...bookings[bookingIndex] };
-      let serviceIndex = booking.services.findIndex((obj) => obj.id === id);
-      let service = { ...booking.services[serviceIndex] };
-      let total = 0;
-      if (value !== '') {
-        if (field === 'additional') {
-          total = price * 100 + +value * 100;
-          service = { ...service, additional: +value, total: total / 100 };
-        } else if (field === 'price') {
-          service = { ...service, price: +value, total: +value };
-        } else {
-          service = { ...service, notes: value };
-        }
+      const serviceId = field === 'newBooking' ? id : bookingId;
 
-        booking.services[serviceIndex] = service;
+      const bookingIndex = bookings.findIndex((obj) => obj.id === serviceId);
+
+      let booking = { ...bookings[bookingIndex] };
+      if (field === 'newBooking') {
+        delete booking.type;
         bookings[bookingIndex] = booking;
+      } else {
+        let serviceIndex = booking.services.findIndex((obj) => obj.id === id);
+        let service = { ...booking.services[serviceIndex] };
+        let total = 0;
+        if (value !== '') {
+          if (field === 'additional') {
+            total = price * 100 + +value * 100;
+            service = { ...service, additional: +value, total: total / 100 };
+          } else if (field === 'price') {
+            service = { ...service, price: +value, total: +value };
+          } else {
+            service = { ...service, notes: value };
+          }
+
+          booking.services[serviceIndex] = service;
+          bookings[bookingIndex] = booking;
+        }
       }
       state[bookingType] = bookings;
     },
@@ -522,7 +531,7 @@ export const {
   setWalkin,
   setAppointment,
   updateStaff,
-  updatePrice,
+  updateServiceRow,
   resetMessage,
   addBooking,
   updateAppointment,

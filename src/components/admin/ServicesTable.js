@@ -4,7 +4,7 @@ import Style from '@theme/style';
 import { Default, Fonts, Colors } from '@constants/style';
 import ServiceRow from './ServiceRow';
 import { useTranslation } from 'react-i18next';
-import { updateStaff, updatePrice } from '@redux/slices/adminHomeSlice';
+import { updateStaff, updateServiceRow } from '@redux/slices/adminHomeSlice';
 import { useDispatch } from 'react-redux';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import Ionicons from 'react-native-vector-icons/MaterialIcons';
@@ -201,7 +201,7 @@ const ServicesTable = ({ services, canceled }) => {
   const handleTextChange = (text, item, field) => {
     if (canceled) return;
     const value = field === 'additional' ? text : text.nativeEvent.text;
-    dispatch(updatePrice({ value, item, field }));
+    dispatch(updateServiceRow({ value, item, field }));
   };
   const handleAddService = () => {
     setAddService(!addService);

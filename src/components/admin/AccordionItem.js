@@ -12,6 +12,9 @@ import moment from 'moment';
 import { appointmentTime } from '@utils/helper';
 import { useAdminContext } from '@contexts/AdminContext';
 import ModalContent from '@components/admin/ModalContent';
+import { updateServiceRow } from '@redux/slices/adminHomeSlice';
+import { useDispatch } from 'react-redux';
+
 const AccordionItem = ({ children, item, expanded, onHeaderPress }) => {
   const { t, i18n } = useTranslation();
   const isRtl = i18n.dir() === 'rtl';
@@ -22,12 +25,9 @@ const AccordionItem = ({ children, item, expanded, onHeaderPress }) => {
   const [visible, setVisible] = useState(false);
   const [message, setMessage] = useState('');
   const [messageType, setMessageType] = useState('');
-  const [localItem, setLocalItem] = useState(item);
   const { setNotificationNumber } = useAdminContext();
 
-  useEffect(() => {
-    setLocalItem(item);
-  }, [item]);
+  const dispatch = useDispatch();
 
   let {
     timeslot,
@@ -41,7 +41,7 @@ const AccordionItem = ({ children, item, expanded, onHeaderPress }) => {
     alert: itemAlert,
     id,
     storeID,
-  } = localItem;
+  } = item;
   const name = client?.firstName ? `${client?.firstName} ${client?.lastName}` : `${client?.name}`;
 
   let time = moment(createdAt).format('h:mm A');
@@ -55,15 +55,13 @@ const AccordionItem = ({ children, item, expanded, onHeaderPress }) => {
     return acc;
   }, []);
 
-  const newBooking = localItem?.type;
+  const newBooking = item?.type;
   const borderColor = timeslot ? Colors.info : Colors.success;
   const type = timeslot ? 'appointment' : 'walkIn';
 
   const updateNewBooking = () => {
     if (!newBooking) return;
-    const updatedItem = { ...localItem };
-    delete updatedItem.type;
-    setLocalItem(updatedItem);
+    dispatch(updateServiceRow({ value: 0, item, field: 'newBooking' }));
     setNotificationNumber((prev) => prev - 1);
   };
   const titleContent = (
@@ -96,7 +94,7 @@ const AccordionItem = ({ children, item, expanded, onHeaderPress }) => {
   return (
     <View style={[styles.accordContainer, { borderColor: borderColor }]}>
       <Modal animationType='fade' transparent={true} visible={visible}>
-        <ModalContent message={message} setVisible={setVisible} messageType={messageType} item={localItem} />
+        <ModalContent message={message} setVisible={setVisible} messageType={messageType} item={item} />
       </Modal>
       <TouchableOpacity
         style={[styles.accordHeader, { position: 'relative' }]}
