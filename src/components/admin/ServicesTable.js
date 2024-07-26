@@ -17,6 +17,7 @@ import { useAuthContext } from '@contexts/AuthContext';
 import { getServiceItems } from '@redux/actions/batchesAction';
 import { cleanServices } from '@utils/helper';
 import { BLEService } from '@services/BLEService';
+import NewServiceRow from './NewServiceRow';
 
 const ServicesTable = ({ services, canceled }) => {
   const { t, i18n } = useTranslation();
@@ -235,16 +236,21 @@ const ServicesTable = ({ services, canceled }) => {
         </View>
       </View>
       <ScrollView showsVerticalScrollIndicator={false}>
-        {services.map((service, index) => (
-          <ServiceRow
-            key={index}
-            item={service}
-            setService={setService}
-            handleTextChange={handleTextChange}
-            setStaff={setStaff}
-            canceled={canceled}
-          />
-        ))}
+        {services.map((service, index) => {
+          if (service.newService) {
+            return <NewServiceRow key={index} item={service} handleTextChange={handleTextChange} />;
+          }
+          return (
+            <ServiceRow
+              key={index}
+              item={service}
+              setService={setService}
+              handleTextChange={handleTextChange}
+              setStaff={setStaff}
+              canceled={canceled}
+            />
+          );
+        })}
       </ScrollView>
       <View style={{ flexDirection: 'row', paddingHorizontal: Default.fixPadding * 2 }}>
         <View style={[{ flex: 1 }]}>

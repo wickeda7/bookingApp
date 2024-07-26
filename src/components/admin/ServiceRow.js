@@ -5,13 +5,11 @@ import Style from '@theme/style';
 import { formatPrice } from '@utils/helper';
 import { useTranslation } from 'react-i18next';
 import AntIcon from 'react-native-vector-icons/AntDesign';
-import { DraxView, DraxViewDragStatus, DraxSnapbackTargetPreset } from 'react-native-drax';
 import NumericInput from '@wwdrew/react-native-numeric-textinput';
 import { updatePrice } from '@redux/slices/adminHomeSlice';
 import { addSplitService } from '@redux/actions/adminHomeAction';
 import { useDispatch, useSelector } from 'react-redux';
 import debounce from 'lodash/debounce';
-import NewServiceDropdown from '../NewServiceDropdown';
 import { setStaffToService } from '@redux/slices/adminHomeSlice';
 import Toast from 'react-native-root-toast';
 const ServiceRow = ({ item, setService, setStaff, handleTextChange, canceled }) => {
@@ -126,7 +124,7 @@ const ServiceRow = ({ item, setService, setStaff, handleTextChange, canceled }) 
         </View>
 
         <View style={[{ flex: 4 }]}>
-          {item.newService ? <NewServiceDropdown /> : <Text style={{ fontSize: 14 }}>{item.name}</Text>}
+          <Text style={{ fontSize: 14 }}>{item.name}</Text>
         </View>
         <View style={[{ flex: 1 }]}>
           <Text style={{ fontSize: 14 }}>{formatPrice(price * 100)}</Text>

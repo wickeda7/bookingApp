@@ -25,6 +25,10 @@ const AccordionItem = ({ children, item, expanded, onHeaderPress }) => {
   const [localItem, setLocalItem] = useState(item);
   const { setNotificationNumber } = useAdminContext();
 
+  useEffect(() => {
+    setLocalItem(item);
+  }, [item]);
+
   let {
     timeslot,
     createdAt,
