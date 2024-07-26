@@ -36,10 +36,10 @@ const AdminHome = () => {
   LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
   LogBox.ignoreAllLogs(); //Ignore all log notifications
   const [notification, setNotification] = useState(null);
-  const [notificationNumber, setNotificationNumber] = useState(1);
+
   const [clockIn, setClockIn] = useState(false);
   const { userData } = useAuthContext();
-  const { setSetTurn, setAmountPerTurn } = useAdminContext();
+  const { setSetTurn, setAmountPerTurn, notificationNumber, setNotificationNumber } = useAdminContext();
   const dispatch = useDispatch();
   const { isLoading, staffAvailable, staffUnAvailable, walkin, appointment } = useSelector((state) => state.adminHome);
   const employee = userData.storeAdmin.employee;
@@ -90,7 +90,7 @@ const AdminHome = () => {
             data.specialist = staffU;
           }
         }
-        setNotificationNumber(notificationNumber + 1);
+        setNotificationNumber((prev) => prev + 1);
         if (data.timeslot) {
           dispatch(setAppointment(data));
         } else {
@@ -105,7 +105,6 @@ const AdminHome = () => {
       }
     }
   }, [notification]);
-
   return (
     <>
       <DraxProvider>

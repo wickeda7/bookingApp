@@ -96,6 +96,10 @@ const ServiceRow = ({ item, setService, setStaff, handleTextChange, canceled }) 
       return;
     }
     if (specialist) return;
+    if (!item.id || !item.name) {
+      return;
+    }
+
     setService(item, 'service', staffToService);
     setStaff(staffToService);
     dispatch(setStaffToService(null));

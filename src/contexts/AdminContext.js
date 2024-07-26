@@ -26,6 +26,7 @@ const AdminContextProvider = ({ children }) => {
   const [amountPerTurn, setAmountPerTurn] = useState(null);
   const [setTurn, setSetTurn] = useState(null);
   const [newService, setNewService] = useState(null);
+  const [notificationNumber, setNotificationNumber] = useState(0);
 
   const [isConnected, setIsConnected] = useState(false); // device is connected or not
   const [device, setDevice] = useState(null);
@@ -276,6 +277,8 @@ const AdminContextProvider = ({ children }) => {
     totalView,
     scanConnect,
     device,
+    notificationNumber,
+    setNotificationNumber,
   };
 
   return <AdminContext.Provider value={value}>{children}</AdminContext.Provider>;

@@ -95,6 +95,10 @@ const ServicesTable = ({ services, canceled }) => {
   }, [newService]);
 
   const setService = (service, type, staff) => {
+    if (!service.id || !service.name) {
+      return;
+    }
+
     dispatch(updateBooking({ type, service, staff }));
   };
 

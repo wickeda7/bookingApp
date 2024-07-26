@@ -10,7 +10,7 @@ import { useTranslation } from 'react-i18next';
 import ServicesTableContainer from './ServicesTableContainer';
 import moment from 'moment';
 import { appointmentTime } from '@utils/helper';
-
+import { useAdminContext } from '@contexts/AdminContext';
 import ModalContent from '@components/admin/ModalContent';
 const AccordionItem = ({ children, item, expanded, onHeaderPress }) => {
   const { t, i18n } = useTranslation();
@@ -22,8 +22,22 @@ const AccordionItem = ({ children, item, expanded, onHeaderPress }) => {
   const [visible, setVisible] = useState(false);
   const [message, setMessage] = useState('');
   const [messageType, setMessageType] = useState('');
+  const [localItem, setLocalItem] = useState(item);
+  const { setNotificationNumber } = useAdminContext();
 
-  let { timeslot, createdAt, callBack, client, specialist, services, confirmed, canceled, alert: itemAlert, id } = item;
+  let {
+    timeslot,
+    createdAt,
+    callBack,
+    client,
+    specialist,
+    services,
+    confirmed,
+    canceled,
+    alert: itemAlert,
+    id,
+    storeID,
+  } = localItem;
   const name = client?.firstName ? `${client?.firstName} ${client?.lastName}` : `${client?.name}`;
 
   let time = moment(createdAt).format('h:mm A');
@@ -37,8 +51,17 @@ const AccordionItem = ({ children, item, expanded, onHeaderPress }) => {
     return acc;
   }, []);
 
+  const newBooking = localItem?.type;
   const borderColor = timeslot ? Colors.info : Colors.success;
   const type = timeslot ? 'appointment' : 'walkIn';
+
+  const updateNewBooking = () => {
+    if (!newBooking) return;
+    const updatedItem = { ...localItem };
+    delete updatedItem.type;
+    setLocalItem(updatedItem);
+    setNotificationNumber((prev) => prev - 1);
+  };
   const titleContent = (
     <>
       <Text style={[styles.accordTitle, { color: borderColor }]}>
@@ -55,12 +78,35 @@ const AccordionItem = ({ children, item, expanded, onHeaderPress }) => {
     </>
   );
 
+  if (services.length === 0) {
+    const data = {
+      bookingId: id,
+      client,
+      type: 'walkin',
+      status: 'pending',
+      storeId: storeID,
+    };
+    services.push(data);
+  }
+
   return (
     <View style={[styles.accordContainer, { borderColor: borderColor }]}>
       <Modal animationType='fade' transparent={true} visible={visible}>
-        <ModalContent message={message} setVisible={setVisible} messageType={messageType} item={item} />
+        <ModalContent message={message} setVisible={setVisible} messageType={messageType} item={localItem} />
       </Modal>
-      <TouchableOpacity style={[styles.accordHeader]} onPress={onHeaderPress}>
+      <TouchableOpacity
+        style={[styles.accordHeader, { position: 'relative' }]}
+        onPress={() => {
+          onHeaderPress();
+          updateNewBooking();
+        }}
+      >
+        {newBooking && (
+          <View style={[Style.newBookingAlert]}>
+            <Maticons name='alert-octagram-outline' size={17} color={'white'} style={{ marginRight: 4 }} />
+            <Text style={{ color: Colors.white, fontSize: 12 }}>New!</Text>
+          </View>
+        )}
         <View style={{ flex: 15 }}>{titleContent}</View>
         <View style={{ flex: canceled ? 3 : 2, flexDirection: 'row' }}>
           {canceled ? (

@@ -111,6 +111,15 @@ export default StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  newBookingAlert: {
+    backgroundColor: 'rgba(255, 183, 3, 0.7)',
+    padding: 5,
+    borderRadius: 8,
+    position: 'absolute',
+    top: 10,
+    right: 40,
+    flexDirection: 'row',
+  },
   canceledContainer: {
     backgroundColor: Colors.primary,
     padding: 5,
