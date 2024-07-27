@@ -12,6 +12,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import debounce from 'lodash/debounce';
 import { setStaffToService } from '@redux/slices/adminHomeSlice';
 import Toast from 'react-native-root-toast';
+import AddStaffService from './AddStaffService';
+import StaffServiceBtn from './StaffServiceBtn';
 const ServiceRow = ({ item, setService, setStaff, handleTextChange, canceled }) => {
   const { t, i18n } = useTranslation();
   const isRtl = i18n.dir() === 'rtl';
@@ -144,41 +146,7 @@ const ServiceRow = ({ item, setService, setStaff, handleTextChange, canceled }) 
           <Text style={{ fontSize: 14 }}>{formatPrice(total * 100)}</Text>
         </View>
       </TouchableOpacity>
-      {add && (
-        <View
-          style={[
-            Style.mainContainer,
-            {
-              flexDirection: 'row',
-              marginHorizontal: Default.fixPadding * 1.5,
-              marginTop: Default.fixPadding,
-              opacity: canceled ? 0.3 : 1,
-              backgroundColor: '#ffffad',
-              paddingVertical: 8,
-            },
-          ]}
-        >
-          <View style={[{ flex: 2, paddingLeft: 10, flexDirection: 'row' }]}></View>
-          <View style={[{ flex: 4 }]}>
-            <Text style={{ fontSize: 14 }}>{addedItem.name}</Text>
-          </View>
-          <View style={[{ flex: 1 }]}>
-            <NumericInput
-              type='decimal'
-              decimalPlaces={2}
-              value={addedItem.price}
-              onUpdate={(value) => handlePriceChange(value)}
-              style={[Style.inputStyle, { width: '80%', height: 25, marginVertical: 0, padding: 4 }]}
-              selectionColor={Colors.primary}
-              editable={editable}
-            />
-          </View>
-          <View style={[{ flex: 1 }]}></View>
-          <View style={[{ flex: 1 }]}>
-            <Text style={{ fontSize: 14 }}>{formatPrice(addedItem.total * 100)}</Text>
-          </View>
-        </View>
-      )}
+      {add && <AddStaffService addedItem={addedItem} handlePriceChange={handlePriceChange} />}
       <View
         style={[
           Style.mainContainer,
@@ -192,109 +160,17 @@ const ServiceRow = ({ item, setService, setStaff, handleTextChange, canceled }) 
       >
         <View style={[{ flex: 3, paddingLeft: 10, flexDirection: 'row' }]}>
           {specialist && (
-            <>
-              {add ? (
-                <>
-                  <TouchableOpacity
-                    activeOpacity={0.8}
-                    onPress={() => {
-                      if (canceled) return;
-                      setAdd(!add);
-                      setAddedItem(null);
-                      dispatch(addSplitService({ service: addedItem, type: 'splitService' }));
-                    }}
-                    style={[
-                      Style.buttonStyle,
-                      Style.borderGreen,
-                      {
-                        paddingVertical: 2,
-                        marginTop: 0,
-                        flexDirection: 'row',
-                        width: 100,
-                        height: 30,
-                        marginRight: 20,
-                      },
-                    ]}
-                  >
-                    <AntIcon size={18} name='check' color='green' />
-                    <Text style={[{ paddingHorizontal: Default.fixPadding * 0.5, color: 'green' }]}>Confirm</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    activeOpacity={0.8}
-                    onPress={() => {
-                      if (canceled) return;
-                      handleCancel();
-                    }}
-                    style={[
-                      Style.buttonStyle,
-                      Style.borderRed,
-                      {
-                        paddingVertical: 2,
-                        marginTop: 0,
-                        flexDirection: 'row',
-                        width: 80,
-                        height: 30,
-                        marginRight: 10,
-                      },
-                    ]}
-                  >
-                    <AntIcon size={18} name='close' color={Colors.red} />
-                    <Text style={[{ paddingHorizontal: Default.fixPadding * 0.5, color: Colors.red }]}>Cancel</Text>
-                  </TouchableOpacity>
-                </>
-              ) : (
-                <>
-                  <TouchableOpacity
-                    activeOpacity={0.8}
-                    onPress={() => {
-                      if (canceled) return;
-                      setService(item, 'remove');
-                    }}
-                    style={[
-                      Style.buttonStyle,
-                      Style.borderRed,
-                      {
-                        paddingVertical: 2,
-                        marginTop: 0,
-                        flexDirection: 'row',
-                        width: 100,
-                        height: 30,
-                        marginRight: 20,
-                      },
-                    ]}
-                  >
-                    <AntIcon size={18} name='deleteuser' color={Colors.red} />
-                    <Text style={[{ paddingHorizontal: Default.fixPadding * 0.5, color: Colors.red }]}>
-                      {tr('removestaff')}
-                    </Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    activeOpacity={0.8}
-                    onPress={() => {
-                      if (canceled) return;
-                      handleAddRow();
-                    }}
-                    style={[
-                      Style.buttonStyle,
-                      Style.borderInfo,
-                      {
-                        paddingVertical: 2,
-                        marginTop: 0,
-                        flexDirection: 'row',
-                        width: 80,
-                        height: 30,
-                        marginRight: 10,
-                      },
-                    ]}
-                  >
-                    <AntIcon size={18} name='adduser' color={Colors.info} />
-                    <Text style={[{ paddingHorizontal: Default.fixPadding * 0.5, color: Colors.info }]}>
-                      {tr('add')}
-                    </Text>
-                  </TouchableOpacity>
-                </>
-              )}
-            </>
+            <StaffServiceBtn
+              add={add}
+              setAdd={setAdd}
+              setAddedItem={setAddedItem}
+              addedItem={addedItem}
+              handleCancel={handleCancel}
+              canceled={canceled}
+              setService={setService}
+              handleAddRow={handleAddRow}
+              item={item}
+            />
           )}
         </View>
         <View style={[{ flex: 4, flexDirection: 'row' }]}>
