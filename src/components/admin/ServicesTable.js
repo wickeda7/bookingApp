@@ -65,7 +65,7 @@ const ServicesTable = ({ _services, canceled }) => {
 
   useEffect(() => {
     if (services.length === 0) return;
-
+    setServices(_services);
     let tempSubtotal = 0;
     let tempAdditional = 0;
     for (var value of services) {
@@ -77,7 +77,7 @@ const ServicesTable = ({ _services, canceled }) => {
     setAdditional(tempAdditional);
     setTotal(tempSubtotal + tempAdditional);
     if (payBy === null) setPayBy('cash');
-  }, [services]);
+  }, [_services]);
 
   status = services.find((obj) => obj.status === 'working');
 
@@ -107,7 +107,6 @@ const ServicesTable = ({ _services, canceled }) => {
       dispatch(getServiceItems({ storeId }));
     }
   }, []);
-
   const setService = (service, type, staff) => {
     if (!service.id || !service.name) {
       return;
