@@ -29,12 +29,15 @@ const StaffRow = ({ item, busy }) => {
   const { userInfo } = item;
   const color = userInfo.displayColor ? userInfo.displayColor : '#000';
   const bColor = busy ? Colors.disable : color;
-  const bgColor = busy ? Colors.bord : Colors.white;
+  const bgColor = busy ? Colors.bord : item.id === staffToService?.id ? '#ffffad' : Colors.white;
   const dbclick = () => {
     if (busy) return;
+    if (item.id === staffToService?.id) {
+      dispatch(setStaffToService(null));
+      return;
+    }
     dispatch(setStaffToService(item));
   };
-
   return (
     <TouchableOpacity
       style={[styles.row, { borderColor: bColor, backgroundColor: bgColor }]}
