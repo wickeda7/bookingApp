@@ -303,7 +303,7 @@ export const parseAccordionData2 = (data) => {
   return items;
 };
 export const cleanServices = (services) => {
-  const newServices = services.reduce((acc, item) => {
+  const cleanServices = services.reduce((acc, item) => {
     const additional = item.additional ? item.additional : 0;
     const total = item.total ? item.total : 0;
     const name = item.name;
@@ -311,7 +311,7 @@ export const cleanServices = (services) => {
     acc.push({ name, price, total, additional });
     return acc;
   }, []);
-  return newServices;
+  return cleanServices;
 };
 export const cloneDeep = (objectToClone) => JSON.parse(JSON.stringify(objectToClone));
 export default {

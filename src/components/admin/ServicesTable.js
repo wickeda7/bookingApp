@@ -19,7 +19,7 @@ import { cleanServices } from '@utils/helper';
 import { BLEService } from '@services/BLEService';
 import NewServiceRow from './NewServiceRow';
 
-const ServicesTable = ({ services, canceled }) => {
+const ServicesTable = ({ _services, canceled }) => {
   const { t, i18n } = useTranslation();
   const isRtl = i18n.dir() === 'rtl';
   function tr(key) {
@@ -39,6 +39,7 @@ const ServicesTable = ({ services, canceled }) => {
   const [additional, setAdditional] = useState(0);
   const [total, setTotal] = useState(0);
   const [addService, setAddService] = useState(false);
+  const [services, setServices] = useState(_services);
 
   const storeId = userData.storeAdmin.id;
   let extendIcon = '';
@@ -82,18 +83,30 @@ const ServicesTable = ({ services, canceled }) => {
 
   useEffect(() => {
     if (newService) {
+      let tempServices = [...services];
       setAddService(false);
-      let tempService = { ...services[0] };
-      tempService = { ...services[0], ...newService };
-      services.push(tempService);
-      ////
-      const updatedServices = services.map((service) => {
+      const newServices = tempServices.map((service) => {
+        if (service.newService) {
+          delete service.newService;
+          return { ...service, ...newService };
+        }
+        return service;
+      });
+      setServices(newServices);
+      // ////
+      const updatedServices = newServices.map((service) => {
         return { id: service.id, name: service.name, price: service.price };
       });
-      dispatch(updateBookingService({ id: tempService.bookingId, services: updatedServices }));
+      dispatch(updateBookingService({ id: newServices[0].bookingId, services: updatedServices }));
       setNewService(null);
     }
   }, [newService]);
+
+  useEffect(() => {
+    if (!serviceItems) {
+      dispatch(getServiceItems({ storeId }));
+    }
+  }, []);
 
   const setService = (service, type, staff) => {
     if (!service.id || !service.name) {
@@ -125,7 +138,8 @@ const ServicesTable = ({ services, canceled }) => {
     const newServices = cleanServices(services); //tip, fees, cash, card, payBy
 
     const data = { newServices, subtotal, total, additional, bookingId, tip, fees, cash, card, payBy };
-    sendData(data);
+    console.log('data', data);
+    // sendData(data);
   };
   const handleSubmit = () => {
     if (canceled || !status) return;
@@ -205,21 +219,19 @@ const ServicesTable = ({ services, canceled }) => {
   };
   const handleAddService = () => {
     setAddService(!addService);
+    let tempServices = [...services];
     if (!addService) {
-      if (!serviceItems) {
-        dispatch(getServiceItems({ storeId }));
-      }
-      let tempService = { ...services[0] };
+      let tempService = { ...tempServices[0] };
       tempService.newService = true;
       tempService.name = '';
       tempService.price = 0;
       tempService.additional = 0;
       tempService.total = 0;
-      services.push(tempService);
+      tempServices.push(tempService);
     } else {
-      services.pop();
+      tempServices.pop();
     }
-
+    setServices(tempServices);
     // if (canceled) return;
     // dispatch(updateBooking({ type: 'add' }));
   };
@@ -306,7 +318,7 @@ const ServicesTable = ({ services, canceled }) => {
             <Text style={[{ paddingHorizontal: Default.fixPadding * 0.5 }, Fonts.White14Bold]}>{tr('delete')}</Text>
           </TouchableOpacity>
         </View>
-        <View style={[{ flex: 1, flexDirection: 'column' }]}>
+        <View style={[{ flex: 2, flexDirection: 'column' }]}>
           <TotalView
             subtotal={subtotal}
             additional={additional}

@@ -13,14 +13,15 @@ const ServicesTableContainer = ({ services, canceled }) => {
     return t(`homeScreen:${key}`);
   }
   const dispatch = useDispatch();
-  const uniqueServices = {};
-  services.reduce((acc, service) => {
-    const specialist = service.specialistID ? service.specialistID : 0;
-    let group = acc[specialist] || [];
-    group.push(service);
-    acc[specialist] = group;
-    return acc;
-  }, uniqueServices);
+  // const uniqueServices = {};
+  // services.reduce((acc, service) => {
+  //   const specialist = service.specialistID ? service.specialistID : 0;
+  //   let group = acc[specialist] || [];
+  //   group.push(service);
+  //   acc[specialist] = group;
+  //   return acc;
+  // }, uniqueServices);
+  // console.log('uniqueServices', uniqueServices);
   if (message !== '') {
     Toast.show(tr('invoiceCompleted'), {
       duration: Toast.durations.LONG,
@@ -35,13 +36,14 @@ const ServicesTableContainer = ({ services, canceled }) => {
       },
     });
   }
-  return (
-    <View>
-      {Object.keys(uniqueServices).map((oneKey, i) => {
-        return <ServicesTable key={i} services={uniqueServices[oneKey]} canceled={canceled} />;
-      })}
-    </View>
-  );
+  return <ServicesTable _services={services} canceled={canceled} />;
+  // return (
+  //   <View>
+  //     {Object.keys(uniqueServices).map((oneKey, i) => {
+  //       return <ServicesTable key={i} services={uniqueServices[oneKey]} canceled={canceled} />;
+  //     })}
+  //   </View>
+  // );
 };
 
 export default ServicesTableContainer;
