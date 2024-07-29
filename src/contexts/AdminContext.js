@@ -189,7 +189,6 @@ const AdminContextProvider = ({ children }) => {
       if (!isConnected) {
         scanConnect(deviceName);
       }
-
       const jsonString = JSON.stringify(data);
       const bytes = new TextEncoder().encode(jsonString);
       const mtuSize = 517;
@@ -213,6 +212,7 @@ const AdminContextProvider = ({ children }) => {
         CHARACTERISTIC_UUID,
         Buffer.from(endFlag).toString('base64')
       );
+      return true;
     } catch (error) {
       showToast(error.message, Colors.red);
       console.error(`Send error: ${error.message}`);
@@ -270,7 +270,6 @@ const AdminContextProvider = ({ children }) => {
     setNewService,
     isConnected,
     setIsConnected,
-    sendData,
     receivedData,
     sendData,
     disconnectFromDevice,

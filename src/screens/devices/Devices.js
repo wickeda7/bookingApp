@@ -1,12 +1,11 @@
 import { KeyboardAvoidingView, Platform, StyleSheet, Text, View, TouchableOpacity, FlatList } from 'react-native';
-import React, { useEffect } from 'react';
+import React, { useState } from 'react';
 import Style from '@theme/style';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { Default, Fonts, Colors } from '@constants/style';
+import { Fonts, Colors } from '@constants/style';
 import MyStatusBar from '@components/myStatusBar';
-import { useState } from 'react';
 import MaterialIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { SERVICE_UUID, CHARACTERISTIC_UUID, deviceName } from '@constants/settings';
+import { deviceName } from '@constants/settings';
 import { useAdminContext } from '@contexts/AdminContext';
 import Toast from 'react-native-root-toast';
 import { useAuthContext } from '@contexts/AuthContext';
@@ -14,6 +13,7 @@ import { useAuthContext } from '@contexts/AuthContext';
 const Devices = (props) => {
   const { device, isConnected, scanConnect, disconnectFromDevice, sendData } = useAdminContext();
   const { userData } = useAuthContext();
+  const [done, setDone] = useState(false);
   const storeId = userData.storeAdmin.id;
   const storeName = userData.storeAdmin.name;
   let statusText = '';
@@ -52,7 +52,13 @@ const Devices = (props) => {
       console.error('Error showing toast:', error);
     }
   };
-
+  const send = async ({ storeId, storeName }) => {
+    const res = await sendData({ storeId, storeName });
+    console.log('sendData res', res);
+    if (res) {
+      setDone(true);
+    }
+  };
   const handleConnect = () => {
     if (!isConnected) {
       scanConnect(deviceName);
@@ -113,6 +119,7 @@ const Devices = (props) => {
                 <Text style={[Fonts.White15Medium]}>{btnText} </Text>
               </TouchableOpacity>
             </View>
+
             {isConnected && (
               <>
                 <View style={{ flexDirection: 'row', marginTop: 20 }}>
@@ -124,11 +131,28 @@ const Devices = (props) => {
                 </View>
                 <View style={{ flexDirection: 'row', marginTop: 10 }}>
                   <TouchableOpacity
-                    onPress={() => sendData({ storeId, storeName })}
-                    style={[Style.buttonStyle, { backgroundColor: Colors.info, width: 110 }]}
+                    onPress={() => send({ storeId, storeName })}
+                    style={[Style.buttonStyle, { backgroundColor: Colors.info, width: 80 }]}
                   >
                     <Text style={[Fonts.White15Medium]}>Sync</Text>
                   </TouchableOpacity>
+                  {done && (
+                    <>
+                      <Ionicons
+                        name={'checkmark-circle'}
+                        size={25}
+                        color={Colors.success}
+                        style={{ marginTop: 15, marginLeft: 15 }}
+                      />
+                      <Text
+                        style={[
+                          { marginLeft: 5, marginTop: 17, color: Colors.success, fontSize: 15, fontWeight: 'bold' },
+                        ]}
+                      >
+                        Done
+                      </Text>
+                    </>
+                  )}
                 </View>
               </>
             )}

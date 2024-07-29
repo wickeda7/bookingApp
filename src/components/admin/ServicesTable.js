@@ -64,7 +64,12 @@ const ServicesTable = ({ _services, canceled }) => {
   const serviceText = addService ? 'Cancel' : 'Add Service';
 
   useEffect(() => {
-    if (services.length === 0) return;
+    if (_services.length === 0) return;
+    if (_services[0].id === undefined) {
+      const servs = { ..._services[0], additional: 0, name: '', price: 0, total: 0, newService: true };
+      setServices([servs]);
+      return;
+    }
     setServices(_services);
     let tempSubtotal = 0;
     let tempAdditional = 0;
