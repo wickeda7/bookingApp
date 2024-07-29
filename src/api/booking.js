@@ -201,13 +201,20 @@ export const booking = {
     try {
       const response = await api.updateBookingService(id, data);
       const { id: bookingId, attributes } = response.data;
+
+      let client = null;
+      let clientinfo = null;
       const services = attributes.services;
-      const cli = attributes.client.data;
-      const info = cli.attributes.userInfo.data;
-      delete cli.attributes.userInfo;
-      const clientinfo = { ...info.attributes, id: info.id };
-      const cli_ = { ...cli.attributes, id: cli.id };
-      const client = { ...cli_, userInfo: clientinfo };
+      const isClient = attributes.client.data ? true : false; // check if client is register or not
+      const cli = isClient ? attributes.client.data : attributes.register.data;
+      if (isClient) {
+        const info = cli.attributes.userInfo.data;
+        delete cli.attributes.userInfo;
+        clientinfo = { ...info.attributes, id: info.id };
+      } else {
+        clientinfo = { ...cli.attributes, id: cli.id };
+      }
+      client = { ...cli.attributes, id: cli.id, userInfo: clientinfo };
       const servArr = services.reduce((acc, item) => {
         acc.push({
           ...item,

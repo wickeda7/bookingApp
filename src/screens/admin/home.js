@@ -73,7 +73,7 @@ const AdminHome = () => {
 
   useEffect(() => {
     if (notification) {
-      const data = notification.request.content.data;
+      let data = notification.request.content.data;
       console.log('notification home ADMIN notification.request.content.data', notification.request.content.data);
       if (data.type === 'cancel') {
         dispatch(updateAppointment(data));
@@ -91,6 +91,21 @@ const AdminHome = () => {
           }
         }
         setNotificationNumber((prev) => prev + 1);
+        if (!data.services) {
+          const services = [
+            {
+              newService: true,
+              name: '',
+              price: 0,
+              additional: 0,
+              total: 0,
+              status: 'pending',
+              type: 'walkin',
+              bookingId: data.id,
+            },
+          ];
+          data.services = services;
+        }
         if (data.timeslot) {
           dispatch(setAppointment(data));
         } else {

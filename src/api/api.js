@@ -30,7 +30,6 @@ export const api = {
     try {
       //const url = `${STRAPIURL}/api/stores?[filters][county][$eq]=Los Angeles County&[filters][type][$eq]=nail&[populate][0]=logo`;
       const url = `${STRAPIURL}/api/stores/getStores/${county}/${type}`;
-      console.log('getStores API', url);
       const response = await axios.get(url);
       return response.data;
     } catch (error) {
@@ -67,7 +66,7 @@ export const api = {
 
       return response.data;
     } catch (error) {
-      console.log('error putFavorite', error);
+      console.error('error putFavorite', error);
       throw error;
     }
   },
@@ -95,7 +94,7 @@ export const api = {
       const response = await axios.get(url);
       return response.data;
     } catch (error) {
-      console.log('error getBookingById', error);
+      console.error('error getBookingById', error);
       throw error;
     }
   },
@@ -119,7 +118,7 @@ export const api = {
       const response = await axios.get(url);
       return response.data;
     } catch (error) {
-      console.log('error getUserBooking', error);
+      console.error('error getUserBooking', error);
       throw error;
     }
   },
@@ -129,7 +128,7 @@ export const api = {
       const response = await axios.get(url);
       return response.data;
     } catch (error) {
-      console.log('error getUserBooking', error);
+      console.error('error getUserBooking', error);
       throw error;
     }
   },
@@ -148,7 +147,7 @@ export const api = {
       const response = await axios.put(url, data);
       return response.data;
     } catch (error) {
-      console.log('error updateEmail', error);
+      console.error('error updateEmail', error);
       throw error;
     }
   },
@@ -159,7 +158,7 @@ export const api = {
       const response = await axios.put(url, { data });
       return response.data;
     } catch (error) {
-      console.log('error updateUser', error);
+      console.error('error updateUser', error);
       throw error;
     }
   },
@@ -206,7 +205,7 @@ export const api = {
       });
       return res.data;
     } catch (error) {
-      console.log('error uploadProfileImage', error);
+      console.error('error uploadProfileImage', error);
     }
   },
   deleteImage: async (id) => {
@@ -246,7 +245,7 @@ export const api = {
       // const response = await axios.post(url, { data: data });
       // return response.data;
     } catch (error) {
-      console.log('error createAccessCode', error);
+      console.error('error createAccessCode', error);
       throw error;
     }
   },
@@ -257,7 +256,7 @@ export const api = {
       const response = await axios.get(url);
       return response.data;
     } catch (error) {
-      console.log('error getAccessCode', error);
+      console.error('error getAccessCode', error);
       throw error;
     }
   },
@@ -316,7 +315,7 @@ export const api = {
       //   return data;
       // }
     } catch (error) {
-      console.log('error postInvoice API', error);
+      console.error('error postInvoice API', error);
       throw error;
     }
   },
@@ -326,17 +325,18 @@ export const api = {
       const response = await axios.post(url, { data });
       return response.data;
     } catch (error) {
-      console.log('error message API', error);
+      console.error('error message API', error);
       throw error;
     }
   },
   updateBookingService: async (id, data) => {
     try {
-      const url = `${STRAPIURL}/api/appointments/${id}?populate=client&populate[1]=client.userInfo`;
+      const url = `${STRAPIURL}/api/appointments/${id}?populate=client&populate[1]=client.userInfo&populate[2]=register`;
+
       const response = await axios.put(url, { data: { services: data } });
       return response.data;
     } catch (error) {
-      console.log('error updateBookingService API', error);
+      console.error('error updateBookingService API', error);
       throw error;
     }
   },
@@ -362,7 +362,7 @@ export const api = {
       const response = await axios.put(url, { data: { service: tempSer, type, staff } });
       return response.data;
     } catch (error) {
-      console.log('error message API', error);
+      console.error('error message API', error);
       throw error;
     }
   },
@@ -372,7 +372,7 @@ export const api = {
       const response = await axios.post(url, { data });
       return response.data;
     } catch (error) {
-      console.log('error notifyBooking API', error);
+      console.error('error notifyBooking API', error);
       throw error;
     }
   },
@@ -424,7 +424,7 @@ export const api = {
         return response.data;
       }
     } catch (error) {
-      console.log('error updateService API', error);
+      console.error('error updateService API', error);
       throw error;
     }
   },
@@ -434,7 +434,7 @@ export const api = {
       const response = await axios.put(`${url}/${id}`, { data });
       return response.data;
     } catch (error) {
-      console.log('error updateStoreInfo API', error);
+      console.error('error updateStoreInfo API', error);
       throw error;
     }
   },
@@ -453,7 +453,7 @@ export const api = {
       const response = await axios.post(url, { data });
       return response.data;
     } catch (error) {
-      console.log('error createPayroll API', error);
+      console.error('error createPayroll API', error);
       throw error;
     }
   },
@@ -491,7 +491,7 @@ export const api = {
       });
       return res.data;
     } catch (error) {
-      console.log('error uploadSignature API', error);
+      console.error('error uploadSignature API', error);
     }
   },
   updatePayroll: async (payrollId, data) => {
@@ -500,7 +500,7 @@ export const api = {
       const response = await axios.put(url, { data });
       return response.data;
     } catch (error) {
-      console.log('error updatePayroll API', error);
+      console.error('error updatePayroll API', error);
       throw error;
     }
   },
@@ -510,7 +510,7 @@ export const api = {
       const response = await axios.post(url, { data });
       return response.data;
     } catch (error) {
-      console.log('error sendMessage API', error);
+      console.error('error sendMessage API', error);
       throw error;
     }
   },

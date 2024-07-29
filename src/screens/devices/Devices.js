@@ -63,11 +63,21 @@ const Devices = (props) => {
   return (
     <KeyboardAvoidingView style={Style.mainContainer} behavior={Platform.OS === 'ios' ? 'padding' : null}>
       <MyStatusBar />
-      <View style={[Style.primaryNav, { flexDirection: 'row' }]}>
-        <TouchableOpacity onPress={() => props.navigation.navigate('Home')} style={Style.navBackButton}>
+      <View
+        style={[
+          Style.primaryNav,
+          {
+            alignItems: 'flex-start',
+          },
+        ]}
+      >
+        <TouchableOpacity
+          onPress={() => props.navigation.navigate('Home')}
+          style={[Style.navBackButton, { flexDirection: 'row' }]}
+        >
           <Ionicons name={'arrow-back'} size={22} color={Colors.white} />
+          <Text style={Fonts.White16Bold}>Devices</Text>
         </TouchableOpacity>
-        <Text style={Fonts.White16Bold}>Devices</Text>
       </View>
       <View style={{ flexDirection: 'row' }}>
         <View style={{ flex: 1, flexDirection: 'row' }}>

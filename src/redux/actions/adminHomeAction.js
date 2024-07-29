@@ -118,6 +118,7 @@ export const updateBookingService = createAsyncThunk('updateBookingService', asy
     return res;
   } catch (error) {
     console.error('error  updateBookingService', error);
+    console.error('error  updateBookingService2', error.message);
     throw error;
   }
 });
