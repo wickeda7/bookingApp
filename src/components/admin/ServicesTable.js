@@ -142,8 +142,7 @@ const ServicesTable = ({ _services, canceled }) => {
     const newServices = cleanServices(services); //tip, fees, cash, card, payBy
 
     const data = { newServices, subtotal, total, additional, bookingId, tip, fees, cash, card, payBy };
-    console.log('data', data);
-    // sendData(data);
+    sendData(data);
   };
   const handleSubmit = () => {
     if (canceled || !status) return;
@@ -155,7 +154,6 @@ const ServicesTable = ({ _services, canceled }) => {
       acc[specialist] = group;
       return acc;
     }, model);
-
     for (const key in model) {
       let subtotal = 0;
       let additional = 0;
@@ -167,6 +165,7 @@ const ServicesTable = ({ _services, canceled }) => {
       const type = model[key][0].timeslot === null ? 'walkin' : 'appointment';
       const storeId = model[key][0].storeID;
       const bookingId = model[key][0].bookingId;
+      const isRegistered = model[key][0].isRegistered;
       // setSpecialistId(specialistId);
       for (const value of model[key]) {
         if (value.price) subtotal += value.price;
@@ -184,27 +183,27 @@ const ServicesTable = ({ _services, canceled }) => {
         });
       }
       total = subtotal + additional + tip;
-
-      dispatch(
-        addInvoice({
-          data: {
-            client: clientId,
-            specialist: specialistId,
-            type,
-            store: storeId,
-            appointment: bookingId,
-            services,
-            subtotal,
-            additional,
-            total,
-            tips: tip,
-            fees,
-            cashAmount: cash,
-            cardAmount: card,
-            createdby: 'admin',
-          },
-        })
-      );
+      let data = {
+        specialist: specialistId,
+        type,
+        store: storeId,
+        appointment: bookingId,
+        services,
+        subtotal,
+        additional,
+        total,
+        tips: tip,
+        fees,
+        cashAmount: cash,
+        cardAmount: card,
+        createdby: 'admin',
+      };
+      if (isRegistered) {
+        data.register = clientId;
+      } else {
+        data.client = clientId;
+      }
+      dispatch(addInvoice({ data }));
       setCard(0);
       setCash(0);
       setTip(0);
