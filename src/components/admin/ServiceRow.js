@@ -26,6 +26,10 @@ const ServiceRow = ({ item, setService, setStaff, handleTextChange, canceled }) 
   const [value, setValue] = useState('');
   const [ogPrice, setOgPrice] = useState(null);
   const ref = useRef();
+
+  // reqSpecialist = requested specialist for the service item.specialist
+  // specialist = assigned specialist for the service item.service.specialist
+  const reqSpecialist = item.reqSpecialist;
   const specialist = item.specialist;
   const color = specialist ? specialist.userInfo.displayColor : '#000';
   const firstName = specialist ? specialist.userInfo.firstName : '';
@@ -83,6 +87,10 @@ const ServiceRow = ({ item, setService, setStaff, handleTextChange, canceled }) 
     setAddedItem(null);
   };
   const moveStaffService = () => {
+    if (specialist) {
+      dispatch(setStaffToService(null));
+      return;
+    }
     if (!staffToService) {
       Toast.show('Please select staff first', {
         duration: Toast.durations.LONG,
@@ -95,7 +103,8 @@ const ServiceRow = ({ item, setService, setStaff, handleTextChange, canceled }) 
       });
       return;
     }
-    if (specialist && specialist.id != staffToService.id) {
+
+    if (reqSpecialist && reqSpecialist.id != staffToService.id) {
       dispatch(setStaffToService(null));
       return;
     }

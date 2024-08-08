@@ -64,6 +64,7 @@ export const booking = {
   getBooking: async (storeId, date) => {
     try {
       const response = await api.getBooking(storeId, date);
+
       const res = response.data.reduce(
         (acc, item) => {
           const { id, attributes } = item;
@@ -71,6 +72,8 @@ export const booking = {
           let clientData = {};
           let specialistData = {};
           let workingId = new Set();
+          // fixed specialists data is for request specialist
+          // specialist  assigned to client is in services
           if (attr.specialists.data.length > 0) {
             const { attributes, id } = attr.specialists.data[0].attributes.userInfo.data;
             const userInfo = { ...attributes, id };
@@ -117,7 +120,8 @@ export const booking = {
                   name: service.name,
                   price: service.price,
                   priceOption: service.priceOption,
-                  specialist: service.specialist === undefined ? specialistData : service.specialist,
+                  specialist: service.specialist,
+                  reqSpecialist: specialistData,
                   client: clientData,
                   storeId,
                   status: service.status ? service.status : 'pending',
