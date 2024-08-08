@@ -83,11 +83,12 @@ const AdminHome = () => {
         if (data.specialistID) {
           const staffA = staffAvailable.find((obj) => obj.id === data.specialistID);
           const staffU = staffUnAvailable.find((obj) => obj.id === data.specialistID);
-          if (staffA) {
-            data.specialist = staffA;
-          }
-          if (staffU) {
-            data.specialist = staffU;
+          const staff = staffA ? staffA : staffU;
+          data.specialist = staff;
+          if (data.services) {
+            data.services = data.services.map((item) => {
+              return { ...item, reqSpecialist: staff };
+            });
           }
         }
         setNotificationNumber((prev) => prev + 1);
