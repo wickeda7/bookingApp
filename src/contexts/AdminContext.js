@@ -7,6 +7,7 @@ import { Buffer } from 'buffer';
 import { BLEService } from '@services/BLEService';
 import { SERVICE_UUID, CHARACTERISTIC_UUID, deviceName } from '@constants/settings';
 import { useSelector } from 'react-redux';
+import axios from 'axios';
 
 const END_OF_DATA = 'END_OF_DATA';
 let connectOptions = {
@@ -236,6 +237,59 @@ const AdminContextProvider = ({ children }) => {
     }
   };
 
+  const getToken = async () => {
+    const options = {
+      method: 'POST',
+      headers: { accept: 'application/json', 'content-type': 'application/json' },
+      body: JSON.stringify({
+        key: 'WPd4NnbzHiXYW8I1u9uDTZ3vV88v-ei5O2m26mr1',
+        merchant_id: '714D3386-A9C9-3BF8-8DE9-C98AD5623331',
+      }),
+    };
+    const url = `https://api.sandbox-paidyet.com/v3/`;
+    const headers = {
+      accept: 'application/json',
+      'Content-Type': 'application/json',
+    };
+    const body = JSON.stringify({
+      key: 'WPd4NnbzHiXYW8I1u9uDTZ3vV88v-ei5O2m26mr1',
+      merchant_id: '714D3386-A9C9-3BF8-8DE9-C98AD5623331',
+    });
+    try {
+      const res = await axios.post(`${url}login`, body, {
+        headers: headers,
+      });
+      const token = res.data.result.token;
+      console.log('token', token);
+      //return res.data.result.token;
+      if (token) {
+        const temp = await sendInfo(token);
+        console.log('temp', temp);
+      }
+    } catch (error) {
+      console.log('error', error);
+    }
+  };
+
+  const sendInfo = async (token) => {
+    const url = `https://api.sandbox-paidyet.com/v3/`;
+    const headers = {
+      accept: 'application/json',
+      'Content-Type': 'application/json',
+      authorization: `Bearer ${token}`,
+    };
+    const body = JSON.stringify({ type: 'sale', amount: 1 });
+    try {
+      const res = await axios.post('https://api.sandbox-paidyet.com/v3/device/1760025430/transaction', body, {
+        headers: headers,
+      });
+      console.log('res', res);
+    } catch (error) {
+      console.log('error', error.message);
+      console.log('error', error);
+    }
+  };
+
   const stopScan = () => {
     setIsConnected(false);
     //manager.stopDeviceScan();
@@ -278,6 +332,7 @@ const AdminContextProvider = ({ children }) => {
     device,
     notificationNumber,
     setNotificationNumber,
+    getToken,
   };
 
   return <AdminContext.Provider value={value}>{children}</AdminContext.Provider>;

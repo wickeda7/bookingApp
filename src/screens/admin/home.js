@@ -39,7 +39,7 @@ const AdminHome = () => {
 
   const [clockIn, setClockIn] = useState(false);
   const { userData } = useAuthContext();
-  const { setSetTurn, setAmountPerTurn, notificationNumber, setNotificationNumber } = useAdminContext();
+  const { setSetTurn, setAmountPerTurn, notificationNumber, setNotificationNumber, getToken } = useAdminContext();
   const dispatch = useDispatch();
   const { isLoading, staffAvailable, staffUnAvailable, walkin, appointment } = useSelector((state) => state.adminHome);
   const employee = userData.storeAdmin.employee;
@@ -153,7 +153,8 @@ const AdminHome = () => {
               </View>
               <View style={{ width: 70, alignItems: 'flex-end', paddingTop: 8 }}>
                 {setTurn && (
-                  <TouchableOpacity onPress={() => setClockIn(!clockIn)}>
+                  // <TouchableOpacity onPress={() => setClockIn(!clockIn)}>
+                  <TouchableOpacity onPress={() => getToken()}>
                     <Icons6 name={'user-gear'} size={25} color={clockIn ? Colors.disable : Colors.white} />
                   </TouchableOpacity>
                 )}
