@@ -238,22 +238,14 @@ const AdminContextProvider = ({ children }) => {
   };
 
   const getToken = async () => {
-    const options = {
-      method: 'POST',
-      headers: { accept: 'application/json', 'content-type': 'application/json' },
-      body: JSON.stringify({
-        key: 'WPd4NnbzHiXYW8I1u9uDTZ3vV88v-ei5O2m26mr1',
-        merchant_id: '714D3386-A9C9-3BF8-8DE9-C98AD5623331',
-      }),
-    };
-    const url = `https://api.sandbox-paidyet.com/v3/`;
+    const url = `https://api.paidyet.com/v3/`;
     const headers = {
       accept: 'application/json',
       'Content-Type': 'application/json',
     };
     const body = JSON.stringify({
-      key: 'WPd4NnbzHiXYW8I1u9uDTZ3vV88v-ei5O2m26mr1',
-      merchant_id: '714D3386-A9C9-3BF8-8DE9-C98AD5623331',
+      key: 'P17focijrRYxx6R0BIk9MgQEH45b46xN5k2fm2z4',
+      merchant_id: 'F8A2551A-1F6D-33A4-BF3D-C2BF16F29078',
     });
     try {
       const res = await axios.post(`${url}login`, body, {
@@ -272,7 +264,7 @@ const AdminContextProvider = ({ children }) => {
   };
 
   const sendInfo = async (token) => {
-    const url = `https://api.sandbox-paidyet.com/v3/`;
+    const url = `https://api.paidyet.com/v3/`;
     const headers = {
       accept: 'application/json',
       'Content-Type': 'application/json',
@@ -280,7 +272,10 @@ const AdminContextProvider = ({ children }) => {
     };
     const body = JSON.stringify({ type: 'sale', amount: 1 });
     try {
-      const res = await axios.post('https://api.sandbox-paidyet.com/v3/device/1760025430/transaction', body, {
+      // const res = await axios.post('https://api.sandbox-paidyet.com/v3/device/1760025430/transaction', body, {
+      //   headers: headers,
+      // });
+      const res = await axios.post(`${url}device/1760234923/transaction`, body, {
         headers: headers,
       });
       console.log('res', res);
