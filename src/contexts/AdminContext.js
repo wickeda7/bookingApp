@@ -278,13 +278,52 @@ const AdminContextProvider = ({ children }) => {
       const res = await axios.post(`${url}device/1760234923/transaction`, body, {
         headers: headers,
       });
+      const resKey = res.data.payload.items[0].key;
       console.log('res', res);
+      console.log('res data resKey', resKey);
+      if (resKey) {
+        setTimeout(async () => {
+          const temp1 = await paymentDetails(resKey, token);
+          console.log('temp1', temp1);
+        }, 1000);
+        setTimeout(async () => {
+          const temp = await paymentDetails(resKey, token);
+          console.log('temp', temp);
+        }, 20000);
+      }
+      //console.log('res data payload', res.data.payload.items[0].key);
     } catch (error) {
       console.log('error', error.message);
       console.log('error', error);
     }
   };
 
+  const paymentDetails = async (key, token) => {
+    const url = `https://api.paidyet.com/v2/devicepaymentrequest/${key}`;
+    console.log('url', url);
+
+    const headers = {
+      accept: 'application/json',
+      'Content-Type': 'application/json',
+      authorization: `Bearer ${token}`,
+    };
+    try {
+      // setTimeout(async () => {
+      //   const temp = await axios.get(url, {
+      //     headers: headers,
+      //   });
+      //   console.log('temp', temp);
+      // }, 1000);
+      const res = await axios.get(url, {
+        headers: headers,
+      });
+      //console.log('res', res);
+      return res.data;
+    } catch (error) {
+      console.log('error', error.message);
+      console.log('error', error);
+    }
+  };
   const stopScan = () => {
     setIsConnected(false);
     //manager.stopDeviceScan();
