@@ -36,15 +36,18 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.wickeda7.bookingApp",
-      "config": {
-        "googleMapsApiKey": "AIzaSyBvma0JNZQhrzbwpDdmEu-u3VYe7pqXm4s"
-      },
       "infoPlist": {
-        "UIBackgroundModes": ["location", "fetch", "remote-notification"],
+        "UIBackgroundModes": [
+          "location",
+          "fetch",
+          "remote-notification"
+        ],
         "SKAdNetworkItems": [
           {
             "SKAdNetworkIdentifier": "v9wttpbfk9.skadnetwork"
@@ -60,14 +63,13 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "config": {
-        "googleMaps": {
-          "apiKey": "AIzaSyDga4QLT0NFeAnYQJTLzk3UZvR4DgOIT2g"
-        }
-      },
       "package": "com.wickeda7.bookingApp",
       "googleServicesFile": "./google-services.json",
-      "permissions": ["android.permission.INTERNET"]
+      "permissions": [
+        "android.permission.INTERNET",
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_FINE_LOCATION"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -77,6 +79,12 @@
       "eas": {
         "projectId": "46bb83bd-ab64-48cb-9df4-1ff2944f36c9"
       }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/46bb83bd-ab64-48cb-9df4-1ff2944f36c9"
     }
   }
 }
