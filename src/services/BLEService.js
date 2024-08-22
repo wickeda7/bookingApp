@@ -484,4 +484,4 @@ class BLEServiceInstance {
   };
 }
 
-export const BLEService = new BLEServiceInstance();
+export const BLEService = Platform.OS === 'android' ? new BLEServiceInstance() : null;
