@@ -185,8 +185,14 @@ export const api = {
       }
       formData.append('refId', id);
       formData.append('field', field);
-
-      const res = await strapiClient.post(url, formData);
+      const headers = {
+        accept: 'application/json',
+        'Accept-Language': 'en-US,en;q=0.8',
+        'Content-Type': 'multipart/form-data',
+      };
+      const res = await strapiClient.post(url, formData, {
+        headers: headers,
+      });
       return res.data;
     } catch (error) {
       console.error('error uploadProfileImage', error);

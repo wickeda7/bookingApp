@@ -127,7 +127,7 @@ const UserHome = ({ props }) => {
         <View style={{ flexDirection: isRtl ? 'row-reverse' : 'row', marginHorizontal: Default.fixPadding * 1.5 }}>
           <View style={{ flex: 9 }}>
             <View style={{ flexDirection: isRtl ? 'row-reverse' : 'row' }}>
-              <Text style={Fonts.White20Bold}>{tr('hii')}, </Text>
+              <Text style={Fonts.White20Bold}>{tr('hi')}, </Text>
               <Text style={Fonts.Yellow20Bold}>{name}</Text>
             </View>
             <View
