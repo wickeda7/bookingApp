@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Platform } from 'react-native';
+import { Platform } from 'react-native';
 import React, { useEffect, useState, useRef } from 'react';
 import { useAuthContext } from '@contexts/AuthContext';
 import * as BackgroundFetch from 'expo-background-fetch';
@@ -129,5 +129,3 @@ const NotificationsHelper = ({ setNotification }) => {
 };
 
 export default NotificationsHelper;
-
-const styles = StyleSheet.create({});

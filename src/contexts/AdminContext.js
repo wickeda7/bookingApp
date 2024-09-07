@@ -4,7 +4,7 @@ import Toast from 'react-native-root-toast';
 import { Colors } from '@constants/style';
 import { TextEncoder } from 'text-encoding';
 import { Buffer } from 'buffer';
-import BLEService from '@services/BLEService';
+import { BLEService } from '@services/BLEService';
 import { SERVICE_UUID, CHARACTERISTIC_UUID, deviceName } from '@constants/settings';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
