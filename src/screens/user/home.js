@@ -6,7 +6,6 @@ import { useTranslation } from 'react-i18next';
 import * as Location from 'expo-location';
 import Device from 'react-native-device-info';
 import ComingSoon from '@components/ComingSoon';
-import NotificationsHelper from '@utils/notifications';
 import { useAuthContext } from '@contexts/AuthContext';
 import { useDispatch } from 'react-redux';
 import { setCounty, setLatitude, setLongitude } from '@redux/slices/storesSlice';
@@ -122,7 +121,6 @@ const UserHome = ({ props }) => {
 
   return (
     <>
-      <NotificationsHelper />
       <View style={{ paddingVertical: Default.fixPadding, backgroundColor: Colors.primary }}>
         <View style={{ flexDirection: isRtl ? 'row-reverse' : 'row', marginHorizontal: Default.fixPadding * 1.5 }}>
           <View style={{ flex: 9 }}>

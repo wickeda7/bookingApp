@@ -22,7 +22,7 @@ import PayrollChartSummary from '@components/admin/PayrollChartSummary';
 import PayrollStaffDetail from './PayrollStaffDetail';
 import { weekDaysObj } from '@constants/settings';
 import PayrollInvoice from '@components/admin/PayrollInvoice';
-import NotificationsHelper from '@utils/notifications';
+import { usePushNotifications } from '@utils/usePushNotifications';
 const Payroll = (props) => {
   const { t, i18n } = useTranslation();
   const isRtl = i18n.dir() === 'rtl';
@@ -36,7 +36,8 @@ const Payroll = (props) => {
   const [employees, setEmployees] = useState([]);
   const [showGraph, setShowGraph] = useState(true);
   const [showInvoice, setShowInvoice] = useState(false);
-  const [notification, setNotification] = useState(null);
+  const { notification } = usePushNotifications();
+
   const [selectedDate, setSelectedDate] = useState(null);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
@@ -133,7 +134,6 @@ const Payroll = (props) => {
   return (
     <KeyboardAvoidingView style={Style.mainContainer} behavior={Platform.OS === 'ios' ? 'padding' : null}>
       <Loader visible={isLoading} />
-      <NotificationsHelper setNotification={setNotification} />
       <MyStatusBar />
       <View style={[Style.primaryNav, { flexDirection: isRtl ? 'row-reverse' : 'row' }]}>
         <TouchableOpacity onPress={() => props.navigation.navigate('Home')} style={Style.navBackButton}>

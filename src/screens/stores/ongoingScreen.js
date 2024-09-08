@@ -10,7 +10,7 @@ import Feather from 'react-native-vector-icons/Feather';
 import BookingRow from '@components/user/bookingRow';
 import { useDispatch, useSelector } from 'react-redux';
 import { getUserBooking } from '@redux/actions/bookingAction';
-import NotificationsHelper from '@utils/notifications';
+import { usePushNotifications } from '@utils/usePushNotifications';
 import { updateUserBooking } from '@redux/slices/bookingSlice';
 
 const OngoingScreen = (props) => {
@@ -19,7 +19,7 @@ const OngoingScreen = (props) => {
   const isRtl = i18n.dir() === 'rtl';
   const { cancelId } = useBookingContext();
   const { userData } = useAuthContext();
-  const [notification, setNotification] = useState(null);
+  const { notification } = usePushNotifications();
   const dispatch = useDispatch();
   const { isLoading, userBookings } = useSelector((state) => state.booking);
   useEffect(() => {
@@ -93,7 +93,6 @@ const OngoingScreen = (props) => {
 
   return (
     <View style={{ flex: 1 }}>
-      <NotificationsHelper setNotification={setNotification} />
       <Loader visible={isLoading} />
       <FlatList
         numColumns={1}

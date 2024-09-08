@@ -7,7 +7,7 @@ import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import Icon from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import NotificationsHelper from '@utils/notifications';
+import { usePushNotifications } from '@utils/usePushNotifications';
 import { useAuthContext } from '@contexts/AuthContext';
 const Reports = (props) => {
   const { t, i18n } = useTranslation();
@@ -20,7 +20,7 @@ const Reports = (props) => {
   LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
   LogBox.ignoreAllLogs(); //Ignore all log notifications
 
-  const [notification, setNotification] = useState(null);
+  const { notification } = usePushNotifications();
   const [newNotification, setNewNotification] = useState(null);
   const [payrollId, setPayrollId] = useState(null);
   const { userData } = useAuthContext();
@@ -36,7 +36,6 @@ const Reports = (props) => {
   }, [notification]);
   return (
     <View style={{ flex: 1, backgroundColor: Colors.white }}>
-      <NotificationsHelper setNotification={setNotification} />
       <MyStatusBar />
       <View
         style={{

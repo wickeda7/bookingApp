@@ -4,7 +4,7 @@ import { Colors, Default, Fonts } from '@constants/style';
 import Style from '@theme/style';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Icons6 from 'react-native-vector-icons/FontAwesome6';
-import NotificationsHelper from '@utils/notifications';
+import { usePushNotifications } from '@utils/usePushNotifications';
 import { useTranslation } from 'react-i18next';
 import { useAuthContext } from '@contexts/AuthContext';
 import { useAdminContext } from '@contexts/AdminContext';
@@ -35,7 +35,7 @@ const AdminHome = () => {
   }
   LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
   LogBox.ignoreAllLogs(); //Ignore all log notifications
-  const [notification, setNotification] = useState(null);
+  const { notification } = usePushNotifications();
 
   const [clockIn, setClockIn] = useState(false);
   const { userData } = useAuthContext();
@@ -74,7 +74,7 @@ const AdminHome = () => {
   useEffect(() => {
     if (notification) {
       let data = notification.request.content.data;
-      console.log('notification home ADMIN notification.request.content.data', notification.request.content.data);
+      console.log('notification 222 home ADMIN notification.request.content.data', notification.request.content.data);
       if (data.type === 'cancel') {
         dispatch(updateAppointment(data));
         return;
@@ -124,7 +124,6 @@ const AdminHome = () => {
   return (
     <>
       <DraxProvider>
-        <NotificationsHelper setNotification={setNotification} />
         <Loader visible={isLoading} />
         <View
           style={{

@@ -9,12 +9,12 @@ import { useAuthContext } from '@contexts/AuthContext';
 import Feather from 'react-native-vector-icons/Feather';
 import Device from 'react-native-device-info';
 import ComingSoon from '@components/ComingSoon';
-import NotificationsHelper from '@utils/notifications';
 import Loader from '@components/loader';
 import { useDispatch, useSelector } from 'react-redux';
 import { getUserBooking, getBookingById, getStaffBooking } from '@redux/actions/bookingAction';
 import { updateUserBooking, resetMessage, setBookingStatus } from '@redux/slices/bookingSlice';
 import Toast from 'react-native-root-toast';
+import { usePushNotifications } from '@utils/usePushNotifications';
 const WorkerHome = ({ props }) => {
   const { userData } = useAuthContext();
   const { t, i18n } = useTranslation();
@@ -28,7 +28,7 @@ const WorkerHome = ({ props }) => {
   const name = userData?.userInfo?.firstName ? userData.userInfo.firstName + ' ' + userData.userInfo.lastName : '';
   const dispatch = useDispatch();
   const { isLoading, userBookings, message } = useSelector((state) => state.booking);
-  const [notification, setNotification] = useState(null);
+  const { notification } = usePushNotifications();
   if (message !== '') {
     Toast.show(tr('invoiceCompleted'), {
       duration: Toast.durations.LONG,
@@ -66,7 +66,6 @@ const WorkerHome = ({ props }) => {
   }, [notification]);
   return (
     <>
-      <NotificationsHelper setNotification={setNotification} />
       <Loader visible={isLoading} />
       <View style={{ paddingVertical: Default.fixPadding, backgroundColor: Colors.primary }}>
         <View style={{ flexDirection: isRtl ? 'row-reverse' : 'row', marginHorizontal: Default.fixPadding * 1.5 }}>
